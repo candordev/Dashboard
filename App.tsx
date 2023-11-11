@@ -1,30 +1,37 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './Screens/HomeScreen';
-import DetailsScreen from './Screens/DetailsScreen';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Header from "./Components/Header";
+import AllScreen from "./Screens/AllScreen";
+import YourScreen from "./Screens/YourScreen";
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+
+const linking = {
+  prefixes: [
+    /* your linking prefixes */
+  ],
+  config: {
+    screens: {
+      /* configuration for matching screens with paths */
+      all: "all",
+      your: "your",
+      NotFound: "404",
+    },
+  },
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
+    <NavigationContainer linking={linking}>
+      <Stack.Navigator
+        initialRouteName="all"
+        screenOptions={({ navigation, route }) => ({
+          header: () => <Header navigation={navigation} />,
+        })}
+      >
+        <Stack.Screen name="all" component={AllScreen} />
+        <Stack.Screen name="your" component={YourScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
