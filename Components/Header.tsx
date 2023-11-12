@@ -1,7 +1,8 @@
 import { Link } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import colors from "../Styles/colors";
+import Text from "./Text";
 
 const Header = ({ navigation, route }: any) => {
   const activeTab = route.name;

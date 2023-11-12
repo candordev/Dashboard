@@ -23,9 +23,8 @@ export default {
     // purple: '#510AC9',
     // purple: '#5E17EB',
     darkGreen: 'seagreen',
-    red: '#bb3553', //
+    red: '#bb3535', //
     green: 'green',
-    lightlightgray: '#f2f2f2',
     yellow: "#FFFFE0",
     gold: 'goldenrod',
     darkGold: 'darkgoldenrod',

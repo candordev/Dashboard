@@ -1,10 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import MoreButton from "./MoreButton";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
-import ProgressBar from "./ProgressBar";
-import { useWindowDimensions } from "react-native";
 import IssueView from "./IssueView";
+import ProgressBar from "./ProgressBar";
+import Text from "./Text";
 
 interface CardProps {
   issue: any;
@@ -22,7 +26,7 @@ const Card: React.FC<CardProps> = ({ issue }: any) => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              marginBottom: 10,
+              marginBottom: 5,
             }}
           >
             <Text style={styles.title}>{issue.title}</Text>
@@ -59,7 +63,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "650" as any,
   },
   content: {
     fontSize: 16,

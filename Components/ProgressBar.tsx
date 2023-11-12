@@ -1,6 +1,7 @@
 import React from "react";
-import { Pressable, View, Text } from "react-native";
+import { Pressable, View } from "react-native";
 import colors from "../Styles/colors";
+import Text from "./Text";
 
 type ProgressBarProps = {
   step: number;
