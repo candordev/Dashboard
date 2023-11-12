@@ -26,7 +26,7 @@ export default function App() {
       <Stack.Navigator
         initialRouteName="all"
         screenOptions={({ navigation, route }) => ({
-          header: () => <Header navigation={navigation} />,
+          header: (props) => <Header {...props} />,
         })}
       >
         <Stack.Screen name="all" component={AllScreen} />

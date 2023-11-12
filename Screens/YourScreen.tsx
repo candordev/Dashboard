@@ -1,3 +1,4 @@
+import { Link } from "@react-navigation/native";
 import React from "react";
 import { Button, Text, View } from "react-native";
 
@@ -12,7 +13,10 @@ const YourScreen = ({ navigation }: any) => {
       }}
     >
       <Text>Details Screen</Text>
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
+      <Link to="/all">
+        <Text>Go to All Screen</Text>
+      </Link>
+      <Button title="Go to Home" onPress={() => navigation.navigate("all")} />
     </View>
   );
 };

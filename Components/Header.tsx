@@ -1,44 +1,46 @@
-import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Link } from "@react-navigation/native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-const Header = ({ navigation }: any) => {
-  const [activeTab, setActiveTab] = useState("all");
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-    navigation.navigate(tab);
-  };
+const Header = ({ navigation, route }: any) => {
+  const activeTab = route.name;
 
   return (
     <View style={styles.container}>
-      <Pressable
-        style={[
-          styles.tabButton,
-          activeTab === "all" && styles.activeTabButton,
-        ]}
-        onPress={() => handleTabClick("all")}
-        disabled={activeTab === "all"}
-      >
-        <Text
-          style={[styles.tabText, activeTab === "all" && styles.activeTabText]}
+      <Link to="/all">
+        <View
+          style={[
+            styles.tabButton,
+            activeTab === "all" && styles.activeTabButton,
+          ]}
         >
-          All
-        </Text>
-      </Pressable>
-      <Pressable
-        style={[
-          styles.tabButton,
-          activeTab === "your" && styles.activeTabButton,
-        ]}
-        onPress={() => handleTabClick("your")}
-        disabled={activeTab === "your"}
-      >
-        <Text
-          style={[styles.tabText, activeTab === "your" && styles.activeTabText]}
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "all" && styles.activeTabText,
+            ]}
+          >
+            All
+          </Text>
+        </View>
+      </Link>
+      <Link to="/your">
+        <View
+          style={[
+            styles.tabButton,
+            activeTab === "your" && styles.activeTabButton,
+          ]}
         >
-          Your
-        </Text>
-      </Pressable>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "your" && styles.activeTabText,
+            ]}
+          >
+            Your
+          </Text>
+        </View>
+      </Link>
     </View>
   );
 };
@@ -56,6 +58,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
+    marginHorizontal: 5,
   },
   activeTabButton: {
     backgroundColor: "#000",
