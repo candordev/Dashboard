@@ -1,46 +1,70 @@
 import { Link } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import colors from "../Styles/colors";
 
 const Header = ({ navigation, route }: any) => {
   const activeTab = route.name;
 
   return (
-    <View style={styles.container}>
-      <Link to="/all">
-        <View
-          style={[
-            styles.tabButton,
-            activeTab === "all" && styles.activeTabButton,
-          ]}
+    <View
+      style={{
+        alignItems: "center",
+        backgroundColor: colors.background,
+        paddingTop: 20,
+        paddingBottom: 15,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          width: "70%",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{ fontSize: 30, fontWeight: "500", fontFamily: "Montserrat" }}
         >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === "all" && styles.activeTabText,
-            ]}
-          >
-            All
-          </Text>
+          {activeTab.charAt(0).toUpperCase() + activeTab.slice(1) + " Issues"}
+        </Text>
+        <View style={styles.container}>
+          <Link to="/all">
+            <View
+              style={[
+                styles.tabButton,
+                activeTab === "all" && styles.activeTabButton,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  activeTab === "all" && styles.activeTabText,
+                ]}
+              >
+                All
+              </Text>
+            </View>
+          </Link>
+          <Link to="/your">
+            <View
+              style={[
+                styles.tabButton,
+                activeTab === "your" && styles.activeTabButton,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  activeTab === "your" && styles.activeTabText,
+                ]}
+              >
+                Your
+              </Text>
+            </View>
+          </Link>
         </View>
-      </Link>
-      <Link to="/your">
-        <View
-          style={[
-            styles.tabButton,
-            activeTab === "your" && styles.activeTabButton,
-          ]}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === "your" && styles.activeTabText,
-            ]}
-          >
-            Your
-          </Text>
-        </View>
-      </Link>
+      </View>
     </View>
   );
 };
@@ -50,15 +74,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
   },
   tabButton: {
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
-    marginHorizontal: 5,
   },
   activeTabButton: {
     backgroundColor: "#000",

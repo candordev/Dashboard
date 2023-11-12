@@ -1,0 +1,37 @@
+export default {
+    gray: 'gray',
+    darkGray: '#444',
+    mediumgray: '#aaa',
+    lightgray: '#bbb',
+    lightergray: '#eaeaea', //for borders
+    lightestgray: '#f2f2f2',
+    black: '#333',
+    // white: 'snow',
+    white: '#FDFDFD',
+    // purple: 'mediumslateblue',
+    bluepurple: 'rgb(96, 102, 197)', //#6066c5
+    purple0: '#f2f2ff', //#f2f2ff
+    // purple1: '#cec4ff',
+    // purple2: '#b8a9ff',
+    // purple3: '#a997ff',
+    purple1: 'rgb(200, 200, 255)', //#C8C8FF
+    purple2: 'rgb(180, 180, 250)', //#B4B4FA
+    purple3: 'rgb(150, 150, 255)', //#9696F0
+    purple4: 'rgb(120, 120, 228)',
+    purple: 'rgb(100, 100, 190)', //#6464BE
+    // purple: '#5426C9',
+    // purple: '#510AC9',
+    // purple: '#5E17EB',
+    darkGreen: 'seagreen',
+    red: '#bb3553', //
+    green: 'green',
+    lightlightgray: '#f2f2f2',
+    yellow: "#FFFFE0",
+    gold: 'goldenrod',
+    darkGold: 'darkgoldenrod',
+    teal: 'teal',
+    scroll: 'black',
+    theme: 'light',
+    background: '#FAFAFA',
+    beige: 'rgb(250, 248, 245)',
+}
