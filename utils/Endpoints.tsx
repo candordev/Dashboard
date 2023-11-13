@@ -7,14 +7,14 @@
 // }
 
 // local
-// export const BASE_URL : string = `http://localhost:4000/api`;
+export const BASE_URL : string = `http://localhost:4000/api`;
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
 // export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
 // PRODUCTION
-export const BASE_URL: string = `http://184.72.74.25:4000/api`;
+// export const BASE_URL: string = `http://184.72.74.25:4000/api`;
 
 export const Endpoints = {
   base: BASE_URL,
@@ -86,5 +86,6 @@ export const Endpoints = {
   addOtherLeaders: `${BASE_URL}/userActivity/addMoreAccepts`,
   getAcceptedLeaders: `${BASE_URL}/userActivity/getAcceptedLeaders?`,
   deleteYourNotifications: `${BASE_URL}/notification/deleteYourNotifications`,
-  getCommentLikes: `${BASE_URL}/comment/getCommentLikes?`
+  getCommentLikes: `${BASE_URL}/comment/getCommentLikes?`,
+  getPostsByGroupWithoutLazyScroll: `${BASE_URL}/userActivity/getPostsByGroupWithoutLazyScroll?`,
 };

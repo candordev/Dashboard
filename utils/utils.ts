@@ -11,10 +11,10 @@ export const customFetch = async (
   multiPart: boolean = false,
 ): Promise<Response> => {
   try {
-    const adminPassword: String = getAdminPassword();
-    if (!adminPassword || adminPassword == '') {
-      throw new Error('No admin password provided on fetch');
-    }
+    // const adminPassword: String = getAdminPassword();
+    // if (!adminPassword || adminPassword == '') {
+    //   throw new Error('No admin password provided on fetch');
+    // }
     // console.log('Fetching from: ', endpoint, options);
     let headers : any = {
       Accept: 'application/json',
@@ -25,7 +25,6 @@ export const customFetch = async (
         'Content-Type': 'multipart/form-data',
       };
     }
-    options.body.adminPassword = adminPassword;
     let res = await Promise.race([
       fetch(endpoint, {
         ...options,
