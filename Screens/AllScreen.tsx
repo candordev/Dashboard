@@ -37,7 +37,8 @@ const AllScreen = ({ navigation }: any) => {
                   groupID: '647dca3dc2e7afc47081a7c9',
                   filterTime: 'all',
                   filter: 'trendy',
-                  adminPassword: 'CandorDev345!'
+                  adminPassword: 'CandorDev345!',
+                  user: '64a4ef50ed8b983a2f9957db',
                 });
             const res: Response = await customFetch(endpoint, {
                 method: "GET",
