@@ -7,6 +7,7 @@ import Assignees from "./Assignees";
 import Category from "./Category";
 import MarkDone from "./MarkDone";
 import CloseIssue from "./CloseIssue";
+import SendTo from "./SendTo";
 
 const IssueRightView = () => {
   return (

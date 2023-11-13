@@ -13,6 +13,7 @@ const Assignees = () => {
     { label: "Tanuj Dunthuluri", value: "Tanuj Dunthuluri" },
     { label: "Atishay Jain", value: "Atishay Jain" },
     { label: "Rishi Bengani", value: "Rishi Bengani" },
+    { label: "Person New", value: "A Person" },
   ]);
   return (
     <View
@@ -21,7 +22,7 @@ const Assignees = () => {
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
-        minHeight: open ? 210 : undefined,
+        minHeight: open ? 255 : undefined,
       }}
     >
       <Text
@@ -34,6 +35,24 @@ const Assignees = () => {
         Assignees
       </Text>
       <DropDownPicker
+        maxHeight={165}
+        multipleText={`${value.length} ${value.length == 1 ? 'leader' : 'leaders' } selected`}
+        searchable={true}
+        searchTextInputStyle={{
+          backgroundColor: colors.white,
+          borderColor: colors.lightgray,
+          borderWidth: 1,
+          borderRadius: 10,
+        }}
+        searchContainerStyle={{
+            borderBottomWidth: 1,
+            paddingBottom: 5,
+            paddingTop: 5,
+            paddingHorizontal: 4,
+            borderBottomColor: colors.lightergray,
+        }}
+        searchPlaceholder="Search..."
+        addCustomItem={true}
         multiple={true}
         open={open}
         value={value}
@@ -49,7 +68,7 @@ const Assignees = () => {
           marginTop: 10,
           minHeight: 30,
         }}
-        placeholder="Select Assignees"
+        placeholder="Select users"
         textStyle={{
           fontSize: 15,
           color: colors.black,
