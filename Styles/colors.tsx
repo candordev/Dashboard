@@ -7,7 +7,7 @@ export default {
     lightestgray: '#f2f2f2',
     black: '#333',
     // white: 'snow',
-    white: '#FDFDFD',
+    white: '#FFF',
     // purple: 'mediumslateblue',
     bluepurple: 'rgb(96, 102, 197)', //#6066c5
     purple0: '#f2f2ff', //#f2f2ff

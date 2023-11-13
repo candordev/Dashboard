@@ -17,8 +17,6 @@ const DoubleTextInput = () => {
         placeholderTextColor={colors.gray}
         multiline
         onContentSizeChange={(event) => {
-          console.log("size set to:");
-          console.log(event.nativeEvent.contentSize.height);
           setHeightFirstInput(event.nativeEvent.contentSize.height);
         }}
       />
@@ -31,8 +29,6 @@ const DoubleTextInput = () => {
         placeholderTextColor={colors.gray}
         multiline
         onContentSizeChange={(event) => {
-          console.log("size set to:");
-          console.log(event.nativeEvent.contentSize.height);
           setHeightSecondInput(event.nativeEvent.contentSize.height);
         }}
       />
@@ -47,6 +43,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
+    backgroundColor: colors.white,
   },
   input: {
     borderColor: colors.lightgray,

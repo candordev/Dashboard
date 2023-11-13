@@ -30,7 +30,7 @@ function ProgressBar(props: ProgressBarProps): JSX.Element {
         <Text
           style={{
             color: colors.black,
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: "500",
             paddingBottom: 3,
             marginTop: 3,

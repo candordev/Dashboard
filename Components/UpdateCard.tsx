@@ -10,6 +10,7 @@ const UpdateCard = () => {
         <View
             style={{
                 borderColor: colors.lightestgray,
+                backgroundColor: colors.white,
                 borderWidth: 2,
                 borderRadius: 10,
                 padding: 10,

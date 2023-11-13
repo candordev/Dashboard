@@ -40,24 +40,28 @@ const Category = () => {
         setOpen={setOpen}
         setValue={setValue}
         setItems={setItems}
+        dropDownDirection="BOTTOM"
         style={{
-            borderColor: colors.gray,
+            borderColor: colors.lightgray,
             borderWidth: 1,
             backgroundColor: colors.white,
             marginTop: 10,
             minHeight: 30,
         }}
+        
         textStyle={{
           fontSize: 15,
           color: colors.black,
           fontWeight: "500",
-          fontFamily: "Montserrat-Regular",
+          fontFamily: "Montserrat",
         }}
+        listMode="SCROLLVIEW"
         dropDownContainerStyle={[
           {
             borderTopWidth: 1,
             backgroundColor: colors.white,
-            borderColor: colors.gray,
+            borderColor: colors.lightgray,
+            marginTop: 10,
           },
         ]}
         ArrowDownIconComponent={() => (
@@ -67,7 +71,7 @@ const Category = () => {
           <FeatherIcon name={"chevron-up"} size={20} color={colors.gray} />
         )}
         TickIconComponent={() => (
-            <FeatherIcon name={"check"} size={20} color={colors.gray} />
+            <FeatherIcon name={"check"} size={17} color={colors.gray} />
         )}
       />
     </View>
