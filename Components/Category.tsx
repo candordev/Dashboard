@@ -22,6 +22,7 @@ const Category = () => {
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
+        minHeight: open ? 210 : undefined,
       }}
     >
       <Text

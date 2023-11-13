@@ -2,7 +2,7 @@ import React from "react";
 import { View, Image } from "react-native";
 import Text from "./Text";
 
-const ProfileRow = () => {
+const ProfileRow = (props : {name : string}) => {
   const imageUrl = "https://avatars.githubusercontent.com/u/100013";
 
   return (
@@ -17,7 +17,7 @@ const ProfileRow = () => {
         source={{ uri: imageUrl }}
         style={{ height: 23, width: 23, borderRadius: 20, overflow: "hidden" }}
       />
-      <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: "500"}}>Tanuj Dunthuluri</Text>
+      <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: "500"}}>{props.name}</Text>
     </View>
   );
 };
