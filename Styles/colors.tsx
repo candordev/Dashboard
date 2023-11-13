@@ -31,6 +31,6 @@ export default {
     teal: 'teal',
     scroll: 'black',
     theme: 'light',
-    background: '#FAFAFA',
+    background: '#FAFCFF',
     beige: 'rgb(250, 248, 245)',
 }

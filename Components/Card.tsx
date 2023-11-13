@@ -9,6 +9,7 @@ import Popover, { PopoverPlacement } from "react-native-popover-view";
 import IssueView from "./IssueView";
 import ProgressBar from "./ProgressBar";
 import Text from "./Text";
+import colors from "../Styles/colors";
 
 interface CardProps {
   issue: any;
@@ -49,8 +50,10 @@ const Card: React.FC<CardProps> = ({ issue }: any) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
     borderRadius: 10,
+    borderColor: colors.lightestgray,
+    borderWidth: 2,
     padding: 20,
     marginVertical: 7,
     shadowColor: "#000",
