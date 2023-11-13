@@ -25,10 +25,6 @@ export const customFetch = async (
         'Content-Type': 'multipart/form-data',
       };
     }
-    // options.body = JSON.stringify({
-    //   ...options.body,
-    //   adminPassword: adminPassword,
-    // });
     let res = await Promise.race([
       fetch(endpoint, {
         ...options,

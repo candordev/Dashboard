@@ -86,5 +86,6 @@ export const Endpoints = {
   addOtherLeaders: `${BASE_URL}/userActivity/addMoreAccepts`,
   getAcceptedLeaders: `${BASE_URL}/userActivity/getAcceptedLeaders?`,
   deleteYourNotifications: `${BASE_URL}/notification/deleteYourNotifications`,
-  getCommentLikes: `${BASE_URL}/comment/getCommentLikes?`
+  getCommentLikes: `${BASE_URL}/comment/getCommentLikes?`,
+  getPostsByGroupWithoutLazyScroll: `${BASE_URL}/userActivity/getPostsByGroupWithoutLazyScroll?`,
 };
