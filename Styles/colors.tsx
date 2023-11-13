@@ -7,7 +7,7 @@ export default {
     lightestgray: '#f2f2f2',
     black: '#333',
     // white: 'snow',
-    white: '#FDFDFD',
+    white: '#FFF',
     // purple: 'mediumslateblue',
     bluepurple: 'rgb(96, 102, 197)', //#6066c5
     purple0: '#f2f2ff', //#f2f2ff
@@ -23,9 +23,8 @@ export default {
     // purple: '#510AC9',
     // purple: '#5E17EB',
     darkGreen: 'seagreen',
-    red: '#bb3553', //
+    red: '#bb3535', //
     green: 'green',
-    lightlightgray: '#f2f2f2',
     yellow: "#FFFFE0",
     gold: 'goldenrod',
     darkGold: 'darkgoldenrod',

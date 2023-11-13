@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Popover, {PopoverPlacement} from "react-native-popover-view";
+import { View } from "react-native";
+import Popover, { PopoverPlacement } from "react-native-popover-view";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import colors from "../Styles/colors";
+import Text from "./Text";
 
 const MoreButton = () => {
   return (
@@ -12,7 +13,9 @@ const MoreButton = () => {
       placement={PopoverPlacement.RIGHT}
       offset={20}
     >
-      <View style={{padding: 10, width: 150, alignItems: 'center', rowGap: 10}}>
+      <View
+        style={{ padding: 10, width: 150, alignItems: "center", rowGap: 10 }}
+      >
         <Text>Accept Issue</Text>
         <Text>Redirect Issue</Text>
         <Text>Report Issue</Text>

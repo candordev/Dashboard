@@ -1,6 +1,7 @@
 import React from "react";
-import { Pressable, View, Text } from "react-native";
+import { Pressable, View } from "react-native";
 import colors from "../Styles/colors";
+import Text from "./Text";
 
 type ProgressBarProps = {
   step: number;
@@ -29,7 +30,7 @@ function ProgressBar(props: ProgressBarProps): JSX.Element {
         <Text
           style={{
             color: colors.black,
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: "500",
             paddingBottom: 3,
             marginTop: 3,

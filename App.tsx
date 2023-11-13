@@ -27,7 +27,7 @@ export default function App() {
 
   const [fontsLoaded] = useFonts({
     'Montserrat': require('./assets/fonts/Montserrat-VariableFont_wght.ttf'),
-    "Open-Sans": require("./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf"),
+    "OpenSans": require("./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {
