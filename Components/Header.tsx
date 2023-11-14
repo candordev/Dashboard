@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   tabButton: {
     paddingVertical: 5,
     paddingHorizontal: 10,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   activeTabButton: {
     backgroundColor: colors.black,

@@ -27,8 +27,8 @@ const DropDown = (props: PropTypes) => {
       setItems={props.setItems}
       dropDownDirection="BOTTOM"
       style={{
-        borderColor: colors.lightgray,
-        borderWidth: 1,
+        borderColor: colors.lightergray,
+        borderWidth: 2,
         backgroundColor: colors.white,
         minHeight: 36,
       }}
@@ -42,9 +42,10 @@ const DropDown = (props: PropTypes) => {
       listMode="SCROLLVIEW"
       dropDownContainerStyle={[
         {
+          borderWidth: 2,
           borderTopWidth: 1,
           backgroundColor: colors.white,
-          borderColor: colors.lightgray,
+          borderColor: colors.lightergray,
         },
       ]}
       ArrowDownIconComponent={() => (
