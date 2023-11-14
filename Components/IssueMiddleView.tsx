@@ -1,11 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView, TextInput, View, StyleSheet } from "react-native";
 import Text from "./Text";
 import colors from "../Styles/colors";
 import UpdateCard from "./UpdateCard";
 import DoubleTextInput from "./DoubleTextInput";
+import { Post, Update } from "../utils/interfaces";
+import { customFetch } from "../utils/utils";
+import { Endpoints } from "../utils/Endpoints";
 
-const IssueMiddleView = () => {
+interface IssueMiddleViewProps {
+  issue: Post;
+}
+
+function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
+  const [update, setUpdates] = React.useState<Update[]>([]);
+
+  useEffect(() => {
+    fetchStatusUpdates();
+  }, []);
+
+  const fetchStatusUpdates = async () => {
+    try {
+      const res: Response = await customFetch(
+        Endpoints.getPostProgress +
+          new URLSearchParams({
+            postID: props.issue._id,
+          }),
+        {
+          method: 'GET',
+        },
+      );
+
+      const resJson = await res.json();
+      if (!res.ok) {
+        console.error(resJson.error);
+      }
+      if (res.ok) {
+        const result: Update[] = resJson;
+        setUpdates([...result]);
+      }
+    } catch (error) {
+      console.error('Error loading posts. Please try again later.', error);
+    }
+  };
+
   return (
     <View
       style={{
@@ -23,32 +61,6 @@ const IssueMiddleView = () => {
         <UpdateCard />
         <UpdateCard />
       </ScrollView>
-      {/* <View
-        style={{
-          borderColor: colors.lightgray,
-          borderWidth: 1,
-          borderRadius: 10,
-          padding: 10,
-        }}
-      >
-        <TextInput
-          style={{
-            borderColor: colors.lightgray,
-            borderBottomWidth: 1,
-          }}
-          placeholder="Update Title"
-          placeholderTextColor={colors.gray}
-          multiline={true}
-        />
-        <TextInput
-          style={{
-          }}
-          placeholder="Update Content"
-          placeholderTextColor={colors.gray}
-          multiline={true}
-        />
-      </View> */}
-
       <DoubleTextInput/>
     </View>
   );

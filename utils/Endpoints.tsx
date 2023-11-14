@@ -88,4 +88,5 @@ export const Endpoints = {
   deleteYourNotifications: `${BASE_URL}/notification/deleteYourNotifications`,
   getCommentLikes: `${BASE_URL}/comment/getCommentLikes?`,
   getPostsByGroupWithoutLazyScroll: `${BASE_URL}/userActivity/getPostsByGroupWithoutLazyScroll?`,
+  getYourProposals: `${BASE_URL}/userActivity/getYourProposals?`,
 };

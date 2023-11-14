@@ -3,8 +3,13 @@ import { TextInput, View } from "react-native";
 import colors from "../Styles/colors";
 import Text from "./Text";
 import ExpandableTextInput from "./ExpandableTextInput";
+import { Post } from "../utils/interfaces";
 
-const IssueLeftView = () => {
+interface IssueLeftViewProps {
+  issue: Post;
+}
+
+function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const comments = [
     "This is a long comment, lorem ipsum djsfl; jef;ewajfl;kaj fe;jfwa;ejfl ksd;jfoei;jfl;kdas fj;fjew ;afj;wla fj",
     "This is a long comment, lorem ipsum djsfl; jef;ewajfl;kaj fe;jfwa;ejfl ksd;jfoei;jfl;kdas fj;fjew ;afj;wla fj",
@@ -32,12 +37,10 @@ const IssueLeftView = () => {
           }}
         >
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            More Trash Cans throughout Campus
+            {props.issue.title}
           </Text>
           <Text style={{ fontSize: 14, marginTop: 5 }}>
-            There is a lack of trash cans around the UF campus. More trash cans
-            would not only reduce littering around campus, but also make it more
-            convenient for student sand staff to get rid of garbage.
+            {props.issue.content}
           </Text>
         </View>
 

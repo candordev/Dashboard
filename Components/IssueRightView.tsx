@@ -8,8 +8,13 @@ import Category from "./Category";
 import MarkDone from "./MarkDone";
 import CloseIssue from "./CloseIssue";
 import SendTo from "./AddLeader";
+import { Post } from "../utils/interfaces";
 
-const IssueRightView = () => {
+interface IssueRightViewProps {
+  issue: Post;
+}
+
+function IssueRightView(props: IssueRightViewProps): JSX.Element {
   return (
     <View
       style={{

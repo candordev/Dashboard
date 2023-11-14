@@ -5,8 +5,13 @@ import colors from "../Styles/colors";
 import IssueLeftView from "./IssueLeftView";
 import IssueMiddleView from "./IssueMiddleView";
 import IssueRightView from "./IssueRightView";
+import { Post } from "../utils/interfaces";
 
-const IssueView = () => {
+interface IssueViewProps {
+  issue: Post;
+}
+
+function IssueView(props: IssueViewProps): JSX.Element {
   return (
     <View
       style={{
@@ -17,9 +22,9 @@ const IssueView = () => {
         columnGap: 10,
       }}
     >
-      <IssueLeftView/>
-      <IssueMiddleView/>
-      <IssueRightView/>
+      <IssueLeftView issue={props.issue}/>
+      <IssueMiddleView issue={props.issue}/>
+      <IssueRightView issue={props.issue}/>
     </View>
   );
 };

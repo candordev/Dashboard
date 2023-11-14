@@ -10,12 +10,14 @@ import IssueView from "./IssueView";
 import ProgressBar from "./ProgressBar";
 import Text from "./Text";
 import colors from "../Styles/colors";
+import { Post } from "../utils/interfaces";
 
 interface CardProps {
-  issue: any;
+  issue: Post;
 }
 
-const Card: React.FC<CardProps> = ({ issue }: any) => {
+// const Card: React.FC<CardProps> = ({ issue }: any) => {
+function Card(props: CardProps): JSX.Element {
   const { height, width } = useWindowDimensions();
 
   return (
@@ -30,10 +32,10 @@ const Card: React.FC<CardProps> = ({ issue }: any) => {
               marginBottom: 5,
             }}
           >
-            <Text style={styles.title}>{issue.title}</Text>
+            <Text style={styles.title}>{props.issue.title}</Text>
             <ProgressBar step={1} underText="In Progress" />
           </View>
-          <Text style={styles.content}>{issue.description}</Text>
+          <Text style={styles.content}>{props.issue.content}</Text>
         </TouchableOpacity>
       }
       placement={PopoverPlacement.FLOATING}
@@ -43,7 +45,7 @@ const Card: React.FC<CardProps> = ({ issue }: any) => {
         height: height * 0.9,
       }}
     >
-      <IssueView />
+      <IssueView issue={props.issue}/>
     </Popover>
   );
 };
