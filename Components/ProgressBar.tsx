@@ -6,13 +6,22 @@ import Text from "./Text";
 type ProgressBarProps = {
   step: number;
   navigation?: any;
-  underText: string;
   profilePost?: boolean;
 };
 
 function ProgressBar(props: ProgressBarProps): JSX.Element {
+  let underText = "";
+  if (props.step === 0) {
+    underText = "No Progress";
+  } else if (props.step === 1) {
+    underText = "Assigned";
+  } else if (props.step === 2) {
+    underText = "In Progress";
+  } else if (props.step === 3) {
+    underText = "Completed";
+  }
   return (
-    <View style={{alignItems: 'center'}}>
+    <View style={{ alignItems: "center" }}>
       <View
         style={{
           flexDirection: "row",
@@ -27,17 +36,17 @@ function ProgressBar(props: ProgressBarProps): JSX.Element {
         <ProgressBlock filled={true} />
         <ProgressBlock filled={props.step >= 3} /> */}
       </View>
-        <Text
-          style={{
-            color: colors.black,
-            fontSize: 13,
-            fontWeight: "500",
-            paddingBottom: 3,
-            marginTop: 3,
-          }}
-        >
-          {props.underText}
-        </Text>
+      <Text
+        style={{
+          color: colors.black,
+          fontSize: 13,
+          fontWeight: "500",
+          paddingBottom: 3,
+          marginTop: 3,
+        }}
+      >
+        {underText}
+      </Text>
     </View>
   );
 }

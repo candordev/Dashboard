@@ -2,18 +2,15 @@ import { Link } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import colors from "../Styles/colors";
-import Text from "./Text";
-import SearchBar from "./SearchBar";
-import FeatherIcon from "react-native-vector-icons/Feather";
-import DropDownPicker from "react-native-dropdown-picker";
-import StatusPicker from "./StatusPicker";
 import DropDown from "./DropDown";
+import SearchBar from "./SearchBar";
+import StatusPicker from "./StatusPicker";
+import Text from "./Text";
 
 const Header = ({ navigation, route }: any) => {
   const activeTab = route.name;
 
   const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
-  const [assigneeSearchPhrase, setAssigneeSearchPhrase] = React.useState("");
 
   const [categoryValue, setCategoryValue] = useState<string[]>([]);
   const [categoryItems, setCategoryItems] = useState([
