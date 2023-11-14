@@ -6,16 +6,12 @@ import {Linking, Platform} from 'react-native';
 
 export const customFetch = async (
   endpoint: string,
+  searchParams: any = {},
   options: {method: string; body?: any},
   attempt: number = 0,
   multiPart: boolean = false,
 ): Promise<Response> => {
   try {
-    // const adminPassword: String = getAdminPassword();
-    // if (!adminPassword || adminPassword == '') {
-    //   throw new Error('No admin password provided on fetch');
-    // }
-    // console.log('Fetching from: ', endpoint, options);
     let headers : any = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -25,8 +21,11 @@ export const customFetch = async (
         'Content-Type': 'multipart/form-data',
       };
     }
+
+    searchParams = {...searchParams, adminPassword: constants.ADMIN_PASSWORD, user: constants.USER};
+
     let res = await Promise.race([
-      fetch(endpoint, {
+      fetch(endpoint + new URLSearchParams(searchParams), {
         ...options,
         headers: headers
       }),
@@ -53,17 +52,13 @@ export const customFetch = async (
         // retry
         await delay(constants.RETRY_WAIT_TIME);
         console.log('Retrying fetch...');
-        return await customFetch(endpoint, options, attempt + 1, true);
+        return await customFetch(endpoint, searchParams, options, attempt + 1, multiPart);
       }
     } else {
       throw error;
     }
   }
 };
-
-const getAdminPassword = (): String => {
-  return constants.ADMIN_PASSWORD;
-}
 
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));

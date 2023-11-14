@@ -19,15 +19,15 @@ const AllScreen = ({ navigation }: any) => {
         //console.debug('fetch posts running');
         try {
             const endpoint =
-                Endpoints.getPostsByGroupWithoutLazyScroll +
-                new URLSearchParams({
-                  groupID: '647dca3dc2e7afc47081a7c9',
-                  filterTime: 'all',
-                  filter: 'trendy',
-                  adminPassword: 'CandorDev345!',
-                  user: '6551ed235e8ef7b3d6f1b7eb',
-                });
-            const res: Response = await customFetch(endpoint, {
+                Endpoints.getPostsByGroupWithoutLazyScroll
+
+            const searchParams = {
+              groupID: '647dca3dc2e7afc47081a7c9',
+              filterTime: 'all',
+              filter: 'trendy',
+            };
+
+            const res: Response = await customFetch(endpoint, searchParams, {
                 method: "GET",
             });
 

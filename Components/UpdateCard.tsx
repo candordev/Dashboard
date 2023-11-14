@@ -4,8 +4,13 @@ import { View } from "react-native";
 import colors from "../Styles/colors";
 
 import Text from "./Text";
+import { Update } from "../utils/interfaces";
 
-const UpdateCard = () => {
+interface UpdateCardProps {
+    update: Update;
+  }
+
+function UpdateCard(props: UpdateCardProps): JSX.Element {
     return (
         <View
             style={{
@@ -23,7 +28,7 @@ const UpdateCard = () => {
                     fontFamily: "Montserrat",
                 }}
             >
-                Update Title
+                {props.update.title}
             </Text>
             <Text
                 style={{
@@ -32,7 +37,7 @@ const UpdateCard = () => {
                     marginTop: 5,
                 }}
             >
-                This is an update description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod.
+                {props.update.content}
             </Text>
         </View>
     );

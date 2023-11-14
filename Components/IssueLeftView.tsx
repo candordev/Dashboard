@@ -44,7 +44,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           </Text>
         </View>
 
-        {comments.map((comment) => {
+        {comments.map((comment, index) => {
           return (
             <View
               style={{
@@ -52,6 +52,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
                 padding: 10,
                 marginTop: 5,
               }}
+              key={index}
             >
               <Text style={{ fontSize: 14, fontWeight: "550" }}>
                 Akshat Pant
