@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, TextInput, View, StyleSheet } from "react-native";
 import Text from "./Text";
 import colors from "../Styles/colors";
@@ -13,7 +13,9 @@ interface IssueMiddleViewProps {
 }
 
 function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
-    const [updates, setUpdates] = React.useState<Update[]>([]);
+    const [updates, setUpdates] = useState<Update[]>([]);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
 
     useEffect(() => {
         fetchStatusUpdates();
@@ -48,6 +50,32 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
         }
     };
 
+    const addUpdate = async () => {
+        try {
+            let res: Response = await customFetch(
+                Endpoints.createStatusUpdate,
+                {},
+                {
+                    method: "POST",
+                    body: {
+                      title: title,
+                      content: content,
+                      postID: props.issue._id,
+                      completed: false,
+                    },
+                }
+            );
+            if (!res.ok) {
+                const resJson = await res.json();
+                console.error(resJson.error);
+            } else {
+                await fetchStatusUpdates();
+            }
+        } catch (error) {
+            console.error("Network error, please try again later.", error);
+        }
+    };
+
     return (
         <View
             style={{
@@ -67,7 +95,11 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
                     <UpdateCard key={index} update={update} />
                 ))}
             </ScrollView>
-            <DoubleTextInput />
+            <DoubleTextInput
+                onFirstInputChange={setTitle}
+                onSecondInputChange={setContent}
+                onSubmit={addUpdate}
+            />
         </View>
     );
 }

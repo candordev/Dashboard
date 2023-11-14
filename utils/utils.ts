@@ -7,7 +7,7 @@ import {Linking, Platform} from 'react-native';
 export const customFetch = async (
   endpoint: string,
   searchParams: any = {},
-  options: {method: string; body?: any},
+  options: {method: string; body?: any;},
   attempt: number = 0,
   multiPart: boolean = false,
 ): Promise<Response> => {
@@ -22,10 +22,19 @@ export const customFetch = async (
       };
     }
 
-    searchParams = {...searchParams, adminPassword: constants.ADMIN_PASSWORD, user: constants.USER};
+    if (options.method == "GET") {
+      searchParams = {...searchParams, adminPassword: constants.ADMIN_PASSWORD, user: constants.USER};
+      endpoint = endpoint + new URLSearchParams(searchParams);
+    } else {
+      options.body = {...options.body, adminPassword: constants.ADMIN_PASSWORD, user: constants.USER};
+      options.body = JSON.stringify(options.body);
+    }
+
+    console.info("options", options)
+    console.info("endpoint", endpoint)
 
     let res = await Promise.race([
-      fetch(endpoint + new URLSearchParams(searchParams), {
+      fetch(endpoint, {
         ...options,
         headers: headers
       }),

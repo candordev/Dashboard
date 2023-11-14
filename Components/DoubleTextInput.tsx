@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import colors from "../Styles/colors";
 
-const DoubleTextInput = () => {
+interface DoubleTextInputProps {
+  onFirstInputChange: (text: string) => void;
+  onSecondInputChange: (text: string) => void;
+  onSubmit: () => void;
+}
+
+function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
   const [heightFirstInput, setHeightFirstInput] = useState(40);
   const [heightSecondInput, setHeightSecondInput] = useState(40);
 
@@ -19,6 +25,7 @@ const DoubleTextInput = () => {
         onContentSizeChange={(event) => {
           setHeightFirstInput(event.nativeEvent.contentSize.height);
         }}
+        onChangeText={props.onFirstInputChange}
       />
       <TextInput
         style={[
@@ -27,10 +34,12 @@ const DoubleTextInput = () => {
         ]}
         placeholder="Update Content"
         placeholderTextColor={colors.gray}
-        multiline
+        // multiline
         onContentSizeChange={(event) => {
           setHeightSecondInput(event.nativeEvent.contentSize.height);
         }}
+        onChangeText={props.onSecondInputChange}
+        onSubmitEditing={props.onSubmit}
       />
     </View>
   );

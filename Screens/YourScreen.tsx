@@ -17,7 +17,7 @@ const YourScreen = ({ navigation }: any) => {
         //console.debug('fetch posts running');
         try {
             const endpoint =
-                Endpoints.getPostsByGroupWithoutLazyScroll;
+                Endpoints.getYourProposals;
 
             const searchParams = {
                 groupID: '647dca3dc2e7afc47081a7c9',
