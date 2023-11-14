@@ -21,7 +21,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
     const [leaders, setLeaders] = useState<UserProfile[]>([]);
 
     useEffect(() => {
-        fetchLeaders();
+      fetchLeaders();
     }, []);
 
     const fetchLeaders = async () => {
@@ -46,6 +46,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             }
             if (res.ok) {
                 const result: UserProfile[] = resJson;
+                console.log("leaders are", result);
                 setLeaders(result);
             }
         } catch (error) {

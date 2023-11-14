@@ -31,28 +31,29 @@ function Assignees(props: AssigneesProps): JSX.Element {
     const leaders = props.leaders.map((leader) => {
       return {
         label: leader.firstName + " " + leader.lastName,
-        value: leader.firstName + " " + leader.lastName,
+        value: leader.email ? leader.email[0] : "atjain02@gmail.com",
       };
     });
 
     setItems(leaders);
   }, [props.leaders]);
 
-  const inviteLeader = (name: string) => {
+  useEffect(() => {
+    for (let email of value) {
+      sendEmailToLeader(email);
+    }
+  }, [value])
+
+  const inviteLeader = (name: string, email: string) => {
     setItems([
       ...items,
       {
         label: name,
-        value: name,
+        value: email,
       },
     ]);
 
-    setValue([...value, name]);
-  }
-
-  function assignLeaders() {
-    console.log("Assigning leaders", value);
-    sendEmailToLeader("atjain02@gmail.com");
+    setValue([...value, email]);
   }
 
   async function sendEmailToLeader(email: string) {

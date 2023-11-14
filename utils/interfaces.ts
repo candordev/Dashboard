@@ -22,6 +22,7 @@ export interface UserProfile {
   numUpdated: number;
   numFinished: number;
   leaderPointsForGroup: number;
+  email?: string[];
 }
 
 export interface MemberProfile extends UserProfile {

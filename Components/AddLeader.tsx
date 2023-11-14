@@ -5,7 +5,7 @@ import colors from "../Styles/colors";
 
 import Text from "./Text";
 
-const AddLeader = (props : {inviteLeader : (name : string) => void}) => {
+const AddLeader = (props : {inviteLeader : (name : string, email: string) => void}) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,7 +47,7 @@ const AddLeader = (props : {inviteLeader : (name : string) => void}) => {
         }}
         onPress={() => {
           if (expanded) {
-            props.inviteLeader(`${firstName} ${lastName}`)
+            props.inviteLeader(`${firstName} ${lastName}`, email)
             setExpanded(false);
           } else {
             setExpanded(true);
