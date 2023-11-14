@@ -7,6 +7,7 @@ import SearchBar from "./SearchBar";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import DropDownPicker from "react-native-dropdown-picker";
 import StatusPicker from "./StatusPicker";
+import DropDown from "./DropDown";
 
 const Header = ({ navigation, route }: any) => {
   const activeTab = route.name;
@@ -14,22 +15,28 @@ const Header = ({ navigation, route }: any) => {
   const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
   const [assigneeSearchPhrase, setAssigneeSearchPhrase] = React.useState("");
 
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<string[]>([]);
-  const [items, setItems] = useState([
+  const [categoryValue, setCategoryValue] = useState<string[]>([]);
+  const [categoryItems, setCategoryItems] = useState([
     { label: "Transportation", value: "Tanuj Dunthuluri" },
     { label: "Agriculture", value: "Atishay Jain" },
     { label: "Rural Development", value: "Rishi Bengani" },
     { label: "Safety", value: "A Person" },
   ]);
 
-  const [open2, setOpen2] = useState(false);
-  const [value2, setValue2] = useState<string[]>([]);
-  const [items2, setItems2] = useState([
+  const [tagValues, setTagValues] = useState<string[]>([]);
+  const [tagItems, setTagItems] = useState([
     { label: "High Priority", value: "Tanuj Dunthuluri" },
     { label: "Medium Priority", value: "Atishay Jain" },
     { label: "Low Priority", value: "Rishi Bengani" },
     { label: "No Priority", value: "A Person" },
+  ]);
+
+  const [assigneeValues, setAssigneeValues] = useState<string[]>([]);
+  const [assigneeItems, setAssigneeItems] = useState([
+    { label: "Tanuj Dunthuluri", value: "Tanuj Dunthuluri" },
+    { label: "Atishay Jain", value: "Atishay Jain" },
+    { label: "Rishi Bengani", value: "Rishi Bengani" },
+    { label: "Srikar Parsi", value: "Srikar Parsi" },
   ]);
 
   return (
@@ -92,106 +99,60 @@ const Header = ({ navigation, route }: any) => {
         </View>
       </View>
       <View
-        style={{ marginTop: 15, flexDirection: "row", alignItems: "center" }}
+        style={{
+          marginTop: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          width: "70%",
+          columnGap: 10,
+        }}
       >
-        <SearchBar
-          searchPhrase={issueSearchPhrase}
-          setSearchPhrase={setIssueSearchPhrase}
-          placeholder="Search Issue..."
-        />
-        <View style={{ width: 200 }}>
-          <DropDownPicker
-            maxHeight={165}
-            multiple={true}
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-            dropDownDirection="BOTTOM"
-            style={{
-              borderColor: colors.lightgray,
-              borderWidth: 1,
-              backgroundColor: colors.white,
-              minHeight: 36,
-            }}
-            placeholder="Select category"
-            placeholderStyle={{ color: colors.black }}
-            textStyle={{
-              fontSize: 15,
-              color: colors.black,
-              fontFamily: "OpenSans",
-            }}
-            listMode="SCROLLVIEW"
-            dropDownContainerStyle={[
-              {
-                borderTopWidth: 1,
-                backgroundColor: colors.white,
-                borderColor: colors.lightgray,
-              },
-            ]}
-            ArrowDownIconComponent={() => (
-              <FeatherIcon
-                name={"chevron-down"}
-                size={20}
-                color={colors.gray}
-              />
-            )}
-            ArrowUpIconComponent={() => (
-              <FeatherIcon name={"chevron-up"} size={20} color={colors.gray} />
-            )}
-            TickIconComponent={() => (
-              <FeatherIcon name={"check"} size={17} color={colors.gray} />
-            )}
+        <View style={{ flex: 1 }}>
+          <SearchBar
+            searchPhrase={issueSearchPhrase}
+            setSearchPhrase={setIssueSearchPhrase}
+            placeholder="Search Issue..."
           />
         </View>
         <StatusPicker />
-        <View style={{ width: 200, marginLeft: 10 }}>
-          <DropDownPicker
-            maxHeight={165}
+      </View>
+      <View
+        style={{
+          marginTop: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          width: "70%",
+          columnGap: 10,
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <DropDown
+            placeholder="Select category"
+            value={categoryValue}
+            setValue={setCategoryValue}
+            items={categoryItems}
+            setItems={setCategoryItems}
             multiple={true}
-            open={open2}
-            value={value2}
-            items={items2}
-            setOpen={setOpen2}
-            setValue={setValue2}
-            setItems={setItems2}
-            dropDownDirection="BOTTOM"
-            style={{
-              borderColor: colors.lightgray,
-              borderWidth: 1,
-              backgroundColor: colors.white,
-              minHeight: 36,
-            }}
-            placeholder="Select tags"
-            placeholderStyle={{ color: colors.black }}
-            textStyle={{
-              fontSize: 15,
-              color: colors.black,
-              fontFamily: "OpenSans",
-            }}
-            listMode="SCROLLVIEW"
-            dropDownContainerStyle={[
-              {
-                borderTopWidth: 1,
-                backgroundColor: colors.white,
-                borderColor: colors.lightgray,
-              },
-            ]}
-            ArrowDownIconComponent={() => (
-              <FeatherIcon
-                name={"chevron-down"}
-                size={20}
-                color={colors.gray}
-              />
-            )}
-            ArrowUpIconComponent={() => (
-              <FeatherIcon name={"chevron-up"} size={20} color={colors.gray} />
-            )}
-            TickIconComponent={() => (
-              <FeatherIcon name={"check"} size={17} color={colors.gray} />
-            )}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <DropDown
+            placeholder="Select tag"
+            value={tagValues}
+            setValue={setTagValues}
+            items={tagItems}
+            setItems={setTagItems}
+            multiple={true}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <DropDown
+            placeholder="Select assignee"
+            value={assigneeValues}
+            setValue={setAssigneeValues}
+            items={assigneeItems}
+            setItems={setAssigneeItems}
+            multiple={true}
           />
         </View>
       </View>
@@ -212,14 +173,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   activeTabButton: {
-    backgroundColor: "#000",
+    backgroundColor: colors.black,
   },
   tabText: {
     fontSize: 16,
     fontWeight: "bold",
   },
   activeTabText: {
-    color: "#fff",
+    color: colors.white,
   },
 });
 
