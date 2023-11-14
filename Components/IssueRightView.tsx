@@ -62,7 +62,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             }}
         >
             <View style={{ rowGap: 10 }}>
-                <Assignees leaders={leaders}/>
+                <Assignees leaders={leaders} issue={props.issue}/>
                 <Category />
             </View>
             <View style={{ rowGap: 10 }}>

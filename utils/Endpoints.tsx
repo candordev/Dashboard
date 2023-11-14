@@ -89,4 +89,5 @@ export const Endpoints = {
   getCommentLikes: `${BASE_URL}/comment/getCommentLikes?`,
   getPostsByGroupWithoutLazyScroll: `${BASE_URL}/userActivity/getPostsByGroupWithoutLazyScroll?`,
   getYourProposals: `${BASE_URL}/userActivity/getYourProposals?`,
+  sendEmailToLeader: `${BASE_URL}/userActivity/sendEmailToLeader`,
 };

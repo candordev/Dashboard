@@ -7,11 +7,14 @@ import DropDownPicker from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AddLeader from "./AddLeader";
 import OrFullWidth from "./OrFullWidth";
-import { UserProfile } from "../utils/interfaces";
+import { Post, UserProfile } from "../utils/interfaces";
 import Icon from "react-native-vector-icons/Feather";
+import { customFetch } from "../utils/utils";
+import { Endpoints } from "../utils/Endpoints";
 
 interface AssigneesProps {
   leaders: UserProfile[];
+  issue: Post;
 }
 
 function Assignees(props: AssigneesProps): JSX.Element {
@@ -28,8 +31,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
     const leaders = props.leaders.map((leader) => {
       return {
         label: leader.firstName + " " + leader.lastName,
-        value: "hello",
-        // value: leader.firstName + " " + leader.lastName,
+        value: leader.firstName + " " + leader.lastName,
       };
     });
 
@@ -50,6 +52,31 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   function assignLeaders() {
     console.log("Assigning leaders", value);
+    sendEmailToLeader("atjain02@gmail.com");
+  }
+
+  async function sendEmailToLeader(email: string) {
+    try {
+      let res: Response = await customFetch(
+          Endpoints.sendEmailToLeader,
+          {},
+          {
+              method: "POST",
+              body: {
+                toLeaderEmail: email,
+                postID: props.issue._id,
+              },
+          }
+      );
+      if (!res.ok) {
+          const resJson = await res.json();
+          console.error(resJson.error);
+      } else {
+          console.log("Email sent to leader");
+      }
+    } catch (error) {
+      console.error("Network error, please try again later.", error);
+    }
   }
 
   return (
@@ -135,13 +162,6 @@ function Assignees(props: AssigneesProps): JSX.Element {
       {value.map((item, index) => {
         return <ProfileRow name={item} key={index} />;
       })}
-      <Pressable
-        style={{padding: 10, alignSelf: "flex-end", marginTop: 1}}
-        onPress={() => {
-          assignLeaders();
-        }}>
-        <Icon name="send" size={20} color={colors.gray} />
-      </Pressable>
       <View>
         <OrFullWidth />
         <AddLeader inviteLeader={inviteLeader}/>

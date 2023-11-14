@@ -33,7 +33,7 @@ function Card(props: CardProps): JSX.Element {
             }}
           >
             <Text style={styles.title}>{props.issue.title}</Text>
-            <ProgressBar step={1} underText="In Progress" />
+            <ProgressBar step={props.issue.step} underText="In Progress" />
           </View>
           <Text style={styles.content}>{props.issue.content}</Text>
         </TouchableOpacity>
