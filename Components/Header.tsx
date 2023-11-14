@@ -1,11 +1,27 @@
 import { Link } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import colors from "../Styles/colors";
 import Text from "./Text";
+import SearchBar from "./SearchBar";
+import FeatherIcon from "react-native-vector-icons/Feather";
+import DropDownPicker from "react-native-dropdown-picker";
+import StatusPicker from "./StatusPicker";
 
 const Header = ({ navigation, route }: any) => {
   const activeTab = route.name;
+
+  const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
+  const [assigneeSearchPhrase, setAssigneeSearchPhrase] = React.useState("");
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<string[]>([]);
+  const [items, setItems] = useState([
+    { label: "Transportation", value: "Tanuj Dunthuluri" },
+    { label: "Agriculture", value: "Atishay Jain" },
+    { label: "Rural Development", value: "Rishi Bengani" },
+    { label: "Safety", value: "A Person" },
+  ]);
 
   return (
     <View
@@ -66,6 +82,110 @@ const Header = ({ navigation, route }: any) => {
           </Link>
         </View>
       </View>
+      <View
+        style={{ marginTop: 15, flexDirection: "row", alignItems: "center" }}
+      >
+        <SearchBar
+          searchPhrase={issueSearchPhrase}
+          setSearchPhrase={setIssueSearchPhrase}
+          placeholder="Search Issue..."
+        />
+        <View style={{ width: 200 }}>
+          <DropDownPicker
+            maxHeight={165}
+            multiple={true}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            dropDownDirection="BOTTOM"
+            style={{
+              borderColor: colors.lightgray,
+              borderWidth: 1,
+              backgroundColor: colors.white,
+              minHeight: 36,
+            }}
+            placeholder="Select category"
+            placeholderStyle={{ color: colors.black }}
+            textStyle={{
+              fontSize: 15,
+              color: colors.black,
+              fontFamily: "OpenSans",
+            }}
+            listMode="SCROLLVIEW"
+            dropDownContainerStyle={[
+              {
+                borderTopWidth: 1,
+                backgroundColor: colors.white,
+                borderColor: colors.lightgray,
+              },
+            ]}
+            ArrowDownIconComponent={() => (
+              <FeatherIcon
+                name={"chevron-down"}
+                size={20}
+                color={colors.gray}
+              />
+            )}
+            ArrowUpIconComponent={() => (
+              <FeatherIcon name={"chevron-up"} size={20} color={colors.gray} />
+            )}
+            TickIconComponent={() => (
+              <FeatherIcon name={"check"} size={17} color={colors.gray} />
+            )}
+          />
+        </View>
+        <StatusPicker />
+        <View style={{ width: 200, marginLeft: 10 }}>
+          <DropDownPicker
+            maxHeight={165}
+            multiple={true}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+            dropDownDirection="BOTTOM"
+            style={{
+              borderColor: colors.lightgray,
+              borderWidth: 1,
+              backgroundColor: colors.white,
+              minHeight: 36,
+            }}
+            placeholder="Select category"
+            placeholderStyle={{ color: colors.black }}
+            textStyle={{
+              fontSize: 15,
+              color: colors.black,
+              fontFamily: "OpenSans",
+            }}
+            listMode="SCROLLVIEW"
+            dropDownContainerStyle={[
+              {
+                borderTopWidth: 1,
+                backgroundColor: colors.white,
+                borderColor: colors.lightgray,
+              },
+            ]}
+            ArrowDownIconComponent={() => (
+              <FeatherIcon
+                name={"chevron-down"}
+                size={20}
+                color={colors.gray}
+              />
+            )}
+            ArrowUpIconComponent={() => (
+              <FeatherIcon name={"chevron-up"} size={20} color={colors.gray} />
+            )}
+            TickIconComponent={() => (
+              <FeatherIcon name={"check"} size={17} color={colors.gray} />
+            )}
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -75,6 +195,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
+    width: 200,
   },
   tabButton: {
     paddingVertical: 5,
