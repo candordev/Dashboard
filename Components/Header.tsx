@@ -23,6 +23,15 @@ const Header = ({ navigation, route }: any) => {
     { label: "Safety", value: "A Person" },
   ]);
 
+  const [open2, setOpen2] = useState(false);
+  const [value2, setValue2] = useState<string[]>([]);
+  const [items2, setItems2] = useState([
+    { label: "High Priority", value: "Tanuj Dunthuluri" },
+    { label: "Medium Priority", value: "Atishay Jain" },
+    { label: "Low Priority", value: "Rishi Bengani" },
+    { label: "No Priority", value: "A Person" },
+  ]);
+
   return (
     <View
       style={{
@@ -142,12 +151,12 @@ const Header = ({ navigation, route }: any) => {
           <DropDownPicker
             maxHeight={165}
             multiple={true}
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
+            open={open2}
+            value={value2}
+            items={items2}
+            setOpen={setOpen2}
+            setValue={setValue2}
+            setItems={setItems2}
             dropDownDirection="BOTTOM"
             style={{
               borderColor: colors.lightgray,
@@ -155,7 +164,7 @@ const Header = ({ navigation, route }: any) => {
               backgroundColor: colors.white,
               minHeight: 36,
             }}
-            placeholder="Select category"
+            placeholder="Select tags"
             placeholderStyle={{ color: colors.black }}
             textStyle={{
               fontSize: 15,
