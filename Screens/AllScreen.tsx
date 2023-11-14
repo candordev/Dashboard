@@ -7,6 +7,7 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import Text from '../Components/Native/Text';
 import {FlashList} from '@shopify/flash-list';
+import { constants } from "../utils/constants";
 
 const AllScreen = ({ navigation }: any) => {
     const [issues, setIssues] = useState<Post[]>([]);
@@ -22,7 +23,7 @@ const AllScreen = ({ navigation }: any) => {
                 Endpoints.getPostsByGroupWithoutLazyScroll
 
             const searchParams = {
-              groupID: '647dca3dc2e7afc47081a7c9',
+              groupID: constants.GROUP_ID,
               filterTime: 'all',
               filter: 'trendy',
             };

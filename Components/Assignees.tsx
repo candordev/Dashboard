@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Pressable, View } from "react-native";
 import colors from "../Styles/colors";
 import Text from "./Text";
 import ProfileRow from "./ProfileRow";
@@ -7,8 +7,14 @@ import DropDownPicker from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AddLeader from "./AddLeader";
 import OrFullWidth from "./OrFullWidth";
+import { UserProfile } from "../utils/interfaces";
+import Icon from "react-native-vector-icons/Feather";
 
-const Assignees = () => {
+interface AssigneesProps {
+  leaders: UserProfile[];
+}
+
+function Assignees(props: AssigneesProps): JSX.Element {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[]>([]);
   const [items, setItems] = useState([
@@ -17,6 +23,18 @@ const Assignees = () => {
     { label: "Rishi Bengani", value: "Rishi Bengani" },
     { label: "Person New", value: "A Person" },
   ]);
+
+  useEffect(() => {
+    const leaders = props.leaders.map((leader) => {
+      return {
+        label: leader.firstName + " " + leader.lastName,
+        value: "hello",
+        // value: leader.firstName + " " + leader.lastName,
+      };
+    });
+
+    setItems(leaders);
+  }, [props.leaders]);
 
   const inviteLeader = (name: string) => {
     setItems([
@@ -28,6 +46,10 @@ const Assignees = () => {
     ]);
 
     setValue([...value, name]);
+  }
+
+  function assignLeaders() {
+    console.log("Assigning leaders", value);
   }
 
   return (
@@ -113,6 +135,13 @@ const Assignees = () => {
       {value.map((item, index) => {
         return <ProfileRow name={item} key={index} />;
       })}
+      <Pressable
+        style={{padding: 10, alignSelf: "flex-end", marginTop: 1}}
+        onPress={() => {
+          assignLeaders();
+        }}>
+        <Icon name="send" size={20} color={colors.gray} />
+      </Pressable>
       <View>
         <OrFullWidth />
         <AddLeader inviteLeader={inviteLeader}/>

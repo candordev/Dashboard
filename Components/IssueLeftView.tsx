@@ -1,20 +1,74 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput, View } from "react-native";
 import colors from "../Styles/colors";
 import Text from "./Text";
 import ExpandableTextInput from "./ExpandableTextInput";
 import { Post } from "../utils/interfaces";
+import { Endpoints } from "../utils/Endpoints";
+import { customFetch } from "../utils/utils";
+import {Comment} from '../utils/interfaces';
 
 interface IssueLeftViewProps {
   issue: Post;
 }
 
 function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
-  const comments = [
-    "This is a long comment, lorem ipsum djsfl; jef;ewajfl;kaj fe;jfwa;ejfl ksd;jfoei;jfl;kdas fj;fjew ;afj;wla fj",
-    "This is a long comment, lorem ipsum djsfl; jef;ewajfl;kaj fe;jfwa;ejfl ksd;jfoei;jfl;kdas fj;fjew ;afj;wla fj",
-    "This is a long comment, lorem ipsum djsfl; jef;ewajfl;kaj fe;jfwa;ejfl ksd;jfoei;jfl;kdas fj;fjew ;afj;wla fj",
-  ];
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    fetchComments();
+  }, [])
+
+
+  async function fetchComments() {
+    try {
+      const endpoint =
+        Endpoints.getComments
+
+      const searchParams = {
+        postID: props.issue._id,
+        skip: "0",
+      }
+
+      let res: Response = await customFetch(endpoint, searchParams, {
+        method: 'GET',
+      });
+
+      let resJson = await res.json();
+      if (!res.ok) {
+        console.error(resJson.error);
+      } else {
+        const newComments: Comment[] = resJson;
+        setComments(newComments);
+      }
+    } catch (error) {
+      console.error("Error loading posts. Please try again later.", error);
+    }
+  }
+
+  async function postComment() {
+    try {
+      let res: Response = await customFetch(Endpoints.createComment, {}, {
+        method: 'POST',
+        body: {
+          content: content,
+          postID: props.issue._id,
+          parentID: undefined,
+        },
+      });
+
+      let resJson = await res.json();
+      if (!res.ok) {
+        console.error(resJson.error);
+      } else {
+        fetchComments();
+      }
+    } catch (error) {
+      console.error("Error loading posts. Please try again later.", error);
+    }
+  }
+
   return (
     <View
       style={{
@@ -44,7 +98,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           </Text>
         </View>
 
-        {comments.map((comment, index) => {
+        {comments.map((comment: Comment, index) => {
           return (
             <View
               style={{
@@ -55,14 +109,14 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
               key={index}
             >
               <Text style={{ fontSize: 14, fontWeight: "550" }}>
-                Akshat Pant
+                {comment.profile.firstName + " " + comment.profile.lastName}
               </Text>
-              <Text style={{ fontSize: 12, marginTop: 3 }}>{comment}</Text>
+              <Text style={{ fontSize: 12, marginTop: 3 }}>{comment.content}</Text>
             </View>
           );
         })}
       </View>
-      <ExpandableTextInput/>
+      <ExpandableTextInput onInputChange={setContent} onSubmit={postComment}/>
     </View>
   );
 };

@@ -20,9 +20,6 @@ const YourScreen = ({ navigation }: any) => {
                 Endpoints.getYourProposals;
 
             const searchParams = {
-                groupID: '647dca3dc2e7afc47081a7c9',
-                filterTime: 'all',
-                filter: 'trendy',
               };
 
             const res: Response = await customFetch(endpoint, searchParams, {
@@ -35,6 +32,7 @@ const YourScreen = ({ navigation }: any) => {
             }
             if (res.ok) {
                 const result: Post[] = resJson;
+                console.log("your posts are", result);
                 setIssues([...result]);
             }
         } catch (error) {
