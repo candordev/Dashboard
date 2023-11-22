@@ -8,7 +8,7 @@ import StatusPicker from "./StatusPicker";
 import Text from "./Text";
 
 const Header = ({ navigation, route }: any) => {
-  const activeTab = route.name;
+  const activeTab = "all";
 
   const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
 

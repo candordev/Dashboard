@@ -42,23 +42,24 @@ const YourScreen = ({ navigation }: any) => {
 
     return (
         //center scroll view
-        <ScrollView
-            style={{ flex: 1, backgroundColor: colors.background }}
-            contentContainerStyle={{
-                alignItems: "center",
-            }}
-        >
-            <View
-                style={{
-                    width: "70%",
-                    marginBottom: 30,
-                }}
-            >
-                {issues.map((issue, index) => (
-                    <Card key={index} issue={issue} />
-                ))}
-            </View>
-        </ScrollView>
+        <View style={{height: 100, width: 100, backgroundColor: colors.black}}/>
+        // <ScrollView
+        //     style={{ flex: 1, backgroundColor: colors.background }}
+        //     contentContainerStyle={{
+        //         alignItems: "center",
+        //     }}
+        // >
+        //     <View
+        //         style={{
+        //             width: "70%",
+        //             marginBottom: 30,
+        //         }}
+        //     >
+        //         {issues.map((issue, index) => (
+        //             <Card key={index} issue={issue} />
+        //         ))}
+        //     </View>
+        // </ScrollView>
     );
 };
 
