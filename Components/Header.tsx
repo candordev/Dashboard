@@ -43,6 +43,7 @@ const Header = ({ navigation, route }: any) => {
         backgroundColor: colors.background,
         paddingTop: 15,
         paddingBottom: 15,
+        zIndex: 100,
       }}
     >
       <View
@@ -81,7 +82,6 @@ const Header = ({ navigation, route }: any) => {
             setItems={setCategoryItems}
             multiple={true}
           />
-          <View style={{height: 20, width: 20, backgroundColor: colors.black}}/>
         </View>
         <View style={{ flex: 1 }}>
           <DropDown

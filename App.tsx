@@ -51,7 +51,8 @@ export default function App() {
     <NavigationContainer linking={linking}>
       <Drawer.Navigator
         useLegacyImplementation={false}
-        drawerContent={() => <LHN />}
+        //get the route name and pass it into LHN
+        drawerContent={(props) => <LHN {...props} />}
         screenOptions={{
           drawerType: "permanent",
           drawerStyle: { width: 200, borderRightWidth: 0 },

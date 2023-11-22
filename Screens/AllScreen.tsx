@@ -53,45 +53,26 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   return (
-    //center scroll view
-    // <ScrollView
-    //   style={{ flex: 1, backgroundColor: colors.background }}
-    //   contentContainerStyle={{
-    //     alignItems: "center",
-    //   }}
-    // >
-    //   <View
-    //     style={{
-    //       width: "70%",
-    //       marginBottom: 30,
-    //     }}
-    //   >
-    //     {issues.map((issue, index) => (
-    //       <Card key={index} issue={issue} />
-    //     ))}
-    //   </View>
-    // </ScrollView>
     <OuterView>
-        <Header />
-        {/* <ScrollView
-          style={{ flex: 1, backgroundColor: colors.background }}
-          contentContainerStyle={{
-            alignItems: "center",
+      <Header />
+      <ScrollView
+        style={{ flex: 1, backgroundColor: colors.background }}
+        contentContainerStyle={{
+          alignItems: "center",
+        }}
+      >
+        <View
+          style={{
+            width: "70%",
+            marginBottom: 30,
           }}
         >
-          <View
-            style={{
-              width: "70%",
-              marginBottom: 30,
-            }}
-          >
-            {issues.map((issue, index) => (
-              <Card key={index} issue={issue} />
-            ))}
-          </View>
-        </ScrollView> */}
-        {/* <View style={{height: 200, width: 400, backgroundColor: colors.black}}></View> */}
-      </OuterView>
+          {issues.map((issue, index) => (
+            <Card key={index} issue={issue} />
+          ))}
+        </View>
+      </ScrollView>
+    </OuterView>
   );
 };
 
