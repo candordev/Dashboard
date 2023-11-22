@@ -30,7 +30,7 @@ function SearchBar({
         <TextInput
           style={styles.input}
           placeholder={placeholder}
-          placeholderTextColor={colors.black}
+          placeholderTextColor={colors.gray}
           value={searchPhrase}
           onChangeText={setSearchPhrase}
         />
@@ -46,16 +46,16 @@ const styles = StyleSheet.create({
     height: 36,
     alignItems: "center",
     width: "100%",
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
   },
   searchBar: {
     flex: 1,
     paddingHorizontal: 10,
     flexDirection: "row",
     backgroundColor: colors.white,
-    borderWidth: 2,
-    borderColor: colors.lightergray,
-    borderRadius: 8,
+    // borderWidth: 2,
+    // borderColor: colors.lightergray,
+    borderRadius: 15,
     alignItems: "center",
     width: "100%",
   },
@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: "OpenSans",
     marginLeft: 10,
+    fontWeight: '500' as any,
     flex: 1,
     color: colors.black,
     paddingVertical: 0,

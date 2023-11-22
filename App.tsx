@@ -54,9 +54,9 @@ export default function App() {
         drawerContent={() => <LHN />}
         screenOptions={{
           drawerType: "permanent",
-          drawerStyle: { width: 150, borderRightWidth: 0 },
+          drawerStyle: { width: 200, borderRightWidth: 0 },
+          headerShown: false,
         }}
-        
       >
         <Drawer.Screen name="all" component={AllScreen} />
         <Drawer.Screen name="your" component={YourScreen} />

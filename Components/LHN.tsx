@@ -1,7 +1,8 @@
-
-import React from 'react';
-import { View, TouchableOpacity} from 'react-native';
-import Text from './Text';
+import React from "react";
+import { View, TouchableOpacity } from "react-native";
+import Text from "./Text";
+import { Link } from "@react-navigation/native";
+import colors from "../Styles/colors";
 
 const LHN = () => {
   const handleNavigation = (screenName: string) => {
@@ -11,24 +12,12 @@ const LHN = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => handleNavigation('Home')}
-      >
-        <Text style={styles.navItemText}>Home</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => handleNavigation('Profile')}
-      >
-        <Text style={styles.navItemText}>Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => handleNavigation('Settings')}
-      >
-        <Text style={styles.navItemText}>Settings</Text>
-      </TouchableOpacity>
+      <Link to="/all" style={styles.navItem}>
+        <Text style={styles.navItemText}>All Issues</Text>
+      </Link>
+      <Link to="/your" style={styles.navItem}>
+        <Text style={styles.navItemText}>Your Issue</Text>
+      </Link>
     </View>
   );
 };
@@ -36,21 +25,21 @@ const LHN = () => {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: colors.black,
     paddingVertical: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   navItem: {
     marginBottom: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 5,
   },
   navItemText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333333',
+    fontWeight: "bold",
+    color: "#333333",
   },
 };
 

@@ -41,66 +41,16 @@ const Header = ({ navigation, route }: any) => {
       style={{
         alignItems: "center",
         backgroundColor: colors.background,
-        paddingTop: 20,
+        paddingTop: 15,
         paddingBottom: 15,
       }}
     >
       <View
         style={{
-          flexDirection: "row",
-          width: "70%",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{ fontSize: 30, fontWeight: "500", fontFamily: "Montserrat" }}
-        >
-          {activeTab.charAt(0).toUpperCase() + activeTab.slice(1) + " Issues"}
-        </Text>
-        <View style={styles.container}>
-          <Link to="/all">
-            <View
-              style={[
-                styles.tabButton,
-                activeTab === "all" && styles.activeTabButton,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  activeTab === "all" && styles.activeTabText,
-                ]}
-              >
-                All
-              </Text>
-            </View>
-          </Link>
-          <Link to="/your">
-            <View
-              style={[
-                styles.tabButton,
-                activeTab === "your" && styles.activeTabButton,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  activeTab === "your" && styles.activeTabText,
-                ]}
-              >
-                Your
-              </Text>
-            </View>
-          </Link>
-        </View>
-      </View>
-      <View
-        style={{
           marginTop: 15,
           flexDirection: "row",
           alignItems: "center",
-          width: "70%",
+          width: "90%",
           columnGap: 10,
         }}
       >
@@ -118,7 +68,7 @@ const Header = ({ navigation, route }: any) => {
           marginTop: 15,
           flexDirection: "row",
           alignItems: "center",
-          width: "70%",
+          width: "90%",
           columnGap: 10,
         }}
       >
@@ -131,6 +81,7 @@ const Header = ({ navigation, route }: any) => {
             setItems={setCategoryItems}
             multiple={true}
           />
+          <View style={{height: 20, width: 20, backgroundColor: colors.black}}/>
         </View>
         <View style={{ flex: 1 }}>
           <DropDown

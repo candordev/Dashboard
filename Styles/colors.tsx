@@ -19,6 +19,7 @@ export default {
     purple3: 'rgb(150, 150, 255)', //#9696F0
     purple4: 'rgb(120, 120, 228)',
     purple: 'rgb(100, 100, 190)', //#6464BE
+    darkBlue: 'rgb(15, 18, 60)',
     // purple: '#5426C9',
     // purple: '#510AC9',
     // purple: '#5E17EB',
@@ -31,6 +32,7 @@ export default {
     teal: 'teal',
     scroll: 'black',
     theme: 'light',
-    background: '#FAFCFF',
+    // background: '#FAFCFF',
+    background: 'rgb(240, 243, 253)',
     beige: 'rgb(250, 248, 245)',
 }
