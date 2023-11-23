@@ -43,7 +43,9 @@ type PropType = {
 const SelectableButton = (props: PropType) => {
   return (
     <TouchableOpacity
-      onPress={() => props.setSelected(!props.selected)}
+      onPress={() => {
+        props.setSelected(!props.selected);
+      }}
       style={[
         styles.button,
         {

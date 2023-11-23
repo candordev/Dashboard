@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -6,12 +5,9 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import "react-native-gesture-handler";
+import LHN from "./Components/LHN";
 import AllScreen from "./Screens/AllScreen";
 import YourScreen from "./Screens/YourScreen";
-import { View } from "react-native";
-import colors from "./Styles/colors";
-import Header from "./Components/Header";
-import LHN from "./Components/LHN";
 
 const Drawer = createDrawerNavigator();
 
