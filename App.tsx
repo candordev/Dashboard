@@ -1,6 +1,5 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
@@ -10,8 +9,6 @@ import AllScreen from "./Screens/AllScreen";
 import YourScreen from "./Screens/YourScreen";
 
 const Drawer = createDrawerNavigator();
-
-const Stack = createStackNavigator();
 
 const linking = {
   prefixes: [
