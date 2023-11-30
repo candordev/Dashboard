@@ -63,8 +63,9 @@ const AllScreen = ({ navigation }: any) => {
       >
         <View
           style={{
-            width: "70%",
+            width: "90%",
             marginBottom: 30,
+            paddingTop: 10,
           }}
         >
           {issues.map((issue, index) => (

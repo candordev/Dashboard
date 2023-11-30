@@ -46,7 +46,7 @@ const Header = ({ navigation, route }: any) => {
         zIndex: 100,
       }}
     >
-      <Text style={{alignSelf: 'flex-start', marginLeft: '5%', fontWeight: '550', fontSize: 27, fontFmaily: 'Montserrat'}}>All Issues</Text>
+      <Text style={{alignSelf: 'flex-start', marginLeft: '5%', fontWeight: '600', fontSize: 27, fontFmaily: 'Montserrat'}}>All Issues</Text>
       <View
         style={{
           marginTop: 15,

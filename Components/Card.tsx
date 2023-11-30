@@ -53,18 +53,16 @@ function Card(props: CardProps): JSX.Element {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
-    borderRadius: 10,
-    borderColor: colors.lightestgray,
-    borderWidth: 2,
+    borderRadius: 15,
     padding: 20,
     marginVertical: 7,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // // shadowOpacity: 0.1,
+    // // shadowRadius: 3,
   },
   title: {
     fontSize: 18,
