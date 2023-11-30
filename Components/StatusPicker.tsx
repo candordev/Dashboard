@@ -43,11 +43,13 @@ type PropType = {
 const SelectableButton = (props: PropType) => {
   return (
     <TouchableOpacity
-      onPress={() => props.setSelected(!props.selected)}
+      onPress={() => {
+        props.setSelected(!props.selected);
+      }}
       style={[
         styles.button,
         {
-          backgroundColor: props.selected ? colors.black : colors.lightestgray,
+          backgroundColor: props.selected ? colors.black : colors.lightergray,
         },
       ]}
     >
@@ -65,7 +67,7 @@ const SelectableButton = (props: PropType) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.lightestgray,
+    backgroundColor: colors.lightergray,
     borderRadius: 15,
     flexDirection: "row",
     columnGap: 7,
