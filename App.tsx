@@ -8,6 +8,8 @@ import LHN from "./Components/LHN";
 import AllScreen from "./Screens/AllScreen";
 import YourScreen from "./Screens/YourScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import LaunchScreen from "./Screens/LaunchScreen";
+import Root from "./Screens/Root";
 import LoginScreen from "./Screens/LoginScreen";
 
 const Drawer = createDrawerNavigator();
@@ -20,8 +22,11 @@ const linking = {
   config: {
     screens: {
       /* configuration for matching screens with paths */
+      root: "root",
       all: "all",
       your: "your",
+      launch: "launch",
+      login: "login",
       NotFound: "404",
     },
   },
@@ -45,25 +50,24 @@ export default function App() {
     return null;
   }
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        useLegacyImplementation={false}
-        //get the route name and pass it into LHN
-        drawerContent={(props) => <LHN {...props} />}
-        screenOptions={{
-          drawerType: "permanent",
-          drawerStyle: { width: 200, borderRightWidth: 0 },
-          headerShown: false,
-        }}
-      >
-        <Drawer.Screen
+    <NavigationContainer linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="launch"
+          component={LaunchScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="login"
           component={LoginScreen}
-          options={{ drawerType: "back" }}
+          options={{ headerShown: false }}
         />
-        <Drawer.Screen name="all" component={AllScreen} />
-        <Drawer.Screen name="your" component={YourScreen} />
-      </Drawer.Navigator>
+        <Stack.Screen
+          name="root" 
+          component={Root}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

@@ -1,101 +1,76 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, Image } from "react-native";
 import colors from "../Styles/colors";
 import Text from "../Components/Text";
-import { Link } from "@react-navigation/native";
+import { Link, StackActions, useNavigation } from "@react-navigation/native";
+import Button from "../Components/Button";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigation : any = useNavigation();
+
   const handleLogin = () => {
-    // Perform login logic here
+    navigation.navigate('root');
   };
 
   return (
     <View style={styles.container}>
-      <View
+      <Text
         style={{
-          backgroundColor: colors.purple,
-          flex: 1,
-          height: "100%",
-          alignItems: "center",
-          paddingTop: 100,
+          fontSize: 75,
+          fontWeight: "bold",
+          marginBottom: 10,
+          color: colors.white,
+          fontFamily: "Montserrat",
         }}
       >
-        <Text
-          style={{
-            fontSize: 60,
-            fontWeight: "bold",
-            marginBottom: 10,
-            color: colors.white,
-            fontFamily: "Montserrat",
-          }}
-        >
-          Candor
-        </Text>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            marginBottom: 40,
-            color: colors.white,
-            fontFamily: "Montserrat",
-          }}
-        >
-          Simplify Change
-        </Text>
-
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
-          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 17 }}>Continue with Google</Text>
-        </LinkButton>
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
-          <Text style={{ color: colors.black, fontWeight: '600', fontSize: 17 }}>Continue with Apple</Text>
-        </LinkButton>
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.black }}>
-          <Text style={{ color: colors.white, fontWeight: '600', fontSize: 17 }}>Sign up with Email</Text>
-        </LinkButton>
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.black }}>
-          <Text style={{ color: colors.white, fontWeight: '600', fontSize: 17 }}>Login</Text>
-        </LinkButton>
-      </View>
-      <View
-        style={{ backgroundColor: colors.black, flex: 1, height: "100%" }}
-      ></View>
-    </View>
-  );
-};
-
-type LinkButtonProps = {
-  route: string;
-  style: any;
-  children: React.ReactNode;
-};
-
-const LinkButton = ({ route, style, children }: LinkButtonProps) => {
-  return (
-    <Link to={"/all"} style={{ width: "60%" }}>
-      <View
-        style={[
-          {
-            marginBottom: 10,
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            flexDirection: "row" as any,
-            alignItems: "center" as any,
-            justifyContent: 'center' as any,
-            columnGap: 10,
-            backgroundColor: colors.white,
-            width: "100%",
-            height: 40,
-            borderRadius: 10,
-          },
-          style,
-        ]}
+        Candor
+      </Text>
+      <Text
+        style={{
+          fontSize: 30,
+          fontWeight: "bold",
+          marginBottom: 40,
+          color: colors.white,
+          fontFamily: "Montserrat",
+        }}
       >
-        {children}
+        Simplify Change
+      </Text>
+      <View
+        style={{
+          backgroundColor: colors.purple4,
+          alignItems: "center",
+          width: "30%",
+          borderRadius: 20,
+          paddingVertical: 15,
+          paddingHorizontal: 20,
+        }}
+      >
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={colors.gray}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          placeholderTextColor={colors.gray}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Button
+          text="Login"
+          onPress={handleLogin}
+          style={{ marginTop: 15, marginBottom: 5 }}
+        />
       </View>
-    </Link>
+    </View>
   );
 };
 
@@ -104,15 +79,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
+    width: "100%",
+    backgroundColor: colors.purple,
+    paddingBottom: 100,
   },
   input: {
-    width: "60%",
+    width: "100%",
     height: 40,
     backgroundColor: colors.white,
     borderRadius: 15,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    marginVertical: 5,
+    paddingHorizontal: 13,
     outlineStyle: "none",
   },
 });
