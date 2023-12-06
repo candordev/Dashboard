@@ -1,4 +1,5 @@
 export interface UserProfile {
+  profileId: string;
   _id: string;
   user: string;
   username: string;
@@ -23,6 +24,7 @@ export interface UserProfile {
   numFinished: number;
   leaderPointsForGroup: number;
   email?: string[];
+  departmentNames: string[];
 }
 
 export interface MemberProfile extends UserProfile {
@@ -86,6 +88,21 @@ export interface Post {
   status_data?: string;
   bill_url?: string;
   bill_status?: string;
+  suggestedDepartments: Department[];
+}
+
+export interface Leader {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface Department {
+  _id: string;
+  name: string;
+  leaders: Leader[];
+  groupID: string;
 }
 
 export interface Update {

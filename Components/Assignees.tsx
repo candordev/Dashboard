@@ -29,14 +29,19 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   useEffect(() => {
     const leaders = props.leaders.map((leader) => {
+      const isSuggested = isLeaderSuggestedByAI(leader.user);
+      const departmentNamesString = leader.departmentNames.join(", ");
+      const aiSuggestsTag = isSuggested ? " [AI suggests]" : ""; 
+
       return {
-        label: leader.firstName + " " + leader.lastName,
+        label: `${leader.firstName}${departmentNamesString ? `(${departmentNamesString})` : ""}${aiSuggestsTag}`,
         value: leader.email ? leader.email[0] : "atjain02@gmail.com",
       };
     });
 
     setItems(leaders);
   }, [props.leaders]);
+  
 
   useEffect(() => {
     for (let email of value) {
@@ -79,6 +84,18 @@ function Assignees(props: AssigneesProps): JSX.Element {
       console.error("Network error, please try again later.", error);
     }
   }
+
+  const isLeaderSuggestedByAI = (leaderId: string) => {
+    // Ensure that there is at least one suggested department and it has leaders
+    if (props.issue.suggestedDepartments.length > 0 && props.issue.suggestedDepartments[0].leaders) {
+      console.log("First suggested department:", props.issue.suggestedDepartments[0]); // Log the first suggested department
+      console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
+  
+      return props.issue.suggestedDepartments[0].leaders.some(leader => leader._id === leaderId);
+    }
+    return false;
+  };
+  
 
   return (
     <View

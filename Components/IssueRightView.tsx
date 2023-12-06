@@ -54,6 +54,8 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         }
     };
 
+    const suggestedDepartmentName = props.issue.suggestedDepartments?.[0]?.name || "No Department Suggested";
+
     return (
         <View
             style={{
@@ -65,7 +67,15 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             <View style={{ rowGap: 10 }}>
                 <Assignees leaders={leaders} issue={props.issue}/>
                 <Category />
-            </View>
+                <View style={{ marginTop: 10}}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', fontFamily: 'Montserrat' }}>
+                    Candor Suggested To:
+                    </Text>
+                    <Text style={{ fontSize: 14, fontFamily: 'Montserrat' }}>
+                    {suggestedDepartmentName}
+                    </Text>
+                </View>
+            </View>          
             <View style={{ rowGap: 10 }}>
                 <MarkDone />
                 <CloseIssue />
