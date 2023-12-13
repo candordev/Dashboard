@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import colors from "../Styles/colors";
-import Text from "./Text";
-import ProfileRow from "./ProfileRow";
 import DropDownPicker from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import colors from "../Styles/colors";
 import AutoAssign from "./AutoAssign";
+import Text from "./Text";
 
 const Category = () => {
   const [open, setOpen] = useState(false);
@@ -23,6 +22,7 @@ const Category = () => {
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
+        zIndex: 1,
       }}
     >
       <Text
@@ -43,13 +43,12 @@ const Category = () => {
         setItems={setItems}
         dropDownDirection="BOTTOM"
         style={{
-            borderColor: colors.lightgray,
-            borderWidth: 1,
-            backgroundColor: colors.white,
-            marginTop: 10,
-            minHeight: 30,
+          borderColor: colors.lightgray,
+          borderWidth: 1,
+          backgroundColor: colors.white,
+          marginTop: 10,
+          minHeight: 30,
         }}
-        
         textStyle={{
           fontSize: 15,
           color: colors.black,
@@ -72,10 +71,10 @@ const Category = () => {
           <FeatherIcon name={"chevron-up"} size={20} color={colors.gray} />
         )}
         TickIconComponent={() => (
-            <FeatherIcon name={"check"} size={17} color={colors.gray} />
+          <FeatherIcon name={"check"} size={17} color={colors.gray} />
         )}
       />
-      <AutoAssign department="Transportation"/>
+      <AutoAssign department="Transportation" />
     </View>
   );
 };

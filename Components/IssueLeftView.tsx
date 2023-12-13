@@ -92,10 +92,10 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
             padding: 10,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "600" }}>
+          <Text style={{ fontSize: 18, fontWeight: "550" }}>
             {props.issue.title}
           </Text>
-          <Text style={{ fontSize: 14, marginTop: 5 }}>
+          <Text style={{ fontSize: 13.5, marginTop: 5 }}>
             {props.issue.content}
           </Text>
         </View>
@@ -123,6 +123,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         <ExpandableTextInput
           onInputChange={setContent}
           onSubmit={postComment}
+          placeholder="Add a comment..."
         />
       </View>
     </View>

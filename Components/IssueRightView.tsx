@@ -13,65 +13,64 @@ import { Endpoints } from "../utils/Endpoints";
 import { constants } from "../utils/constants";
 import { customFetch } from "../utils/utils";
 import AutoAssign from "./AutoAssign";
+import PrivateChat from "./PrivateChat";
 
 interface IssueRightViewProps {
-    issue: Post;
+  issue: Post;
 }
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
-    const [leaders, setLeaders] = useState<UserProfile[]>([]);
+  const [leaders, setLeaders] = useState<UserProfile[]>([]);
 
-    useEffect(() => {
-      fetchLeaders();
-    }, []);
+  useEffect(() => {
+    fetchLeaders();
+  }, []);
 
-    const fetchLeaders = async () => {
-        try {
-            let endpoint: string;
-            endpoint = Endpoints.getGroupLeaders;
+  const fetchLeaders = async () => {
+    try {
+      let endpoint: string;
+      endpoint = Endpoints.getGroupLeaders;
 
-            const res: Response = await customFetch(
-                endpoint,
-                {
-                    page: "1",
-                    groupID: constants.GROUP_ID,
-                },
-                {
-                    method: "GET",
-                }
-            );
-
-            const resJson = await res.json();
-            if (!res.ok) {
-              console.error(resJson.error);
-            }
-            if (res.ok) {
-                const result: UserProfile[] = resJson;
-                console.log("leaders are", result);
-                setLeaders(result);
-            }
-        } catch (error) {
-            console.error("Error loading posts. Please try again later.", error);
+      const res: Response = await customFetch(
+        endpoint,
+        {
+          page: "1",
+          groupID: constants.GROUP_ID,
+        },
+        {
+          method: "GET",
         }
-    };
+      );
 
-    return (
-        <View
-            style={{
-                height: "100%",
-                flex: 1,
-                justifyContent: "space-between",
-            }}
-        >
-            <View style={{ rowGap: 10 }}>
-                <Assignees leaders={leaders} issue={props.issue}/>
-                <Category />
-            </View>
-            <View style={{ rowGap: 10 }}>
-                <MarkDone />
-            </View>
-        </View>
-    );
+      const resJson = await res.json();
+      if (!res.ok) {
+        console.error(resJson.error);
+      }
+      if (res.ok) {
+        const result: UserProfile[] = resJson;
+        console.log("leaders are", result);
+        setLeaders(result);
+      }
+    } catch (error) {
+      console.error("Error loading posts. Please try again later.", error);
+    }
+  };
+
+  return (
+    <View
+      style={{
+        height: "100%",
+        flex: 1,
+        justifyContent: "space-between",
+        rowGap: 10,
+      }}
+    >
+      <Assignees leaders={leaders} issue={props.issue} />
+      <Category />
+      <PrivateChat />
+      <MarkDone />
+    </View>
+  );
 }
 
 export default IssueRightView;

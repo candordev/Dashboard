@@ -18,12 +18,14 @@ function AutoAssign(props: AutoAssignProps): JSX.Element {
       <Button
         text="Yes"
         onPress={() => {}}
-        style={{ backgroundColor: colors.purple, width: 50, marginRight: 5, height: 35,}}
+        style={{ backgroundColor: colors.purple, width: 50, marginRight: 5, height: 33,}}
+        textStyle={{ fontSize: 16 }}
       />
       <Button
         text="No"
         onPress={() => {}}
-        style={{ backgroundColor: colors.red, width: 50, height: 35}}
+        style={{ backgroundColor: colors.red, width: 50, height: 33}}
+        textStyle={{ fontSize: 16 }}
       />
     </View>
   );

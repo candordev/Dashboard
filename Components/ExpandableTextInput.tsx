@@ -5,6 +5,7 @@ import colors from "../Styles/colors";
 interface ExpandableTextInputProps {
   onInputChange: (text: string) => void;
   onSubmit: () => void;
+  placeholder: string;
 }
 
 function ExpandableTextInput(props: ExpandableTextInputProps): JSX.Element {
@@ -13,11 +14,11 @@ function ExpandableTextInput(props: ExpandableTextInputProps): JSX.Element {
     <TextInput
       style={[
         styles.input,
-        { height: Math.max(40, height), borderBottomWidth: 1 },
+        { height: Math.max(40, height) },
       ]}
-      placeholder="Add a comment..."
+      placeholder={props.placeholder}
       placeholderTextColor={colors.gray}
-      // multiline={true}
+      multiline={true}
       onContentSizeChange={(event) => {
         setHeight(event.nativeEvent.contentSize.height);
       }}
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    margin: 10,
     backgroundColor: colors.white,
     outlineStyle: "none",
   },
