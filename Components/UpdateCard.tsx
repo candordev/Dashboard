@@ -23,7 +23,7 @@ function UpdateCard(props: UpdateCardProps): JSX.Element {
         >
             <Text
                 style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: "550",
                     fontFamily: "Montserrat",
                 }}

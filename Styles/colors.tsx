@@ -25,7 +25,7 @@ export default {
     // purple: '#5E17EB',
     darkGreen: 'seagreen',
     red: '#bb3535', //
-    green: 'green',
+    green: 'rgb(60, 190, 90)',
     yellow: "#FFFFE0",
     gold: 'goldenrod',
     darkGold: 'darkgoldenrod',

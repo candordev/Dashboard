@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -11,9 +11,11 @@ import ProgressBar from "./ProgressBar";
 import Text from "./Text";
 import colors from "../Styles/colors";
 import { Post } from "../utils/interfaces";
+import { Link, useNavigation } from "@react-navigation/native";
 
 interface CardProps {
   issue: Post;
+  remainOpen: boolean;
 }
 
 // const Card: React.FC<CardProps> = ({ issue }: any) => {
@@ -22,6 +24,7 @@ function Card(props: CardProps): JSX.Element {
 
   return (
     <Popover
+      isVisible={props.remainOpen ? true : undefined}
       from={
         <TouchableOpacity style={styles.card}>
           <View
@@ -45,10 +48,10 @@ function Card(props: CardProps): JSX.Element {
         height: height * 0.9,
       }}
     >
-      <IssueView issue={props.issue}/>
+      <IssueView issue={props.issue} />
     </Popover>
   );
-};
+}
 
 const styles = StyleSheet.create({
   card: {

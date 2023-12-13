@@ -87,8 +87,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
-        minHeight: open ? 255 : undefined,
         rowGap: 10,
+        zIndex: 2,
       }}
     >
       <Text
@@ -110,7 +110,9 @@ function Assignees(props: AssigneesProps): JSX.Element {
           backgroundColor: colors.white,
           borderColor: colors.lightgray,
           borderWidth: 1,
-          borderRadius: 10,
+          borderRadius: 7,
+          paddingVertical: 5,
+          paddingHorizontal: 5,
         }}
         searchContainerStyle={{
           borderBottomWidth: 1,

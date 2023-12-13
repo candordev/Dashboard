@@ -12,6 +12,7 @@ import { Post, UserProfile } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { constants } from "../utils/constants";
 import { customFetch } from "../utils/utils";
+import AutoAssign from "./AutoAssign";
 
 interface IssueRightViewProps {
     issue: Post;
@@ -68,7 +69,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             </View>
             <View style={{ rowGap: 10 }}>
                 <MarkDone />
-                <CloseIssue />
             </View>
         </View>
     );

@@ -6,7 +6,7 @@ import ExpandableTextInput from "./ExpandableTextInput";
 import { Post } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
-import {Comment} from '../utils/interfaces';
+import { Comment } from "../utils/interfaces";
 
 interface IssueLeftViewProps {
   issue: Post;
@@ -18,21 +18,19 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
 
   useEffect(() => {
     fetchComments();
-  }, [])
-
+  }, []);
 
   async function fetchComments() {
     try {
-      const endpoint =
-        Endpoints.getComments
+      const endpoint = Endpoints.getComments;
 
       const searchParams = {
         postID: props.issue._id,
         skip: "0",
-      }
+      };
 
       let res: Response = await customFetch(endpoint, searchParams, {
-        method: 'GET',
+        method: "GET",
       });
 
       let resJson = await res.json();
@@ -49,14 +47,18 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
 
   async function postComment() {
     try {
-      let res: Response = await customFetch(Endpoints.createComment, {}, {
-        method: 'POST',
-        body: {
-          content: content,
-          postID: props.issue._id,
-          parentID: undefined,
-        },
-      });
+      let res: Response = await customFetch(
+        Endpoints.createComment,
+        {},
+        {
+          method: "POST",
+          body: {
+            content: content,
+            postID: props.issue._id,
+            parentID: undefined,
+          },
+        }
+      );
 
       let resJson = await res.json();
       if (!res.ok) {
@@ -72,32 +74,33 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   return (
     <View
       style={{
-        borderColor: colors.lightestgray,
-        backgroundColor: colors.background,
-        borderWidth: 2,
-        borderRadius: 10,
         height: "100%",
         flex: 1,
         justifyContent: "space-between",
       }}
     >
-      <View>
+      <View
+        style={{
+          borderColor: colors.lightestgray,
+          backgroundColor: colors.white,
+          borderWidth: 2,
+          borderRadius: 10,
+        }}
+      >
         <View
           style={{
-            backgroundColor: colors.white,
             padding: 10,
-            borderTopRightRadius: 10,
-            borderTopLeftRadius: 10,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 18, fontWeight: "600" }}>
             {props.issue.title}
           </Text>
           <Text style={{ fontSize: 14, marginTop: 5 }}>
             {props.issue.content}
           </Text>
         </View>
-
+      </View>
+      <View>
         {comments.map((comment: Comment, index) => {
           return (
             <View
@@ -111,14 +114,19 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
               <Text style={{ fontSize: 14, fontWeight: "550" }}>
                 {comment.profile.firstName + " " + comment.profile.lastName}
               </Text>
-              <Text style={{ fontSize: 12, marginTop: 3 }}>{comment.content}</Text>
+              <Text style={{ fontSize: 12, marginTop: 3 }}>
+                {comment.content}
+              </Text>
             </View>
           );
         })}
+        <ExpandableTextInput
+          onInputChange={setContent}
+          onSubmit={postComment}
+        />
       </View>
-      <ExpandableTextInput onInputChange={setContent} onSubmit={postComment}/>
     </View>
   );
-};
+}
 
 export default IssueLeftView;

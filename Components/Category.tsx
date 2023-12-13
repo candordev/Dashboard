@@ -5,6 +5,7 @@ import Text from "./Text";
 import ProfileRow from "./ProfileRow";
 import DropDownPicker from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import AutoAssign from "./AutoAssign";
 
 const Category = () => {
   const [open, setOpen] = useState(false);
@@ -22,7 +23,6 @@ const Category = () => {
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
-        minHeight: open ? 210 : undefined,
       }}
     >
       <Text
@@ -75,6 +75,7 @@ const Category = () => {
             <FeatherIcon name={"check"} size={17} color={colors.gray} />
         )}
       />
+      <AutoAssign department="Transportation"/>
     </View>
   );
 };

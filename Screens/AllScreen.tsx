@@ -19,6 +19,7 @@ import OuterView from "../Components/OuterView";
 
 const AllScreen = ({ navigation }: any) => {
   const [issues, setIssues] = useState<Post[]>([]);
+  const dev = true;
 
   useEffect(() => {
     fetchPosts();
@@ -69,7 +70,7 @@ const AllScreen = ({ navigation }: any) => {
           }}
         >
           {issues.map((issue, index) => (
-            <Card key={index} issue={issue} />
+            <Card key={index} issue={issue} remainOpen={dev && index == 0}/>
           ))}
         </View>
       </ScrollView>

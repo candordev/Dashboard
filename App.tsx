@@ -52,7 +52,7 @@ export default function App() {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="launch"
           component={LaunchScreen}
           options={{ headerShown: false }}
@@ -61,7 +61,7 @@ export default function App() {
           name="login"
           component={LoginScreen}
           options={{ headerShown: false }}
-        />
+        /> */}
         <Stack.Screen
           name="root" 
           component={Root}
