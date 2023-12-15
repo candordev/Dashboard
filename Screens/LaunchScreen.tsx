@@ -141,16 +141,16 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           </Text>
         </LinkButton>
         <TouchableOpacity        
-            style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10}}
+            style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: 538, alignItems: 'center', justifyContent: 'center'}}
             onPress={handleSignup} // Add this line
           >
-            <Text style={{ color: colors.white, fontWeight: "650", fontSize: 17 }}>
+            <Text style={{ color: colors.white, fontWeight: "650", fontSize: 17}}>
               Sign up with Email
             </Text>
         </TouchableOpacity>
         <TouchableOpacity
             onPress={() => navigation.navigate('login')}
-            style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10}}
+            style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: 538, alignItems: 'center', justifyContent: 'center', marginTop: 4}}
           >
             <Text
               style={{ color: colors.white, fontWeight: "650", fontSize: 17 }}

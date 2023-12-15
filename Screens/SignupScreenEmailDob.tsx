@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, Pressable, Button } from 'react-native';
-import Text from '../Components/Native/Text';
+import Text from '../Components/Text';
 import { fetchSignInMethodsForEmail, getAuth } from 'firebase/auth';
+
 import { Endpoints } from '../utils/Endpoints';
 import colors from '../Styles/colors';
 import styles from '../Styles/styles';
@@ -38,12 +39,12 @@ function SignupScreenEmailDob({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState([
-    colors.gray,
-    colors.gray,
-    colors.gray,
-    colors.gray,
-    colors.gray,
-    colors.gray,
+    colors.white,
+    colors.white,
+    colors.white,
+    colors.white,
+    colors.white,
+    colors.white,
   ]);
   const {signupUser, error, signUpWithEmail, setError} = useSignup();
 
@@ -51,37 +52,37 @@ function SignupScreenEmailDob({
     let arr = [...passwordError];
 
     if (inputPassword.length >= 8) {
-      arr[0] = colors.purple;
+      arr[0] = colors.white;
     } else {
       arr[0] = colors.red;
     }
 
     if (/[A-Z]/.test(inputPassword)) {
-      arr[1] = colors.purple;
+      arr[1] = colors.white;
     } else {
       arr[1] = colors.red;
     }
 
     if (/[a-z]/.test(inputPassword)) {
-      arr[2] = colors.purple;
+      arr[2] = colors.white;
     } else {
       arr[2] = colors.red;
     }
 
     if (/\d/.test(inputPassword)) {
-      arr[3] = colors.purple;
+      arr[3] = colors.white;
     } else {
       arr[3] = colors.red;
     }
 
     if (/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(inputPassword)) {
-      arr[4] = colors.purple;
+      arr[4] = colors.white;
     } else {
       arr[4] = colors.red;
     }
 
     if (inputPassword == confirmPassword) {
-      arr[5] = colors.purple;
+      arr[5] = colors.white;
     } else {
       arr[5] = colors.red;
     }
@@ -277,8 +278,60 @@ function SignupScreenEmailDob({
   };
 
   return (
-    <View style={{ backgroundColor: colors.white, flex: 1 }}>
-      <View style={{ alignItems: 'center', marginHorizontal: 30 }}>
+    <View style={styles.containerAkshat}>
+    {/* Candor Simplify Change Text */}
+    <View style={{ alignItems: 'center', marginTop: 100 , marginBottom: 10}}>
+      <Text
+        style={{
+          fontSize: 75,
+          fontWeight: "bold",
+          color: colors.white,
+          fontFamily: "Montserrat",
+        }}
+      >
+        Candor
+      </Text>
+      <Text
+        style={{
+          fontSize: 30,
+          fontWeight: "bold",
+          color: colors.white,
+          fontFamily: "Montserrat",
+        }}
+      >
+        Simplify Change
+      </Text>
+    </View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ width: '80%' }}> {/* Adjust width as necessary */}
+
+                   {/* First Name Input */}
+       <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+          <View style={{ ...styles.inputContainer, flex: 1, marginRight: 10 }}>
+          <TextInput
+        placeholderTextColor={colors.lightgray}
+        style={styles.input}
+        placeholder="First Name"
+        value={firstName}
+        onChangeText={(text) => {
+            setFirstName(text);
+            setFirstNameError('')
+        }}
+        />
+          </View>
+          <View style={{ ...styles.inputContainer, flex: 1 }}>
+          <TextInput
+        placeholderTextColor={colors.lightgray}
+        style={styles.input}
+        placeholder="Last Name"
+        value={lastName}
+        onChangeText={(text) => {
+            setLastName(text);
+            setLastNameError('')
+        }}
+        />
+            </View>
+        </View>
         {/* Email Input */}
         <View style={styles.inputContainer}>
           <TextInput
@@ -319,45 +372,15 @@ function SignupScreenEmailDob({
           </Text>
         )}
 
-       {/* First Name Input*/}
-        <View style={styles.inputContainer}>
-        <TextInput
-        placeholderTextColor={colors.lightgray}
-        style={styles.input}
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={(text) => {
-            setFirstName(text);
-            setFirstNameError('')
-        }}
-        />
-        </View>
-        {firstNameError !== '' && (
-        <Text style={{ color: colors.red, fontSize: 15, textAlign: 'center' }}>
-        {firstNameError}
-        </Text>
-        )}
 
-        {/* Last Name Input */}
-        <View style={styles.inputContainer}>
-        <TextInput
-        placeholderTextColor={colors.lightgray}
-        style={styles.input}
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={(text) => {
-            setLastName(text);
-            setLastNameError('')
-        }}
-        />
-        </View>
+
         {lastNameError !== '' && (
         <Text style={{ color: colors.red, fontSize: 15, textAlign: 'center' }}>
         {lastNameError}
         </Text>
         )}
 <View style={{alignItems: 'center', marginHorizontal: 30}}>
-        <View style={styles.inputContainer}>
+      <View style={{ ...styles.inputContainer, width: '125%' }}>
           <TextInput
             placeholderTextColor={colors.lightgray}
             style={styles.input}
@@ -376,7 +399,7 @@ function SignupScreenEmailDob({
 
           </Pressable>
         </View>
-        <View style={styles.inputContainer}>
+        <View style={{ ...styles.inputContainer, width: '125%' }}>
           <TextInput
             placeholderTextColor={colors.lightgray}
             style={styles.input}
@@ -404,13 +427,8 @@ function SignupScreenEmailDob({
             {error}
           </Text>
         )}
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 20,
-            alignItems: 'center',
-            alignSelf: 'flex-start',
-          }}>
+       <View style={{marginBottom: 10}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <input
             type="checkbox"
             checked={checkBox}
@@ -418,27 +436,28 @@ function SignupScreenEmailDob({
             style={{ /* your styles here */ }}
             />
           <Pressable onPress={openTermsAndConditions}>
-            <Text style={{marginLeft: 10, color: colors.gray, fontSize: 15}}>
+            <Text style={{ marginLeft: 10, color: colors.white, fontSize: 15, textAlign: 'left' }}>
               Please agree to our terms{' '}
               <Text
-                style={{color: colors.purple, textDecorationLine: 'underline'}}>
+                style={{color: colors.white, textDecorationLine: 'underline'}}>
                 here
               </Text>
             </Text>
           </Pressable>
+          </View>
         </View>
-        <View style={{width: '100%', alignItems: 'flex-start', marginTop: 20}}>
+        <View style={{}}>
           <Text
-            style={{
-              color: passwordError.every(item => item === colors.purple)
-                ? colors.purple
-                : colors.gray,
-              fontSize: 15,
-              textAlign: 'center',
-            }}>
+             style={{
+                color: passwordError.every(item => item === colors.white) ? colors.gray : colors.white,
+                fontSize: 15,
+                //textAlign: 'left',
+                marginLeft: -20
+              }}>
+
             Passwords must contain:
           </Text>
-          <View style={{marginLeft: 20}}>
+          <View >
             <Text style={{color: passwordError[0], fontSize: 15}}>
               8 characters
             </Text>
@@ -464,24 +483,20 @@ function SignupScreenEmailDob({
         {/* Next Button */}
         <TouchableOpacity
           onPress={validateFields}
-          style={{
-            marginTop: 16,
-            height: 42,
-            borderRadius: 8,
-            backgroundColor: '#007bff',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: 350, alignItems: 'center', justifyContent: 'center', marginTop: 13}}
           disabled={loading} // Disable button while loading
         >
-          <Text style={{ fontSize: 17, fontWeight: '600', color: '#ffffff' }}>
-            Next
+          <Text style={{ fontSize: 17, fontWeight: '600', color: colors.white }}>
+            Done
           </Text>
         </TouchableOpacity>
-      </View>
+        </View>
+    </View>
     </View>
   );
 }
+
+
 
 export default SignupScreenEmailDob;
 
