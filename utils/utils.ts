@@ -69,5 +69,17 @@ export const customFetch = async (
   }
 };
 
+export const openTermsAndConditions = () => {
+  const url = 'https://www.candornow.com/request-a-demo';
+  Linking.canOpenURL(url)
+    .then(supported => {
+      if (supported) {
+        return Linking.openURL(url);
+      }
+    })
+    .catch();
+};
+
+
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));

@@ -1,13 +1,16 @@
 import { Link } from "@react-navigation/native";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import colors from "../Styles/colors";
 import DropDown from "./DropDown";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
+import {useSignout} from '../Hooks/useSignout';
+import { useUserContext } from "../Hooks/useUserContext";
 
 const Header = ({ navigation, route }: any) => {
+  const {state, dispatch} = useUserContext();
   const activeTab = "all";
 
   const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
@@ -35,6 +38,10 @@ const Header = ({ navigation, route }: any) => {
     { label: "Rishi Bengani", value: "Rishi Bengani" },
     { label: "Srikar Parsi", value: "Srikar Parsi" },
   ]);
+  const handleSignOut = () => {
+    // Call the signout function when the button is pressed
+    useSignout({ dispatch });
+  };
 
   return (
     <View
@@ -46,7 +53,12 @@ const Header = ({ navigation, route }: any) => {
         zIndex: 100,
       }}
     >
-      <Text style={{alignSelf: 'flex-start', marginLeft: '5%', fontWeight: '600', fontSize: 27, fontFmaily: 'Montserrat'}}>All Issues</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '90%' }}>
+        <Text style={{ alignSelf: 'flex-start', fontWeight: '600', fontSize: 27, fontFamily: 'Montserrat' }}>All Issues</Text>
+        <TouchableOpacity onPress={handleSignOut}>
+          <Text style={{ color: colors.black , fontWeight: '600', fontSize: 16 }}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
       <View
         style={{
           marginTop: 15,

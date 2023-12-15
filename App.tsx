@@ -11,6 +11,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LaunchScreen from "./Screens/LaunchScreen";
 import Root from "./Screens/Root";
 import LoginScreen from "./Screens/LoginScreen";
+import NavigationWrapper from "./Structure/NavigationWrapper";
+import {UserProvider} from "./Structure/UserContext";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -49,25 +51,31 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
+  // return (
+  //   <NavigationContainer linking={linking}>
+  //     <Stack.Navigator>
+  //       <Stack.Screen
+  //         name="launch"
+  //         component={LaunchScreen}
+  //         options={{ headerShown: false }}
+  //       />
+  //       <Stack.Screen
+  //         name="login"
+  //         component={LoginScreen}
+  //         options={{ headerShown: false }}
+  //       />
+  //       <Stack.Screen
+  //         name="root" 
+  //         component={Root}
+  //         options={{ headerShown: false }}
+  //       />
+  //     </Stack.Navigator>
+  //   </NavigationContainer>
+  // );
   return (
-    <NavigationContainer linking={linking}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="launch"
-          component={LaunchScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="root" 
-          component={Root}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserProvider>
+        <NavigationWrapper />        
+    </UserProvider>
   );
+
 }
