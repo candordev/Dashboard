@@ -96,7 +96,7 @@ function SignupScreenEmailDob({
     let arr = [...passwordError];
 
     if (inputPassword == password) {
-      arr[5] = colors.purple;
+      arr[5] = colors.white;
     } else {
       arr[5] = colors.red;
     }
@@ -109,7 +109,9 @@ function SignupScreenEmailDob({
   const handleSignup = async () => { 
     setLoading(true);
 
-    if (passwordError.some(color => color !== colors.purple)) {
+    console.log("DEBUG")
+
+    if (passwordError.some(color => color !== colors.white)) {
       setError('Please fulfill the password requirements below');
       setLoading(false);
       return;
@@ -118,6 +120,8 @@ function SignupScreenEmailDob({
       setLoading(false);
       return;
     }
+
+    console.log("we got here no error so should signup")
 
     const token: string | undefined = await signUpWithEmail(email, password);
 
@@ -144,7 +148,8 @@ function SignupScreenEmailDob({
   const { userID } = route.params ? route.params : { userID: null };
 
   const verifyPassword = async () => {
-    if (passwordError.some(color => color !== colors.purple)) {
+    console.log("The colors", passwordError)
+    if (passwordError.some(color => color !== colors.white)) {
         setError('Please fulfill the password requirements below');
         setLoading(false);
         return false ;
@@ -167,15 +172,16 @@ function SignupScreenEmailDob({
       setError('')
     //   setFormError('');
 
-    
-  
+
+
       const emailValid = await doesEmailExistFirebase();
       const usernameValid = await validateUsername();
       const nameValid = validateName();
       const passwordValid = await verifyPassword();
+      console.log('username error', passwordValid)
 
 
-      console.log("We here boi", emailValid, usernameValid, nameValid)
+      console.log("We here boi", emailValid, usernameValid, nameValid, passwordValid)
       if (emailValid && usernameValid && nameValid && passwordValid) {
         console.log("We here boi Ayy")
         handleSignup();
@@ -303,35 +309,67 @@ function SignupScreenEmailDob({
       </Text>
     </View>
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ width: '80%' }}> {/* Adjust width as necessary */}
+      <View style={{ width: '80%' }}> 
 
                    {/* First Name Input */}
-       <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-          <View style={{ ...styles.inputContainer, flex: 1, marginRight: 10 }}>
-          <TextInput
-        placeholderTextColor={colors.lightgray}
-        style={styles.input}
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={(text) => {
-            setFirstName(text);
-            setFirstNameError('')
-        }}
-        />
-          </View>
-          <View style={{ ...styles.inputContainer, flex: 1 }}>
-          <TextInput
-        placeholderTextColor={colors.lightgray}
-        style={styles.input}
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={(text) => {
-            setLastName(text);
-            setLastNameError('')
-        }}
-        />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+        
+          <View style={{ flex: 1, marginRight: 10,  marginBottom: 5 }}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholderTextColor={colors.lightgray}
+                style={styles.input}
+                placeholder="First Name"
+                value={firstName}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                  setFirstNameError('');
+                }}
+              />
             </View>
+            <Text style={{
+              position: 'absolute', // Position absolute
+              bottom: -20, // Adjust this value as needed
+              left: 0,
+              right: 0,
+              color: firstNameError ? colors.red : 'transparent',
+              fontSize: 11,
+              textAlign: 'center',
+              height: 35, // Increase height as needed
+            }}>
+            {firstNameError || null}
+          </Text>
+          </View>
+
+          {/* Container for Last Name Input and Error */}
+          <View style={{ flex: 1,  marginBottom: 5 }}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholderTextColor={colors.lightgray}
+                style={styles.input}
+                placeholder="Last Name"
+                value={lastName}
+                onChangeText={(text) => {
+                  setLastName(text);
+                  setLastNameError('');
+                }}
+              />
+            </View>
+            <Text style={{
+              position: 'absolute', // Position absolute
+              bottom: -20, // Adjust this value as needed
+              left: 0,
+              right: 0,
+              color: lastNameError ? colors.red : 'transparent',
+              fontSize: 11,
+              textAlign: 'center',
+              height: 35, // Increase height as needed
+            }}>
+            {lastNameError || ' '}
+          </Text>
+          </View>
         </View>
+
         {/* Email Input */}
         <View style={styles.inputContainer}>
           <TextInput
@@ -347,12 +385,18 @@ function SignupScreenEmailDob({
             autoCapitalize="none"
           />
         </View>
-        {emailError !== '' && (
-          <Text style={{ color: colors.red, fontSize: 15, textAlign: 'center', marginTop: 5 }}>
-            {emailError}
-          </Text>
-        )}
-
+        <Text style={{
+              position: 'absolute', // Position absolute
+              bottom: -20, // Adjust this value as needed
+              left: 0,
+              right: 0,
+              color: emailError ? colors.red : 'transparent',
+              fontSize: 11,
+              textAlign: 'center',
+              height: 440, // Increase height as needed
+            }}>
+            {emailError || ' '}
+        </Text>
         {/* Username Input */}
         <View style={styles.inputContainer}>
           <TextInput
@@ -366,19 +410,19 @@ function SignupScreenEmailDob({
             }}
           />
         </View>
-        {usernameError !== '' && (
-          <Text style={{ color: colors.red, fontSize: 15, textAlign: 'center', marginTop: 5 }}>
-            {usernameError}
-          </Text>
-        )}
-
-
-
-        {lastNameError !== '' && (
-        <Text style={{ color: colors.red, fontSize: 15, textAlign: 'center' }}>
-        {lastNameError}
+        <Text style={{
+              position: 'absolute', // Position absolute
+              bottom: -20, // Adjust this value as needed
+              left: 0,
+              right: 0,
+              color: usernameError ? colors.red : 'transparent',
+              fontSize: 11,
+              textAlign: 'center',
+              height: 382, // Increase height as needed
+            }}>
+          {usernameError || ' '}
         </Text>
-        )}
+
 <View style={{alignItems: 'center', marginHorizontal: 30}}>
       <View style={{ ...styles.inputContainer, width: '125%' }}>
           <TextInput
@@ -416,17 +460,19 @@ function SignupScreenEmailDob({
                 )}  
           </Pressable>
         </View>
-        {error != '' && (
-          <Text
-            style={{
-              color: colors.red,
-              fontSize: 15,
-              marginTop: 20,
-              alignSelf: 'flex-start',
+        <Text style={{
+              position: 'absolute', // Position absolute
+              bottom: -20, // Adjust this value as needed
+              left: 0,
+              right: 0,
+              color: error ? colors.red : 'transparent',
+              fontSize: 11,
+              textAlign: 'center',
+              height: 205, // Increase height as needed
             }}>
-            {error}
-          </Text>
-        )}
+            {error || ' '}
+        </Text>
+
        <View style={{marginBottom: 10}}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <input
@@ -449,7 +495,7 @@ function SignupScreenEmailDob({
         <View style={{}}>
           <Text
              style={{
-                color: passwordError.every(item => item === colors.white) ? colors.gray : colors.white,
+                color: colors.white,
                 fontSize: 15,
                 //textAlign: 'left',
                 marginLeft: -20
