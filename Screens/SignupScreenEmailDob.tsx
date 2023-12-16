@@ -529,7 +529,7 @@ function SignupScreenEmailDob({
         {/* Next Button */}
         <TouchableOpacity
           onPress={validateFields}
-          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: 350, alignItems: 'center', justifyContent: 'center', marginTop: 13}}
+          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: 315, alignItems: 'center', justifyContent: 'center', marginTop: 13}}
           disabled={loading} // Disable button while loading
         >
           <Text style={{ fontSize: 17, fontWeight: '600', color: colors.white }}>

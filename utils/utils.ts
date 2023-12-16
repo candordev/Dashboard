@@ -3,40 +3,39 @@ import {NotificationData, NotificationType} from '../utils/interfaces';
 import {Endpoints} from './Endpoints';
 import {constants} from './constants';
 import {Linking, Platform} from 'react-native';
+import { getAuth } from "firebase/auth";
 
+
+export const getAuthToken = async (): Promise<string> => {
+  try {
+    const auth = getAuth();
+    // console.log("THIS IS THE AUTH", auth)
+    const token = await auth.currentUser?.getIdToken() ?? '';
+     console.log("THIS IS THE TOKEN", token)
+    return token;
+  } catch (error) {
+    console.error('Error getting auth token: ', error);
+    throw error;
+  }
+};
 export const customFetch = async (
   endpoint: string,
-  searchParams: any = {},
-  options: {method: string; body?: any;},
+  options: {method: string; body?: any},
   attempt: number = 0,
-  multiPart: boolean = false,
 ): Promise<Response> => {
   try {
-    let headers : any = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-    if (multiPart) {
-      headers = {
-        'Content-Type': 'multipart/form-data',
-      };
+    const token: string = await getAuthToken();
+    if (!token || token == '') {
+      throw new Error('No auth token provided on fetch');
     }
-
-    if (options.method == "GET") {
-      searchParams = {...searchParams, adminPassword: constants.ADMIN_PASSWORD, user: constants.USER};
-      endpoint = endpoint + new URLSearchParams(searchParams);
-    } else {
-      options.body = {...options.body, adminPassword: constants.ADMIN_PASSWORD, user: constants.USER};
-      options.body = JSON.stringify(options.body);
-    }
-
-    console.info("options", options)
-    console.info("endpoint", endpoint)
-
     let res = await Promise.race([
       fetch(endpoint, {
         ...options,
-        headers: headers
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
       }),
       new Promise<Response>((_, reject) =>
         setTimeout(() => reject(new Error('Timeout')), constants.TIMEOUT),
@@ -44,7 +43,7 @@ export const customFetch = async (
     ]);
     if (res.status === 403) {
       // authentication error
-      // event.emit(eventNames.FORCE_SIGNOUT);
+      //event.emit(eventNames.FORCE_SIGNOUT);
       throw new Error('Authentication error, signing out...');
     }
     return res;
@@ -60,8 +59,8 @@ export const customFetch = async (
       } else {
         // retry
         await delay(constants.RETRY_WAIT_TIME);
-        console.log('Retrying fetch...');
-        return await customFetch(endpoint, searchParams, options, attempt + 1, multiPart);
+        // console.log('Retrying fetch...');
+        return await customFetch(endpoint, options, attempt + 1);
       }
     } else {
       throw error;

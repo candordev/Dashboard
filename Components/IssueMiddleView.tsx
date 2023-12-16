@@ -23,15 +23,18 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
 
     const fetchStatusUpdates = async () => {
         try {
-            const res: Response = await customFetch(
-                Endpoints.getPostProgress,
-                {
-                    postID: props.issue._id,
-                },
-                {
-                    method: "GET",
-                }
-            );
+
+            let endpoint: string;
+            endpoint =
+              Endpoints.getPostProgress +
+              new URLSearchParams({
+                postID: props.issue._id,
+              });
+      
+            const res: Response = await customFetch(endpoint, {
+              method: 'GET',
+            });
+
 
             const resJson = await res.json();
             if (!res.ok) {
@@ -52,19 +55,16 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
 
     const addUpdate = async () => {
         try {
-            let res: Response = await customFetch(
-                Endpoints.createStatusUpdate,
-                {},
-                {
-                    method: "POST",
-                    body: {
-                      title: title,
-                      content: content,
-                      postID: props.issue._id,
-                      completed: false,
-                    },
-                }
-            );
+            let res: Response = await customFetch(Endpoints.createStatusUpdate, {
+                method: 'POST',
+                body: JSON.stringify({
+                    title: title,
+                    content: content,
+                    postID: props.issue._id,
+                    completed: false,
+                }),
+              });
+              
             if (!res.ok) {
                 const resJson = await res.json();
                 console.error(resJson.error);

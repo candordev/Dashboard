@@ -5,11 +5,13 @@ import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useUserContext } from '../Hooks/useUserContext';
 import { useLogin } from '../Hooks/useLogin';
 import Root from '../Screens/Root';
+import YourScreen from '../Screens/YourScreen';
 import LoginScreen from '../Screens/LoginScreen';
 import LaunchScreen from '../Screens/LaunchScreen';
 import {useSignout} from '../Hooks/useSignout';
 import SignupStack from '../Screens/SignupStack';
 import { useSignup } from '../Hooks/useSignup';
+import AllScreen from '../Screens/AllScreen';
 
 
 
@@ -40,9 +42,9 @@ function NavigationWrapper() {
 
     if (authUser && authUser != null && !isSignupOperation) {
       try {
-        console.log("THIS WAS CALLED AYY")
         // Retrieve user token
         const token = await authUser.getIdToken();
+
         // Log in user with the obtained token
         await loginUser({ token: token });
       } catch (e) {
@@ -77,7 +79,11 @@ function NavigationWrapper() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {state.token ? (
           // If authenticated, show the Root screen
+          <>
           <Stack.Screen name="root" component={Root} />
+          <Stack.Screen name="all" component={AllScreen} />
+          <Stack.Screen name="your" component={YourScreen} />       
+          </>
         ) : (
           // If not authenticated, show the LoginScreen
           <>

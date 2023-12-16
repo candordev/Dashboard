@@ -320,29 +320,28 @@ function Assignees(props: AssigneesProps): JSX.Element {
     setValue([...value, email]);
   }
 
-  async function sendEmailToLeader(email: string) {
-    try {
-      let res: Response = await customFetch(
-          Endpoints.sendEmailToLeader,
-          {},
-          {
-              method: "POST",
-              body: {
-                toLeaderEmail: email,
-                postID: props.issue._id,
-              },
-          }
-      );
-      if (!res.ok) {
-          const resJson = await res.json();
-          console.error(resJson.error);
-      } else {
-          console.log("Email sent to leader");
-      }
-    } catch (error) {
-      console.error("Network error, please try again later.", error);
-    }
-  }
+  // async function sendEmailToLeader(email: string) {
+  //   try {
+  //     let res: Response = await customFetch(
+  //         Endpoints.sendEmailToLeader,
+  //         {
+  //             method: "POST",
+  //             body: {
+  //               toLeaderEmail: email,
+  //               postID: props.issue._id,
+  //             },
+  //         }
+  //     );
+  //     if (!res.ok) {
+  //         const resJson = await res.json();
+  //         console.error(resJson.error);
+  //     } else {
+  //         console.log("Email sent to leader");
+  //     }
+  //   } catch (error) {
+  //     console.error("Network error, please try again later.", error);
+  //   }
+  // }
 
   const isLeaderSuggestedByAI = (leaderId: string) => {
     // Ensure that there is at least one suggested department and it has leaders

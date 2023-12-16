@@ -1,12 +1,39 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import colors from "../Styles/colors";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+interface Status {
+  newSelected: boolean;
+  assignedSelected: boolean;
+  updatedSelected: boolean;
+  completedSelected: boolean;
+}
 
-const StatusPicker = () => {
+interface StatusPickerProps {
+  onStatusChange: (status: Status) => void;
+}
+
+const StatusPicker = ({ onStatusChange }: StatusPickerProps) => {
   const [newSelected, setNewSelected] = useState(true);
   const [assignedSelected, setAssignedSelected] = useState(true);
-  const [updatedSelected, setUpdatedSelected] = useState(false);
-  const [completedSelected, setCompletedSelected] = useState(false);
+  const [updatedSelected, setUpdatedSelected] = useState(true);
+  const [completedSelected, setCompletedSelected] = useState(true);
+
+  const prevStatusRef = useRef<Status>();
+  useEffect(() => {
+    const prevStatus = prevStatusRef.current;
+    const currentStatus = {
+      newSelected,
+      assignedSelected,
+      updatedSelected,
+      completedSelected,
+    };
+
+    if (JSON.stringify(prevStatus) !== JSON.stringify(currentStatus)) {
+      onStatusChange(currentStatus);
+    }
+
+    prevStatusRef.current = currentStatus;
+  }, [newSelected, assignedSelected, updatedSelected, completedSelected]);
 
   return (
     <View style={styles.container}>

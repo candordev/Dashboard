@@ -9,7 +9,18 @@ import Text from "./Text";
 import {useSignout} from '../Hooks/useSignout';
 import { useUserContext } from "../Hooks/useUserContext";
 
-const Header = ({ navigation, route }: any) => {
+interface Status {
+  newSelected: boolean;
+  assignedSelected: boolean;
+  updatedSelected: boolean;
+  completedSelected: boolean;
+}
+interface HeaderProps {
+  onStatusChange: (status: Status) => void;
+  headerTitle: string;
+}
+
+const Header = ({ onStatusChange , headerTitle }: HeaderProps) => {
   const {state, dispatch} = useUserContext();
   const activeTab = "all";
 
@@ -54,7 +65,7 @@ const Header = ({ navigation, route }: any) => {
       }}
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '90%' }}>
-        <Text style={{ alignSelf: 'flex-start', fontWeight: '600', fontSize: 27, fontFamily: 'Montserrat' }}>All Issues</Text>
+        <Text style={{ alignSelf: 'flex-start', fontWeight: '600', fontSize: 27, fontFamily: 'Montserrat' }}>{headerTitle}</Text>
         <TouchableOpacity onPress={handleSignOut}>
           <Text style={{ color: colors.black , fontWeight: '600', fontSize: 16 }}>Sign Out</Text>
         </TouchableOpacity>
@@ -75,7 +86,7 @@ const Header = ({ navigation, route }: any) => {
             placeholder="Search Issue..."
           />
         </View>
-        <StatusPicker />
+        <StatusPicker onStatusChange={onStatusChange} />
       </View>
       <View
         style={{

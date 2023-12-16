@@ -12,6 +12,7 @@ import { Post, UserProfile } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { constants } from "../utils/constants";
 import { customFetch } from "../utils/utils";
+import { useUserContext } from "../Hooks/useUserContext";
 
 interface IssueRightViewProps {
     issue: Post;
@@ -19,6 +20,7 @@ interface IssueRightViewProps {
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
     const [leaders, setLeaders] = useState<UserProfile[]>([]);
+    const {state, dispatch} = useUserContext();
 
     useEffect(() => {
       fetchLeaders();
@@ -26,19 +28,18 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
 
     const fetchLeaders = async () => {
         try {
+            console.log("THESE THE LEADER GROUPS", state.leaderGroups[0])
             let endpoint: string;
-            endpoint = Endpoints.getGroupLeaders;
-
-            const res: Response = await customFetch(
-                endpoint,
-                {
-                    page: "1",
-                    groupID: constants.GROUP_ID,
-                },
-                {
-                    method: "GET",
-                }
-            );
+            endpoint =
+              Endpoints.getGroupLeaders +
+              new URLSearchParams({
+                page: "1",
+                groupID: state.leaderGroups[0],
+              });
+      
+            const res: Response = await customFetch(endpoint, {
+              method: 'GET',
+            });
 
             const resJson = await res.json();
             if (!res.ok) {

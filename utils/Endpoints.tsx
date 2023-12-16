@@ -90,4 +90,5 @@ export const Endpoints = {
   getPostsByGroupWithoutLazyScroll: `${BASE_URL}/userActivity/getPostsByGroupWithoutLazyScroll?`,
   getYourProposals: `${BASE_URL}/userActivity/getYourProposals?`,
   sendEmailToLeader: `${BASE_URL}/userActivity/sendEmailToLeader`,
+  dashboardPosts: `${BASE_URL}/userActivity/dashboardPosts?`
 };

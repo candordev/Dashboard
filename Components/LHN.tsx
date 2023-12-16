@@ -14,7 +14,7 @@ const LHN = ({ props }: any) => {
   return (
     <View style={styles.container}>
       <NavItem name={"All Issues"} route="/all" icon="list" />
-      <NavItem name="Your Issues" route="/your" icon="list" />
+      <NavItem name={"Your Issues"} route="/your" icon="list" />
     </View>
   );
 };
