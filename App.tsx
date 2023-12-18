@@ -13,6 +13,11 @@ import Root from "./Screens/Root";
 import LoginScreen from "./Screens/LoginScreen";
 import NavigationWrapper from "./Structure/NavigationWrapper";
 import {UserProvider} from "./Structure/UserContext";
+import {CategoriesProvider} from './Structure/CategoriesContext';
+import { NavigationProvider } from './Structure/NavigationProvider';
+
+
+
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -74,7 +79,11 @@ export default function App() {
   // );
   return (
     <UserProvider>
+      <NavigationProvider>
+      <CategoriesProvider>
         <NavigationWrapper />        
+        </CategoriesProvider>
+      </NavigationProvider>
     </UserProvider>
   );
 

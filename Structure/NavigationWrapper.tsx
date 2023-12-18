@@ -26,6 +26,7 @@ function NavigationWrapper() {
   const { loginUser } = useLogin();
 
   useEffect(() => {
+    console.log("INFNITE LOOP H")
     console.log('Component is initially rendered in the DOM');
     // Your code here
   }, []); // The empty dependency array ensures it runs only once
@@ -57,6 +58,7 @@ function NavigationWrapper() {
 
   // Check for authentication state changes
   useEffect(() => {
+    console.log("INFNITE LOOP I")
     console.log("Atleast called")
     const auth = getAuth();
     console.log("The auth changed", auth)

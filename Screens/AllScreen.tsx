@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -8,16 +9,21 @@ import {
 } from "react-native";
 import Card from "../Components/Card";
 import colors from "../Styles/colors";
-import { Post, Department } from "../utils/interfaces";
+import { Post, Department, CategoryWithPosts,  } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import Text from "../Components/Text";
-import { FlashList } from "@shopify/flash-list";
 import { constants } from "../utils/constants";
 import Header from "../Components/Header";
 import OuterView from "../Components/OuterView";
 import styles from "../Styles/styles";
 import { useUserContext } from "../Hooks/useUserContext";
+import {event, eventNames} from '../Events';
+import { useNavigationState } from '../Structure/NavigationProvider';
+import FlashList from "@shopify/flash-list/dist/FlashList";
+import { useIsFocused } from '@react-navigation/native';
+import { cpuUsage } from "process";
+
 
 interface GroupedIssues {
   [key: string]: Post[];
@@ -38,131 +44,124 @@ const sampleStatus: Status = {
   completedSelected: true,
 };
 
-
-// let user = {
-//   username: resJson.username,
-//   firstName: resJson.firstName,
-//   lastName: resJson.lastName,
-//   email: resJson.email,
-//   dob: resJson.dateOfBirth,
-//   token: token,
-//   imageUrl: resJson.profilePicture,
-//   candorPoints: resJson.candorPoints,
-//   candorPointsByGroup: resJson.candorPointsByGroup,
-//   totalCandorCoins: resJson.totalCandorCoins,
-//   candorCoinsByGroup: resJson.candorCoinsByGroup,
-//   bio: resJson.bio,
-//   _id: resJson.user,
-//   leaderPoints: resJson.leaderPoints,
-//   leaderGroups: resJson.leaderGroups,
-// };
-
 const AllScreen = ({ navigation }: any) => {
-  const [issues, setIssues] = useState<Post[]>([]);
-  const [groupedIssues, setGroupedIssues] = useState<{ [key: string]: Post[] }>({});
-  const { state, dispatch } = useUserContext();
-  const [refreshKey, setRefreshKey] = useState(0);
 
-  // useEffect(() => {
-  //   console.log("First time loaded in DOM called")
-  //   fetchPosts(sampleStatus);
-  // }, []);
+  const [refreshKey, setRefreshKey] = useState(0);  
+  const [categoriesWithPosts, setCategoriesWithPosts] = useState<{ [key: string]: Post[] }>({});
+  const [currStatus, setCurrStatus] = useState<Status>(sampleStatus);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPopoverVisible, setIsPopoverVisible] = useState(false);
+  const [selectedHeaderOption, setSelectedHeaderOption] = useState<string | undefined>();
+  const {setUpdatedScreens,updatedScreens, setIsCategoryOpen, isCategoryOpen} = useNavigationState();
+  const handlePopoverVisibilityChange = (isVisible: boolean | ((prevState: boolean) => boolean)) => {
+    setIsPopoverVisible(isVisible);
+  };
+  const isFocused = useIsFocused(); // Assuming you're using something like this
 
-  const handleStatusChange = useCallback((status: Status) => {
-    console.log("status changed", status);
-    fetchPosts(status);
-  }, []); // Empty dependency array ensures this function is created once and reused
-
+  useEffect(() => {
+    if (isFocused && updatedScreens.all) {
+      // Fetch posts for Screen 1
+      fetchPosts(currStatus, selectedHeaderOption);
+      // Reset the flag for Screen 1
+      setUpdatedScreens({ all: false });
+    }
+  }, [isFocused]); // }, [isFocused, updatedScreens.all]);
   
 
-  const fetchPosts = async (status: Status | undefined) => {
-    //console.debug('fetch posts running');
-    try {
-      //const endpointDP = Endpoints.dashboardPosts;
 
-      // Construct the query parameters
-      const params = {
+  useEffect(() => {
+    console.log("Component mounted, fetching posts initially");
+     
+      console.log("Event triggered, fetching posts");
+      fetchPosts(currStatus, selectedHeaderOption);
+
+  }, [currStatus, selectedHeaderOption]); // Depend on currStatus to refetch when it changes
+
+
+  useEffect(() => {
+    console.log("POP OVER JUST CHANGED: ", isPopoverVisible)
+    console.log("Category was set for a post: ", isPopoverVisible)
+
+     if(isPopoverVisible && isCategoryOpen){
+      console.log("CHECK")
+      fetchPosts(currStatus, selectedHeaderOption);
+      setIsPopoverVisible(false);
+      setIsCategoryOpen(false);
+      setUpdatedScreens({ all: false, your: true, suggested: true });
+     }
+      // console.log("Event triggered, fetching posts");
+      // fetchPosts(currStatus);
+
+  }, [isPopoverVisible]); // Depend on currStatus to refetch when it changes
+
+  const handleStatusChange = async (newStatus: Status) => {
+    console.log("Received status:", status);
+    console.log("Current status:", currStatus);
+    console.log("Status changed, updating current status and refetching posts");
+    if (JSON.stringify(newStatus) !== JSON.stringify(currStatus)) {
+      setCurrStatus(newStatus);
+    }
+  };
+
+  const handleHeaderOptionChange = (option: string) => {
+
+    if (JSON.stringify(option) !== JSON.stringify(selectedHeaderOption)) {
+      setSelectedHeaderOption(option);
+    }
+    // Additional logic if needed
+  };
+
+  
+  
+
+  const fetchPosts = async (status: Status | undefined, headerOption?: string) => {
+    try {
+      const queryParams = new URLSearchParams({
         filter: 'top',
         tab: 'all',
-        //adminPassword: 'CandorDev345!'
-        // status: JSON.stringify([
-        //   status?.newSelected,
-        //   status?.assignedSelected,
-        //   status?.updatedSelected,
-        //   status?.completedSelected,
-        // ]),
-      };
+        status: JSON.stringify([
+          status?.newSelected,
+          status?.assignedSelected,
+          status?.updatedSelected,
+          status?.completedSelected,
+        ]),
+      });
   
-      // Construct the query string
-
-      let res: Response = await customFetch(
-        Endpoints.dashboardPosts +
-          new URLSearchParams({
-            filter: 'top',
-            tab: 'all',     
-            status: JSON.stringify([
-              status?.newSelected,
-              status?.assignedSelected,
-              status?.updatedSelected,
-              status?.completedSelected,
-            ]),     
-            //adminPassword: 'CandorDev345!',
-            //user: '6551ed235e8ef7b3d6f1b7eb'
-          }),
-        {
-          method: 'GET',
-        },
-      );
-
-      // const queryString = new URLSearchParams(params).toString();
-      // const url = `${endpointDP}?${queryString}`;
-  
-      // let res: Response = await customFetch(url, {
-      //   method: "GET",
-      // });
-      let resJson = await res.json();
-      if (!res.ok) {
-        console.error("Error loading posts. Please try again later.");
+      // Add selectedHeaderOption to the query params if it's defined
+      if (headerOption) {
+        queryParams.append('header', headerOption);
       }
+  
+      let res: Response = await customFetch(`${Endpoints.dashboardPosts}?${queryParams.toString()}`, {
+        method: 'GET',
+      });
+  
+      let resJson = await res.json();
       if (res.ok) {
-        console.log("GOT HERE YUH")
-        const result: Post[] = resJson;
-        setIssues([...result]);
-        setRefreshKey(prevKey => prevKey + 1); // Increment the key to force update
-        console.log("ISSUES WERE SET")
+        setCategoriesWithPosts(resJson);
+        setRefreshKey(prevKey => prevKey + 1); // Increment key to force update
+      } else {
+        console.error("Error loading posts. Please try again later.");
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
     }
   };
-
-  useEffect(() => {
-    // Group posts by suggestedDepartment[0] or 'No Department'
-    const newGroupedIssues = issues.reduce<GroupedIssues>((acc, issue) => {
-      const department = issue.suggestedDepartments[0]?.name || 'No Department';
-      if (!acc[department]) {
-        acc[department] = [];
-      }
-      acc[department].push(issue);
-      return acc;
-    }, {});
-
-    setGroupedIssues(newGroupedIssues);
-  }, [issues]);
+  
 
    return (
     <View style={{ flex: 1 }}>
-       <Header onStatusChange={handleStatusChange} headerTitle={'All Issues'} />
-       <ScrollView horizontal style={{ /* Add styles for the outer ScrollView if necessary */ }}>
-        {Object.entries(groupedIssues).map(([departmentName, departmentIssues]) => (
-          <View
-            key={departmentName}
-            style={{
-              width: 400, // Set a specific width or use a percentage of the screen width
-              marginHorizontal: 20, // Add horizontal margin to space out the columns
-              // Add other styles as needed
-            }}
-          >
+    <Header onHeaderOptionChange={handleHeaderOptionChange} onStatusChange={handleStatusChange} headerTitle={'All Issues'} />
+    <ScrollView horizontal style={{ /* Add styles if necessary */ }}>
+      {Object.entries(categoriesWithPosts).map(([name, posts]) => (
+        <View
+          key={name}
+          style={{
+            width: 400, // Adjust as needed
+            marginHorizontal: 20,
+            // Other styles
+          }}
+        >
           <Text
             style={{
               fontSize: 18,
@@ -171,15 +170,18 @@ const AllScreen = ({ navigation }: any) => {
               marginBottom: 10,
               marginTop: 10,
               fontFamily: "Montserrat",
-
-            }}>{departmentName}</Text>
-            {/* <FlashList
-              data={departmentIssues}
-              renderItem={({ item }) => <Card issue={item} />} */}
-               <FlashList
-                  key={`${departmentName}-${refreshKey}`} // Unique key for each FlashList
-                  data={departmentIssues}
-                  renderItem={({ item }) => <Card issue={item} />}
+            }}
+          >
+            {name}
+          </Text>
+          <FlatList
+            key={`${name}-${refreshKey}`}
+            data={posts}
+            renderItem={({ item }) => 
+            <Card onPopoverVisibilityChange={handlePopoverVisibilityChange}
+            issue={item} 
+            />}
+            //estimatedItemSize={135} // Adjust this value based on your average item size
               // ... other FlashList props ...
             />
           </View>

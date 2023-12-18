@@ -18,6 +18,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
     const [content, setContent] = useState("");
 
     useEffect(() => {
+        console.log("INFNITE LOOP D")
         fetchStatusUpdates();
     }, []);
 

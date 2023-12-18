@@ -20,6 +20,7 @@ const StatusPicker = ({ onStatusChange }: StatusPickerProps) => {
 
   const prevStatusRef = useRef<Status>();
   useEffect(() => {
+    console.log("INFNITE LOOP E")
     const prevStatus = prevStatusRef.current;
     const currentStatus = {
       newSelected,

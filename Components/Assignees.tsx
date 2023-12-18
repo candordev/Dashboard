@@ -129,7 +129,9 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   useEffect(() => {
     console.log('Value state updated:', value);
+    console.log("INFNITE LOOP A")
     setPreviousValue(value);
+
     
   }, [value]);
 
@@ -304,10 +306,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   //   }
   // // };
   
-  
-  
-  
-  
+
   const inviteLeader = (name: string, email: string) => {
     setItems([
       ...items,

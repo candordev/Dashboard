@@ -23,6 +23,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
     const {state, dispatch} = useUserContext();
 
     useEffect(() => {
+     console.log("INFNITE LOOP E")
       fetchLeaders();
     }, []);
 
@@ -67,7 +68,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         >
             <View style={{ rowGap: 10 }}>
                 <Assignees leaders={leaders} issue={props.issue}/>
-                <Category />
+                <Category issueId={props.issue._id} />
                 <View style={{ marginTop: 10}}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', fontFamily: 'Montserrat' }}>
                     Candor Suggested To:

@@ -27,6 +27,11 @@ export interface UserProfile {
   departmentNames: string[];
 }
 
+
+export interface CategoryWithPosts {
+  [categoryName: string]: Post[];
+}
+
 export interface MemberProfile extends UserProfile {
   isLeader: boolean;
 }
@@ -142,6 +147,11 @@ export interface Group {
   imgUrl: string;
   name: string;
   unreadIndicator: boolean;
+}
+
+export interface Category {
+  name: string; // Name of the category
+  posts: String[]; // Array of post IDs associated with the category
 }
 
 export interface FullGroup extends Group {

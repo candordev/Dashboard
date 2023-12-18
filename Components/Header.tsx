@@ -8,6 +8,8 @@ import StatusPicker from "./StatusPicker";
 import Text from "./Text";
 import {useSignout} from '../Hooks/useSignout';
 import { useUserContext } from "../Hooks/useUserContext";
+import { useCategoryContext } from "../Hooks/useCategoryContext";
+import OptionPicker from "./OptionPicker";
 
 interface Status {
   newSelected: boolean;
@@ -18,21 +20,30 @@ interface Status {
 interface HeaderProps {
   onStatusChange: (status: Status) => void;
   headerTitle: string;
+  onHeaderOptionChange: (option: string) => void; // Add this line
 }
 
-const Header = ({ onStatusChange , headerTitle }: HeaderProps) => {
+interface OptionPickerProps {
+  onOptionChange: (option: string) => void;
+}
+
+const Header = ({ onStatusChange , headerTitle, onHeaderOptionChange }: HeaderProps) => {
   const {state, dispatch} = useUserContext();
   const activeTab = "all";
 
   const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
 
   const [categoryValue, setCategoryValue] = useState<string[]>([]);
-  const [categoryItems, setCategoryItems] = useState([
-    { label: "Transportation", value: "Tanuj Dunthuluri" },
-    { label: "Agriculture", value: "Atishay Jain" },
-    { label: "Rural Development", value: "Rishi Bengani" },
-    { label: "Safety", value: "A Person" },
-  ]);
+  // const [categoryItems, setCategoryItems] = useState([
+  //   { label: "Transportation", value: "Tanuj Dunthuluri" },
+  //   { label: "Agriculture", value: "Atishay Jain" },
+  //   { label: "Rural Development", value: "Rishi Bengani" },
+  //   { label: "Safety", value: "A Person" },
+  // ]);
+  const [categoryItems, setCategoryItems] = useState([]);
+
+  
+  
 
   const [tagValues, setTagValues] = useState<string[]>([]);
   const [tagItems, setTagItems] = useState([
@@ -49,6 +60,10 @@ const Header = ({ onStatusChange , headerTitle }: HeaderProps) => {
     { label: "Rishi Bengani", value: "Rishi Bengani" },
     { label: "Srikar Parsi", value: "Srikar Parsi" },
   ]);
+  const [selectedOption, setSelectedOption] = useState<String>();
+
+
+
   const handleSignOut = () => {
     // Call the signout function when the button is pressed
     useSignout({ dispatch });
@@ -99,7 +114,7 @@ const Header = ({ onStatusChange , headerTitle }: HeaderProps) => {
       >
         <View style={{ flex: 1 }}>
           <DropDown
-            placeholder="Select category"
+            placeholder="Select department"
             value={categoryValue}
             setValue={setCategoryValue}
             items={categoryItems}
@@ -128,6 +143,7 @@ const Header = ({ onStatusChange , headerTitle }: HeaderProps) => {
           />
         </View>
       </View>
+      <OptionPicker onOptionChange={onHeaderOptionChange} />
     </View>
   );
 };

@@ -17,6 +17,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [content, setContent] = useState("");
 
   useEffect(() => {
+    console.log("INFNITE LOOP C")
     fetchComments();
   }, [])
 

@@ -44,7 +44,7 @@ const sampleStatus: Status = {
   completedSelected: true,
 };
 
-const YourScreen = ({ navigation }: any) => {
+const SuggestedScreen = ({ navigation }: any) => {
 
   const [refreshKey, setRefreshKey] = useState(0);  
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{ [key: string]: Post[] }>({});
@@ -61,7 +61,7 @@ const YourScreen = ({ navigation }: any) => {
   useEffect(() => {
     if (isFocused && updatedScreens.all) {
       // Fetch posts for Screen 1
-      fetchPosts(currStatus, selectedHeaderOption);
+      fetchPosts(currStatus);
       // Reset the flag for Screen 1
       setUpdatedScreens({ all: false });
     }
@@ -73,7 +73,7 @@ const YourScreen = ({ navigation }: any) => {
     console.log("Component mounted, fetching posts initially");
      
       console.log("Event triggered, fetching posts");
-      fetchPosts(currStatus, selectedHeaderOption);
+      fetchPosts(currStatus);
 
   }, [currStatus, selectedHeaderOption]); // Depend on currStatus to refetch when it changes
 
@@ -84,10 +84,10 @@ const YourScreen = ({ navigation }: any) => {
 
      if(isPopoverVisible && isCategoryOpen){
       console.log("CHECK")
-      fetchPosts(currStatus, selectedHeaderOption);
+      fetchPosts(currStatus);
       setIsPopoverVisible(false);
       setIsCategoryOpen(false);
-      setUpdatedScreens({ all: true, your: false, suggested: true });
+      setUpdatedScreens({ all: true, your: true, suggested: false });
      }
       // console.log("Event triggered, fetching posts");
       // fetchPosts(currStatus);
@@ -114,32 +114,28 @@ const YourScreen = ({ navigation }: any) => {
   
   
 
-  const fetchPosts = async (status: Status | undefined, headerOption?: string) => {
+  const fetchPosts = async (status: Status | undefined) => {
     try {
-      console.log("THE HEADER OPTION", headerOption)
-      const queryParams = new URLSearchParams({
-        filter: 'top',
-        tab: 'your',
-        status: JSON.stringify([
-          status?.newSelected,
-          status?.assignedSelected,
-          status?.updatedSelected,
-          status?.completedSelected,
-        ]),
-      });
-  
-      // Add selectedHeaderOption to the query params if it's defined
-      if (headerOption) {
-        console.log("appended")
-        queryParams.append('header', headerOption);
-      }
-  
-      let res: Response = await customFetch(`${Endpoints.dashboardPosts}?${queryParams.toString()}`, {
-        method: 'GET',
-      });
+      let res: Response = await customFetch(
+        Endpoints.dashboardPosts +
+          new URLSearchParams({
+            filter: 'top',
+            tab: 'suggested',     
+            status: JSON.stringify([
+              status?.newSelected,
+              status?.assignedSelected,
+              status?.updatedSelected,
+              status?.completedSelected,
+            ]),     
+          }),
+        {
+          method: 'GET',
+        },
+      );
   
       let resJson = await res.json();
       if (res.ok) {
+        //const result: CategoryWithPosts[] = resJson;
         setCategoriesWithPosts(resJson);
         setRefreshKey(prevKey => prevKey + 1); // Increment key to force update
       } else {
@@ -150,10 +146,11 @@ const YourScreen = ({ navigation }: any) => {
     }
   };
   
+  
 
    return (
     <View style={{ flex: 1 }}>
-    <Header onHeaderOptionChange={handleHeaderOptionChange} onStatusChange={handleStatusChange} headerTitle={'Your Issues'} />
+    <Header onHeaderOptionChange={handleHeaderOptionChange} onStatusChange={handleStatusChange} headerTitle={'Suggested Issues'} />
     <ScrollView horizontal style={{ /* Add styles if necessary */ }}>
       {Object.entries(categoriesWithPosts).map(([name, posts]) => (
         <View
@@ -193,5 +190,5 @@ const YourScreen = ({ navigation }: any) => {
   );
 };
 
-export default YourScreen;
+export default SuggestedScreen;
 

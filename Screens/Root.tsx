@@ -9,6 +9,10 @@ import { getAuth } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import SuggestedScreen from "./SuggestedScreen"
+import {CategoriesStateType, setCategories} from '../Structure/CategoriesContext';
+import {useCategoryContext} from '../Hooks/useCategoryContext';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -27,6 +31,17 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 function Root() {
+        const {
+          categoriesState,
+          categoriesDispatch,
+        }: {categoriesState: CategoriesStateType; categoriesDispatch: any} = useCategoryContext();
+
+        useEffect(() => {
+          console.log("INFNITE LOOP F")
+          setCategories(categoriesDispatch);
+        }, []);
+
+        console.log("THESE ARE THE YYUU: ", categoriesState.categories)
 
   return (
       <Drawer.Navigator
@@ -41,6 +56,7 @@ function Root() {
       >
         <Drawer.Screen name="all" component={AllScreen} />
         <Drawer.Screen name="your" component={YourScreen} />
+        <Drawer.Screen name="suggested" component={SuggestedScreen} />
       </Drawer.Navigator>
   );
 }
