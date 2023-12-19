@@ -81,8 +81,8 @@ export default function App() {
     <UserProvider>
       <NavigationProvider>
       <CategoriesProvider>
-        <NavigationWrapper />        
-        </CategoriesProvider>
+         <NavigationWrapper />        
+       </CategoriesProvider>
       </NavigationProvider>
     </UserProvider>
   );

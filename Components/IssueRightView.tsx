@@ -32,10 +32,10 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             console.log("THESE THE LEADER GROUPS", state.leaderGroups[0])
             let endpoint: string;
             endpoint =
-              Endpoints.getGroupLeaders +
+              Endpoints.getGroupLeadersForAcceptCustom +
               new URLSearchParams({
-                page: "1",
-                groupID: state.leaderGroups[0],
+                //page: "1",
+                postID: props.issue._id,
               });
       
             const res: Response = await customFetch(endpoint, {
@@ -49,6 +49,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             if (res.ok) {
                 const result: UserProfile[] = resJson;
                 console.log("leaders are", result);
+
                 setLeaders(result);
             }
         } catch (error) {

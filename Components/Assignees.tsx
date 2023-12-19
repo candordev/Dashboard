@@ -20,6 +20,7 @@ interface AssigneesProps {
 function Assignees(props: AssigneesProps): JSX.Element {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[]>([]);
+  const [selectedChildren, setSelectedChildren] = useState<string[]>([]);
   const [items, setItems] = useState([
     //{ label: "Tanuj Dunthuluri", value: "Tanuj Dunthuluri" ,parent: 'Atishay Jain'},
     //{ label: "Shi Shi", value: "Shi Shi" ,parent: 'Atishay Jain'},
@@ -30,29 +31,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
     { label: "Srikar Parsi", value: "Srikar Parsi" , parent: 'Department A'},
   ]);
   const [previousValue, setPreviousValue] = useState<string[]>([]);
+  const [previousValueChild, setPreviousChildValue] = useState<string[]>([]);
 
-
-  // useEffect(() => {
-  //   const leaders = props.leaders.map((leader) => {
-  //     const isSuggested = isLeaderSuggestedByAI(leader.user);
-  //     const departmentNamesString = leader.departmentNames.join(", ");
-  //     const aiSuggestsTag = isSuggested ? " [AI suggests]" : ""; 
-
-  //     return {
-  //       label: `${leader.firstName}${departmentNamesString ? `(${departmentNamesString})` : ""}${aiSuggestsTag}`,
-  //       value: leader.email ? leader.email[0] : "atjain02@gmail.com",
-  //     };
-  //   });
-
-  //   setItems(leaders);
-  // }, [props.leaders]);
-  
-
-  // useEffect(() => {
-  //   for (let email of value) {
-  //     sendEmailToLeader(email);
-  //   }
-  // }, [value])
   type Department = {
     label: string;
     value: string;
@@ -74,52 +54,105 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
 
   useEffect(() => {
-    // Initialize an object to group leaders by department
     const departments: { [key: string]: Department } = {};
+    const initialValues: string[] = [];
   
-    // Loop over the leaders to group them by department
     props.leaders.forEach((leader) => {
-      console.log("leader departments", leader.departmentNames)
-      leader.departmentNames.forEach(departmentName => {
+      const aiSuggests = isLeaderSuggestedByAI(leader.user);
+  
+      const departmentName = leader.departmentNames[0]
         if (!departments[departmentName]) {
           departments[departmentName] = {
             label: departmentName,
             value: departmentName,
             children: [],
-            ...(isLeaderSuggestedByAI(leader.user) && { aiSuggests: true }),
+            aiSuggests: aiSuggests,
           };
+        } else if (aiSuggests) {
+          departments[departmentName].aiSuggests = true;
         }
-        // Add leader as a child to the department
+  
         departments[departmentName].children.push({
           label: leader.firstName,
-          value: leader.email ? leader.email[0] : "atjain02@gmail.com",
+          value: leader.lastName,
           parent: departmentName,
         });
-      });
-    });
+  
+        // If leader is accepted, add to initial values
+        if (leader.acceptedPost) {
+          currentSelectedChildrenRef.current.push(leader.lastName);
+          previousValueRefChild.current.push(leader.lastName)
+          initialValues.push(leader.departmentNames[0])
+          initialValues.push(leader.lastName)
+        }
 
-    const itemsArray: Item[] = [];
+    });
+  
+    const itemsArray: Item[] = Object.values(departments).flatMap(department => {
+      return [
+        {
+          label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label,
+          value: department.value,
+        },
+        ...department.children.map(child => ({
+          label: child.label,
+          value: child.value,
+          parent: department.value,
+        }))
+      ];
+    });
+  
+    setItems(itemsArray);
+    setValue(initialValues);
+  }, [props.leaders]);
+  
+  // useEffect(() => {
+  //   // Initialize an object to group leaders by department
+  //   const departments: { [key: string]: Department } = {};
+  
+  //   // Loop over the leaders to group them by department
+  //   props.leaders.forEach((leader) => {
+  //     console.log("leader departments", leader.departmentNames)
+  //     leader.departmentNames.forEach(departmentName => {
+  //       if (!departments[departmentName]) {
+  //         departments[departmentName] = {
+  //           label: departmentName,
+  //           value: departmentName,
+  //           children: [],
+  //           ...(isLeaderSuggestedByAI(leader.user) && { aiSuggests: true }),
+  //         };
+  //       }
+  //       // Add leader as a child to the department
+  //       departments[departmentName].children.push({
+  //         label: leader.firstName,
+  //         value: leader.lastName,
+  //         parent: departmentName,
+  //       });
+  //     });
+  //   });
+
+  //   const itemsArray: Item[] = [];
 
   
-    // Convert departments object to array and include AI suggests tag if applicable
-    Object.values(departments).forEach(department => {
-      // Add department first with parent as null
-      itemsArray.push({
-        label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label,
-        value: department.value,
-        // parent is intentionally omitted or set to undefined for a department
-      });
+  //   // Convert departments object to array and include AI suggests tag if applicable
+  //   Object.values(departments).forEach(department => {
+  //     // Add department first with parent as null
+  //     itemsArray.push({
+  //       label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label,
+  //       value: department.value,
+  //       // parent is intentionally omitted or set to undefined for a department
+  //     });
     
-      // Add children of the department
-      itemsArray.push(...department.children.map(child => ({
-        label: child.label,
-        value: child.value,
-        parent: department.value, // Assuming the department's value is used as the parent identifier
-      })));
-    });
-    console.log("DEBUG ITEMS", itemsArray)
-    setItems(itemsArray);
-  }, [props.leaders]);
+  //     // Add children of the department
+  //     itemsArray.push(...department.children.map(child => ({
+  //       label: child.label,
+  //       value: child.value,
+  //       parent: department.value, // Assuming the department's value is used as the parent identifier
+  //     })));
+  //   });
+  //   console.log("DEBUG ITEMS", itemsArray)
+  //   setItems(itemsArray);
+  // }, [props.leaders]);
 
 
 
@@ -129,25 +162,55 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   useEffect(() => {
     console.log('Value state updated:', value);
-    console.log("INFNITE LOOP A")
-    setPreviousValue(value);
+        setPreviousValue(value);
+        setPreviousChildValue(selectedChildren)
+        previousValueRefChild.current = previousValueChild;
+        // currentSelectedChildrenRef.current = selectedChildren;
 
-    
-  }, [value]);
+  }, [value, selectedChildren],);
 
-  useEffect(() => {
-    console.log('previousValue updated:', previousValue);
+  // useEffect(() => {
+  //   console.log('previousValue updated:', previousValue);
     
     
-  }, [previousValue]);
+  // }, [previousValue]);
 
   const previousValueRef = useRef<string[]>([]);
+  const previousValueRefChild = useRef<string[]>([]);
+  const currentSelectedChildrenRef = useRef<string[]>([]);
 
 
   useEffect(() => {
     // Update the ref when previousValue state changes
     previousValueRef.current = previousValue;
-  }, [previousValue]);
+    // previousValueRefChild.current = previousValueChild;
+  }, [previousValue, previousValueChild]);
+  
+
+  const onCloseDropDown = () => {
+    const currentSelectedChildren = currentSelectedChildrenRef.current;
+    const previousSelectedChildren = previousValueRefChild.current;
+  
+    // Check if selectedChildren has changed
+    const hasChildrenChanged = previousSelectedChildren.length !== currentSelectedChildren.length ||
+                               previousSelectedChildren.some((child, index) => child !== currentSelectedChildren[index]);
+  
+    console.log("current child", currentSelectedChildren);
+    console.log("previous child", previousSelectedChildren);
+  
+    if (hasChildrenChanged) {
+      console.log("Selected children have changed. Making route call...");
+      // Make your route call here
+      // ...
+
+      // Update the previousValueChild state
+      setPreviousChildValue(currentSelectedChildren);
+    } else {
+      console.log("No change in selected children.");
+    }
+
+    previousValueRefChild.current = currentSelectedChildrenRef.current;
+  };
   
 
   const onUserSelect = (selectedItems: ItemType<string>[] | ItemType<string>) => {
@@ -169,6 +232,9 @@ function Assignees(props: AssigneesProps): JSX.Element {
     const currentValueB = new Set<string>(currentValueAsString);
     //const valAdded =  new Set<string>();
     console.log("previousValueSet", previousValueRef.current)
+    const newSelectedChildren = new Set<string>(previousValueRefChild.current);
+    console.log("initial children", newSelectedChildren)
+
   
   
     // Handle selection of new values
@@ -176,7 +242,9 @@ function Assignees(props: AssigneesProps): JSX.Element {
       //currentValueSet.add(val);
       if (!previousValueSet.has(val)) {
         const childItem = items.find(item => item.value === val && item.parent);
-        if (childItem) {       
+        if (childItem) { 
+          newSelectedChildren.add(childItem.value);    
+          console.log("children after child ite selected", newSelectedChildren)  
           console.log("CHILD SELECT", val);
           if (childItem.parent && !currentValueSet.has(childItem.parent)) {
             currentValueSet.add(childItem.parent);
@@ -186,6 +254,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           console.log("PARENT SELECT");
           const children = items.filter(item => item.parent === val);
           children.forEach(child => currentValueSet.add(child.value));
+          children.forEach(child => newSelectedChildren.add(child.value));
           //isStateChanged = true;
         }
         console.log("This was THE value selected", val)
@@ -198,12 +267,15 @@ function Assignees(props: AssigneesProps): JSX.Element {
       if (!currentValueB.has(val)) {
         const childItem = items.find(item => item.value === val && item.parent);
         if (childItem) {
+
           console.log("deselecting child");
           const siblings = items.filter(item => item.parent === childItem.parent);
           const isAnySiblingSelected = siblings.some(sibling => currentValueB.has(sibling.value));
+          newSelectedChildren.delete(childItem.value)
           if (!isAnySiblingSelected) {
             if (childItem.parent && currentValueSet.delete(childItem.parent)) {
-              //isStateChanged = true;
+              
+              
             }
           }
         } else {
@@ -211,7 +283,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
           const children = items.filter(item => item.parent === val);
           children.forEach(child => {
             currentValueSet.delete(child.value);
-            //isStateChanged = true;
+            newSelectedChildren.delete(child.value)
+           
           });
         }
       }
@@ -221,90 +294,16 @@ function Assignees(props: AssigneesProps): JSX.Element {
     //if (isStateChanged) {
       console.log("THIS IS THE FINAL VALUES TO BE SELECTED", Array.from(currentValueSet))
       setValue(Array.from(currentValueSet)); 
+     
+      console.log("set Selected Children",Array.from(newSelectedChildren))
+      setSelectedChildren(Array.from(newSelectedChildren));
+      currentSelectedChildrenRef.current = Array.from(newSelectedChildren);
       // const updatedPreviousValue = new Set([...valAdded, ...currentValueSet]);
       // setPreviousValue(Array.from(updatedPreviousValue));
     //}
   };
   
-  
-  // const onChangeValue = (currentValue: ValueType[] | null) => {
-  //   if (!userMadeChange.current) {
-  //     console.log("USER MADE CHANGE IS TRUE AND CODE NOT RAN")
-  //     // Change is not user-initiated, just return
-  //     return;
-  //   }
-  //   userMadeChange.current = false;
-  //   console.log("Value changed", currentValue);
 
-  //   if (!currentValue) {
-  //     if (previousValue.length > 0) {
-  //       setPreviousValue([]);
-  //       setValue([]);
-  //     }
-  //     return;
-  //   }
-  
-  //   // Convert ValueType to strings for comparison
-  //   const currentValueAsString = currentValue.map(value => value.toString());
-  //   const previousValueSet = new Set<string>(previousValue);
-  //   const currentValueSet = new Set<string>(currentValueAsString);
-  
-  //   let isStateChanged = false;
-  
-  //   // Handle selection of new values
-  //   currentValueAsString.forEach(val => {
-  //     if (!previousValueSet.has(val)) {
-  //       const childItem = items.find(item => item.value === val && item.parent);
-  //       if (childItem) {
-  //         console.log("CHILD SELECT", val)
-  //         // It's a child item, check if its parent is selected
-  //         if (childItem.parent && !currentValueSet.has(childItem.parent)) {
-  //           // Parent is not selected, select it
-  //           currentValueSet.add(childItem.parent);
-  //           isStateChanged = true;
-  //         }
-  //       }else{
-  //         console.log("PARENT SELECT")
-  //         const children = items.filter(item => item.parent === val);
-  //         children.forEach(child => currentValueSet.add(child.value))
-  //         isStateChanged = true;
-  //       }
-  //     }
-  //   });
-  
-  //   // Handle deselection
-  //   previousValue.forEach(val => {
-  //     if (!currentValueSet.has(val)) {
-  //       const childItem = items.find(item => item.value === val && item.parent);
-  //       if (childItem) {
-  //         console.log("deselecting child")
-  //         // Child deselected, check if parent should be deselected
-  //         const siblings = items.filter(item => item.parent === childItem.parent);
-  //         const isAnySiblingSelected = siblings.some(sibling => currentValueSet.has(sibling.value));
-  //         if (!isAnySiblingSelected) {
-  //           // Deselect parent if no siblings are selected
-  //           if (childItem.parent && currentValueSet.delete(childItem.parent)) {
-  //             isStateChanged = true;
-  //           }
-  //         }
-  //       } else {
-  //         console.log("deselecting parent")
-  //         // Parent deselected, deselect all children
-  //         const children = items.filter(item => item.parent === val);
-  //         children.forEach(child => {
-  //           currentValueSet.delete(child.value);
-  //           isStateChanged = true;
-  //         });
-  //       }
-  //     }
-  //   });
-  
-  //   // Update state only if there's a change
-  //   if (isStateChanged) {
-  //     setValue(Array.from(currentValueSet));
-  //     setPreviousValue(currentValueAsString);
-  //   }
-  // // };
   
 
   const inviteLeader = (name: string, email: string) => {
@@ -405,6 +404,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
         setItems={setItems}
         categorySelectable={true}
         onSelectItem={onUserSelect}
+        onClose={onCloseDropDown}
         //onChangeValue={onChangeValue} // Custom logic for selection changes
         // onChangeValue={(currentValue) => {
         //   console.log("Current Value:", currentValue);
