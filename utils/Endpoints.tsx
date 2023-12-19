@@ -83,6 +83,7 @@ export const Endpoints = {
   addGroupsByLocation: `${BASE_URL}/group/addGroupsByLocation`,
   getPostLikes: `${BASE_URL}/post/getPostLikes?`,
   getGroupLeadersForAccept: `${BASE_URL}/group/getGroupLeadersForAccept?`,
+  getGroupLeadersForAcceptCustom: `${BASE_URL}/group/getGroupLeadersForAcceptCustom?`,
   addOtherLeaders: `${BASE_URL}/userActivity/addMoreAccepts`,
   getAcceptedLeaders: `${BASE_URL}/userActivity/getAcceptedLeaders?`,
   deleteYourNotifications: `${BASE_URL}/notification/deleteYourNotifications`,

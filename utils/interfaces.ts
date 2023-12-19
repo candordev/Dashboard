@@ -25,6 +25,7 @@ export interface UserProfile {
   leaderPointsForGroup: number;
   email?: string[];
   departmentNames: string[];
+  acceptedPost: boolean;
 }
 
 
