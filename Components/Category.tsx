@@ -53,7 +53,7 @@ const Category = () => {
           fontSize: 15,
           color: colors.black,
           fontWeight: "500",
-          fontFamily: "Montserrat",
+          fontFamily: "OpenSans",
         }}
         listMode="SCROLLVIEW"
         dropDownContainerStyle={[

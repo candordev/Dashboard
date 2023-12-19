@@ -142,7 +142,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           fontSize: 15,
           color: colors.black,
           fontWeight: "500",
-          fontFamily: "Montserrat",
+          fontFamily: "OpenSans",
         }}
         listMode="SCROLLVIEW"
         dropDownContainerStyle={[

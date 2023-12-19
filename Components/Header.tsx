@@ -46,13 +46,13 @@ const Header = ({ navigation, route }: any) => {
         zIndex: 100,
       }}
     >
-      <Text style={{alignSelf: 'flex-start', marginLeft: '5%', fontWeight: '600', fontSize: 27, fontFmaily: 'Montserrat'}}>All Issues</Text>
+      <Text style={{alignSelf: 'flex-start', marginLeft: '3.75%', fontWeight: '600', fontSize: 27, fontFmaily: 'Montserrat'}}>All Issues</Text>
       <View
         style={{
           marginTop: 15,
           flexDirection: "row",
           alignItems: "center",
-          width: "90%",
+          width: "92.5%",
           columnGap: 10,
         }}
       >
@@ -70,7 +70,7 @@ const Header = ({ navigation, route }: any) => {
           marginTop: 15,
           flexDirection: "row",
           alignItems: "center",
-          width: "90%",
+          width: "92.5%",
           columnGap: 10,
         }}
       >

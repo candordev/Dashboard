@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -6,12 +6,12 @@ import {
   useWindowDimensions,
 } from "react-native";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
+import { Easing } from "react-native-reanimated";
+import colors from "../Styles/colors";
+import { Post } from "../utils/interfaces";
 import IssueView from "./IssueView";
 import ProgressBar from "./ProgressBar";
 import Text from "./Text";
-import colors from "../Styles/colors";
-import { Post } from "../utils/interfaces";
-import { Link, useNavigation } from "@react-navigation/native";
 
 interface CardProps {
   issue: Post;
@@ -42,6 +42,7 @@ function Card(props: CardProps): JSX.Element {
         </TouchableOpacity>
       }
       placement={PopoverPlacement.FLOATING}
+      animationConfig={{ duration: 250, easing: Easing.inOut(Easing.quad) }}
       popoverStyle={{
         borderRadius: 10,
         width: width * 0.7,

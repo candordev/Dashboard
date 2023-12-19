@@ -19,7 +19,7 @@ import OuterView from "../Components/OuterView";
 
 const AllScreen = ({ navigation }: any) => {
   const [issues, setIssues] = useState<Post[]>([]);
-  const dev = true;
+  const dev = false;
 
   useEffect(() => {
     fetchPosts();
@@ -64,7 +64,7 @@ const AllScreen = ({ navigation }: any) => {
       >
         <View
           style={{
-            width: "90%",
+            width: "92.5%",
             marginBottom: 30,
             paddingTop: 10,
           }}
