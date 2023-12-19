@@ -184,7 +184,4 @@ const styles = StyleSheet.create({
 });
 
 export default LaunchScreen;
-function setError(message: any) {
-  throw new Error("Function not implemented.");
-}
 

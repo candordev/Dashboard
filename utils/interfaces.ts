@@ -28,7 +28,6 @@ export interface UserProfile {
   acceptedPost: boolean;
 }
 
-
 export interface CategoryWithPosts {
   [categoryName: string]: Post[];
 }
@@ -190,9 +189,9 @@ export interface Comment {
 }
 
 export enum UserReaction {
-  like = 'like',
-  dislike = 'dislike',
-  neither = 'neither',
+  like = "like",
+  dislike = "dislike",
+  neither = "neither",
 }
 
 export interface Notification {
@@ -225,22 +224,29 @@ export interface Region {
   longitudeDelta: number;
 }
 
+export interface ProgressSelector {
+  newSelected: boolean;
+  assignedSelected: boolean;
+  updatedSelected: boolean;
+  completedSelected: boolean;
+}
+
 export enum NotificationType {
-  commentLike = 'commentLike',
-  newComment = 'newComment',
-  updatePost = 'updatePost',
-  upvote = 'upvote',
-  announcement = 'announcement',
-  pollVote = 'pollVote',
-  proposalAccepted = 'proposalAccepted',
-  proposalUnaccepted = 'proposalUnaccepted',
-  proposal = 'proposal',
+  commentLike = "commentLike",
+  newComment = "newComment",
+  updatePost = "updatePost",
+  upvote = "upvote",
+  announcement = "announcement",
+  pollVote = "pollVote",
+  proposalAccepted = "proposalAccepted",
+  proposalUnaccepted = "proposalUnaccepted",
+  proposal = "proposal",
 }
 
 export enum BillStatusType {
-  'Prefiled',
-  'Introduced',
-  'Engrossed',
-  'Enrolled',
-  'Passed',
+  "Prefiled",
+  "Introduced",
+  "Engrossed",
+  "Enrolled",
+  "Passed",
 }

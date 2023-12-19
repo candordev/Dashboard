@@ -76,8 +76,25 @@ function NavigationWrapper() {
     return <>{/* You can add a loading indicator here */}</>;
   }
 
+  const linking = {
+    prefixes: [
+      /* your linking prefixes */
+    ],
+    config: {
+      screens: {
+        /* configuration for matching screens with paths */
+        root: "root",
+        all: "all",
+        your: "your",
+        launch: "launch",
+        login: "login",
+        NotFound: "404",
+      },
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {state.token ? (
           // If authenticated, show the Root screen

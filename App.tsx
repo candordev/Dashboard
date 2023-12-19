@@ -1,31 +1,9 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useState } from "react";
 import "react-native-gesture-handler";
 import NavigationWrapper from "./Structure/NavigationWrapper";
 import { UserProvider } from "./Structure/UserContext";
-
-const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
-
-const linking = {
-  prefixes: [
-    /* your linking prefixes */
-  ],
-  config: {
-    screens: {
-      /* configuration for matching screens with paths */
-      root: "root",
-      all: "all",
-      your: "your",
-      launch: "launch",
-      login: "login",
-      NotFound: "404",
-    },
-  },
-};
 
 export default function App() {
   const [fontsLoaded] = useFonts({

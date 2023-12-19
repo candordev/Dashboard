@@ -8,41 +8,23 @@ import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { Post } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
-
-interface GroupedIssues {
-  [key: string]: Post[];
-}
-
-interface Status {
-  newSelected: boolean;
-  assignedSelected: boolean;
-  updatedSelected: boolean;
-  completedSelected: boolean;
-}
-
-const sampleStatus: Status = {
-  newSelected: true,
-  assignedSelected: true,
-  updatedSelected: true,
-  completedSelected: true,
-};
+import { ProgressSelector } from "../utils/interfaces";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
   }>({});
-  const [currStatus, setCurrStatus] = useState<Status>(sampleStatus);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isPopoverVisible, setIsPopoverVisible] = useState(false);
+  const [currStatus, setCurrStatus] = useState<ProgressSelector>({
+    newSelected: true,
+    assignedSelected: true,
+    updatedSelected: true,
+    completedSelected: true,
+  });
   const [selectedHeaderOption, setSelectedHeaderOption] = useState<
     string | undefined
   >();
-  const handlePopoverVisibilityChange = (
-    isVisible: boolean | ((prevState: boolean) => boolean)
-  ) => {
-    setIsPopoverVisible(isVisible);
-  };
+
   const isFocused = useIsFocused(); // Assuming you're using something like this
 
   useEffect(() => {
@@ -52,7 +34,7 @@ const AllScreen = ({ navigation }: any) => {
     fetchPosts(currStatus, selectedHeaderOption);
   }, [currStatus, selectedHeaderOption]); // Depend on currStatus to refetch when it changes
 
-  const handleStatusChange = async (newStatus: Status) => {
+  const handleStatusChange = async (newStatus: ProgressSelector) => {
     console.log("Received status:", status);
     console.log("Current status:", currStatus);
     console.log("Status changed, updating current status and refetching posts");
@@ -69,7 +51,7 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   const fetchPosts = async (
-    status: Status | undefined,
+    status: ProgressSelector | undefined,
     headerOption?: string
   ) => {
     try {
@@ -149,7 +131,9 @@ const AllScreen = ({ navigation }: any) => {
               data={posts}
               renderItem={({ item }) => (
                 <Card
-                  onPopoverVisibilityChange={handlePopoverVisibilityChange}
+                  onPopoverVisibilityChange={() => {
+                    //REFETCH THE POSTS WHEN THE POPOVER IS CLOSED
+                  }}
                   issue={item}
                 />
               )}
