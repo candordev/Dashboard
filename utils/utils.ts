@@ -1,4 +1,3 @@
-// import messaging from '@react-native-firebase/messaging';
 import {NotificationData, NotificationType} from '../utils/interfaces';
 import {Endpoints} from './Endpoints';
 import {constants} from './constants';

@@ -1,4 +1,4 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 
 import SignupScreenEmailDob from './SignupScreenEmailDob';
@@ -7,7 +7,7 @@ import SignupScreenEmailDob from './SignupScreenEmailDob';
 // import SignupScreenPassword from './SignupScreenPassword';
 // import SignupScreenUsername from './SignupScreenUsername';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 function SignupStack(): JSX.Element {
   return (

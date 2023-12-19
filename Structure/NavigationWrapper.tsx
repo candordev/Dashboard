@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useUserContext } from '../Hooks/useUserContext';
 import { useLogin } from '../Hooks/useLogin';
@@ -16,7 +16,7 @@ import AllScreen from '../Screens/AllScreen';
 
 
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 
 

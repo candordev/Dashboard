@@ -1,41 +1,42 @@
-import React, { useState } from 'react';
-import { TextInput, View, TouchableOpacity, Pressable, Button } from 'react-native';
-import Text from '../Components/Text';
-import { fetchSignInMethodsForEmail, getAuth } from 'firebase/auth';
+import React, { useState } from "react";
+import {
+  TextInput,
+  View,
+  TouchableOpacity,
+  Pressable,
+  Button,
+} from "react-native";
+import Text from "../Components/Text";
+import { fetchSignInMethodsForEmail, getAuth } from "firebase/auth";
 
-import { Endpoints } from '../utils/Endpoints';
-import colors from '../Styles/colors';
-import styles from '../Styles/styles';
-import { useSignup } from '../Hooks/useSignup';
-import { openTermsAndConditions } from '../utils/utils';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-
-// import CheckBox from '@react-native-community/checkbox';
-// import { Icon } from 'react-native-vector-icons/Icon';
+import { Endpoints } from "../utils/Endpoints";
+import colors from "../Styles/colors";
+import styles from "../Styles/styles";
+import { useSignup } from "../Hooks/useSignup";
+import { openTermsAndConditions } from "../utils/utils";
 
 type SignupScreenEmailDobProps = {
   route: any;
   navigation: any;
 };
 
-
 function SignupScreenEmailDob({
   route,
   navigation,
 }: SignupScreenEmailDobProps): JSX.Element {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [firstNameError, setFirstNameError] = useState('');
-  const [lastNameError, setLastNameError] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
   const [checkBox, setCheckBox] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState([
@@ -46,7 +47,7 @@ function SignupScreenEmailDob({
     colors.white,
     colors.white,
   ]);
-  const {signupUser, error, signUpWithEmail, setError} = useSignup();
+  const { signupUser, error, signUpWithEmail, setError } = useSignup();
 
   const updatePassword = (inputPassword: string) => {
     let arr = [...passwordError];
@@ -106,34 +107,26 @@ function SignupScreenEmailDob({
     setConfirmPassword(inputPassword);
   };
 
-  const handleSignup = async () => { 
+  const handleSignup = async () => {
     setLoading(true);
 
-    console.log("DEBUG")
+    console.log("DEBUG");
 
-    if (passwordError.some(color => color !== colors.white)) {
-      setError('Please fulfill the password requirements below');
+    if (passwordError.some((color) => color !== colors.white)) {
+      setError("Please fulfill the password requirements below");
       setLoading(false);
       return;
     } else if (!checkBox) {
-      setError('Please agree to our terms');
+      setError("Please agree to our terms");
       setLoading(false);
       return;
     }
 
-    console.log("we got here no error so should signup")
+    console.log("we got here no error so should signup");
 
     const token: string | undefined = await signUpWithEmail(email, password);
 
-
-      await signupUser(
-        firstName,
-        lastName,
-        email,
-        username,
-        token ?? '',
-      );
-
+    await signupUser(firstName, lastName, email, username, token ?? "");
   };
 
   const toggleShowPassword = () => {
@@ -144,64 +137,62 @@ function SignupScreenEmailDob({
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-
   const { userID } = route.params ? route.params : { userID: null };
 
   const verifyPassword = async () => {
-    console.log("The colors", passwordError)
-    if (passwordError.some(color => color !== colors.white)) {
-        setError('Please fulfill the password requirements below');
-        setLoading(false);
-        return false ;
-      } else if (!checkBox) {
-        setError('Please agree to our terms');
-        setLoading(false);
-        return false;
-      }
-      return true;
-  }
+    console.log("The colors", passwordError);
+    if (passwordError.some((color) => color !== colors.white)) {
+      setError("Please fulfill the password requirements below");
+      setLoading(false);
+      return false;
+    } else if (!checkBox) {
+      setError("Please agree to our terms");
+      setLoading(false);
+      return false;
+    }
+    return true;
+  };
 
   const validateFields = async () => {
     try {
-
       setLoading(true);
-      setEmailError('');
-      setUsernameError('');
-      setFirstNameError('');
-      setLastNameError('');
-      setError('')
-    //   setFormError('');
-
-
+      setEmailError("");
+      setUsernameError("");
+      setFirstNameError("");
+      setLastNameError("");
+      setError("");
+      //   setFormError('');
 
       const emailValid = await doesEmailExistFirebase();
       const usernameValid = await validateUsername();
       const nameValid = validateName();
       const passwordValid = await verifyPassword();
-      console.log('username error', passwordValid)
+      console.log("username error", passwordValid);
 
-
-      console.log("We here boi", emailValid, usernameValid, nameValid, passwordValid)
+      console.log(
+        "We here boi",
+        emailValid,
+        usernameValid,
+        nameValid,
+        passwordValid
+      );
       if (emailValid && usernameValid && nameValid && passwordValid) {
-        console.log("We here boi Ayy")
+        console.log("We here boi Ayy");
         handleSignup();
-      } 
-      
+      }
 
-    //   else {
-    //     setFormError('Please correct the errors before proceeding.');
-    //   }
+      //   else {
+      //     setFormError('Please correct the errors before proceeding.');
+      //   }
     } catch (error) {
-      console.error('Validation error:', error);
+      console.error("Validation error:", error);
     } finally {
       setLoading(false);
     }
   };
-  
-
 
   const validateUsername = async () => {
-    setUsernameError('');
+    setUsernameError("");
     setLoading(true);
 
     try {
@@ -211,23 +202,23 @@ function SignupScreenEmailDob({
             username: username.trim(),
           }),
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
-        },
+        }
       );
       let resJson = await res.json();
       setLoading(false);
       if (!res.ok) {
-        setUsernameError('Invalid username');
+        setUsernameError("Invalid username");
         setLoading(false);
         return false;
       }
       if (res.ok) {
-         setLoading(false);
-         return true;
+        setLoading(false);
+        return true;
       }
     } catch (error) {
       setLoading(false);
@@ -242,42 +233,47 @@ function SignupScreenEmailDob({
       const auth = getAuth();
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       setLoading(false);
-  
+
       if (signInMethods.length) {
         // Email is taken, set the appropriate error
-        if (signInMethods.includes('google.com')) {
-          setEmailError('This email is taken. Please sign in with Google or try a different email.');
-        } else if (signInMethods.includes('apple.com')) {
-          setEmailError('This email is taken. Please sign in with Apple or try a different email.');
+        if (signInMethods.includes("google.com")) {
+          setEmailError(
+            "This email is taken. Please sign in with Google or try a different email."
+          );
+        } else if (signInMethods.includes("apple.com")) {
+          setEmailError(
+            "This email is taken. Please sign in with Apple or try a different email."
+          );
         } else {
-          setEmailError('This email is taken. Please log in or try a different email.');
+          setEmailError(
+            "This email is taken. Please log in or try a different email."
+          );
         }
         return false;
       }
-  
+
       return true; // Email is not taken
     } catch (error) {
       setLoading(false);
-      setEmailError('That email address is invalid!');
+      setEmailError("That email address is invalid!");
       return false;
     }
   };
-  
 
   const validateName = () => {
     let isValid = true;
     if (firstName.trim().length === 0) {
-      setFirstNameError('Please enter your first name');
+      setFirstNameError("Please enter your first name");
       isValid = false;
     } else {
-      setFirstNameError('');
+      setFirstNameError("");
     }
 
     if (lastName.trim().length === 0) {
-      setLastNameError('Please enter your last name');
+      setLastNameError("Please enter your last name");
       isValid = false;
     } else {
-      setLastNameError('');
+      setLastNameError("");
     }
 
     return isValid;
@@ -285,269 +281,306 @@ function SignupScreenEmailDob({
 
   return (
     <View style={styles.containerAkshat}>
-    {/* Candor Simplify Change Text */}
-    <View style={{ alignItems: 'center', marginTop: 100 , marginBottom: 10}}>
-      <Text
-        style={{
-          fontSize: 75,
-          fontWeight: "bold",
-          color: colors.white,
-          fontFamily: "Montserrat",
-        }}
-      >
-        Candor
-      </Text>
-      <Text
-        style={{
-          fontSize: 30,
-          fontWeight: "bold",
-          color: colors.white,
-          fontFamily: "Montserrat",
-        }}
-      >
-        Simplify Change
-      </Text>
-    </View>
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ width: '80%' }}> 
-
-                   {/* First Name Input */}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-        
-          <View style={{ flex: 1, marginRight: 10,  marginBottom: 5 }}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholderTextColor={colors.lightgray}
-                style={styles.input}
-                placeholder="First Name"
-                value={firstName}
-                onChangeText={(text) => {
-                  setFirstName(text);
-                  setFirstNameError('');
-                }}
-              />
-            </View>
-            <Text style={{
-              position: 'absolute', // Position absolute
-              bottom: -20, // Adjust this value as needed
-              left: 0,
-              right: 0,
-              color: firstNameError ? colors.red : 'transparent',
-              fontSize: 11,
-              textAlign: 'center',
-              height: 35, // Increase height as needed
-            }}>
-            {firstNameError || null}
-          </Text>
-          </View>
-
-          {/* Container for Last Name Input and Error */}
-          <View style={{ flex: 1,  marginBottom: 5 }}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholderTextColor={colors.lightgray}
-                style={styles.input}
-                placeholder="Last Name"
-                value={lastName}
-                onChangeText={(text) => {
-                  setLastName(text);
-                  setLastNameError('');
-                }}
-              />
-            </View>
-            <Text style={{
-              position: 'absolute', // Position absolute
-              bottom: -20, // Adjust this value as needed
-              left: 0,
-              right: 0,
-              color: lastNameError ? colors.red : 'transparent',
-              fontSize: 11,
-              textAlign: 'center',
-              height: 35, // Increase height as needed
-            }}>
-            {lastNameError || ' '}
-          </Text>
-          </View>
-        </View>
-
-        {/* Email Input */}
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholderTextColor={colors.lightgray}
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => {
-              setEmail(text);
-              setEmailError('');
+      {/* Candor Simplify Change Text */}
+      <View style={{ alignItems: "center", marginTop: 100, marginBottom: 10 }}>
+        <Text
+          style={{
+            fontSize: 75,
+            fontWeight: "bold",
+            color: colors.white,
+            fontFamily: "Montserrat",
+          }}
+        >
+          Candor
+        </Text>
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "bold",
+            color: colors.white,
+            fontFamily: "Montserrat",
+          }}
+        >
+          Simplify Change
+        </Text>
+      </View>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <View style={{ width: "80%" }}>
+          {/* First Name Input */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
             }}
-            autoFocus={true}
-            autoCapitalize="none"
-          />
-        </View>
-        <Text style={{
-              position: 'absolute', // Position absolute
-              bottom: -20, // Adjust this value as needed
-              left: 0,
-              right: 0,
-              color: emailError ? colors.red : 'transparent',
-              fontSize: 11,
-              textAlign: 'center',
-              height: 440, // Increase height as needed
-            }}>
-            {emailError || ' '}
-        </Text>
-        {/* Username Input */}
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholderTextColor={colors.lightgray}
-            style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={(text) => {
-              setUsername(text);
-              setUsernameError('');
-            }}
-          />
-        </View>
-        <Text style={{
-              position: 'absolute', // Position absolute
-              bottom: -20, // Adjust this value as needed
-              left: 0,
-              right: 0,
-              color: usernameError ? colors.red : 'transparent',
-              fontSize: 11,
-              textAlign: 'center',
-              height: 382, // Increase height as needed
-            }}>
-          {usernameError || ' '}
-        </Text>
-
-<View style={{alignItems: 'center', marginHorizontal: 30}}>
-      <View style={{ ...styles.inputContainer, width: '125%' }}>
-          <TextInput
-            placeholderTextColor={colors.lightgray}
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={updatePassword}
-            secureTextEntry={!showPassword}
-            autoFocus={true}
-          />
-          <Pressable onPress={toggleShowPassword} style={{padding: 12}}>
-          {showPassword ? (
-                <FaEyeSlash size={20} color={colors.lightgray} />
-                ) : (
-                <FaEye size={20} color={colors.lightgray} />
-                )}
-
-          </Pressable>
-        </View>
-        <View style={{ ...styles.inputContainer, width: '125%' }}>
-          <TextInput
-            placeholderTextColor={colors.lightgray}
-            style={styles.input}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={updateConfirmPassword}
-            secureTextEntry={!showConfirmPassword}
-          />
-          <Pressable onPress={toggleShowConfirmPassword} style={{padding: 12}}>
-          {showConfirmPassword ? (
-                <FaEyeSlash size={20} color={colors.lightgray} />
-                ) : (
-                <FaEye size={20} color={colors.lightgray} />
-                )}  
-          </Pressable>
-        </View>
-        <Text style={{
-              position: 'absolute', // Position absolute
-              bottom: -20, // Adjust this value as needed
-              left: 0,
-              right: 0,
-              color: error ? colors.red : 'transparent',
-              fontSize: 11,
-              textAlign: 'center',
-              height: 205, // Increase height as needed
-            }}>
-            {error || ' '}
-        </Text>
-
-       <View style={{marginBottom: 10}}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <input
-            type="checkbox"
-            checked={checkBox}
-            onChange={(e) => setCheckBox(e.target.checked)}
-            style={{ /* your styles here */ }}
-            />
-          <Pressable onPress={openTermsAndConditions}>
-            <Text style={{ marginLeft: 10, color: colors.white, fontSize: 15, textAlign: 'left' }}>
-              Please agree to our terms{' '}
+          >
+            <View style={{ flex: 1, marginRight: 10, marginBottom: 5 }}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholderTextColor={colors.lightgray}
+                  style={styles.input}
+                  placeholder="First Name"
+                  value={firstName}
+                  onChangeText={(text) => {
+                    setFirstName(text);
+                    setFirstNameError("");
+                  }}
+                />
+              </View>
               <Text
-                style={{color: colors.white, textDecorationLine: 'underline'}}>
-                here
+                style={{
+                  position: "absolute", // Position absolute
+                  bottom: -20, // Adjust this value as needed
+                  left: 0,
+                  right: 0,
+                  color: firstNameError ? colors.red : "transparent",
+                  fontSize: 11,
+                  textAlign: "center",
+                  height: 35, // Increase height as needed
+                }}
+              >
+                {firstNameError || null}
               </Text>
-            </Text>
-          </Pressable>
-          </View>
-        </View>
-        <View style={{}}>
-          <Text
-             style={{
-                color: colors.white,
-                fontSize: 15,
-                //textAlign: 'left',
-                marginLeft: -20
-              }}>
+            </View>
 
-            Passwords must contain:
-          </Text>
-          <View >
-            <Text style={{color: passwordError[0], fontSize: 15}}>
-              8 characters
-            </Text>
-            <Text style={{color: passwordError[1], fontSize: 15}}>
-              1 uppercase
-            </Text>
-            <Text style={{color: passwordError[2], fontSize: 15}}>
-              1 lowercase
-            </Text>
-            <Text style={{color: passwordError[3], fontSize: 15}}>
-              1 number
-            </Text>
-            <Text style={{color: passwordError[4], fontSize: 15}}>
-              1 special character
-            </Text>
-            <Text style={{color: passwordError[5], fontSize: 15}}>
-              Passwords match
-            </Text>
+            {/* Container for Last Name Input and Error */}
+            <View style={{ flex: 1, marginBottom: 5 }}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholderTextColor={colors.lightgray}
+                  style={styles.input}
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChangeText={(text) => {
+                    setLastName(text);
+                    setLastNameError("");
+                  }}
+                />
+              </View>
+              <Text
+                style={{
+                  position: "absolute", // Position absolute
+                  bottom: -20, // Adjust this value as needed
+                  left: 0,
+                  right: 0,
+                  color: lastNameError ? colors.red : "transparent",
+                  fontSize: 11,
+                  textAlign: "center",
+                  height: 35, // Increase height as needed
+                }}
+              >
+                {lastNameError || " "}
+              </Text>
+            </View>
           </View>
+
+          {/* Email Input */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholderTextColor={colors.lightgray}
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                setEmailError("");
+              }}
+              autoFocus={true}
+              autoCapitalize="none"
+            />
+          </View>
+          <Text
+            style={{
+              position: "absolute", // Position absolute
+              bottom: -20, // Adjust this value as needed
+              left: 0,
+              right: 0,
+              color: emailError ? colors.red : "transparent",
+              fontSize: 11,
+              textAlign: "center",
+              height: 440, // Increase height as needed
+            }}
+          >
+            {emailError || " "}
+          </Text>
+          {/* Username Input */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholderTextColor={colors.lightgray}
+              style={styles.input}
+              placeholder="Username"
+              value={username}
+              onChangeText={(text) => {
+                setUsername(text);
+                setUsernameError("");
+              }}
+            />
+          </View>
+          <Text
+            style={{
+              position: "absolute", // Position absolute
+              bottom: -20, // Adjust this value as needed
+              left: 0,
+              right: 0,
+              color: usernameError ? colors.red : "transparent",
+              fontSize: 11,
+              textAlign: "center",
+              height: 382, // Increase height as needed
+            }}
+          >
+            {usernameError || " "}
+          </Text>
+
+          <View style={{ alignItems: "center", marginHorizontal: 30 }}>
+            <View style={{ ...styles.inputContainer, width: "125%" }}>
+              <TextInput
+                placeholderTextColor={colors.lightgray}
+                style={styles.input}
+                placeholder="Password"
+                value={password}
+                onChangeText={updatePassword}
+                secureTextEntry={!showPassword}
+                autoFocus={true}
+              />
+              <Pressable onPress={toggleShowPassword} style={{ padding: 12 }}>
+                {showPassword ? (
+                  <FaEyeSlash size={20} color={colors.lightgray} />
+                ) : (
+                  <FaEye size={20} color={colors.lightgray} />
+                )}
+              </Pressable>
+            </View>
+            <View style={{ ...styles.inputContainer, width: "125%" }}>
+              <TextInput
+                placeholderTextColor={colors.lightgray}
+                style={styles.input}
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChangeText={updateConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+              />
+              <Pressable
+                onPress={toggleShowConfirmPassword}
+                style={{ padding: 12 }}
+              >
+                {showConfirmPassword ? (
+                  <FaEyeSlash size={20} color={colors.lightgray} />
+                ) : (
+                  <FaEye size={20} color={colors.lightgray} />
+                )}
+              </Pressable>
+            </View>
+            <Text
+              style={{
+                position: "absolute", // Position absolute
+                bottom: -20, // Adjust this value as needed
+                left: 0,
+                right: 0,
+                color: error ? colors.red : "transparent",
+                fontSize: 11,
+                textAlign: "center",
+                height: 205, // Increase height as needed
+              }}
+            >
+              {error || " "}
+            </Text>
+
+            <View style={{ marginBottom: 10 }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <input
+                  type="checkbox"
+                  checked={checkBox}
+                  onChange={(e) => setCheckBox(e.target.checked)}
+                  style={
+                    {
+                      /* your styles here */
+                    }
+                  }
+                />
+                <Pressable onPress={openTermsAndConditions}>
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      color: colors.white,
+                      fontSize: 15,
+                      textAlign: "left",
+                    }}
+                  >
+                    Please agree to our terms{" "}
+                    <Text
+                      style={{
+                        color: colors.white,
+                        textDecorationLine: "underline",
+                      }}
+                    >
+                      here
+                    </Text>
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+            <View style={{}}>
+              <Text
+                style={{
+                  color: colors.white,
+                  fontSize: 15,
+                  //textAlign: 'left',
+                  marginLeft: -20,
+                }}
+              >
+                Passwords must contain:
+              </Text>
+              <View>
+                <Text style={{ color: passwordError[0], fontSize: 15 }}>
+                  8 characters
+                </Text>
+                <Text style={{ color: passwordError[1], fontSize: 15 }}>
+                  1 uppercase
+                </Text>
+                <Text style={{ color: passwordError[2], fontSize: 15 }}>
+                  1 lowercase
+                </Text>
+                <Text style={{ color: passwordError[3], fontSize: 15 }}>
+                  1 number
+                </Text>
+                <Text style={{ color: passwordError[4], fontSize: 15 }}>
+                  1 special character
+                </Text>
+                <Text style={{ color: passwordError[5], fontSize: 15 }}>
+                  Passwords match
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Next Button */}
+          <TouchableOpacity
+            onPress={validateFields}
+            style={{
+              backgroundColor: colors.black,
+              padding: 10,
+              borderRadius: 10,
+              width: 315,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 13,
+            }}
+            disabled={loading} // Disable button while loading
+          >
+            <Text
+              style={{ fontSize: 17, fontWeight: "600", color: colors.white }}
+            >
+              Done
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-        {/* Next Button */}
-        <TouchableOpacity
-          onPress={validateFields}
-          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: 315, alignItems: 'center', justifyContent: 'center', marginTop: 13}}
-          disabled={loading} // Disable button while loading
-        >
-          <Text style={{ fontSize: 17, fontWeight: '600', color: colors.white }}>
-            Done
-          </Text>
-        </TouchableOpacity>
-        </View>
-    </View>
     </View>
   );
 }
 
-
-
 export default SignupScreenEmailDob;
 
 function setError(arg0: string) {
-    throw new Error('Function not implemented.');
+  throw new Error("Function not implemented.");
 }
-
-

@@ -1,9 +1,4 @@
-import { appleAuth } from '@invertase/react-native-apple-authentication';
 import auth, { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
 import { useState } from 'react';
 import { Endpoints } from '../utils/Endpoints';
 import { setUser } from './setUser';
