@@ -27,12 +27,18 @@ const AllScreen = ({ navigation }: any) => {
 
   const isFocused = useIsFocused(); // Assuming you're using something like this
 
+
+
+
+
+
+
   useEffect(() => {
     console.log("Component mounted, fetching posts initially");
 
     console.log("Event triggered, fetching posts");
     fetchPosts(currStatus, selectedHeaderOption);
-  }, [currStatus, selectedHeaderOption]); // Depend on currStatus to refetch when it changes
+  }, [currStatus, selectedHeaderOption, isFocused ]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     console.log("Received status:", status);
@@ -131,8 +137,11 @@ const AllScreen = ({ navigation }: any) => {
               data={posts}
               renderItem={({ item }) => (
                 <Card
-                  onPopoverVisibilityChange={() => {
-                    //REFETCH THE POSTS WHEN THE POPOVER IS CLOSED
+                  onPopoverVisibilityChange={(isVisible) => {
+                    console.log("IS VISIBLE", isVisible)
+                    if(!isVisible){
+                      fetchPosts(currStatus, selectedHeaderOption);
+                    }
                   }}
                   issue={item}
                 />

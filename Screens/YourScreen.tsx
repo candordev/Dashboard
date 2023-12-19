@@ -50,7 +50,7 @@ const YourScreen = ({ navigation }: any) => {
 
     console.log("Event triggered, fetching posts");
     fetchPosts(currStatus, selectedHeaderOption);
-  }, [currStatus, selectedHeaderOption]); // Depend on currStatus to refetch when it changes
+  }, [currStatus, selectedHeaderOption, isFocused]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: Status) => {
     console.log("Received status:", status);
@@ -151,9 +151,13 @@ const YourScreen = ({ navigation }: any) => {
               data={posts}
               renderItem={({ item }) => (
                 <Card
-                  onPopoverVisibilityChange={handlePopoverVisibilityChange}
-                  issue={item}
-                />
+                onPopoverVisibilityChange={(isVisible) => {
+                  if(!isVisible){
+                    fetchPosts(currStatus, selectedHeaderOption);
+                  }
+                }}
+                issue={item}
+              />
               )}
               //estimatedItemSize={135} // Adjust this value based on your average item size
               // ... other FlashList props ...

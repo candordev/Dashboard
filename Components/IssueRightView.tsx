@@ -8,7 +8,7 @@ import Category from "./Category";
 import MarkDone from "./MarkDone";
 import CloseIssue from "./CloseIssue";
 import SendTo from "./AddLeader";
-import { Post, UserProfile } from "../utils/interfaces";
+import { CategoryPost, Post, UserProfile } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { constants } from "../utils/constants";
 import { customFetch } from "../utils/utils";
@@ -20,11 +20,13 @@ interface IssueRightViewProps {
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
     const [leaders, setLeaders] = useState<UserProfile[]>([]);
+    const [categories, setCategories] = useState<CategoryPost[]>([]);
+
     const {state, dispatch} = useUserContext();
 
     useEffect(() => {
-     console.log("INFNITE LOOP E")
       fetchLeaders();
+      getCategories();
     }, []);
 
     const fetchLeaders = async () => {
@@ -57,6 +59,38 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         }
     };
 
+    const getCategories = async () => {
+        try {
+            console.log("THESE THE LEADER GROUPS", state.leaderGroups[0])
+            let endpoint: string;
+            endpoint =
+              Endpoints.getCategoryForPost +
+              new URLSearchParams({
+                //page: "1",
+                postID: props.issue._id,
+              });
+      
+            const res: Response = await customFetch(endpoint, {
+              method: 'GET',
+            });
+
+            const resJson = await res.json();
+            if (!res.ok) {
+              console.error(resJson.error);
+            }
+            if (res.ok) {
+                const result: CategoryPost[] = resJson;
+                console.log("CATEGORIES ARE...", result);
+
+                setCategories(result);
+            }
+        } catch (error) {
+            console.error("Error loading categories. Please try again later.", error);
+        }
+    };
+
+
+
     const suggestedDepartmentName = props.issue.suggestedDepartments?.[0]?.name || "No Department Suggested";
 
     return (
@@ -69,7 +103,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         >
             <View style={{ rowGap: 10 }}>
                 <Assignees leaders={leaders} issue={props.issue}/>
-                <Category issueId={props.issue._id} />
+                <Category issueId={props.issue._id} categories={categories}/>
                 <View style={{ marginTop: 10}}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', fontFamily: 'Montserrat' }}>
                     Candor Suggested To:

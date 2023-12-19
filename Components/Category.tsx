@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import DropDownPicker, { ValueType } from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
@@ -8,6 +8,9 @@ import { customFetch } from "../utils/utils";
 import AddCategory from "./AddCategory";
 import OrFullWidth from "./OrFullWidth";
 import Text from "./Text";
+import { CategoryPost } from "../utils/interfaces";
+
+
 
 type DropdownItem = {
   label: string;
@@ -16,15 +19,33 @@ type DropdownItem = {
 
 interface CategoryProps {
   issueId: string; // Assuming issueId is a string
+  categories: CategoryPost[];
   // ... other props if any
 }
 
-const Category: React.FC<CategoryProps> = ({ issueId }) => {
+const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[] | null>(null);
   const [items, setItems] = useState<DropdownItem[]>([]);
   const [valueChanged, setValueChanged] = useState(false);
 
+
+  useEffect(() => {
+    // Map categories to dropdown items
+    const dropdownItems = categories.map(category => ({
+      label: category.name,
+      value: category.name,
+    }));
+
+    // Find which categories are checked
+    const checkedCategories = categories
+      .filter(category => category.checked)
+      .map(category => category.name);
+
+    setItems(dropdownItems);
+    setValue(checkedCategories.length > 0 ? checkedCategories : null);
+
+  }, [categories]); // Depend on categories prop
   const handleValueChange = (newValues: ValueType[] | null) => {
     console.log("Selected values changed to:", newValues);
     if (newValues != null) {

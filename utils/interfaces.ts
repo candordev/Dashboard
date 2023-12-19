@@ -149,9 +149,9 @@ export interface Group {
   unreadIndicator: boolean;
 }
 
-export interface Category {
+export interface CategoryPost {
   name: string; // Name of the category
-  posts: String[]; // Array of post IDs associated with the category
+  checked: boolean;
 }
 
 export interface FullGroup extends Group {

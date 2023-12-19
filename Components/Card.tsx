@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Pressable,
@@ -22,32 +22,37 @@ interface CardProps {
 // const Card: React.FC<CardProps> = ({ issue }: any) => {
 function Card(props: CardProps): JSX.Element {
   const { height, width } = useWindowDimensions();
-  const [isVisible, setIsVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
 
   // const togglePopover = () => {
   //   setPopoverVisible((currentVisible) => {
   //     const newVisible = !currentVisible;
+  //     console.log("CARD NEW VISIBLE", newVisible)
   //     props.onPopoverVisibilityChange(newVisible); // Notify the parent component
+      
   //     return newVisible;
   //   });
   // };
 
-  const togglePopover = () => {
-    setPopoverVisible(currentVisible => !currentVisible);
-  };
-  
 
+  const togglePopover = () => {
+    setPopoverVisible(!popoverVisible);
+  };
+
+  const onRequestClose = () => {
+    setPopoverVisible(false);
+    props.onPopoverVisibilityChange(false); // Notify AllScreen when the popover closes
+  };
   
   const issueContent = props.issue.content.substring(0, 100).toString();
   console.log(issueContent); // Add this to check what `issue` contains
 
 
   return (
-    <Popover
-        isVisible={popoverVisible}
+    <Popover  
       from={
-       <Pressable style={styles.card} onPress={togglePopover}>
+        
+        <Pressable style={styles.card} onPress={togglePopover}>
           <View
             style={{
               flexDirection: "row",
@@ -62,11 +67,7 @@ function Card(props: CardProps): JSX.Element {
           <Text style={styles.content}>{issueContent}</Text>
         </Pressable>
       }
-      onRequestClose={() => {
-        console.log("INITAL HER")
-        setPopoverVisible(false);
-        props.onPopoverVisibilityChange(true); // Notify the parent that the popover is closed
-      }}
+      onRequestClose={onRequestClose}
       placement={PopoverPlacement.FLOATING}
       popoverStyle={{
         borderRadius: 10,

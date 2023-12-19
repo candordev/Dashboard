@@ -12,6 +12,7 @@ import {useSignout} from '../Hooks/useSignout';
 import SignupStack from '../Screens/SignupStack';
 import { useSignup } from '../Hooks/useSignup';
 import AllScreen from '../Screens/AllScreen';
+import SuggestedScreen from '../Screens/SuggestedScreen';
 
 
 
@@ -86,6 +87,7 @@ function NavigationWrapper() {
         root: "root",
         all: "all",
         your: "your",
+        suggested: "suggested",
         launch: "launch",
         login: "login",
         NotFound: "404",
@@ -102,6 +104,7 @@ function NavigationWrapper() {
           <Stack.Screen name="root" component={Root} />
           <Stack.Screen name="all" component={AllScreen} />
           <Stack.Screen name="your" component={YourScreen} />       
+          <Stack.Screen name="suggested" component={SuggestedScreen} />       
           </>
         ) : (
           // If not authenticated, show the LoginScreen
