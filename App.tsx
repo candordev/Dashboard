@@ -1,23 +1,11 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useState } from "react";
 import "react-native-gesture-handler";
-import LHN from "./Components/LHN";
-import AllScreen from "./Screens/AllScreen";
-import YourScreen from "./Screens/YourScreen";
-import { createStackNavigator } from "@react-navigation/stack";
-import LaunchScreen from "./Screens/LaunchScreen";
-import Root from "./Screens/Root";
-import LoginScreen from "./Screens/LoginScreen";
 import NavigationWrapper from "./Structure/NavigationWrapper";
-import {UserProvider} from "./Structure/UserContext";
-import {CategoriesProvider} from './Structure/CategoriesContext';
-import { NavigationProvider } from './Structure/NavigationProvider';
-
-
-
+import { UserProvider } from "./Structure/UserContext";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -70,7 +58,7 @@ export default function App() {
   //         options={{ headerShown: false }}
   //       />
   //       <Stack.Screen
-  //         name="root" 
+  //         name="root"
   //         component={Root}
   //         options={{ headerShown: false }}
   //       />
@@ -79,12 +67,7 @@ export default function App() {
   // );
   return (
     <UserProvider>
-      <NavigationProvider>
-      <CategoriesProvider>
-         <NavigationWrapper />        
-       </CategoriesProvider>
-      </NavigationProvider>
+      <NavigationWrapper />
     </UserProvider>
   );
-
 }

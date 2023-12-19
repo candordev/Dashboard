@@ -19,8 +19,6 @@ import OuterView from "../Components/OuterView";
 import styles from "../Styles/styles";
 import { useUserContext } from "../Hooks/useUserContext";
 import {event, eventNames} from '../Events';
-import { useNavigationState } from '../Structure/NavigationProvider';
-import FlashList from "@shopify/flash-list/dist/FlashList";
 import { useIsFocused } from '@react-navigation/native';
 import { cpuUsage } from "process";
 
@@ -52,22 +50,10 @@ const SuggestedScreen = ({ navigation }: any) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const [selectedHeaderOption, setSelectedHeaderOption] = useState<string | undefined>();
-  const {setUpdatedScreens,updatedScreens, setIsCategoryOpen, isCategoryOpen} = useNavigationState();
   const handlePopoverVisibilityChange = (isVisible: boolean | ((prevState: boolean) => boolean)) => {
     setIsPopoverVisible(isVisible);
   };
   const isFocused = useIsFocused(); // Assuming you're using something like this
-
-  useEffect(() => {
-    if (isFocused && updatedScreens.all) {
-      // Fetch posts for Screen 1
-      fetchPosts(currStatus);
-      // Reset the flag for Screen 1
-      setUpdatedScreens({ all: false });
-    }
-  }, [isFocused]); // }, [isFocused, updatedScreens.all]);
-  
-
 
   useEffect(() => {
     console.log("Component mounted, fetching posts initially");
@@ -76,23 +62,6 @@ const SuggestedScreen = ({ navigation }: any) => {
       fetchPosts(currStatus);
 
   }, [currStatus, selectedHeaderOption]); // Depend on currStatus to refetch when it changes
-
-
-  useEffect(() => {
-    console.log("POP OVER JUST CHANGED: ", isPopoverVisible)
-    console.log("Category was set for a post: ", isPopoverVisible)
-
-     if(isPopoverVisible && isCategoryOpen){
-      console.log("CHECK")
-      fetchPosts(currStatus);
-      setIsPopoverVisible(false);
-      setIsCategoryOpen(false);
-      setUpdatedScreens({ all: true, your: true, suggested: false });
-     }
-      // console.log("Event triggered, fetching posts");
-      // fetchPosts(currStatus);
-
-  }, [isPopoverVisible]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: Status) => {
     console.log("Received status:", status);

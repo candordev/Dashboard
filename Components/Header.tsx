@@ -1,15 +1,13 @@
-import { Link } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSignout } from "../Hooks/useSignout";
+import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import DropDown from "./DropDown";
+import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
-import {useSignout} from '../Hooks/useSignout';
-import { useUserContext } from "../Hooks/useUserContext";
-import { useCategoryContext } from "../Hooks/useCategoryContext";
-import OptionPicker from "./OptionPicker";
 
 interface Status {
   newSelected: boolean;
@@ -27,8 +25,12 @@ interface OptionPickerProps {
   onOptionChange: (option: string) => void;
 }
 
-const Header = ({ onStatusChange , headerTitle, onHeaderOptionChange }: HeaderProps) => {
-  const {state, dispatch} = useUserContext();
+const Header = ({
+  onStatusChange,
+  headerTitle,
+  onHeaderOptionChange,
+}: HeaderProps) => {
+  const { state, dispatch } = useUserContext();
   const activeTab = "all";
 
   const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
@@ -41,9 +43,6 @@ const Header = ({ onStatusChange , headerTitle, onHeaderOptionChange }: HeaderPr
   //   { label: "Safety", value: "A Person" },
   // ]);
   const [categoryItems, setCategoryItems] = useState([]);
-
-  
-  
 
   const [tagValues, setTagValues] = useState<string[]>([]);
   const [tagItems, setTagItems] = useState([
@@ -62,8 +61,6 @@ const Header = ({ onStatusChange , headerTitle, onHeaderOptionChange }: HeaderPr
   ]);
   const [selectedOption, setSelectedOption] = useState<String>();
 
-
-
   const handleSignOut = () => {
     // Call the signout function when the button is pressed
     useSignout({ dispatch });
@@ -79,10 +76,29 @@ const Header = ({ onStatusChange , headerTitle, onHeaderOptionChange }: HeaderPr
         zIndex: 100,
       }}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '90%' }}>
-        <Text style={{ alignSelf: 'flex-start', fontWeight: '600', fontSize: 27, fontFamily: 'Montserrat' }}>{headerTitle}</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: "90%",
+        }}
+      >
+        <Text
+          style={{
+            alignSelf: "flex-start",
+            fontWeight: "600",
+            fontSize: 27,
+            fontFamily: "Montserrat",
+          }}
+        >
+          {headerTitle}
+        </Text>
         <TouchableOpacity onPress={handleSignOut}>
-          <Text style={{ color: colors.black , fontWeight: '600', fontSize: 16 }}>Sign Out</Text>
+          <Text
+            style={{ color: colors.black, fontWeight: "600", fontSize: 16 }}
+          >
+            Sign Out
+          </Text>
         </TouchableOpacity>
       </View>
       <View

@@ -1,19 +1,14 @@
-import React, { useState } from "react";
-import {
-  TextInput,
-  View,
-  TouchableOpacity,
-  Pressable,
-  Button,
-} from "react-native";
-import Text from "../Components/Text";
 import { fetchSignInMethodsForEmail, getAuth } from "firebase/auth";
+import React, { useState } from "react";
+import { Pressable, TextInput, TouchableOpacity, View } from "react-native";
+import Text from "../Components/Text";
 
-import { Endpoints } from "../utils/Endpoints";
+import { useSignup } from "../Hooks/useSignup";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
-import { useSignup } from "../Hooks/useSignup";
+import { Endpoints } from "../utils/Endpoints";
 import { openTermsAndConditions } from "../utils/utils";
+import FeatherIcon from "react-native-vector-icons/Feather";
 
 type SignupScreenEmailDobProps = {
   route: any;
@@ -444,9 +439,9 @@ function SignupScreenEmailDob({
               />
               <Pressable onPress={toggleShowPassword} style={{ padding: 12 }}>
                 {showPassword ? (
-                  <FaEyeSlash size={20} color={colors.lightgray} />
+                  <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
                 ) : (
-                  <FaEye size={20} color={colors.lightgray} />
+                  <FeatherIcon name={"eye"} size={20} color={colors.gray} />
                 )}
               </Pressable>
             </View>
@@ -464,9 +459,9 @@ function SignupScreenEmailDob({
                 style={{ padding: 12 }}
               >
                 {showConfirmPassword ? (
-                  <FaEyeSlash size={20} color={colors.lightgray} />
+                  <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
                 ) : (
-                  <FaEye size={20} color={colors.lightgray} />
+                  <FeatherIcon name={"eye"} size={20} color={colors.gray} />
                 )}
               </Pressable>
             </View>
