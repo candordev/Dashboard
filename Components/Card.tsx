@@ -16,7 +16,7 @@ import { Post } from "../utils/interfaces";
 
 interface CardProps {
   issue: Post;
-  onPopoverVisibilityChange: (isVisible: boolean) => void;
+  onPopoverClose: () => void; // Add this line
 }
 
 // const Card: React.FC<CardProps> = ({ issue }: any) => {
@@ -24,24 +24,9 @@ function Card(props: CardProps): JSX.Element {
   const { height, width } = useWindowDimensions();
   const [popoverVisible, setPopoverVisible] = useState(false);
 
-  // const togglePopover = () => {
-  //   setPopoverVisible((currentVisible) => {
-  //     const newVisible = !currentVisible;
-  //     console.log("CARD NEW VISIBLE", newVisible)
-  //     props.onPopoverVisibilityChange(newVisible); // Notify the parent component
-      
-  //     return newVisible;
-  //   });
-  // };
-
-
-  const togglePopover = () => {
-    setPopoverVisible(!popoverVisible);
-  };
-
-  const onRequestClose = () => {
+  const handleClosePopover = () => {
     setPopoverVisible(false);
-    props.onPopoverVisibilityChange(false); // Notify AllScreen when the popover closes
+    props.onPopoverClose(); // Call the passed callback
   };
   
   const issueContent = props.issue.content.substring(0, 100).toString();
@@ -50,9 +35,11 @@ function Card(props: CardProps): JSX.Element {
 
   return (
     <Popover  
+      isVisible={popoverVisible}
+      onRequestClose={handleClosePopover} // Add this prop
+    
       from={
-        
-        <Pressable style={styles.card} onPress={togglePopover}>
+        <Pressable style={styles.card} onPress={() => setPopoverVisible(true)}>
           <View
             style={{
               flexDirection: "row",
@@ -67,7 +54,6 @@ function Card(props: CardProps): JSX.Element {
           <Text style={styles.content}>{issueContent}</Text>
         </Pressable>
       }
-      onRequestClose={onRequestClose}
       placement={PopoverPlacement.FLOATING}
       popoverStyle={{
         borderRadius: 10,
@@ -86,13 +72,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     marginVertical: 7,
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // // shadowOpacity: 0.1,
-    // // shadowRadius: 3,
   },
   title: {
     fontSize: 18,

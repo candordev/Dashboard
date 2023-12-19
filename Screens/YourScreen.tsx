@@ -110,6 +110,11 @@ const YourScreen = ({ navigation }: any) => {
     }
   };
 
+  const handlePopoverClose = () => {
+    fetchPosts(currStatus, selectedHeaderOption);
+  };
+
+
   return (
     <View style={{ flex: 1 }}>
       <Header
@@ -150,14 +155,7 @@ const YourScreen = ({ navigation }: any) => {
               key={`${name}-${refreshKey}`}
               data={posts}
               renderItem={({ item }) => (
-                <Card
-                onPopoverVisibilityChange={(isVisible) => {
-                  if(!isVisible){
-                    fetchPosts(currStatus, selectedHeaderOption);
-                  }
-                }}
-                issue={item}
-              />
+                <Card issue={item} onPopoverClose={handlePopoverClose} />
               )}
               //estimatedItemSize={135} // Adjust this value based on your average item size
               // ... other FlashList props ...
