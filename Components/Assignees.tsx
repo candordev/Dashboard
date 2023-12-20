@@ -58,11 +58,12 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
 
   useEffect(() => {
-    console.log("GROUP FOR A POST", props.issue.group)
+    //console.log("GROUP FOR A POST", props.issue.group)
     const departments: { [key: string]: Department } = {};
     const initialValues: string[] = [];
   
     props.leaders.forEach((leader) => {
+      console.log("suggested should be running")
       const aiSuggests = isLeaderSuggestedByAI(leader.user);
   
       const departmentName = leader.departmentNames[0]
@@ -112,7 +113,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
     setItems(itemsArray);
     setValue(initialValues);
-  }, [props.leaders]);
+  }, [props.leaders]);//props.leaders
   
 
 
@@ -361,7 +362,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   const isLeaderSuggestedByAI = (leaderId: string) => {
     // Ensure that there is at least one suggested department and it has leaders
-    if (props.issue.suggestedDepartments.length > 0 && props.issue.suggestedDepartments[0].leaders) {
+    console.log("suggested departments", props.issue.suggestedDepartments)
+    //console.log("suggested departments", props.issue.suggestedDepartments)
+
+    if (props.issue.suggestedDepartments.length > 0 && props.issue.suggestedDepartments[0].leaders.length > 0) {
       console.log("First suggested department:", props.issue.suggestedDepartments[0]); // Log the first suggested department
       console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
   

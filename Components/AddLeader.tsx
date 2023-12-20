@@ -47,6 +47,7 @@ const AddLeader = (props: {
         const data = await response.json();
         if (response.ok) {
 
+          console.log("DEPARTMENTS FETCHED DATA", data)
           setItems(data.map((dept: { name: any; _id: any; }) => ({ label: dept.name, value: dept._id })));
         } else {
           // Handle error in response
@@ -113,6 +114,7 @@ const AddLeader = (props: {
               setOpen={setOpen}
               setValue={setValue}
               setItems={setItems}
+              listMode="SCROLLVIEW"
               dropDownDirection="TOP" // This makes the dropdown open upwards
           />
 
