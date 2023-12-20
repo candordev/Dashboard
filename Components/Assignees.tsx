@@ -32,6 +32,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
   ]);
   const [previousValue, setPreviousValue] = useState<string[]>([]);
   const [previousValueChild, setPreviousChildValue] = useState<string[]>([]);
+  const [emailedLeaders, setEmailedLeaders] = useState<string[]>([]);
+  
+
+
 
   type Department = {
     label: string;
@@ -54,6 +58,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
 
   useEffect(() => {
+    console.log("GROUP FOR A POST", props.issue.group)
     const departments: { [key: string]: Department } = {};
     const initialValues: string[] = [];
   
@@ -74,16 +79,19 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
         departments[departmentName].children.push({
           label: leader.firstName,
-          value: leader.lastName,
+          value: leader.username,
           parent: departmentName,
         });
   
         // If leader is accepted, add to initial values
         if (leader.acceptedPost) {
-          currentSelectedChildrenRef.current.push(leader.lastName);
-          previousValueRefChild.current.push(leader.lastName)
-          initialValues.push(leader.departmentNames[0])
-          initialValues.push(leader.lastName)
+          currentSelectedChildrenRef.current.push(leader.username);
+          previousValueRefChild.current.push(leader.username)
+          previousValueRefChildB.current.push(leader.username)
+          if(!initialValues.includes(leader.departmentNames[0])){
+            initialValues.push(leader.departmentNames[0])
+          }     
+          initialValues.push(leader.username)
         }
 
     });
@@ -106,54 +114,6 @@ function Assignees(props: AssigneesProps): JSX.Element {
     setValue(initialValues);
   }, [props.leaders]);
   
-  // useEffect(() => {
-  //   // Initialize an object to group leaders by department
-  //   const departments: { [key: string]: Department } = {};
-  
-  //   // Loop over the leaders to group them by department
-  //   props.leaders.forEach((leader) => {
-  //     console.log("leader departments", leader.departmentNames)
-  //     leader.departmentNames.forEach(departmentName => {
-  //       if (!departments[departmentName]) {
-  //         departments[departmentName] = {
-  //           label: departmentName,
-  //           value: departmentName,
-  //           children: [],
-  //           ...(isLeaderSuggestedByAI(leader.user) && { aiSuggests: true }),
-  //         };
-  //       }
-  //       // Add leader as a child to the department
-  //       departments[departmentName].children.push({
-  //         label: leader.firstName,
-  //         value: leader.lastName,
-  //         parent: departmentName,
-  //       });
-  //     });
-  //   });
-
-  //   const itemsArray: Item[] = [];
-
-  
-  //   // Convert departments object to array and include AI suggests tag if applicable
-  //   Object.values(departments).forEach(department => {
-  //     // Add department first with parent as null
-  //     itemsArray.push({
-  //       label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label,
-  //       value: department.value,
-  //       // parent is intentionally omitted or set to undefined for a department
-  //     });
-    
-  //     // Add children of the department
-  //     itemsArray.push(...department.children.map(child => ({
-  //       label: child.label,
-  //       value: child.value,
-  //       parent: department.value, // Assuming the department's value is used as the parent identifier
-  //     })));
-  //   });
-  //   console.log("DEBUG ITEMS", itemsArray)
-  //   setItems(itemsArray);
-  // }, [props.leaders]);
-
 
 
 
@@ -177,19 +137,20 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   const previousValueRef = useRef<string[]>([]);
   const previousValueRefChild = useRef<string[]>([]);
+  const previousValueRefChildB = useRef<string[]>([]);
   const currentSelectedChildrenRef = useRef<string[]>([]);
 
 
   useEffect(() => {
     // Update the ref when previousValue state changes
     previousValueRef.current = previousValue;
-    // previousValueRefChild.current = previousValueChild;
+    previousValueRefChild.current = previousValueChild;
   }, [previousValue, previousValueChild]);
   
 
-  const onCloseDropDown = () => {
+  const onCloseDropDown = async () => {
     const currentSelectedChildren = currentSelectedChildrenRef.current;
-    const previousSelectedChildren = previousValueRefChild.current;
+    const previousSelectedChildren = previousValueRefChildB.current;
   
     // Check if selectedChildren has changed
     const hasChildrenChanged = previousSelectedChildren.length !== currentSelectedChildren.length ||
@@ -201,15 +162,38 @@ function Assignees(props: AssigneesProps): JSX.Element {
     if (hasChildrenChanged) {
       console.log("Selected children have changed. Making route call...");
       // Make your route call here
-      // ...
 
-      // Update the previousValueChild state
+      try {
+        let res = await customFetch(Endpoints.setAssignees, {
+          method: "POST",
+          body: JSON.stringify({
+            postID: props.issue._id, 
+            assignees: currentSelectedChildren, // Assuming issueId is available in this component
+          }),
+        });
+
+        if (!res.ok) {
+          const resJson = await res.json();
+          console.error("Error adding ASSIGNEES:", resJson.error);
+        } else {
+          console.log("ASSIGNEES added successfully");
+          //event.emit(eventNames.ISSUE_CATEGORY_SET);
+          // You can handle any additional state updates or notifications here
+        }
+      } catch (error) {
+        console.error("Network error, please try again later.", error);
+      }
+
+
+      // // ...
+
+      // // Update the previousValueChild state
       setPreviousChildValue(currentSelectedChildren);
     } else {
       console.log("No change in selected children.");
     }
 
-    previousValueRefChild.current = currentSelectedChildrenRef.current;
+    previousValueRefChildB.current = currentSelectedChildrenRef.current;
   };
   
 
@@ -303,43 +287,77 @@ function Assignees(props: AssigneesProps): JSX.Element {
     //}
   };
   
-
   
 
-  const inviteLeader = (name: string, email: string) => {
-    setItems([
-      ...items,
-      {
-        label: name,
-        value: email,
-      },
-    ]);
+  const updateDropdownAndSelection = (departmentName: string, leaderFirstName: string, leaderEmail: string) => {
+    let updatedItems = [...items];
+    let departmentExists = updatedItems.some(item => item.label === departmentName);
+    const newSelectedChildren = new Set<string>(previousValueRefChild.current);
+  
+    // if (!departmentExists) {
+    //   // Add new department
+    //   updatedItems.push({
+    //     label: departmentName,
+    //     value: departmentName
+    //   });
+    // }
+    console.log("department exists", departmentExists)
+    if(departmentExists){
+      // Add new leader as a separate item with a parent property
+      updatedItems.push({
+        label: leaderFirstName,
+        value: leaderEmail,
+        parent: departmentName
+      });
+    }
+  
+    // Update items state
+    setItems(updatedItems);
+    newSelectedChildren.add(leaderEmail)
+  
+    // Update selected values to include new leader and department
+    let updatedValue = [...value, departmentName, leaderEmail];
+    setValue(updatedValue);
+    setSelectedChildren(Array.from(newSelectedChildren))
+  };
+  
+  
 
-    setValue([...value, email]);
+  const inviteLeader = async (firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) => {
+    await sendEmailToLeader(firstName, lastName, departmentID, email, departmentName);
+  };
+
+  async function sendEmailToLeader(firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) {
+    const currentSelectedChildren = currentSelectedChildrenRef.current;
+    console.log("This is the department Name", departmentName)
+    try {
+      console.log("This is the email: ", email)
+      console.log("This is the issue ID: ", props.issue._id)
+      let res = await customFetch(Endpoints.sendEmailToLeader, {
+        method: "POST",
+        body: JSON.stringify({
+          postID: props.issue._id, 
+          toLeaderEmail: email, // Assuming issueId is available in this component
+          firstName: firstName,
+          lastName: lastName,
+          departmentID: departmentID,
+          email: email,
+          groupID: props.issue.group._id,
+          assigneeUsernames: currentSelectedChildren,
+        }),
+      });
+
+      if (!res.ok) {
+        const resJson = await res.json();
+        console.error("Error  EMAIL:", resJson.error);
+      } else {
+        console.log("EMAIL successfully");
+        updateDropdownAndSelection(departmentName, firstName, email);
+      }
+    } catch (error) {
+      console.error("Network error, please try again later.", error);
+    }
   }
-
-  // async function sendEmailToLeader(email: string) {
-  //   try {
-  //     let res: Response = await customFetch(
-  //         Endpoints.sendEmailToLeader,
-  //         {
-  //             method: "POST",
-  //             body: {
-  //               toLeaderEmail: email,
-  //               postID: props.issue._id,
-  //             },
-  //         }
-  //     );
-  //     if (!res.ok) {
-  //         const resJson = await res.json();
-  //         console.error(resJson.error);
-  //     } else {
-  //         console.log("Email sent to leader");
-  //     }
-  //   } catch (error) {
-  //     console.error("Network error, please try again later.", error);
-  //   }
-  // }
 
   const isLeaderSuggestedByAI = (leaderId: string) => {
     // Ensure that there is at least one suggested department and it has leaders
@@ -375,8 +393,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
       </Text>
       <DropDownPicker
         maxHeight={180}
-        multipleText={`${value.length} ${
-          value.length == 1 ? "leader" : "leaders"
+        multipleText={`${selectedChildren.length} ${
+          selectedChildren.length == 1 ? "leader" : "leaders"
         } selected`}
         searchable={true}
         searchTextInputStyle={{
@@ -457,12 +475,14 @@ function Assignees(props: AssigneesProps): JSX.Element {
           <FeatherIcon name={"check"} size={17} color={colors.gray} />
         )}
       />
-      {value.map((item, index) => {
+      {selectedChildren.map((item, index) => {
         return <ProfileRow name={item} key={index} />;
       })}
       <View>
+    </View>
+      <View>
         <OrFullWidth />
-        <AddLeader inviteLeader={inviteLeader}/>
+        <AddLeader inviteLeader={inviteLeader}  groupID={props.issue.group._id}/>
       </View>
     </View>
   );

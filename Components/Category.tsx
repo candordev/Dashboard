@@ -54,6 +54,24 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
     }
   };
 
+  const updateDropdownAndSelection = (newCategoryName: string) => {
+    let updatedItems = [...items];
+  
+
+      updatedItems.push({
+        label: newCategoryName,
+        value: newCategoryName
+      });
+    
+  
+    // Update items state
+    setItems(updatedItems);
+  
+    // Update selected values to include new leader and department
+    let updatedValue = value ? [...value, newCategoryName] : [newCategoryName];
+    setValue(updatedValue);
+  };
+
   const handleDropdownClose = async () => {
     if (valueChanged) {
       console.log("Dropdown closed with new value:", value);
@@ -74,6 +92,8 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
           const resJson = await res.json();
           console.error("Error adding categories:", resJson.error);
         } else {
+          
+           //fake set the category here
           //console.log("Categories added successfully");
           //event.emit(eventNames.ISSUE_CATEGORY_SET);
           // You can handle any additional state updates or notifications here
@@ -110,6 +130,7 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
         console.error("Error adding new category:", resJson.error);
       } else {
         console.log("New Category added successfully");
+        updateDropdownAndSelection(newCategoryName);
 
         // Update categories in context
 

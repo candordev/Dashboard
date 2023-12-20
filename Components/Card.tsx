@@ -35,7 +35,7 @@ function Card(props: CardProps): JSX.Element {
 
   return (
     <Popover  
-      isVisible={popoverVisible}
+      //isVisible={popoverVisible}
       onRequestClose={handleClosePopover} // Add this prop
     
       from={

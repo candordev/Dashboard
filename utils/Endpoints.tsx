@@ -94,5 +94,8 @@ export const Endpoints = {
   dashboardPosts: `${BASE_URL}/userActivity/dashboardPosts?`,
   categories: `${BASE_URL}/userActivity/categories?`,
   addCategory:`${BASE_URL}/userActivity/addCategory?`,
-  getCategoryForPost: `${BASE_URL}/userActivity/getCategoriesForPost?`
+  getCategoryForPost: `${BASE_URL}/userActivity/getCategoriesForPost?`,
+  setAssignees: `${BASE_URL}/userActivity/setAssignees?`,
+  getDepartments: `${BASE_URL}/department/getDepartments?`
+
 };
