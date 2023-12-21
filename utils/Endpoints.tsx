@@ -98,6 +98,7 @@ export const Endpoints = {
   setAssignees: `${BASE_URL}/userActivity/setAssignees?`,
   getDepartments: `${BASE_URL}/department/getDepartments?`,
   setDeadline: `${BASE_URL}/post/setDeadline?`,
+  setNeighborhood: `${BASE_URL}/userActivity/setNeighborhood?`,
 
 
 };

@@ -14,11 +14,10 @@ import { constants } from "../utils/constants";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import DatePicker from 'react-datepicker';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
 import 'react-datepicker/dist/react-datepicker.css';
+import { GooglePlacesAutocomplete, GooglePlaceData, GooglePlaceDetail } from 'react-native-google-places-autocomplete';
+import { getAuth } from "firebase/auth";
+
 
 
 interface IssueRightViewProps {
@@ -29,7 +28,29 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
     const [leaders, setLeaders] = useState<UserProfile[]>([]);
     const [categories, setCategories] = useState<CategoryPost[]>([]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+    const [idToken, setIdToken] = useState<string | ''>('');
+    const [inputValue, setInputValue] = useState('');
+    const [key, setKey] = useState(0); // Initialize a key state
+    const auth = getAuth();
+    // console.log("THIS IS THE AUTH", auth)
 
+    useEffect(() => {
+      // Fetch the ID token
+      const fetchToken = async () => {
+        const user = auth.currentUser;
+        if (user) {
+          const token = await user.getIdToken();
+          console.log("DAA TOKEN", token)
+          setIdToken(token);
+        }
+      };
+      console.log("THE LOCATION INPUT VALUE: ", props.issue.neighborhood)
+      setInputValue(props.issue.neighborhood)
+
+
+
+      fetchToken();
+    }, []);
 
 
     const handleDateChange = async (date: Date | null) => {
@@ -136,6 +157,29 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
 
     const suggestedDepartmentName = props.issue.suggestedDepartments?.[0]?.name || "No Department Suggested";
 
+    const handleSelect = async (data: GooglePlaceData, details: GooglePlaceDetail | null) => {
+      const address = data.description; // Or use details.formatted_address
+
+      try {
+          let res = await customFetch(Endpoints.setNeighborhood, {
+              method: "POST",
+              body: JSON.stringify({ address: address, postID: props.issue._id }),
+          });
+
+          if (!res.ok) {
+              const resJson = await res.json();
+              console.error("Error setting neighborhood:", resJson.error);
+          } else {
+              const resJson = await res.json();
+              console.log("THE NEIGHBORHOOD: ",resJson.neighborhood )
+              setInputValue(resJson.neighborhood); // Update the input box with the neighborhood
+              setKey(prevKey => prevKey + 1);
+          }
+      } catch (error) {
+          console.error("Network error, please try again later.", error);
+      }
+  };
+
     return (
         <View
             style={{
@@ -160,6 +204,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
                       fontSize: 18,
                       fontWeight: "550",
                       fontFamily: "Montserrat",
+                      marginTop: 7
                     }}
                   >
                     Select Deadline
@@ -172,6 +217,36 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               />
 
             </View>  
+            <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: "550",
+                      fontFamily: "Montserrat",
+                      marginTop: 20,
+                    }}
+                  >
+                    Select Location
+            </Text>
+            <GooglePlacesAutocomplete
+                key={key} // Use the key here
+                placeholder= {inputValue ? inputValue : 'Search'}
+                onPress={handleSelect}
+                query={{
+                  key: 'AIzaSyD-DMOdct5BYGr0zv9UHIZ3Sk9ZWWdJEUY',
+                  language: 'en',
+                }}
+                requestUrl={{
+                  useOnPlatform: 'web', // or "all"
+                  url:
+                    'http://184.72.74.25:4000/api/userActivity/google-places-proxy', // or any proxy server that hits https://maps.googleapis.com/maps/api
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                      Authorization: 'Bearer ' + idToken,
+                    },
+
+                }}   
+              />
 
             <View style={{ rowGap: 10 }}>
                 <MarkDone />

@@ -46,6 +46,7 @@ function NavigationWrapper() {
       try {
         // Retrieve user token
         const token = await authUser.getIdToken();
+        console.log("found token", token)
 
         // Log in user with the obtained token
         await loginUser({ token: token });

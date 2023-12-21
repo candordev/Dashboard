@@ -95,6 +95,7 @@ export interface Post {
   bill_status?: string;
   suggestedDepartments: Department[];
   deadline: Date;
+  neighborhood: string;
 }
 
 export interface Leader {

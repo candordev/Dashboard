@@ -393,7 +393,7 @@ function SignupScreenEmailDob({
               color: emailError ? colors.red : "transparent",
               fontSize: 11,
               textAlign: "center",
-              height: 440, // Increase height as needed
+              height: 448, // Increase height as needed
             }}
           >
             {emailError || " "}
@@ -420,7 +420,7 @@ function SignupScreenEmailDob({
               color: usernameError ? colors.red : "transparent",
               fontSize: 11,
               textAlign: "center",
-              height: 382, // Increase height as needed
+              height: 389, // Increase height as needed
             }}
           >
             {usernameError || " "}
