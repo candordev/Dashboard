@@ -13,6 +13,13 @@ import { Endpoints } from "../utils/Endpoints";
 import { constants } from "../utils/constants";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
+import DatePicker from 'react-datepicker';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 interface IssueRightViewProps {
     issue: Post;
@@ -21,12 +28,48 @@ interface IssueRightViewProps {
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
     const [leaders, setLeaders] = useState<UserProfile[]>([]);
     const [categories, setCategories] = useState<CategoryPost[]>([]);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+
+
+    const handleDateChange = async (date: Date | null) => {
+        
+        try {
+          let res = await customFetch(Endpoints.setDeadline, {
+            method: "POST",
+            body: JSON.stringify({
+              postID: props.issue._id, 
+              deadline: date, // Assuming issueId is available in this component
+            }),
+          });
+  
+          if (!res.ok) {
+            const resJson = await res.json();
+            console.error("Error adding DEADLINE:", resJson.error);
+          } else {
+            console.log("DEADLINE added successfully");
+            setSelectedDate(date);
+            //event.emit(eventNames.ISSUE_CATEGORY_SET);
+            // You can handle any additional state updates or notifications here
+          }
+        } catch (error) {
+          console.error("Network error, please try again later.", error);
+        }
+
+    };
 
     const {state, dispatch} = useUserContext();
 
     useEffect(() => {
       fetchLeaders();
       getCategories();
+      console.log("THIS IS THE DEADLINE", props.issue.deadline)
+      if(props.issue.deadline){
+        setSelectedDate(new Date(props.issue.deadline));
+      }else{
+        setSelectedDate(null);
+      }
+     
     }, []);
 
     const fetchLeaders = async () => {
@@ -104,18 +147,35 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             <View style={{ rowGap: 10 }}>
                 <Assignees leaders={leaders} issue={props.issue}/>
                 <Category issueId={props.issue._id} categories={categories}/>
-                <View style={{ marginTop: 10}}>
+                {/* <View style={{ marginTop: 10}}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', fontFamily: 'Montserrat' }}>
                     Candor Suggested To:
                     </Text>
                     <Text style={{ fontSize: 14, fontFamily: 'Montserrat' }}>
                     {suggestedDepartmentName}
                     </Text>
-                </View>
-            </View>          
+                </View> */}
+                   <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: "550",
+                      fontFamily: "Montserrat",
+                    }}
+                  >
+                    Select Deadline
+                  </Text>
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={handleDateChange}
+                  showTimeSelect
+                  dateFormat="Pp"
+              />
+
+            </View>  
+
             <View style={{ rowGap: 10 }}>
                 <MarkDone />
-                <CloseIssue />
+                {/* <CloseIssue /> */}
             </View>
         </View>
     );

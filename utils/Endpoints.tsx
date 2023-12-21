@@ -96,6 +96,8 @@ export const Endpoints = {
   addCategory:`${BASE_URL}/userActivity/addCategory?`,
   getCategoryForPost: `${BASE_URL}/userActivity/getCategoriesForPost?`,
   setAssignees: `${BASE_URL}/userActivity/setAssignees?`,
-  getDepartments: `${BASE_URL}/department/getDepartments?`
+  getDepartments: `${BASE_URL}/department/getDepartments?`,
+  setDeadline: `${BASE_URL}/post/setDeadline?`,
+
 
 };
