@@ -13,6 +13,7 @@ interface HeaderProps {
   onStatusChange: (status: Status) => void;
   headerTitle: string;
   onHeaderOptionChange: (option: string) => void;
+  
 }
 
 const Header = ({

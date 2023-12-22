@@ -32,10 +32,6 @@ function Assignees(props: AssigneesProps): JSX.Element {
   ]);
   const [previousValue, setPreviousValue] = useState<string[]>([]);
   const [previousValueChild, setPreviousChildValue] = useState<string[]>([]);
-  const [emailedLeaders, setEmailedLeaders] = useState<string[]>([]);
-  
-
-
 
   type Department = {
     label: string;
@@ -97,7 +93,13 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
     });
   
-    const itemsArray: Item[] = Object.values(departments).flatMap(department => {
+    const itemsArray: Item[] = Object.values(departments).sort((a, b) => {
+      if (a.aiSuggests && !b.aiSuggests) return -1;
+      if (!a.aiSuggests && b.aiSuggests) return 1;
+      return 0;
+    })
+    .flatMap(department => {
+      // Then map each department and its children to items
       return [
         {
           label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label,
@@ -113,7 +115,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
     setItems(itemsArray);
     setValue(initialValues);
-  }, [props.leaders]);//props.leaders
+  }, [props.leaders]);
   
 
 
@@ -126,15 +128,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
         setPreviousValue(value);
         setPreviousChildValue(selectedChildren)
         previousValueRefChild.current = previousValueChild;
-        // currentSelectedChildrenRef.current = selectedChildren;
 
   }, [value, selectedChildren],);
-
-  // useEffect(() => {
-  //   console.log('previousValue updated:', previousValue);
-    
-    
-  // }, [previousValue]);
 
   const previousValueRef = useRef<string[]>([]);
   const previousValueRefChild = useRef<string[]>([]);
