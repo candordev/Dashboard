@@ -382,8 +382,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
-        minHeight: open ? 255 : undefined,
         rowGap: 10,
+        zIndex: 2,
       }}
     >
       <Text

@@ -6,7 +6,8 @@ import ExpandableTextInput from "./ExpandableTextInput";
 import { Post } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
-import {Comment} from '../utils/interfaces';
+import { Comment } from "../utils/interfaces";
+import PrivateChat from "./PrivateChat";
 
 interface IssueLeftViewProps {
   issue: Post;
@@ -17,14 +18,12 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    console.log("INFNITE LOOP C")
+    console.log("INFNITE LOOP C");
     fetchComments();
-  }, [])
-
+  }, []);
 
   async function fetchComments() {
     try {
-
       const res: Response = await customFetch(
         Endpoints.getComments +
           new URLSearchParams({
@@ -32,10 +31,9 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
             skip: "0",
           }),
         {
-          method: 'GET',
-        },
+          method: "GET",
+        }
       );
-
 
       let resJson = await res.json();
       if (!res.ok) {
@@ -51,9 +49,8 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
 
   async function postComment() {
     try {
-
       let res: Response = await customFetch(Endpoints.createComment, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           content: content,
           postID: props.issue._id,
@@ -75,13 +72,10 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   return (
     <View
       style={{
-        borderColor: colors.lightestgray,
-        backgroundColor: colors.background,
-        borderWidth: 2,
-        borderRadius: 10,
         height: "100%",
         flex: 1,
         justifyContent: "space-between",
+        rowGap: 10,
       }}
     >
       <View>
@@ -89,8 +83,9 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           style={{
             backgroundColor: colors.white,
             padding: 10,
-            borderTopRightRadius: 10,
-            borderTopLeftRadius: 10,
+            borderWidth: 2,
+            borderRadius: 10,
+            borderColor: colors.lightestgray,
           }}
         >
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
@@ -114,14 +109,16 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
               <Text style={{ fontSize: 14, fontWeight: "550" }}>
                 {comment.profile.firstName + " " + comment.profile.lastName}
               </Text>
-              <Text style={{ fontSize: 12, marginTop: 3 }}>{comment.content}</Text>
+              <Text style={{ fontSize: 12, marginTop: 3 }}>
+                {comment.content}
+              </Text>
             </View>
           );
         })}
       </View>
-      <ExpandableTextInput onInputChange={setContent} onSubmit={postComment}/>
+      <PrivateChat />
     </View>
   );
-};
+}
 
 export default IssueLeftView;
