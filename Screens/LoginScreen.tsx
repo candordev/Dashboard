@@ -2,17 +2,47 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet, Image } from "react-native";
 import colors from "../Styles/colors";
 import Text from "../Components/Text";
-import { Link, StackActions, useNavigation } from "@react-navigation/native";
+import { Link, useNavigation } from "@react-navigation/native";
 import Button from "../Components/Button";
+//import auth from '@react-native-firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigation : any = useNavigation();
 
-  const handleLogin = () => {
-    navigation.navigate('root');
+  const handleLogin = async () => {
+    const initialAuthState = getAuth().currentUser;
+    console.log("Initial Auth State:", initialAuthState);
+    setLoading(true);
+    setError("");
+    try {
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log("This is the user credentials", userCredential)
+          const newState = getAuth().currentUser;
+          console.log("New State:", newState); 
+          // Signed in 
+
+          const user = userCredential.user;
+          //navigation.navigate('root'); // Navigate to the desired screen
+          // ...
+        })
+        .catch((error) => {
+          setError(error.message); // Update the error message
+        });
+     
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,11 +100,18 @@ const LoginScreen = () => {
           style={{ marginTop: 15, marginBottom: 5 }}
         />
       </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {/* Include loading state and other UI components */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    // ... Other styling for error text
+  },
+  
   container: {
     flex: 1,
     justifyContent: "center",

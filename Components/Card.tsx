@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -6,19 +6,24 @@ import {
   useWindowDimensions,
 } from "react-native";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
+import colors from "../Styles/colors";
+import { Post } from "../utils/interfaces";
 import IssueView from "./IssueView";
 import ProgressBar from "./ProgressBar";
 import Text from "./Text";
-import colors from "../Styles/colors";
-import { Post } from "../utils/interfaces";
 
 interface CardProps {
   issue: Post;
+  onPopoverClose: () => void; // Add this line
 }
 
 // const Card: React.FC<CardProps> = ({ issue }: any) => {
 function Card(props: CardProps): JSX.Element {
   const { height, width } = useWindowDimensions();
+  const [popoverVisible, setPopoverVisible] = useState(false);
+
+  const issueContent = props.issue.content.substring(0, 100).toString();
+  console.log(issueContent); // Add this to check what `issue` contains
 
   return (
     <Popover
@@ -35,7 +40,7 @@ function Card(props: CardProps): JSX.Element {
             <Text style={styles.title}>{props.issue.title}</Text>
             <ProgressBar step={props.issue.step} />
           </View>
-          <Text style={styles.content}>{props.issue.content}</Text>
+          <Text style={styles.content}>{issueContent}</Text>
         </TouchableOpacity>
       }
       placement={PopoverPlacement.FLOATING}
@@ -45,10 +50,10 @@ function Card(props: CardProps): JSX.Element {
         height: height * 0.9,
       }}
     >
-      <IssueView issue={props.issue}/>
+      <IssueView issue={props.issue} />
     </Popover>
   );
-};
+}
 
 const styles = StyleSheet.create({
   card: {
@@ -56,13 +61,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     marginVertical: 7,
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // // shadowOpacity: 0.1,
-    // // shadowRadius: 3,
   },
   title: {
     fontSize: 18,

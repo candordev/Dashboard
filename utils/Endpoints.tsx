@@ -83,6 +83,7 @@ export const Endpoints = {
   addGroupsByLocation: `${BASE_URL}/group/addGroupsByLocation`,
   getPostLikes: `${BASE_URL}/post/getPostLikes?`,
   getGroupLeadersForAccept: `${BASE_URL}/group/getGroupLeadersForAccept?`,
+  getGroupLeadersForAcceptCustom: `${BASE_URL}/group/getGroupLeadersForAcceptCustom?`,
   addOtherLeaders: `${BASE_URL}/userActivity/addMoreAccepts`,
   getAcceptedLeaders: `${BASE_URL}/userActivity/getAcceptedLeaders?`,
   deleteYourNotifications: `${BASE_URL}/notification/deleteYourNotifications`,
@@ -90,4 +91,14 @@ export const Endpoints = {
   getPostsByGroupWithoutLazyScroll: `${BASE_URL}/userActivity/getPostsByGroupWithoutLazyScroll?`,
   getYourProposals: `${BASE_URL}/userActivity/getYourProposals?`,
   sendEmailToLeader: `${BASE_URL}/userActivity/sendEmailToLeader`,
+  dashboardPosts: `${BASE_URL}/userActivity/dashboardPosts?`,
+  categories: `${BASE_URL}/userActivity/categories?`,
+  addCategory:`${BASE_URL}/userActivity/addCategory?`,
+  getCategoryForPost: `${BASE_URL}/userActivity/getCategoriesForPost?`,
+  setAssignees: `${BASE_URL}/userActivity/setAssignees?`,
+  getDepartments: `${BASE_URL}/department/getDepartments?`,
+  setDeadline: `${BASE_URL}/post/setDeadline?`,
+  setNeighborhood: `${BASE_URL}/userActivity/setNeighborhood?`,
+
+
 };

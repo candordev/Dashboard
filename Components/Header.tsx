@@ -1,24 +1,38 @@
-import { Link } from "@react-navigation/native";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSignout } from "../Hooks/useSignout";
+import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import DropDown from "./DropDown";
+import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
+import { Status } from "../utils/interfaces";
+interface HeaderProps {
+  onStatusChange: (status: Status) => void;
+  headerTitle: string;
+  onHeaderOptionChange: (option: string) => void;
+}
 
-const Header = ({ navigation, route }: any) => {
+const Header = ({
+  onStatusChange,
+  headerTitle,
+  onHeaderOptionChange,
+}: HeaderProps) => {
+  const { state, dispatch } = useUserContext();
   const activeTab = "all";
 
   const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
 
   const [categoryValue, setCategoryValue] = useState<string[]>([]);
-  const [categoryItems, setCategoryItems] = useState([
-    { label: "Transportation", value: "Tanuj Dunthuluri" },
-    { label: "Agriculture", value: "Atishay Jain" },
-    { label: "Rural Development", value: "Rishi Bengani" },
-    { label: "Safety", value: "A Person" },
-  ]);
+  // const [categoryItems, setCategoryItems] = useState([
+  //   { label: "Transportation", value: "Tanuj Dunthuluri" },
+  //   { label: "Agriculture", value: "Atishay Jain" },
+  //   { label: "Rural Development", value: "Rishi Bengani" },
+  //   { label: "Safety", value: "A Person" },
+  // ]);
+  const [categoryItems, setCategoryItems] = useState([]);
 
   const [tagValues, setTagValues] = useState<string[]>([]);
   const [tagItems, setTagItems] = useState([
@@ -35,6 +49,12 @@ const Header = ({ navigation, route }: any) => {
     { label: "Rishi Bengani", value: "Rishi Bengani" },
     { label: "Srikar Parsi", value: "Srikar Parsi" },
   ]);
+  const [selectedOption, setSelectedOption] = useState<String>();
+
+  const handleSignOut = () => {
+    // Call the signout function when the button is pressed
+    useSignout({ dispatch });
+  };
 
   return (
     <View
@@ -46,7 +66,31 @@ const Header = ({ navigation, route }: any) => {
         zIndex: 100,
       }}
     >
-      <Text style={{alignSelf: 'flex-start', marginLeft: '5%', fontWeight: '600', fontSize: 27, fontFmaily: 'Montserrat'}}>All Issues</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: "90%",
+        }}
+      >
+        <Text
+          style={{
+            alignSelf: "flex-start",
+            fontWeight: "600",
+            fontSize: 27,
+            fontFamily: "Montserrat",
+          }}
+        >
+          {headerTitle}
+        </Text>
+        <TouchableOpacity onPress={handleSignOut}>
+          <Text
+            style={{ color: colors.black, fontWeight: "600", fontSize: 16 }}
+          >
+            Sign Out
+          </Text>
+        </TouchableOpacity>
+      </View>
       <View
         style={{
           marginTop: 15,
@@ -63,7 +107,7 @@ const Header = ({ navigation, route }: any) => {
             placeholder="Search Issue..."
           />
         </View>
-        <StatusPicker />
+        <StatusPicker onStatusChange={onStatusChange} />
       </View>
       <View
         style={{
@@ -76,7 +120,7 @@ const Header = ({ navigation, route }: any) => {
       >
         <View style={{ flex: 1 }}>
           <DropDown
-            placeholder="Select category"
+            placeholder="Select department"
             value={categoryValue}
             setValue={setCategoryValue}
             items={categoryItems}
@@ -105,6 +149,7 @@ const Header = ({ navigation, route }: any) => {
           />
         </View>
       </View>
+      <OptionPicker onOptionChange={onHeaderOptionChange} />
     </View>
   );
 };

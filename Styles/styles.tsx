@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     // borderColor: colors.lightgray,
     borderRadius: 8,
     alignItems: 'center',
-    backgroundColor: colors.lightlightgray,
+    backgroundColor: colors.white,
   },
   bigButton: {
     borderRadius: 8,
@@ -440,6 +440,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.black,
     marginRight: 20,
+  },
+  containerAkshat: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: colors.purple,
+    paddingBottom: 100,
+  },
+  inputAkshat: {
+    width: "60%",
+    height: 40,
+    backgroundColor: colors.white,
+    borderRadius: 15,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    outlineStyle: "none",
   },
 });
 

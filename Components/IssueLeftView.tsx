@@ -17,23 +17,25 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [content, setContent] = useState("");
 
   useEffect(() => {
+    console.log("INFNITE LOOP C")
     fetchComments();
   }, [])
 
 
   async function fetchComments() {
     try {
-      const endpoint =
-        Endpoints.getComments
 
-      const searchParams = {
-        postID: props.issue._id,
-        skip: "0",
-      }
+      const res: Response = await customFetch(
+        Endpoints.getComments +
+          new URLSearchParams({
+            postID: props.issue._id,
+            skip: "0",
+          }),
+        {
+          method: 'GET',
+        },
+      );
 
-      let res: Response = await customFetch(endpoint, searchParams, {
-        method: 'GET',
-      });
 
       let resJson = await res.json();
       if (!res.ok) {
@@ -49,13 +51,14 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
 
   async function postComment() {
     try {
-      let res: Response = await customFetch(Endpoints.createComment, {}, {
+
+      let res: Response = await customFetch(Endpoints.createComment, {
         method: 'POST',
-        body: {
+        body: JSON.stringify({
           content: content,
           postID: props.issue._id,
           parentID: undefined,
-        },
+        }),
       });
 
       let resJson = await res.json();

@@ -9,17 +9,23 @@ import { Endpoints } from "../utils/Endpoints";
 import { Post, Status } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
 
-const YourScreen = ({ navigation }: any) => {
+interface GroupedIssues {
+  [key: string]: Post[];
+}
+
+const sampleStatus: Status = {
+  newSelected: true,
+  assignedSelected: true,
+  updatedSelected: true,
+  completedSelected: true,
+};
+
+const SuggestedScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
   }>({});
-  const [currStatus, setCurrStatus] = useState<Status>({
-    newSelected: true,
-    assignedSelected: true,
-    updatedSelected: true,
-    completedSelected: true,
-  });
+  const [currStatus, setCurrStatus] = useState<Status>(sampleStatus);
   const [isVisible, setIsVisible] = useState(false);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const [selectedHeaderOption, setSelectedHeaderOption] = useState<
@@ -63,7 +69,7 @@ const YourScreen = ({ navigation }: any) => {
       console.log("THE HEADER OPTION", headerOption);
       const queryParams = new URLSearchParams({
         filter: "top",
-        tab: "your",
+        tab: "suggested",
         status: JSON.stringify([
           status?.newSelected,
           status?.assignedSelected,
@@ -101,12 +107,13 @@ const YourScreen = ({ navigation }: any) => {
     fetchPosts(currStatus, selectedHeaderOption);
   };
 
+
   return (
     <View style={{ flex: 1 }}>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
-        headerTitle={"Your Issues"}
+        headerTitle={"Suggested Issues"}
       />
       <ScrollView
         horizontal
@@ -153,4 +160,4 @@ const YourScreen = ({ navigation }: any) => {
   );
 };
 
-export default YourScreen;
+export default SuggestedScreen;

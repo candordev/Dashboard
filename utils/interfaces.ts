@@ -1,4 +1,5 @@
 export interface UserProfile {
+  profileId: string;
   _id: string;
   user: string;
   username: string;
@@ -23,6 +24,12 @@ export interface UserProfile {
   numFinished: number;
   leaderPointsForGroup: number;
   email?: string[];
+  departmentNames: string[];
+  acceptedPost: boolean;
+}
+
+export interface CategoryWithPosts {
+  [categoryName: string]: Post[];
 }
 
 export interface MemberProfile extends UserProfile {
@@ -86,6 +93,23 @@ export interface Post {
   status_data?: string;
   bill_url?: string;
   bill_status?: string;
+  suggestedDepartments: Department[];
+  deadline: Date;
+  neighborhood: string;
+}
+
+export interface Leader {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface Department {
+  _id: string;
+  name: string;
+  leaders: Leader[];
+  groupID: string;
 }
 
 export interface Update {
@@ -127,6 +151,11 @@ export interface Group {
   unreadIndicator: boolean;
 }
 
+export interface CategoryPost {
+  name: string; // Name of the category
+  checked: boolean;
+}
+
 export interface FullGroup extends Group {
   numMembers: number;
   numLeaders: number;
@@ -162,9 +191,9 @@ export interface Comment {
 }
 
 export enum UserReaction {
-  like = 'like',
-  dislike = 'dislike',
-  neither = 'neither',
+  like = "like",
+  dislike = "dislike",
+  neither = "neither",
 }
 
 export interface Notification {
@@ -197,22 +226,35 @@ export interface Region {
   longitudeDelta: number;
 }
 
+export interface ProgressSelector {
+  newSelected: boolean;
+  assignedSelected: boolean;
+  updatedSelected: boolean;
+  completedSelected: boolean;
+}
+
 export enum NotificationType {
-  commentLike = 'commentLike',
-  newComment = 'newComment',
-  updatePost = 'updatePost',
-  upvote = 'upvote',
-  announcement = 'announcement',
-  pollVote = 'pollVote',
-  proposalAccepted = 'proposalAccepted',
-  proposalUnaccepted = 'proposalUnaccepted',
-  proposal = 'proposal',
+  commentLike = "commentLike",
+  newComment = "newComment",
+  updatePost = "updatePost",
+  upvote = "upvote",
+  announcement = "announcement",
+  pollVote = "pollVote",
+  proposalAccepted = "proposalAccepted",
+  proposalUnaccepted = "proposalUnaccepted",
+  proposal = "proposal",
 }
 
 export enum BillStatusType {
-  'Prefiled',
-  'Introduced',
-  'Engrossed',
-  'Enrolled',
-  'Passed',
+  "Prefiled",
+  "Introduced",
+  "Engrossed",
+  "Enrolled",
+  "Passed",
+}
+export interface Status {
+  newSelected: boolean;
+  assignedSelected: boolean;
+  updatedSelected: boolean;
+  completedSelected: boolean;
 }

@@ -1,11 +1,26 @@
-import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
+import React from "react";
 import LHN from "../Components/LHN";
 import AllScreen from "./AllScreen";
+import SuggestedScreen from "./SuggestedScreen";
 import YourScreen from "./YourScreen";
-import LaunchScreen from "./LaunchScreen";
 
 const Drawer = createDrawerNavigator();
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBm_R9VjtEnZvsC5M0JZLO3_xNBOT38NM4",
+  authDomain: "candor-9863e.firebaseapp.com",
+  projectId: "candor-9863e",
+  storageBucket: "candor-9863e.appspot.com",
+  messagingSenderId: "230275243650",
+  appId: "1:230275243650:web:401b24c1ec5628f9cf1e9b",
+  measurementId: "G-DCSB46Z23D",
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 function Root() {
   return (
@@ -21,6 +36,7 @@ function Root() {
     >
       <Drawer.Screen name="all" component={AllScreen} />
       <Drawer.Screen name="your" component={YourScreen} />
+      <Drawer.Screen name="suggested" component={SuggestedScreen} />
     </Drawer.Navigator>
   );
 }

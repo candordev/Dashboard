@@ -1,79 +1,152 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  View,
-} from "react-native";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { FlatList, ScrollView, View } from "react-native";
 import Card from "../Components/Card";
-import colors from "../Styles/colors";
-import { Post } from "../utils/interfaces";
-import { Endpoints } from "../utils/Endpoints";
-import { customFetch } from "../utils/utils";
-import Text from "../Components/Native/Text";
-import { FlashList } from "@shopify/flash-list";
-import { constants } from "../utils/constants";
 import Header from "../Components/Header";
-import OuterView from "../Components/OuterView";
+import Text from "../Components/Text";
+import colors from "../Styles/colors";
+import { Endpoints } from "../utils/Endpoints";
+import { Post } from "../utils/interfaces";
+import { customFetch } from "../utils/utils";
+import { ProgressSelector } from "../utils/interfaces";
 
 const AllScreen = ({ navigation }: any) => {
-  const [issues, setIssues] = useState<Post[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
+    [key: string]: Post[];
+  }>({});
+  const [currStatus, setCurrStatus] = useState<ProgressSelector>({
+    newSelected: true,
+    assignedSelected: true,
+    updatedSelected: true,
+    completedSelected: true,
+  });
+  const [selectedHeaderOption, setSelectedHeaderOption] = useState<
+    string | undefined
+  >();
+
+  const isFocused = useIsFocused(); // Assuming you're using something like this
+
+
+
+
+
+
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    console.log("Component mounted, fetching posts initially");
 
-  const fetchPosts = async () => {
-    //console.debug('fetch posts running');
+    console.log("Event triggered, fetching posts");
+    fetchPosts(currStatus, selectedHeaderOption);
+  }, [currStatus, selectedHeaderOption, isFocused ]); // Depend on currStatus to refetch when it changes
+
+  const handleStatusChange = async (newStatus: ProgressSelector) => {
+    console.log("Received status:", status);
+    console.log("Current status:", currStatus);
+    console.log("Status changed, updating current status and refetching posts");
+    if (JSON.stringify(newStatus) !== JSON.stringify(currStatus)) {
+      setCurrStatus(newStatus);
+    }
+  };
+
+  const handleHeaderOptionChange = (option: string) => {
+    if (JSON.stringify(option) !== JSON.stringify(selectedHeaderOption)) {
+      setSelectedHeaderOption(option);
+    }
+    // Additional logic if needed
+  };
+
+  const fetchPosts = async (
+    status: ProgressSelector | undefined,
+    headerOption?: string
+  ) => {
     try {
-      const endpoint = Endpoints.getPostsByGroupWithoutLazyScroll;
-
-      const searchParams = {
-        groupID: constants.GROUP_ID,
-        filterTime: "all",
-        filter: "trendy",
-      };
-
-      const res: Response = await customFetch(endpoint, searchParams, {
-        method: "GET",
+      const queryParams = new URLSearchParams({
+        filter: "top",
+        tab: "all",
+        status: JSON.stringify([
+          status?.newSelected,
+          status?.assignedSelected,
+          status?.updatedSelected,
+          status?.completedSelected,
+        ]),
       });
 
-      const resJson = await res.json();
-      if (!res.ok) {
-        console.error("Error loading posts. Please try again later.");
+      // Add selectedHeaderOption to the query params if it's defined
+      if (headerOption) {
+        queryParams.append("header", headerOption);
       }
+
+      let res: Response = await customFetch(
+        `${Endpoints.dashboardPosts}?${queryParams.toString()}`,
+        {
+          method: "GET",
+        }
+      );
+
+      let resJson = await res.json();
       if (res.ok) {
-        const result: Post[] = resJson;
-        setIssues([...result]);
+        setCategoriesWithPosts(resJson);
+        setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
+      } else {
+        console.error("Error loading posts. Please try again later.");
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
     }
   };
 
+  const handlePopoverClose = () => {
+    fetchPosts(currStatus, selectedHeaderOption);
+  };
+
   return (
-    <OuterView>
-      <Header />
+    <View style={{ flex: 1 }}>
+      <Header
+        onHeaderOptionChange={handleHeaderOptionChange}
+        onStatusChange={handleStatusChange}
+        headerTitle={"All Issues"}
+      />
       <ScrollView
-        style={{ flex: 1, backgroundColor: colors.background }}
-        contentContainerStyle={{
-          alignItems: "center",
-        }}
+        horizontal
+        style={
+          {
+            /* Add styles if necessary */
+          }
+        }
       >
-        <View
-          style={{
-            width: "90%",
-            marginBottom: 30,
-            paddingTop: 10,
-          }}
-        >
-          {issues.map((issue, index) => (
-            <Card key={index} issue={issue} />
-          ))}
-        </View>
+        {Object.entries(categoriesWithPosts).map(([name, posts]) => (
+          <View
+            key={name}
+            style={{
+              width: 400, // Adjust as needed
+              marginHorizontal: 20,
+              // Other styles
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "550",
+                color: colors.black,
+                marginBottom: 10,
+                marginTop: 10,
+                fontFamily: "Montserrat",
+              }}
+            >
+              {name}
+            </Text>
+            <FlatList
+              key={`${name}-${refreshKey}`}
+              data={posts}
+              renderItem={({ item }) => (
+                <Card issue={item} onPopoverClose={handlePopoverClose} />
+              )}
+            />
+          </View>
+        ))}
       </ScrollView>
-    </OuterView>
+    </View>
   );
 };
 
