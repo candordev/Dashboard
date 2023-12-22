@@ -143,7 +143,7 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
-        minHeight: open ? 210 : undefined,
+        zIndex: 1,
       }}
     >
       <Text

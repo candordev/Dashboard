@@ -13,7 +13,7 @@ function ExpandableTextInput(props: ExpandableTextInputProps): JSX.Element {
     <TextInput
       style={[
         styles.input,
-        { height: Math.max(40, height), borderBottomWidth: 1 },
+        { height: Math.max(40, height)},
       ]}
       placeholder="Add a comment..."
       placeholderTextColor={colors.gray}
@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    margin: 10,
     backgroundColor: colors.white,
     outlineStyle: "none",
   },

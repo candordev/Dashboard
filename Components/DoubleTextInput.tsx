@@ -19,7 +19,7 @@ function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
           styles.input,
           { height: Math.max(40, heightFirstInput), borderBottomWidth: 1 },
         ]}
-        placeholder="Update Title"
+        placeholder="Title"
         placeholderTextColor={colors.gray}
         multiline
         onContentSizeChange={(event) => {
@@ -32,7 +32,7 @@ function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
           styles.input,
           { height: Math.max(40, heightSecondInput), borderBottomWidth: 1, borderBottomColor: "white" },
         ]}
-        placeholder="Update Content"
+        placeholder="Content"
         placeholderTextColor={colors.gray}
         // multiline
         onContentSizeChange={(event) => {
