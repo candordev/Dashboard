@@ -6,18 +6,11 @@ import Header from "../Components/Header";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
-import { Post } from "../utils/interfaces";
+import { Post, Status } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
 
 interface GroupedIssues {
   [key: string]: Post[];
-}
-
-interface Status {
-  newSelected: boolean;
-  assignedSelected: boolean;
-  updatedSelected: boolean;
-  completedSelected: boolean;
 }
 
 const sampleStatus: Status = {

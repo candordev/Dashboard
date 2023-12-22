@@ -1,13 +1,7 @@
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import colors from "../Styles/colors";
 import { useEffect, useRef, useState } from "react";
-interface Status {
-  newSelected: boolean;
-  assignedSelected: boolean;
-  updatedSelected: boolean;
-  completedSelected: boolean;
-}
-
+import { Status } from "../utils/interfaces";
 interface StatusPickerProps {
   onStatusChange: (status: Status) => void;
 }
@@ -20,7 +14,6 @@ const StatusPicker = ({ onStatusChange }: StatusPickerProps) => {
 
   const prevStatusRef = useRef<Status>();
   useEffect(() => {
-    console.log("INFNITE LOOP E")
     const prevStatus = prevStatusRef.current;
     const currentStatus = {
       newSelected,

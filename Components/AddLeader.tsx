@@ -29,9 +29,6 @@ const AddLeader = (props: {
   const [value, setValue] = useState(null);
   const [selectedDepartmentName, setSelectedDepartmentName] = useState("");
 
-
-
-
   useEffect(() => {
     async function fetchDepartments() {
       try {
@@ -62,9 +59,6 @@ const AddLeader = (props: {
     fetchDepartments();
     //setItems(departments)
   }, [props.groupID]);
-
-
-
 
   return (
     <View style={{ rowGap: 10 }}>

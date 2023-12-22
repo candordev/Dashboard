@@ -8,21 +8,11 @@ import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
-
-interface Status {
-  newSelected: boolean;
-  assignedSelected: boolean;
-  updatedSelected: boolean;
-  completedSelected: boolean;
-}
+import { Status } from "../utils/interfaces";
 interface HeaderProps {
   onStatusChange: (status: Status) => void;
   headerTitle: string;
-  onHeaderOptionChange: (option: string) => void; // Add this line
-}
-
-interface OptionPickerProps {
-  onOptionChange: (option: string) => void;
+  onHeaderOptionChange: (option: string) => void;
 }
 
 const Header = ({

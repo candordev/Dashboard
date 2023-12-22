@@ -23,27 +23,7 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  // return (
-  //   <NavigationContainer linking={linking}>
-  //     <Stack.Navigator>
-  //       <Stack.Screen
-  //         name="launch"
-  //         component={LaunchScreen}
-  //         options={{ headerShown: false }}
-  //       />
-  //       <Stack.Screen
-  //         name="login"
-  //         component={LoginScreen}
-  //         options={{ headerShown: false }}
-  //       />
-  //       <Stack.Screen
-  //         name="root"
-  //         component={Root}
-  //         options={{ headerShown: false }}
-  //       />
-  //     </Stack.Navigator>
-  //   </NavigationContainer>
-  // );
+  
   return (
     <UserProvider>
           <NavigationWrapper />

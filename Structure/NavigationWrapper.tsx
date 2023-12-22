@@ -14,12 +14,7 @@ import { useSignup } from '../Hooks/useSignup';
 import AllScreen from '../Screens/AllScreen';
 import SuggestedScreen from '../Screens/SuggestedScreen';
 
-
-
-
 const Stack = createStackNavigator();
-
-
 
 function NavigationWrapper() {
   const { isSignupOperation } = useSignup();
@@ -35,8 +30,6 @@ function NavigationWrapper() {
 
   // Set an initializing state while Firebase connects
   const [loading, setLoading] = React.useState(true);
-
-  
 
   // Handle user state changes
   async function onAuthStateChangedCallback(authUser: User | null) {
@@ -60,8 +53,6 @@ function NavigationWrapper() {
 
   // Check for authentication state changes
   useEffect(() => {
-    console.log("INFNITE LOOP I")
-    console.log("Atleast called")
     const auth = getAuth();
     console.log("The auth changed", auth)
     const unsubscribe = onAuthStateChanged(auth, onAuthStateChangedCallback);
@@ -117,7 +108,6 @@ function NavigationWrapper() {
                 component={SignupStack}
                 options={() => ({
                   headerShown: false,
-                  animation: 'slide_from_bottom',
                 })}
               />
         </>

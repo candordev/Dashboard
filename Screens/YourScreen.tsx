@@ -6,33 +6,20 @@ import Header from "../Components/Header";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
-import { Post } from "../utils/interfaces";
+import { Post, Status } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
-
-interface GroupedIssues {
-  [key: string]: Post[];
-}
-
-interface Status {
-  newSelected: boolean;
-  assignedSelected: boolean;
-  updatedSelected: boolean;
-  completedSelected: boolean;
-}
-
-const sampleStatus: Status = {
-  newSelected: true,
-  assignedSelected: true,
-  updatedSelected: true,
-  completedSelected: true,
-};
 
 const YourScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
   }>({});
-  const [currStatus, setCurrStatus] = useState<Status>(sampleStatus);
+  const [currStatus, setCurrStatus] = useState<Status>({
+    newSelected: true,
+    assignedSelected: true,
+    updatedSelected: true,
+    completedSelected: true,
+  });
   const [isVisible, setIsVisible] = useState(false);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const [selectedHeaderOption, setSelectedHeaderOption] = useState<
@@ -113,7 +100,6 @@ const YourScreen = ({ navigation }: any) => {
   const handlePopoverClose = () => {
     fetchPosts(currStatus, selectedHeaderOption);
   };
-
 
   return (
     <View style={{ flex: 1 }}>

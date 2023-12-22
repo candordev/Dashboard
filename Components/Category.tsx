@@ -10,8 +10,6 @@ import OrFullWidth from "./OrFullWidth";
 import Text from "./Text";
 import { CategoryPost } from "../utils/interfaces";
 
-
-
 type DropdownItem = {
   label: string;
   value: string;
@@ -29,22 +27,20 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
   const [items, setItems] = useState<DropdownItem[]>([]);
   const [valueChanged, setValueChanged] = useState(false);
 
-
   useEffect(() => {
     // Map categories to dropdown items
-    const dropdownItems = categories.map(category => ({
+    const dropdownItems = categories.map((category) => ({
       label: category.name,
       value: category.name,
     }));
 
     // Find which categories are checked
     const checkedCategories = categories
-      .filter(category => category.checked)
-      .map(category => category.name);
+      .filter((category) => category.checked)
+      .map((category) => category.name);
 
     setItems(dropdownItems);
     setValue(checkedCategories.length > 0 ? checkedCategories : null);
-
   }, [categories]); // Depend on categories prop
   const handleValueChange = (newValues: ValueType[] | null) => {
     console.log("Selected values changed to:", newValues);
@@ -56,17 +52,15 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
 
   const updateDropdownAndSelection = (newCategoryName: string) => {
     let updatedItems = [...items];
-  
 
-      updatedItems.push({
-        label: newCategoryName,
-        value: newCategoryName
-      });
-    
-  
+    updatedItems.push({
+      label: newCategoryName,
+      value: newCategoryName,
+    });
+
     // Update items state
     setItems(updatedItems);
-  
+
     // Update selected values to include new leader and department
     let updatedValue = value ? [...value, newCategoryName] : [newCategoryName];
     setValue(updatedValue);
@@ -92,8 +86,7 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
           const resJson = await res.json();
           console.error("Error adding categories:", resJson.error);
         } else {
-          
-           //fake set the category here
+          //fake set the category here
           //console.log("Categories added successfully");
           //event.emit(eventNames.ISSUE_CATEGORY_SET);
           // You can handle any additional state updates or notifications here

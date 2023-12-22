@@ -252,3 +252,9 @@ export enum BillStatusType {
   "Enrolled",
   "Passed",
 }
+export interface Status {
+  newSelected: boolean;
+  assignedSelected: boolean;
+  updatedSelected: boolean;
+  completedSelected: boolean;
+}

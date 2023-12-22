@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Modal,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
   useWindowDimensions,
 } from "react-native";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
+import colors from "../Styles/colors";
+import { Post } from "../utils/interfaces";
 import IssueView from "./IssueView";
 import ProgressBar from "./ProgressBar";
 import Text from "./Text";
-import colors from "../Styles/colors";
-import { Post } from "../utils/interfaces";
 
 interface CardProps {
   issue: Post;
@@ -24,22 +22,13 @@ function Card(props: CardProps): JSX.Element {
   const { height, width } = useWindowDimensions();
   const [popoverVisible, setPopoverVisible] = useState(false);
 
-  const handleClosePopover = () => {
-    setPopoverVisible(false);
-    props.onPopoverClose(); // Call the passed callback
-  };
-  
   const issueContent = props.issue.content.substring(0, 100).toString();
   console.log(issueContent); // Add this to check what `issue` contains
 
-
   return (
-    <Popover  
-      //isVisible={popoverVisible}
-      onRequestClose={handleClosePopover} // Add this prop
-    
+    <Popover
       from={
-        <Pressable style={styles.card} onPress={() => setPopoverVisible(true)}>
+        <TouchableOpacity style={styles.card}>
           <View
             style={{
               flexDirection: "row",
@@ -52,7 +41,7 @@ function Card(props: CardProps): JSX.Element {
             <ProgressBar step={props.issue.step} />
           </View>
           <Text style={styles.content}>{issueContent}</Text>
-        </Pressable>
+        </TouchableOpacity>
       }
       placement={PopoverPlacement.FLOATING}
       popoverStyle={{
@@ -61,10 +50,10 @@ function Card(props: CardProps): JSX.Element {
         height: height * 0.9,
       }}
     >
-      <IssueView issue={props.issue}/>
+      <IssueView issue={props.issue} />
     </Popover>
   );
-};
+}
 
 const styles = StyleSheet.create({
   card: {

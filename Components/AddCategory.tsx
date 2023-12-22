@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import colors from '../Styles/colors';
-import Text from './Text';
+import React, { useState } from "react";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import colors from "../Styles/colors";
+import Text from "./Text";
 
-const AddCategory = ({ onCategoryAdded }) => {
-  const [categoryName, setCategoryName] = useState('');
+const AddCategory = ({ onCategoryAdded }: any) => {
+  const [categoryName, setCategoryName] = useState("");
   const [expanded, setExpanded] = useState(false);
 
   const handlePress = () => {
     if (expanded && categoryName.trim()) {
       onCategoryAdded(categoryName.trim());
-      setCategoryName('');
+      setCategoryName("");
     }
     setExpanded(!expanded);
   };
@@ -26,12 +26,9 @@ const AddCategory = ({ onCategoryAdded }) => {
           style={styles.input}
         />
       )}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handlePress}
-      >
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.buttonText}>
-          {expanded ? 'Done' : 'Add Category'}
+          {expanded ? "Done" : "Add Category"}
         </Text>
       </TouchableOpacity>
     </View>
@@ -46,19 +43,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginHorizontal: 5,
     height: 30,
-    outlineStyle: 'none',
+    outlineStyle: "none",
   },
   button: {
     backgroundColor: colors.purple,
     borderRadius: 10,
     paddingVertical: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    fontFamily: 'Montserrat',
+    fontFamily: "Montserrat",
     color: colors.white,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 
