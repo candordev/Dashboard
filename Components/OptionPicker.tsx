@@ -8,7 +8,7 @@ interface OptionPickerProps {
 }
 
 const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>('Tag');
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
@@ -34,6 +34,8 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginRight: 10,
+    marginTop: -7,
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 10,
