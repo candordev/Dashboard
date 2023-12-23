@@ -23,8 +23,14 @@ const YourScreen = ({ navigation }: any) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const [selectedHeaderOption, setSelectedHeaderOption] = useState<
-    string | undefined
-  >();
+  string | undefined
+>('Tag');
+
+
+  const [selectedAssigneeIds, setSelectedAssigneeIds] = useState<
+  string[] | undefined
+>();
+
   const handlePopoverVisibilityChange = (
     isVisible: boolean | ((prevState: boolean) => boolean)
   ) => {
@@ -36,8 +42,8 @@ const YourScreen = ({ navigation }: any) => {
     console.log("Component mounted, fetching posts initially");
 
     console.log("Event triggered, fetching posts");
-    fetchPosts(currStatus, selectedHeaderOption);
-  }, [currStatus, selectedHeaderOption, isFocused]); // Depend on currStatus to refetch when it changes
+    fetchPosts(currStatus, selectedHeaderOption, selectedAssigneeIds);
+   }, [currStatus, selectedHeaderOption, isFocused, selectedAssigneeIds ]);
 
   const handleStatusChange = async (newStatus: Status) => {
     console.log("Received status:", status);
@@ -46,6 +52,12 @@ const YourScreen = ({ navigation }: any) => {
     if (JSON.stringify(newStatus) !== JSON.stringify(currStatus)) {
       setCurrStatus(newStatus);
     }
+  };
+
+  const handleAssigneeSelection = (selectedAssigneeIds: string[]) => {
+    console.log("Selected Assignees:", selectedAssigneeIds);
+    setSelectedAssigneeIds(selectedAssigneeIds)
+    // Perform actions with the selected IDs, like updating state or making API calls
   };
 
   const handleHeaderOptionChange = (option: string) => {
@@ -57,13 +69,18 @@ const YourScreen = ({ navigation }: any) => {
 
   const fetchPosts = async (
     status: Status | undefined,
-    headerOption?: string
+    headerOption?: string,
+    selectedAssigneeIds?: string[]
   ) => {
     try {
       console.log("THE HEADER OPTION", headerOption);
+      if(selectedAssigneeIds == undefined){
+        selectedAssigneeIds = []
+      }
       const queryParams = new URLSearchParams({
         filter: "top",
         tab: "your",
+        assignees: JSON.stringify(selectedAssigneeIds),
         status: JSON.stringify([
           status?.newSelected,
           status?.assignedSelected,
@@ -97,6 +114,25 @@ const YourScreen = ({ navigation }: any) => {
     }
   };
 
+  const [groupID, setGroupID] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    // Function to find the first groupID
+    const findFirstGroupID = () => {
+      for (const category in categoriesWithPosts) {
+        const posts = categoriesWithPosts[category];
+        if (posts.length > 0 && posts[0].group._id) {
+          return posts[0].group._id; // Return the first found groupID
+        }
+      }
+      return undefined; // Return undefined if no groupID is found
+    };
+
+    // Set the groupID when categoriesWithPosts changes
+    const firstGroupID = findFirstGroupID();
+    setGroupID(firstGroupID);
+  }, [categoriesWithPosts]);
+
   const handlePopoverClose = () => {
     fetchPosts(currStatus, selectedHeaderOption);
   };
@@ -107,6 +143,8 @@ const YourScreen = ({ navigation }: any) => {
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
         headerTitle={"Your Issues"}
+        onAssigneeSelection={handleAssigneeSelection}
+        groupID={groupID}
       />
       <ScrollView
         horizontal
