@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
@@ -8,11 +8,23 @@ import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
-import { Status } from "../utils/interfaces";
+import { Post, Status, UserProfile } from "../utils/interfaces";
+import { Endpoints } from "../utils/Endpoints";
+import { customFetch } from "../utils/utils";
+import Card from "./Card";
+import { group } from "console";
+import { MultiSelect } from 'react-native-element-dropdown';
+import AntDesign from "react-native-vector-icons/AntDesign";
+import DropDownPicker, { ItemType, ValueType } from "react-native-dropdown-picker";
+
+
+
 interface HeaderProps {
   onStatusChange: (status: Status) => void;
   headerTitle: string;
+  groupID?: string; // groupID is optional and can be undefined
   onHeaderOptionChange: (option: string) => void;
+  onAssigneeSelection: (option: string[]) => void;
   
 }
 
@@ -20,41 +32,128 @@ const Header = ({
   onStatusChange,
   headerTitle,
   onHeaderOptionChange,
+  onAssigneeSelection,
+  groupID
 }: HeaderProps) => {
   const { state, dispatch } = useUserContext();
   const activeTab = "all";
 
-  const [issueSearchPhrase, setIssueSearchPhrase] = React.useState("");
 
   const [categoryValue, setCategoryValue] = useState<string[]>([]);
-  // const [categoryItems, setCategoryItems] = useState([
-  //   { label: "Transportation", value: "Tanuj Dunthuluri" },
-  //   { label: "Agriculture", value: "Atishay Jain" },
-  //   { label: "Rural Development", value: "Rishi Bengani" },
-  //   { label: "Safety", value: "A Person" },
-  // ]);
-  const [categoryItems, setCategoryItems] = useState([]);
 
-  const [tagValues, setTagValues] = useState<string[]>([]);
-  const [tagItems, setTagItems] = useState([
-    { label: "High Priority", value: "Tanuj Dunthuluri" },
-    { label: "Medium Priority", value: "Atishay Jain" },
-    { label: "Low Priority", value: "Rishi Bengani" },
-    { label: "No Priority", value: "A Person" },
-  ]);
 
-  const [assigneeValues, setAssigneeValues] = useState<string[]>([]);
+
+  const [searchPhrase, setSearchPhrase] = useState('');
+  const [posts, setPosts] = useState<Post[]>([]); // Ensure this is an array of Post
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    console.log("SEARCH PHRASE CHANGED: ",searchPhrase)
+    fetchPosts(searchPhrase, setPosts); // Fetch posts whenever searchPhrase changes
+  }, [searchPhrase]);
+
+  const fetchPosts = async (searchPhrase: string, setPosts: (posts: Post[]) => void) => {
+    try {
+      console.log("search phrase", searchPhrase)
+      if (!searchPhrase.trim()) {
+        setPosts([]); // Clear posts if the search phrase is empty
+        return;
+      }
+  
+      const queryParams = new URLSearchParams({ title: searchPhrase });
+      let res: Response = await customFetch(
+        `${Endpoints.dashboardPosts}${queryParams.toString()}`,
+        { method: "GET" }
+      );
+  
+      let resJson = await res.json();
+      if (res.ok) {
+        setPosts(resJson); // Update the state with the fetched posts
+        console.log("SEARCHED POSTS", resJson)
+      } else {
+        console.error("Error loading posts. Please try again later.");
+        setPosts([]); // Clear posts in case of an error
+      }
+    } catch (error) {
+      console.error("Error loading posts. Please try again later.", error);
+      setPosts([]); // Clear posts in case of an error
+    }
+  };
+
+  const [leaders, setLeaders] = useState<UserProfile[]>([]); // State to store leaders
+
+  useEffect(() => {
+    // Update assigneeItems based on the fetched leaders
+    console.log("THESE ARE THE FETCHED LEADERS", leaders)
+    const newAssigneeItems = leaders.map((leader) => ({
+      label: `${leader.firstName} ${leader.lastName}`,
+      value: leader.user,
+    }));
+    setAssigneeItems(newAssigneeItems);
+  }, [leaders]);
+
+
+
+  useEffect(() => {
+    fetchLeaders(); // Fetch leaders when the component mounts or when groupID changes
+  }, [groupID]);
+
+  const handleAssigneeSelection = (selectedValues: string[]) => {
+    setAssigneeValues(selectedValues);
+    console.log("THESE ARE THE SELECTED ID: ", assigneeValues )
+    // Call a prop function to send the selected IDs to the parent component
+    onAssigneeSelection(selectedValues);
+  };
+
+
+
+  const fetchLeaders = async () => {
+    try {
+      const queryParams = new URLSearchParams();
+      
+      // Append groupID only if it is not undefined
+      if (groupID) {
+        queryParams.append('groupID', groupID);
+      }
+
+      console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      let endpoint = Endpoints.getGroupLeaders + queryParams.toString();
+
+      const res = await customFetch(endpoint, { method: 'GET' });
+      const resJson = await res.json();
+
+        if (!res.ok) {
+          console.error(resJson.error);
+        }
+        if (res.ok) {
+            const result: UserProfile[] = resJson;
+            console.log("leaders are", result);
+
+            setLeaders(result);
+        }
+    } catch (error) {
+        console.error("Error loading posts. Please try again later.", error);
+    }
+};
+  
+  
+
+const [assigneeValues, setAssigneeValues] = useState<string[]>([]); // Explicitly specify the type as string[]
+
   const [assigneeItems, setAssigneeItems] = useState([
     { label: "Tanuj Dunthuluri", value: "Tanuj Dunthuluri" },
     { label: "Atishay Jain", value: "Atishay Jain" },
     { label: "Rishi Bengani", value: "Rishi Bengani" },
     { label: "Srikar Parsi", value: "Srikar Parsi" },
   ]);
-  const [selectedOption, setSelectedOption] = useState<String>();
 
   const handleSignOut = () => {
     // Call the signout function when the button is pressed
     useSignout({ dispatch });
+  };
+
+  const handlePopoverClose = () => {
+    //fetchPosts(currStatus, selectedHeaderOption);
   };
 
   return (
@@ -64,7 +163,7 @@ const Header = ({
         backgroundColor: colors.background,
         paddingTop: 15,
         paddingBottom: 15,
-        zIndex: 100,
+        zIndex: 1,
       }}
     >
       <View
@@ -84,78 +183,71 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-        <TouchableOpacity onPress={handleSignOut}>
-          <Text
-            style={{ color: colors.black, fontWeight: "600", fontSize: 16 }}
+        <View style={{ flexDirection: "row", justifyContent: "flex-end", flex: 1}}>
+          <OptionPicker onOptionChange={onHeaderOptionChange} />
+          <TouchableOpacity onPress={handleSignOut}>
+            <Text style={{ color: colors.black, fontWeight: "600", fontSize: 16 }}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      
+      <View
+        style={{
+          marginTop: 15,
+          flexDirection: "row",
+          alignItems: "center",
+          width: "90%",
+          columnGap: 10,
+        }}
+      >
+      <View style={{ flex: 1 }}>
+            <SearchBar
+              searchPhrase={searchPhrase}
+              setSearchPhrase={setSearchPhrase}
+              placeholder="Search Issue..."
+            />
+      </View>
+          
+        {/* Search Results */}
+        {searchPhrase ? (
+          <View style={styles.searchResultsContainer}>
+            <FlatList
+              data={posts}
+              renderItem={({ item }) => <Card issue={item} onPopoverClose={handlePopoverClose} />}
+              keyExtractor={(item) => item._id}
+              ItemSeparatorComponent={() => <View style={styles.itemSeparator} />} // Divider between items
+            />
+          </View>
+        ) : (
+          // Render the Status Picker and Assignee Dropdown only when there's no search phrase
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              width: "36%",
+              columnGap: 10,
+            }}
           >
-            Sign Out
-          </Text>
-        </TouchableOpacity>
+            <StatusPicker onStatusChange={onStatusChange} />
+            <View style={{ flex: 1 }}>
+            <DropDown
+                placeholder="Select assignee"
+                value={assigneeValues}
+                setValue={handleAssigneeSelection}
+                items={assigneeItems}
+                setItems={setAssigneeItems}
+                multiple={true}
+              />
+            </View>
+          </View>
+        )}
       </View>
-      <View
-        style={{
-          marginTop: 15,
-          flexDirection: "row",
-          alignItems: "center",
-          width: "90%",
-          columnGap: 10,
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <SearchBar
-            searchPhrase={issueSearchPhrase}
-            setSearchPhrase={setIssueSearchPhrase}
-            placeholder="Search Issue..."
-          />
-        </View>
-        <StatusPicker onStatusChange={onStatusChange} />
-      </View>
-      <View
-        style={{
-          marginTop: 15,
-          flexDirection: "row",
-          alignItems: "center",
-          width: "90%",
-          columnGap: 10,
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <DropDown
-            placeholder="Select department"
-            value={categoryValue}
-            setValue={setCategoryValue}
-            items={categoryItems}
-            setItems={setCategoryItems}
-            multiple={true}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <DropDown
-            placeholder="Select tag"
-            value={tagValues}
-            setValue={setTagValues}
-            items={tagItems}
-            setItems={setTagItems}
-            multiple={true}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <DropDown
-            placeholder="Select assignee"
-            value={assigneeValues}
-            setValue={setAssigneeValues}
-            items={assigneeItems}
-            setItems={setAssigneeItems}
-            multiple={true}
-          />
-        </View>
-      </View>
-      <OptionPicker onOptionChange={onHeaderOptionChange} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+
   container: {
     flexDirection: "row",
     justifyContent: "flex-end",
@@ -176,6 +268,23 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: colors.white,
+  },
+  searchResultsContainer: {
+    position: 'absolute',
+    top: 28, // Adjust this to be just below the search bar
+    left: 0,
+    right: 0,
+    height: 600, // Fixed height for the container (adjust as needed)
+    backgroundColor: 'white', // Background color for the container
+    zIndex: 1,
+    borderWidth: 1, // Width of the border
+    borderColor: '#d1d1d1', // Color of the border
+    borderTopColor: 'white'
+  },
+  itemSeparator: {
+    height: 1,
+    backgroundColor: '#ccc', // Color for the dividers
+    zIndex: 1000,
   },
 });
 

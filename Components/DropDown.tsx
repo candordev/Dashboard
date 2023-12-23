@@ -17,6 +17,7 @@ const DropDown = (props: PropTypes) => {
 
   return (
     <DropDownPicker
+     
       maxHeight={165}
       open={open}
       multiple={props.multiple}
@@ -29,6 +30,7 @@ const DropDown = (props: PropTypes) => {
       style={{
         // borderColor: colors.lightergray,
         // borderWidth: 2,
+        zIndex: 0,
         borderWidth: 0,
         borderRadius: 15,
         backgroundColor: colors.white,

@@ -88,6 +88,7 @@ const SelectableButton = (props: PropType) => {
 
 const styles = StyleSheet.create({
   container: {
+    zIndex: 0,
     backgroundColor: colors.lightergray,
     borderRadius: 15,
     flexDirection: "row",
