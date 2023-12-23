@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import Text from "./Text";
 import colors from "../Styles/colors";
@@ -12,6 +12,12 @@ interface IssueViewProps {
 }
 
 function IssueView(props: IssueViewProps): JSX.Element {
+  const [updateTrigger, setUpdateTrigger] = useState(false);
+
+  const handleUpdateTrigger = () => {
+    setUpdateTrigger(prev => !prev); // Toggle the trigger to force re-render
+  };
+
   return (
     <View
       style={{
@@ -23,8 +29,8 @@ function IssueView(props: IssueViewProps): JSX.Element {
       }}
     >
       <IssueLeftView issue={props.issue}/>
-      <IssueMiddleView issue={props.issue}/>
-      <IssueRightView issue={props.issue}/>
+      <IssueMiddleView updateTrigger={updateTrigger} issue={props.issue}/>
+      <IssueRightView fetchStatusUpdates={handleUpdateTrigger} issue={props.issue}/>
     </View>
   );
 };

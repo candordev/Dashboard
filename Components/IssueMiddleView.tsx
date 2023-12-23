@@ -10,6 +10,7 @@ import { Endpoints } from "../utils/Endpoints";
 
 interface IssueMiddleViewProps {
   issue: Post;
+  updateTrigger: Boolean; 
 }
 
 function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
@@ -17,10 +18,14 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
+  // useEffect(() => {
+  //   console.log("INFNITE LOOP D");
+  //   fetchStatusUpdates();
+  // }, []);
+
   useEffect(() => {
-    console.log("INFNITE LOOP D");
     fetchStatusUpdates();
-  }, []);
+  }, [props.updateTrigger]); // Dependency on updateTrigger
 
   const fetchStatusUpdates = async () => {
     try {
