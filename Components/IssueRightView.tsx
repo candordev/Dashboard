@@ -21,6 +21,7 @@ import { getAuth } from "firebase/auth";
 
 
 interface IssueRightViewProps {
+    fetchStatusUpdates: () => void;
     issue: Post;
 }
 
@@ -61,6 +62,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             body: JSON.stringify({
               postID: props.issue._id, 
               deadline: date, // Assuming issueId is available in this component
+              
             }),
           });
   
@@ -249,7 +251,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               />
 
             <View style={{ rowGap: 10 }}>
-                <MarkDone />
+                <MarkDone fetchStatusUpdates={props.fetchStatusUpdates} issueId={props.issue._id}/>
                 {/* <CloseIssue /> */}
             </View>
         </View>

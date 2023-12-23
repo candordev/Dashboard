@@ -75,7 +75,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
         }
   
         departments[departmentName].children.push({
-          label: leader.firstName,
+          label: leader.firstName + ' ' +leader.lastName,
           value: leader.username,
           parent: departmentName,
         });
