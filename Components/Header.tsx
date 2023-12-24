@@ -16,6 +16,7 @@ import { group } from "console";
 import { MultiSelect } from 'react-native-element-dropdown';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import DropDownPicker, { ItemType, ValueType } from "react-native-dropdown-picker";
+import CreatePost from "./CreatePost";
 
 
 
@@ -117,7 +118,7 @@ const Header = ({
       }
 
       console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
-      let endpoint = Endpoints.getGroupLeaders + queryParams.toString();
+      let endpoint = Endpoints.getGroupLeaders + queryParams.toString(); // backend route does it by page, might need to j get all of the leaders
 
       const res = await customFetch(endpoint, { method: 'GET' });
       const resJson = await res.json();
@@ -224,7 +225,7 @@ const [assigneeValues, setAssigneeValues] = useState<string[]>([]); // Explicitl
             style={{
               flexDirection: "row",
               alignItems: "center",
-              width: "36%",
+              width: "50%",
               columnGap: 10,
             }}
           >
@@ -239,6 +240,7 @@ const [assigneeValues, setAssigneeValues] = useState<string[]>([]); // Explicitl
                 multiple={true}
               />
             </View>
+            <CreatePost/>
           </View>
         )}
       </View>

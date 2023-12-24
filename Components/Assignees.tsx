@@ -11,13 +11,19 @@ import { Post, UserProfile } from "../utils/interfaces";
 import Icon from "react-native-vector-icons/Feather";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
+import { useUserContext } from "../Hooks/useUserContext";
+import CreatePost from "./CreatePost";
+import { create } from "domain";
 
 interface AssigneesProps {
-  leaders: UserProfile[];
-  issue: Post;
+  issue?: Post;
+  createPost: Boolean;
+  onAssigneesChange?: (option: string[]) => void;
+  onAssigneesChangeEmail?: (option: string) => void;
 }
 
 function Assignees(props: AssigneesProps): JSX.Element {
+  const {state, dispatch} = useUserContext();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[]>([]);
   const [selectedChildren, setSelectedChildren] = useState<string[]>([]);
@@ -32,6 +38,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
   ]);
   const [previousValue, setPreviousValue] = useState<string[]>([]);
   const [previousValueChild, setPreviousChildValue] = useState<string[]>([]);
+  const [leaders, setLeaders] = useState<UserProfile[]>([]);
+
 
   type Department = {
     label: string;
@@ -52,13 +60,50 @@ function Assignees(props: AssigneesProps): JSX.Element {
     parent?: string;
   };
   
+  const fetchLeaders = async () => {
+    try {
+        console.log("THESE THE LEADER GROUPS", state.leaderGroups[0])
+        // Initialize URLSearchParams
+        let params = new URLSearchParams({
+            //page: "1",
+            groupID: state.leaderGroups[0]
+        });
+
+        // Add postID only if props.issue is defined
+        if (props.issue && props.issue._id) {
+            params.append('postID', props.issue._id);
+        }
+
+        let endpoint = Endpoints.getGroupLeadersForAcceptCustom + params;
+
+        const res = await customFetch(endpoint, {
+            method: 'GET',
+        });
+
+        const resJson = await res.json();
+        if (!res.ok) {
+            console.error(resJson.error);
+            return;
+        }
+
+        const result = resJson; // Assuming resJson is an array of UserProfile
+        console.log("leaders are", result);
+        setLeaders(result);
+    } catch (error) {
+        console.error("Error loading posts. Please try again later.", error);
+    }
+};
+
+useEffect(()=>{
+  fetchLeaders()
+}, []);
 
   useEffect(() => {
     //console.log("GROUP FOR A POST", props.issue.group)
     const departments: { [key: string]: Department } = {};
     const initialValues: string[] = [];
   
-    props.leaders.forEach((leader) => {
+    leaders.forEach((leader) => {
       console.log("suggested should be running")
       const aiSuggests = isLeaderSuggestedByAI(leader.user);
   
@@ -102,7 +147,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
       // Then map each department and its children to items
       return [
         {
-          label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label,
+          label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label, //The reason for two sometimes is because a suggested leader can be part of multiple departments in database rn
           value: department.value,
         },
         ...department.children.map(child => ({
@@ -115,7 +160,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
     setItems(itemsArray);
     setValue(initialValues);
-  }, [props.leaders]);
+  }, [leaders]);
   
 
 
@@ -145,51 +190,59 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
 
   const onCloseDropDown = async () => {
-    const currentSelectedChildren = currentSelectedChildrenRef.current;
-    const previousSelectedChildren = previousValueRefChildB.current;
-  
-    // Check if selectedChildren has changed
-    const hasChildrenChanged = previousSelectedChildren.length !== currentSelectedChildren.length ||
-                               previousSelectedChildren.some((child, index) => child !== currentSelectedChildren[index]);
-  
-    console.log("current child", currentSelectedChildren);
-    console.log("previous child", previousSelectedChildren);
-  
-    if (hasChildrenChanged) {
-      console.log("Selected children have changed. Making route call...");
-      // Make your route call here
+    if(!props.createPost && props.issue && props.issue._id){
+        const currentSelectedChildren = currentSelectedChildrenRef.current;
+        const previousSelectedChildren = previousValueRefChildB.current;
+      
+        // Check if selectedChildren has changed
+        const hasChildrenChanged = previousSelectedChildren.length !== currentSelectedChildren.length ||
+                                  previousSelectedChildren.some((child, index) => child !== currentSelectedChildren[index]);
+      
+        console.log("current child", currentSelectedChildren);
+        console.log("previous child", previousSelectedChildren);
+      
+        if (hasChildrenChanged) {
+          console.log("Selected children have changed. Making route call...");
+          // Make your route call here
 
-      try {
-        let res = await customFetch(Endpoints.setAssignees, {
-          method: "POST",
-          body: JSON.stringify({
-            postID: props.issue._id, 
-            assignees: currentSelectedChildren, // Assuming issueId is available in this component
-          }),
-        });
+          try {
+            let res = await customFetch(Endpoints.setAssignees, {
+              method: "POST",
+              body: JSON.stringify({
+                postID: props.issue._id, 
+                assignees: currentSelectedChildren, // Assuming issueId is available in this component
+              }),
+            });
 
-        if (!res.ok) {
-          const resJson = await res.json();
-          console.error("Error adding ASSIGNEES:", resJson.error);
+            if (!res.ok) {
+              const resJson = await res.json();
+              console.error("Error adding ASSIGNEES:", resJson.error);
+            } else {
+              console.log("ASSIGNEES added successfully");
+              //event.emit(eventNames.ISSUE_CATEGORY_SET);
+              // You can handle any additional state updates or notifications here
+            }
+          } catch (error) {
+            console.error("Network error, please try again later.", error);
+          }
+
+
+          // // ...
+
+          // // Update the previousValueChild state
+          setPreviousChildValue(currentSelectedChildren);
         } else {
-          console.log("ASSIGNEES added successfully");
-          //event.emit(eventNames.ISSUE_CATEGORY_SET);
-          // You can handle any additional state updates or notifications here
+          console.log("No change in selected children.");
         }
-      } catch (error) {
-        console.error("Network error, please try again later.", error);
-      }
 
-
-      // // ...
-
-      // // Update the previousValueChild state
-      setPreviousChildValue(currentSelectedChildren);
-    } else {
-      console.log("No change in selected children.");
+        previousValueRefChildB.current = currentSelectedChildrenRef.current;
+  }else{
+    const currentSelectedChildren = currentSelectedChildrenRef.current;
+    if (props.onAssigneesChange) {
+      props.onAssigneesChange(currentSelectedChildren);
     }
-
-    previousValueRefChildB.current = currentSelectedChildrenRef.current;
+    
+  }
   };
   
 
@@ -310,7 +363,11 @@ function Assignees(props: AssigneesProps): JSX.Element {
     // Update items state
     setItems(updatedItems);
     newSelectedChildren.add(leaderEmail)
-  
+
+    if (props.onAssigneesChange && props.createPost) {
+      props.onAssigneesChange(Array.from(newSelectedChildren));
+      
+    }
     // Update selected values to include new leader and department
     let updatedValue = [...value, departmentName, leaderEmail];
     setValue(updatedValue);
@@ -320,53 +377,91 @@ function Assignees(props: AssigneesProps): JSX.Element {
   
 
   const inviteLeader = async (firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) => {
-    await sendEmailToLeader(firstName, lastName, departmentID, email, departmentName);
+    if(!props.createPost){
+      await sendEmailToLeader(firstName, lastName, departmentID, email, departmentName);
+    }else{
+      await createLeaderAccount(firstName, lastName, departmentID, email, departmentName)
+    }
   };
 
-  async function sendEmailToLeader(firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) {
-    const currentSelectedChildren = currentSelectedChildrenRef.current;
-    console.log("This is the department Name", departmentName)
+  async function createLeaderAccount(firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) {
     try {
-      console.log("This is the email: ", email)
-      console.log("This is the issue ID: ", props.issue._id)
-      let res = await customFetch(Endpoints.sendEmailToLeader, {
+      
+      let res = await customFetch(Endpoints.addLeaderCreatePost, {
         method: "POST",
         body: JSON.stringify({
-          postID: props.issue._id, 
-          toLeaderEmail: email, // Assuming issueId is available in this component
           firstName: firstName,
           lastName: lastName,
           departmentID: departmentID,
           email: email,
-          groupID: props.issue.group._id,
-          assigneeUsernames: currentSelectedChildren,
+          groupID: state.leaderGroups[0],
         }),
       });
 
       if (!res.ok) {
         const resJson = await res.json();
-        console.error("Error  EMAIL:", resJson.error);
+        console.error("Error with creating an account:", resJson.error);
       } else {
-        console.log("EMAIL successfully");
         updateDropdownAndSelection(departmentName, firstName, email);
+        // if(props.onAssigneesChangeEmail){
+        //   props.onAssigneesChangeEmail(email)
+        // }
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
     }
   }
 
-  const isLeaderSuggestedByAI = (leaderId: string) => {
-    // Ensure that there is at least one suggested department and it has leaders
-    console.log("suggested departments", props.issue.suggestedDepartments)
-    //console.log("suggested departments", props.issue.suggestedDepartments)
 
-    if (props.issue.suggestedDepartments.length > 0 && props.issue.suggestedDepartments[0].leaders.length > 0) {
-      console.log("First suggested department:", props.issue.suggestedDepartments[0]); // Log the first suggested department
-      console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
-  
-      return props.issue.suggestedDepartments[0].leaders.some(leader => leader._id === leaderId);
-    }
-    return false;
+
+  async function sendEmailToLeader(firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) {
+    if(!props.createPost &&  props.issue && props.issue._id){
+          const currentSelectedChildren = currentSelectedChildrenRef.current;
+          console.log("This is the department Name", departmentName)
+          try {
+            console.log("This is the email: ", email)
+            console.log("This is the issue ID: ", props.issue._id)
+            let res = await customFetch(Endpoints.sendEmailToLeader, {
+              method: "POST",
+              body: JSON.stringify({
+                postID: props.issue._id, 
+                firstName: firstName,
+                lastName: lastName,
+                departmentID: departmentID,
+                email: email,
+                groupID: props.issue.group._id,
+                assigneeUsernames: currentSelectedChildren,
+
+              }),
+            });
+
+            if (!res.ok) {
+              const resJson = await res.json();
+              console.error("Error  EMAIL:", resJson.error);
+            } else {
+              console.log("EMAIL successfully");
+              updateDropdownAndSelection(departmentName, firstName, email);
+            }
+          } catch (error) {
+            console.error("Network error, please try again later.", error);
+          }
+  }
+  }
+
+  const isLeaderSuggestedByAI = (leaderId: string) => {
+    if(!props.createPost && props.issue && props.issue._id){
+        // Ensure that there is at least one suggested department and it has leaders
+        console.log("suggested departments", props.issue.suggestedDepartments)
+        //console.log("suggested departments", props.issue.suggestedDepartments)
+
+        if (props.issue.suggestedDepartments.length > 0 && props.issue.suggestedDepartments[0].leaders.length > 0) {
+          console.log("First suggested department:", props.issue.suggestedDepartments[0]); // Log the first suggested department
+          console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
+      
+          return props.issue.suggestedDepartments[0].leaders.some(leader => leader._id === leaderId);
+        }
+        return false;
+  }
   };
   
 
@@ -481,7 +576,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
     </View>
       <View>
         <OrFullWidth />
-        <AddLeader inviteLeader={inviteLeader}  groupID={props.issue.group._id}/>
+        <AddLeader inviteLeader={inviteLeader} createPost={props.createPost} />
       </View>
     </View>
   );
