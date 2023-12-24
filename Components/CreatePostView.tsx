@@ -15,9 +15,10 @@ import { useUserContext } from '../Hooks/useUserContext';
 
 interface CalendarContainerProps {
   children: ReactElement; // Change the type to ReactElement
+  onClose: () => void;
 }
 
-const CalendarContainer = ({ children }: CalendarContainerProps) => {
+const CalendarContainer = ({ children}: CalendarContainerProps) => {
   const el = document.getElementById('calendar-portal');
 
   // Only render the Portal if children is defined
@@ -37,7 +38,8 @@ function CreatePostView(props: any) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const {state, dispatch} = useUserContext();
   const [inputValue, setInputValue] = useState('');
-
+  const[errorMessage, setErrorMessage]
+ = useState('')
 
 
 
@@ -86,8 +88,12 @@ function CreatePostView(props: any) {
         console.log(res.body)
         const resJson = await res.json();
         if (!res.ok) {
+          
           console.error("Error creating Post:", resJson.error);
+          setErrorMessage(resJson.error)
         } else {
+          props.onClose(); // Call the callback on successful post creation
+          setErrorMessage('')
           console.log("Post succesfully made", resJson);
           //event.emit(eventNames.ISSUE_CATEGORY_SET);
           // You can handle any additional state updates or notifications here
@@ -220,14 +226,15 @@ const handleCategoryChange = (categories: string[] | null) => {
 
                 }}   
               />
-
+              
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
           <TouchableOpacity
             style={styles.toggleButton}
             onPress={handleDone}
             >
             <Text style={styles.toggleButtonText}>Done</Text>
           </TouchableOpacity>   
-
+          
           </ScrollView>
 
 
@@ -236,6 +243,11 @@ const handleCategoryChange = (categories: string[] | null) => {
 }
 
 const styles = StyleSheet.create({
+  errorMessage: {
+    color: 'red', // or any color you prefer for error messages
+    padding: 10,
+    marginBottom: 10,
+  },
       toggleButtonText: {
         fontFamily: "Montserrat",
         color: colors.white,
@@ -247,7 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 60,
     },
   container: {
     flex: 1,

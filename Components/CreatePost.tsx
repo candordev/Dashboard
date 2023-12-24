@@ -21,22 +21,34 @@ interface CreatePost {
 function CreatePost(props: CreatePost): JSX.Element {
   const { height, width } = useWindowDimensions();
 
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+    const closePopup = () => {
+      setIsPopupVisible(false);
+    };
+    const openPopup = () => {
+      setIsPopupVisible(true);
+    };
+
+
   return (
     <Popover
-      from={
-        <TouchableOpacity style={styles.card}>
+        from={(
+          <TouchableOpacity style={styles.card} onPress={openPopup}>
             <Text style={styles.title}>Create Post</Text>
-        </TouchableOpacity>
-      }
-      placement={PopoverPlacement.FLOATING}
-      popoverStyle={{
-        borderRadius: 10,
-        width: width * 0.4,
-        height: height * 0.9,
-      }}
-    >
-      <CreatePostView/>
-    </Popover>
+          </TouchableOpacity>
+        )}
+        isVisible={isPopupVisible}
+        onRequestClose={closePopup}
+        placement={PopoverPlacement.FLOATING}
+        popoverStyle={{
+          borderRadius: 10,
+          width: width * 0.4,
+          height: height * 0.9,
+        }}
+      >
+        <CreatePostView onClose={closePopup} />
+      </Popover>
   );
 }
 
