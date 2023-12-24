@@ -99,6 +99,11 @@ export const Endpoints = {
   getDepartments: `${BASE_URL}/department/getDepartments?`,
   setDeadline: `${BASE_URL}/post/setDeadline?`,
   setNeighborhood: `${BASE_URL}/userActivity/setNeighborhood?`,
+  addLeaderCreatePost: `${BASE_URL}/userActivity/addLeaderCreatePost?`,
+  addCategoryCreatePost: `${BASE_URL}/userActivity/addCategoryCreatePost?`,
+  createDashboardProposal: `${BASE_URL}/post/createDashboardProposal?`,
+  getNeighborhoodCreatePost:  `${BASE_URL}/userActivity/getNeighborhoodCreatePost?`,
+
 
 
 };

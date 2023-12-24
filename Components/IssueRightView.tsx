@@ -26,13 +26,12 @@ interface IssueRightViewProps {
 }
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
-    const [leaders, setLeaders] = useState<UserProfile[]>([]);
-    const [categories, setCategories] = useState<CategoryPost[]>([]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
     const [idToken, setIdToken] = useState<string | ''>('');
     const [inputValue, setInputValue] = useState('');
     const [key, setKey] = useState(0); // Initialize a key state
     const auth = getAuth();
+    
     // console.log("THIS IS THE AUTH", auth)
 
     useEffect(() => {
@@ -47,8 +46,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       };
       console.log("THE LOCATION INPUT VALUE: ", props.issue.neighborhood)
       setInputValue(props.issue.neighborhood)
-
-
 
       fetchToken();
     }, []);
@@ -84,8 +81,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
     const {state, dispatch} = useUserContext();
 
     useEffect(() => {
-      fetchLeaders();
-      getCategories();
       console.log("THIS IS THE DEADLINE", props.issue.deadline)
       if(props.issue.deadline){
         setSelectedDate(new Date(props.issue.deadline));
@@ -94,70 +89,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       }
      
     }, []);
-
-    const fetchLeaders = async () => {
-        try {
-            console.log("THESE THE LEADER GROUPS", state.leaderGroups[0])
-            let endpoint: string;
-            endpoint =
-              Endpoints.getGroupLeadersForAcceptCustom +
-              new URLSearchParams({
-                //page: "1",
-                postID: props.issue._id,
-              });
-      
-            const res: Response = await customFetch(endpoint, {
-              method: 'GET',
-            });
-
-            const resJson = await res.json();
-            if (!res.ok) {
-              console.error(resJson.error);
-            }
-            if (res.ok) {
-                const result: UserProfile[] = resJson;
-                console.log("leaders are", result);
-
-                setLeaders(result);
-            }
-        } catch (error) {
-            console.error("Error loading posts. Please try again later.", error);
-        }
-    };
-
-    const getCategories = async () => {
-        try {
-            console.log("THESE THE LEADER GROUPS", state.leaderGroups[0])
-            let endpoint: string;
-            endpoint =
-              Endpoints.getCategoryForPost +
-              new URLSearchParams({
-                //page: "1",
-                postID: props.issue._id,
-              });
-      
-            const res: Response = await customFetch(endpoint, {
-              method: 'GET',
-            });
-
-            const resJson = await res.json();
-            if (!res.ok) {
-              console.error(resJson.error);
-            }
-            if (res.ok) {
-                const result: CategoryPost[] = resJson;
-                console.log("CATEGORIES ARE...", result);
-
-                setCategories(result);
-            }
-        } catch (error) {
-            console.error("Error loading categories. Please try again later.", error);
-        }
-    };
-
-
-
-    const suggestedDepartmentName = props.issue.suggestedDepartments?.[0]?.name || "No Department Suggested";
 
     const handleSelect = async (data: GooglePlaceData, details: GooglePlaceDetail | null) => {
       const address = data.description; // Or use details.formatted_address
@@ -190,17 +121,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
                 justifyContent: "space-between",
             }}
         >
-            <View style={{ rowGap: 10 }}>
-                <Assignees leaders={leaders} issue={props.issue}/>
-                <Category issueId={props.issue._id} categories={categories}/>
-                {/* <View style={{ marginTop: 10}}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', fontFamily: 'Montserrat' }}>
-                    Candor Suggested To:
-                    </Text>
-                    <Text style={{ fontSize: 14, fontFamily: 'Montserrat' }}>
-                    {suggestedDepartmentName}
-                    </Text>
-                </View> */}
+            <View style={{ rowGap: 10, zIndex: 2}}>
+                <Assignees issue={props.issue} createPost={false}/>
+                <Category issueId={props.issue._id} createPost={false }/>
                    <Text
                     style={{
                       fontSize: 18,

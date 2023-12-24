@@ -9,6 +9,7 @@ import AddCategory from "./AddCategory";
 import OrFullWidth from "./OrFullWidth";
 import Text from "./Text";
 import { CategoryPost } from "../utils/interfaces";
+import { useUserContext } from "../Hooks/useUserContext";
 
 type DropdownItem = {
   label: string;
@@ -16,16 +17,59 @@ type DropdownItem = {
 };
 
 interface CategoryProps {
-  issueId: string; // Assuming issueId is a string
-  categories: CategoryPost[];
+  issueId?: string; // Assuming issueId is a string
+  createPost: boolean;
+  onCategoryChange?: (option: string[] | null) => void;
   // ... other props if any
 }
 
-const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
+const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChange }) => {
+  const {state, dispatch} = useUserContext();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[] | null>(null);
   const [items, setItems] = useState<DropdownItem[]>([]);
   const [valueChanged, setValueChanged] = useState(false);
+  const [categories, setCategories] = useState<CategoryPost[]>([]);
+
+  const getCategories = async () => {
+    try {
+        console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+        
+        // Initialize URLSearchParams
+        let params = new URLSearchParams({
+            groupID: state.leaderGroups[0] // This parameter is always included
+        });
+
+        // Add postID only if issueId is defined
+        if (issueId && !createPost) {
+            params.append('postID', issueId);
+        }
+
+        let endpoint = Endpoints.getCategoryForPost + params;
+
+        const res = await customFetch(endpoint, {
+            method: 'GET',
+        });
+
+        const resJson = await res.json();
+        if (!res.ok) {
+            console.error(resJson.error);
+            return;
+        }
+
+        const result = resJson; // Assuming resJson is an array of CategoryPost
+        console.log("CATEGORIES ARE...", result);
+        setCategories(result);
+    } catch (error) {
+        console.error("Error loading categories. Please try again later.", error);
+    }
+};
+
+
+useEffect(() => {
+  getCategories();
+}, []); // Depend on categories prop
+
 
   useEffect(() => {
     // Map categories to dropdown items
@@ -42,6 +86,8 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
     setItems(dropdownItems);
     setValue(checkedCategories.length > 0 ? checkedCategories : null);
   }, [categories]); // Depend on categories prop
+
+
   const handleValueChange = (newValues: ValueType[] | null) => {
     console.log("Selected values changed to:", newValues);
     if (newValues != null) {
@@ -67,7 +113,7 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
   };
 
   const handleDropdownClose = async () => {
-    if (valueChanged) {
+    if (valueChanged && !createPost ) {
       console.log("Dropdown closed with new value:", value);
       //setValue(value)
 
@@ -81,40 +127,63 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
             names: value,
           }),
         });
-
         if (!res.ok) {
           const resJson = await res.json();
           console.error("Error adding categories:", resJson.error);
         } else {
-          //fake set the category here
-          //console.log("Categories added successfully");
-          //event.emit(eventNames.ISSUE_CATEGORY_SET);
-          // You can handle any additional state updates or notifications here
+          console.log("Categories added successfully");
         }
       } catch (error) {
         console.error("Network error, please try again later.", error);
       }
 
-      //ISSUE_CATEGORY_SET = "issueCategorySet",
-
-      // Reset the value changed tracker
       setValueChanged(false);
+    }else{
+      if(onCategoryChange){
+        onCategoryChange(value);
+      }
     }
   };
 
   const handleNewCategory = async (newCategoryName: string) => {
+    if(!createPost){
+        try {
+          const updatedValue = value
+            ? [...new Set([...value, newCategoryName])]
+            : [newCategoryName];
+
+
+          let res = await customFetch(Endpoints.addCategory, {
+            method: "POST",
+            body: JSON.stringify({
+              postID: issueId,
+              names: updatedValue,
+            }),
+          });
+
+          if (!res.ok) {
+            const resJson = await res.json();
+            console.error("Error adding new category:", resJson.error);
+          } else {
+            console.log("New Category added successfully");
+            updateDropdownAndSelection(newCategoryName);
+
+          }
+        } catch (error) {
+          console.error("Network error, please try again later.", error);
+    }
+  }else{
     try {
       const updatedValue = value
         ? [...new Set([...value, newCategoryName])]
         : [newCategoryName];
 
-      console.log("UPDATED VALUE", updatedValue);
-      console.log("ISSUE ID", issueId);
-      let res = await customFetch(Endpoints.addCategory, {
+
+      let res = await customFetch(Endpoints.addCategoryCreatePost, {
         method: "POST",
         body: JSON.stringify({
-          postID: issueId,
-          names: updatedValue,
+          groupID: state.leaderGroups[0],
+          names: [newCategoryName],
         }),
       });
 
@@ -124,16 +193,14 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
       } else {
         console.log("New Category added successfully");
         updateDropdownAndSelection(newCategoryName);
-
-        // Update categories in context
-
-        // Optionally, update local state to include the new category
-        //setItems(prevItems => [...prevItems, { label: newCategoryName, value: newCategoryName }]);
-        //setValue(prevValue => [...(prevValue || []), newCategoryName]);
+        if(onCategoryChange){
+          onCategoryChange(updatedValue);
+        }
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
-    }
+}
+  }
   };
 
   return (
@@ -186,6 +253,7 @@ const Category: React.FC<CategoryProps> = ({ issueId, categories }) => {
             backgroundColor: colors.white,
             borderColor: colors.lightgray,
             marginTop: 10,
+            height: 120
           },
         ]}
         ArrowDownIconComponent={() => (

@@ -7,11 +7,13 @@ import Text from "./Text";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useUserContext } from "../Hooks/useUserContext";
 
 const AddLeader = (props: { 
   inviteLeader: (firstName: string, lastName: string, email: string, departmentID: string, departmentName: string) => void; 
-  groupID: string; // Include groupID in the props object
+  createPost: Boolean;
 }) => {
+  const {state, dispatch} = useUserContext();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,7 +35,7 @@ const AddLeader = (props: {
     async function fetchDepartments() {
       try {
         // Prepare the query parameters
-        const queryParams = new URLSearchParams({  groupID: props.groupID });
+        const queryParams = new URLSearchParams({ groupID: state.leaderGroups[0] });
     
         // Make the GET request
         const response = await customFetch(`${Endpoints.getDepartments}${queryParams.toString()}`, {
@@ -58,7 +60,7 @@ const AddLeader = (props: {
 
     fetchDepartments();
     //setItems(departments)
-  }, [props.groupID]);
+  }, []);
 
   return (
     <View style={{ rowGap: 10 }}>
