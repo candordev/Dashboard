@@ -243,6 +243,7 @@ export enum NotificationType {
   proposalAccepted = "proposalAccepted",
   proposalUnaccepted = "proposalUnaccepted",
   proposal = "proposal",
+  reminder="reminders"
 }
 
 export enum BillStatusType {

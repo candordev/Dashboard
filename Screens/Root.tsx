@@ -1,11 +1,16 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import LHN from "../Components/LHN";
 import AllScreen from "./AllScreen";
 import SuggestedScreen from "./SuggestedScreen";
 import YourScreen from "./YourScreen";
+import InboxScreen from "./InboxScreen";
+import {event, eventNames} from '../Events';
+import {AppState, Pressable} from 'react-native';
+import {getUnreadNotifs} from '../utils/utils';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -22,7 +27,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+
 function Root() {
+  console.log("AABBCCDD")
+  // const [unread, setUnread] = useState<number>(0);
+
+  // useEffect(() => {
+  //   // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
+  //     getUnreadDB()
+
+  // }, []);
+  
+  // const getUnreadDB = useCallback(async () => {
+  //   try {
+  //     console.log("GET UNREAD NOTIF")
+  //     setUnread(await getUnreadNotifs());  
+  //   } catch (err) {
+  //     console.error('Error getting notification count', err);
+  //   }
+  // }, []);
+
   return (
     <Drawer.Navigator
       useLegacyImplementation={false}
@@ -37,6 +61,7 @@ function Root() {
       <Drawer.Screen name="all" component={AllScreen} />
       {/* <Drawer.Screen name="your" component={YourScreen} />
       <Drawer.Screen name="suggested" component={SuggestedScreen} /> */}
+      <Drawer.Screen name="inbox" component={InboxScreen} />
     </Drawer.Navigator>
   );
 }
