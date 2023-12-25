@@ -158,7 +158,7 @@ const Header = ({
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          width: "90%",
+          width: "100%",
         }}
       >
         <Text
@@ -190,7 +190,7 @@ const Header = ({
           marginTop: 15,
           flexDirection: "row",
           alignItems: "center",
-          width: "90%",
+          width: "100%",
           columnGap: 10,
         }}
       >

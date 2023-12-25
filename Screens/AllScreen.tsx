@@ -9,65 +9,71 @@ import { Endpoints } from "../utils/Endpoints";
 import { Post } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
 import { ProgressSelector } from "../utils/interfaces";
+import OuterView from "../Components/OuterView";
+import { useUserContext } from "../Hooks/useUserContext";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
+
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
   }>({});
-  const [currStatus, setCurrStatus] = useState<ProgressSelector>({
+
+  const [progressSelected, setProgressSelected] = useState<ProgressSelector>({
     newSelected: true,
     assignedSelected: true,
     updatedSelected: true,
     completedSelected: true,
   });
-  const [selectedHeaderOption, setSelectedHeaderOption] = useState<
+  const [categorySelected, setCategorySelected] = useState<
     string | undefined
-  >('Tag');
-  const [selectedAssigneeIds, setSelectedAssigneeIds] = useState<
-  string[] | undefined
->();
+  >("Tag");
+
+  const [assigneesSelectedIds, setAssigneesSelectedIds] = useState<
+    string[] | undefined
+  >();
 
   const isFocused = useIsFocused(); // Assuming you're using something like this
+  const {state} = useUserContext();
 
   useEffect(() => {
     console.log("Component mounted, fetching posts initially");
 
     console.log("Event triggered, fetching posts");
-    fetchPosts(currStatus, selectedHeaderOption, selectedAssigneeIds);
-  }, [currStatus, selectedHeaderOption, isFocused, selectedAssigneeIds ]); // Depend on currStatus to refetch when it changes
+    fetchPosts(progressSelected, categorySelected, assigneesSelectedIds);
+  }, [progressSelected, categorySelected, isFocused, assigneesSelectedIds]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     console.log("Received status:", status);
-    console.log("Current status:", currStatus);
+    console.log("Current status:", progressSelected);
     console.log("Status changed, updating current status and refetching posts");
-    if (JSON.stringify(newStatus) !== JSON.stringify(currStatus)) {
-      setCurrStatus(newStatus);
+    if (JSON.stringify(newStatus) !== JSON.stringify(progressSelected)) {
+      setProgressSelected(newStatus);
     }
   };
 
   const handleHeaderOptionChange = (option: string) => {
-    if (JSON.stringify(option) !== JSON.stringify(selectedHeaderOption)) {
-      setSelectedHeaderOption(option);
+    if (JSON.stringify(option) !== JSON.stringify(categorySelected)) {
+      setCategorySelected(option);
     }
     // Additional logic if needed
   };
 
-
   const handleAssigneeSelection = (selectedAssigneeIds: string[]) => {
     console.log("Selected Assignees:", selectedAssigneeIds);
-    setSelectedAssigneeIds(selectedAssigneeIds)
+    setAssigneesSelectedIds(selectedAssigneeIds);
     // Perform actions with the selected IDs, like updating state or making API calls
   };
+
   const fetchPosts = async (
     status: ProgressSelector | undefined,
     headerOption?: string,
     selectedAssigneeIds?: string[]
   ) => {
     try {
-      console.log("THE SELECTED ID's FOR ASSIGNEES", selectedAssigneeIds)
-      if(selectedAssigneeIds == undefined){
-        selectedAssigneeIds = []
+      console.log("THE SELECTED ID's FOR ASSIGNEES", selectedAssigneeIds);
+      if (selectedAssigneeIds == undefined) {
+        selectedAssigneeIds = [];
       }
       const queryParams = new URLSearchParams({
         filter: "top",
@@ -95,7 +101,7 @@ const AllScreen = ({ navigation }: any) => {
 
       let resJson = await res.json();
       if (res.ok) {
-        console.log("resJson DEBUG: ", resJson )
+        console.log("resJson DEBUG: ", resJson);
         setCategoriesWithPosts(resJson);
         setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
@@ -107,50 +113,30 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   const handlePopoverClose = () => {
-    fetchPosts(currStatus, selectedHeaderOption);
+    fetchPosts(progressSelected, categorySelected);
   };
-  const [groupID, setGroupID] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    // Function to find the first groupID
-    const findFirstGroupID = () => {
-      for (const category in categoriesWithPosts) {
-        const posts = categoriesWithPosts[category];
-        if (posts.length > 0 && posts[0].group._id) {
-          return posts[0].group._id; // Return the first found groupID
-        }
-      }
-      return undefined; // Return undefined if no groupID is found
-    };
-
-    // Set the groupID when categoriesWithPosts changes
-    const firstGroupID = findFirstGroupID();
-    setGroupID(firstGroupID);
-  }, [categoriesWithPosts]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <OuterView style={{paddingHorizontal: 40,}}>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
         onAssigneeSelection={handleAssigneeSelection}
         headerTitle={"All Issues"}
-        groupID={groupID}
+        groupID={state.leaderGroups[0]}
       />
       <ScrollView
         horizontal
-        style={
-          {
-            /* Add styles if necessary */
-          }
-        }
+        style={{
+          backgroundColor: colors.background,
+        }}
       >
         {Object.entries(categoriesWithPosts).map(([name, posts]) => (
           <View
             key={name}
             style={{
-              width: 400, // Adjust as needed
-              marginHorizontal: 20,
+              width: 350, // Adjust as needed
+              marginRight: 20,
               // Other styles
             }}
           >
@@ -176,7 +162,7 @@ const AllScreen = ({ navigation }: any) => {
           </View>
         ))}
       </ScrollView>
-    </View>
+    </OuterView>
   );
 };
 
