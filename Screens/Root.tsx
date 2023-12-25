@@ -59,8 +59,8 @@ function Root() {
       }}
     >
       <Drawer.Screen name="all" component={AllScreen} />
-      <Drawer.Screen name="your" component={YourScreen} />
-      <Drawer.Screen name="suggested" component={SuggestedScreen} />
+      {/* <Drawer.Screen name="your" component={YourScreen} />
+      <Drawer.Screen name="suggested" component={SuggestedScreen} /> */}
       <Drawer.Screen name="inbox" component={InboxScreen} />
     </Drawer.Navigator>
   );

@@ -26,7 +26,7 @@ function ProgressBar(props: ProgressBarProps): JSX.Element {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          width: 82,
+          width: 74.5,
         }}
       >
         <ProgressBlock filled={props.step >= 1} />
@@ -42,7 +42,7 @@ function ProgressBar(props: ProgressBarProps): JSX.Element {
           fontSize: 13,
           fontWeight: "500",
           paddingBottom: 3,
-          marginTop: 3,
+          marginTop: 1,
         }}
       >
         {underText}
@@ -62,8 +62,8 @@ export function ProgressBlock({
     <View
       style={[
         {
-          height: 9 * scale,
-          width: 25 * scale,
+          height: 8.1 * scale,
+          width: 22.5 * scale,
           borderWidth: 1,
           borderColor: colors.black,
           borderRadius: 4 * scale,

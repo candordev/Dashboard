@@ -59,15 +59,15 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     borderRadius: 15,
-    padding: 20,
+    padding: 15,
     marginVertical: 7,
   },
   title: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "650" as any,
   },
   content: {
-    fontSize: 16,
+    fontSize: 15,
   },
 });
 

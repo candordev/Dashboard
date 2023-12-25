@@ -26,24 +26,23 @@ function NavigationWrapper() {
   const { loginUser } = useLogin();
 
   useEffect(() => {
-    console.log("INFNITE LOOP H")
-    console.log('Component is initially rendered in the DOM');
+    console.log("INFNITE LOOP H");
+    console.log("Component is initially rendered in the DOM");
     // Your code here
   }, []); // The empty dependency array ensures it runs only once
-
 
   // Set an initializing state while Firebase connects
   const [loading, setLoading] = React.useState(true);
 
   // Handle user state changes
   async function onAuthStateChangedCallback(authUser: User | null) {
-    console.log('onAuthStateChangedCallback', authUser);
+    console.log("onAuthStateChangedCallback", authUser);
 
     if (authUser && authUser != null && !isSignupOperation) {
       try {
         // Retrieve user token
         const token = await authUser.getIdToken();
-        console.log("found token", token)
+        console.log("found token", token);
 
         // Log in user with the obtained token
         await loginUser({ token: token });
@@ -58,7 +57,7 @@ function NavigationWrapper() {
   // Check for authentication state changes
   useEffect(() => {
     const auth = getAuth();
-    console.log("The auth changed", auth)
+    console.log("The auth changed", auth);
     const unsubscribe = onAuthStateChanged(auth, onAuthStateChangedCallback);
 
     return () => {
@@ -66,8 +65,6 @@ function NavigationWrapper() {
       unsubscribe();
     };
   }, []);
-
-
 
   if (loading) {
     return <>{/* You can add a loading indicator here */}</>;
@@ -82,8 +79,8 @@ function NavigationWrapper() {
         /* configuration for matching screens with paths */
         root: "root",
         all: "all",
-        your: "your",
-        suggested: "suggested",
+        // your: "your",
+        // suggested: "suggested",
         inbox: "inbox",
         launch: "launch",
         login: "login",
@@ -108,21 +105,20 @@ function NavigationWrapper() {
         ) : (
           // If not authenticated, show the LoginScreen
           <>
-          <Stack.Screen name="launch" component={LaunchScreen} />
-          <Stack.Screen name="login" component={LoginScreen} />
-          <Stack.Screen
-                name="signupStack"
-                component={SignupStack}
-                options={() => ({
-                  headerShown: false,
-                })}
-              />
-        </>
+            <Stack.Screen name="launch" component={LaunchScreen} />
+            <Stack.Screen name="login" component={LoginScreen} />
+            <Stack.Screen
+              name="signupStack"
+              component={SignupStack}
+              options={() => ({
+                headerShown: false,
+              })}
+            />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
   );
-
 }
 
 export default NavigationWrapper;
