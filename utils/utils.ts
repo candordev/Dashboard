@@ -1,8 +1,9 @@
-import {NotificationData, NotificationType} from '../utils/interfaces';
+import {NotificationData, NotificationType, Post} from '../utils/interfaces';
 import {Endpoints} from './Endpoints';
 import {constants} from './constants';
 import {Linking, Platform} from 'react-native';
 import { getAuth } from "firebase/auth";
+import {event, eventNames} from '../Events';
 
 
 export const getAuthToken = async (): Promise<string> => {
@@ -78,6 +79,126 @@ export const openTermsAndConditions = () => {
     .catch();
 };
 
+const fetchPost = async (postId: string) => {
+  try {
+    let res: Response = await customFetch(
+      Endpoints.getPostById +
+        new URLSearchParams({
+          postID: postId,
+        }),
+      {
+        method: 'GET',
+      },
+    );
+    let resJson = await res.json();
+    if (!res.ok) {
+     
+    }
+    if (res.ok) {
+      const result: Post = resJson;
+      // console.info("fetched post is ", result);
+      return result
+    }
+  } catch (error) {
+   
+  }
+};
+
+export const clickNotif = async (
+  notifData: NotificationData | undefined,
+  notifID: string,
+  navigation: any,
+) => {
+  console.debug('Clicked notification:', notifData, notifID);
+  try {
+    let res: Response = await customFetch(Endpoints.seenNotification, {
+      method: 'POST',
+      body: JSON.stringify({
+        notificationID: notifID,
+      }),
+    });
+    // console.info(res);
+    let resJson = await res.json();
+    if (!res.ok) {
+      throw new Error(resJson.error);
+    }
+    if (res.ok) {
+      event.emit(eventNames.FETCH_NOTIFS);
+      // console.log('Marked notification as seen');
+    }
+  } catch (error) {
+    console.error('Error marking notification as seen: ', error);
+  }
+
+  switch (notifData?.contentType) {
+    case NotificationType.commentLike:
+      navigation.push('post', {
+        postID: notifData?.postID,
+        commentID: notifData?.commentID,
+      });
+      break;
+    case NotificationType.newComment:
+      navigation.push('post', {
+        postID: notifData?.postID,
+        commentID: notifData?.commentID,
+      });
+      break;
+    case NotificationType.updatePost:
+      // TODO
+      break;
+    case NotificationType.upvote:
+      navigation.push('post', {
+        postID: notifData?.postID,
+      });
+      break;
+    case NotificationType.announcement:
+      navigation.push('post', {
+        postID: notifData?.postID,
+      });
+      break;
+    case NotificationType.pollVote:
+      navigation.push('post', {
+        postID: notifData?.pollID,
+      });
+      break;
+    case NotificationType.proposalAccepted:
+      navigation.push('post', {
+        postID: notifData?.postID,
+      });
+      break;
+    case NotificationType.proposalUnaccepted:
+      navigation.push('post', {
+        postID: notifData?.postID,
+      });
+      break;
+    case NotificationType.proposal:
+      navigation.push('post', {
+        postID: notifData?.postID,
+      });
+      break;
+    default:
+      console.error('Unknown notification type:', notifData);
+      navigation.navigate('Notifications');
+      break;
+  }
+};
+
+export const getUnreadNotifs = async (): Promise<number> => {
+  try {
+    let res: Response = await customFetch(Endpoints.unseenNotificationsCount, {
+      method: 'GET',
+    });
+    let resJson = await res.json();
+    if (!res.ok) {
+      throw new Error(resJson.error);
+    } else {
+      // notifee.setBadgeCount(resJson.notificationCount);
+      return resJson.notificationCount as number;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
 
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));

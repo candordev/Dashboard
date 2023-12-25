@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback, useState  } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -13,6 +13,10 @@ import SignupStack from '../Screens/SignupStack';
 import { useSignup } from '../Hooks/useSignup';
 import AllScreen from '../Screens/AllScreen';
 import SuggestedScreen from '../Screens/SuggestedScreen';
+import InboxScreen from '../Screens/InboxScreen';
+import {event, eventNames} from '../Events';
+import {AppState, Pressable} from 'react-native';
+import {getUnreadNotifs} from '../utils/utils';
 
 const Stack = createStackNavigator();
 
@@ -80,12 +84,14 @@ function NavigationWrapper() {
         all: "all",
         your: "your",
         suggested: "suggested",
+        inbox: "inbox",
         launch: "launch",
         login: "login",
         NotFound: "404",
       },
     },
   };
+
 
   return (
     <NavigationContainer linking={linking}>
@@ -97,6 +103,7 @@ function NavigationWrapper() {
           <Stack.Screen name="all" component={AllScreen} />
           <Stack.Screen name="your" component={YourScreen} />       
           <Stack.Screen name="suggested" component={SuggestedScreen} />       
+          <Stack.Screen name="inbox" component={InboxScreen} />       
           </>
         ) : (
           // If not authenticated, show the LoginScreen
