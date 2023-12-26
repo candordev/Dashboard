@@ -20,6 +20,7 @@ interface HeaderProps {
   groupID?: string; // groupID is optional and can be undefined
   onHeaderOptionChange: (option: string) => void;
   onAssigneeSelection: (option: string[]) => void;
+  onSearchChange: (option: string) => void;
 }
 
 const Header = ({
@@ -28,6 +29,7 @@ const Header = ({
   onHeaderOptionChange,
   onAssigneeSelection,
   groupID,
+  onSearchChange
 }: HeaderProps) => {
   const { state, dispatch } = useUserContext();
   const activeTab = "all";
@@ -40,39 +42,9 @@ const Header = ({
 
   useEffect(() => {
     console.log("SEARCH PHRASE CHANGED: ", searchPhrase);
-    fetchPosts(searchPhrase, setPosts); // Fetch posts whenever searchPhrase changes
+    onSearchChange(searchPhrase);
   }, [searchPhrase]);
 
-  const fetchPosts = async (
-    searchPhrase: string,
-    setPosts: (posts: Post[]) => void
-  ) => {
-    try {
-      console.log("search phrase", searchPhrase);
-      if (!searchPhrase.trim()) {
-        setPosts([]); // Clear posts if the search phrase is empty
-        return;
-      }
-
-      const queryParams = new URLSearchParams({ title: searchPhrase });
-      let res: Response = await customFetch(
-        `${Endpoints.dashboardPosts}${queryParams.toString()}`,
-        { method: "GET" }
-      );
-
-      let resJson = await res.json();
-      if (res.ok) {
-        setPosts(resJson); // Update the state with the fetched posts
-        console.log("SEARCHED POSTS", resJson);
-      } else {
-        console.error("Error loading posts. Please try again later.");
-        setPosts([]); // Clear posts in case of an error
-      }
-    } catch (error) {
-      console.error("Error loading posts. Please try again later.", error);
-      setPosts([]); // Clear posts in case of an error
-    }
-  };
 
   const [leaders, setLeaders] = useState<UserProfile[]>([]); // State to store leaders
 
@@ -203,21 +175,7 @@ const Header = ({
         </View>
 
         {/* Search Results */}
-        {searchPhrase ? (
-          <View style={styles.searchResultsContainer}>
-            <FlatList
-              data={posts}
-              renderItem={({ item }) => (
-                <Card issue={item} onPopoverClose={handlePopoverClose} />
-              )}
-              keyExtractor={(item) => item._id}
-              ItemSeparatorComponent={() => (
-                <View style={styles.itemSeparator} />
-              )} // Divider between items
-            />
-          </View>
-        ) : (
-          // Render the Status Picker and Assignee Dropdown only when there's no search phrase
+       
           <View
             style={{
               flexDirection: "row",
@@ -239,7 +197,7 @@ const Header = ({
             </View>
             <CreatePost />
           </View>
-        )}
+
       </View>
     </View>
   );

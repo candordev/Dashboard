@@ -14,6 +14,7 @@ import { useUserContext } from "../Hooks/useUserContext";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('')
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -40,8 +41,8 @@ const AllScreen = ({ navigation }: any) => {
     console.log("Component mounted, fetching posts initially");
 
     console.log("Event triggered, fetching posts");
-    fetchPosts(progressSelected, categorySelected, assigneesSelectedIds);
-  }, [progressSelected, categorySelected, isFocused, assigneesSelectedIds]); // Depend on currStatus to refetch when it changes
+    fetchPosts(progressSelected,searchTerm, categorySelected, assigneesSelectedIds);
+  }, [progressSelected, categorySelected, isFocused, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     console.log("Received status:", status);
@@ -65,16 +66,25 @@ const AllScreen = ({ navigation }: any) => {
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
+  const handleSearchChange = (searchTerm: string) => {
+    console.log("Selected Assignees:", searchTerm);
+    setSearchTerm(searchTerm);
+    // Perform actions with the selected IDs, like updating state or making API calls
+  };
+
   const fetchPosts = async (
     status: ProgressSelector | undefined,
+    searchTerm: string,
     headerOption?: string,
-    selectedAssigneeIds?: string[]
+    selectedAssigneeIds?: string[],
+    
   ) => {
     try {
-      console.log("THE SELECTED ID's FOR ASSIGNEES", selectedAssigneeIds);
+      console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
+
       const queryParams = new URLSearchParams({
         filter: "top",
         tab: "all",
@@ -85,6 +95,7 @@ const AllScreen = ({ navigation }: any) => {
           status?.updatedSelected,
           status?.completedSelected,
         ]),
+        title: searchTerm,
       });
 
       // Add selectedHeaderOption to the query params if it's defined
@@ -113,7 +124,7 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   const handlePopoverClose = () => {
-    fetchPosts(progressSelected, categorySelected);
+    fetchPosts(progressSelected, searchTerm, categorySelected);
   };
 
   return (
@@ -124,6 +135,7 @@ const AllScreen = ({ navigation }: any) => {
         onAssigneeSelection={handleAssigneeSelection}
         headerTitle={"All Issues"}
         groupID={state.leaderGroups[0]}
+        onSearchChange={handleSearchChange}
       />
       <ScrollView
         horizontal
