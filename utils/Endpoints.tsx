@@ -7,7 +7,7 @@
 // }
 
 // local
-// export const BASE_URL : string = `http://localhost:4000/api`;
+//export const BASE_URL : string = `http://localhost:4000/api`;
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
@@ -104,6 +104,7 @@ export const Endpoints = {
   createDashboardProposal: `${BASE_URL}/post/createDashboardProposal?`,
   getNeighborhoodCreatePost:  `${BASE_URL}/userActivity/getNeighborhoodCreatePost?`,
   getPrivateChats:  `${BASE_URL}/comment/getPrivateChats?`,
+  editPost:  `${BASE_URL}/post/editPost?`
 
 
 

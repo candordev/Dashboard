@@ -4,10 +4,13 @@ import colors from "../Styles/colors";
 import Text from "./Text";
 import Button from "./Button";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { Endpoints } from "../utils/Endpoints";
+import { customFetch } from "../utils/utils";
 
 type IssueContent = {
   title: string;
   content: string;
+  issueID: string;
 };
 
 const IssueContent: React.FC<IssueContent> = (props) => {
@@ -16,8 +19,29 @@ const IssueContent: React.FC<IssueContent> = (props) => {
   const [title, setTitle] = useState(props.title);
   const [content, setContent] = useState(props.content);
 
-  const handleDone = () => {
-    setEditing(false);
+  const handleDone = async () => {
+   
+    try {
+      console.log("content", content)
+      let res: Response = await customFetch(Endpoints.editPost, {
+        method: "POST",
+        body: JSON.stringify({
+          content: content,
+          postID: props.issueID,
+          title: title,
+        }),
+      });
+
+      let resJson = await res.json();
+      if (!res.ok) {
+        console.error(resJson.error);
+      } else {
+         setEditing(false);
+         console.log("SUCSEFULLY EDDITED")
+      }
+    } catch (error) {
+      console.error("Error loading posts. Please try again later.", error);
+    }
     //fetch here
   };
 
