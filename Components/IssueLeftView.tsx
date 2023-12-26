@@ -8,6 +8,7 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { Comment } from "../utils/interfaces";
 import PrivateChat from "./PrivateChat";
+import IssueContent from "./IssueContent";
 
 interface IssueLeftViewProps {
   issue: Post;
@@ -80,44 +81,26 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-      <View>
-        <View
-          style={{
-            backgroundColor: colors.white,
-            padding: 10,
-            borderWidth: 2,
-            borderRadius: 10,
-            borderColor: colors.lightestgray,
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            {props.issue.title}
-          </Text>
-          <Text style={{ fontSize: 14, marginTop: 5 }}>
-            {props.issue.content}
-          </Text>
-        </View>
-
-        {comments.map((comment: Comment, index) => {
-          return (
-            <View
-              style={{
-                backgroundColor: colors.white,
-                padding: 10,
-                marginTop: 5,
-              }}
-              key={index}
-            >
-              <Text style={{ fontSize: 14, fontWeight: "550" }}>
-                {comment.profile.firstName + " " + comment.profile.lastName}
-              </Text>
-              <Text style={{ fontSize: 12, marginTop: 3 }}>
-                {comment.content}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
+      <IssueContent title={props.issue.title} content={props.issue.content} />
+      {comments.map((comment: Comment, index) => {
+        return (
+          <View
+            style={{
+              backgroundColor: colors.white,
+              padding: 10,
+              marginTop: 5,
+            }}
+            key={index}
+          >
+            <Text style={{ fontSize: 14, fontWeight: "550" }}>
+              {comment.profile.firstName + " " + comment.profile.lastName}
+            </Text>
+            <Text style={{ fontSize: 12, marginTop: 3 }}>
+              {comment.content}
+            </Text>
+          </View>
+        );
+      })}
       <PrivateChat issueID={props.issue._id}/>
     </View>
   );
