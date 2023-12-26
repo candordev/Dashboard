@@ -96,11 +96,7 @@ function NavigationWrapper() {
         {state.token ? (
           // If authenticated, show the Root screen
           <>
-          <Stack.Screen name="root" component={Root} />
-          <Stack.Screen name="all" component={AllScreen} />
-          <Stack.Screen name="your" component={YourScreen} />       
-          <Stack.Screen name="suggested" component={SuggestedScreen} />       
-          <Stack.Screen name="inbox" component={InboxScreen} />       
+          <Stack.Screen name="root" component={Root} />    
           </>
         ) : (
           // If not authenticated, show the LoginScreen
