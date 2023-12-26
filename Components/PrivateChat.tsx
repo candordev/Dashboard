@@ -151,6 +151,6 @@ userName: {
   },
   messageContainer: {
       flex: 1,
-      marginTop: 5
+      marginTop: 10
   }
 });
