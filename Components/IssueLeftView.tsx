@@ -79,29 +79,26 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-      <View>
-        <IssueContent title={props.issue.title} content={props.issue.content} />
-
-        {comments.map((comment: Comment, index) => {
-          return (
-            <View
-              style={{
-                backgroundColor: colors.white,
-                padding: 10,
-                marginTop: 5,
-              }}
-              key={index}
-            >
-              <Text style={{ fontSize: 14, fontWeight: "550" }}>
-                {comment.profile.firstName + " " + comment.profile.lastName}
-              </Text>
-              <Text style={{ fontSize: 12, marginTop: 3 }}>
-                {comment.content}
-              </Text>
-            </View>
-          );
-        })}
-      </View>
+      <IssueContent title={props.issue.title} content={props.issue.content} />
+      {comments.map((comment: Comment, index) => {
+        return (
+          <View
+            style={{
+              backgroundColor: colors.white,
+              padding: 10,
+              marginTop: 5,
+            }}
+            key={index}
+          >
+            <Text style={{ fontSize: 14, fontWeight: "550" }}>
+              {comment.profile.firstName + " " + comment.profile.lastName}
+            </Text>
+            <Text style={{ fontSize: 12, marginTop: 3 }}>
+              {comment.content}
+            </Text>
+          </View>
+        );
+      })}
       <PrivateChat />
     </View>
   );

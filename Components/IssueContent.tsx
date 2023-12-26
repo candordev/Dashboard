@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import colors from "../Styles/colors";
 import Text from "./Text";
@@ -32,13 +32,14 @@ const IssueContent: React.FC<IssueContent> = (props) => {
       }}
     >
       {editing ? (
-        <>
+        <View>
           <TextInput
             style={[
               {
                 fontSize: 18,
                 fontWeight: "bold",
                 marginRight: 55,
+                fontFamily: "OpenSans"
               },
               styles.textInput,
             ]}
@@ -46,25 +47,29 @@ const IssueContent: React.FC<IssueContent> = (props) => {
             onChangeText={(text) => setTitle(text)}
             autoFocus={true}
             multiline={true}
-            numberOfLines={undefined}
+            numberOfLines={title.length / 20 + 1}
           />
           <TextInput
             style={[
               {
                 fontSize: 14,
                 marginTop: 5,
+                fontFamily: "OpenSans"
               },
               styles.textInput,
             ]}
             value={content}
             onChangeText={(text) => setContent(text)}
             multiline={true}
-            numberOfLines={undefined}
+            numberOfLines={content.length / 30 + 1}
           />
-        </>
+        </View>
       ) : (
         <>
-          <Text style={{ fontSize: 18, fontWeight: "bold", paddingRight: 55 }}>
+          <Text
+            style={{ fontSize: 18, fontWeight: "bold", paddingRight: 55 }}
+            onayout={() => {}}
+          >
             {title}
           </Text>
           <Text style={{ fontSize: 14, marginTop: 5 }}>{content}</Text>
@@ -99,7 +104,6 @@ const IssueContent: React.FC<IssueContent> = (props) => {
 
 const styles = StyleSheet.create({
   textInput: {
-    flex: 1,
     outlineStyle: "none",
   },
 });
