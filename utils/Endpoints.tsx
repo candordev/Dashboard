@@ -103,6 +103,7 @@ export const Endpoints = {
   addCategoryCreatePost: `${BASE_URL}/userActivity/addCategoryCreatePost?`,
   createDashboardProposal: `${BASE_URL}/post/createDashboardProposal?`,
   getNeighborhoodCreatePost:  `${BASE_URL}/userActivity/getNeighborhoodCreatePost?`,
+  getPrivateChats:  `${BASE_URL}/comment/getPrivateChats?`,
 
 
 
