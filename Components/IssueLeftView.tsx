@@ -17,9 +17,9 @@ interface IssueLeftViewProps {
 function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
+  
 
   useEffect(() => {
-    console.log("INFNITE LOOP C");
     fetchComments();
   }, []);
 
@@ -47,6 +47,8 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       console.error("Error loading posts. Please try again later.", error);
     }
   }
+
+
 
   async function postComment() {
     try {
@@ -99,7 +101,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           </View>
         );
       })}
-      <PrivateChat />
+      <PrivateChat issueID={props.issue._id}/>
     </View>
   );
 }
