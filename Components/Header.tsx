@@ -21,6 +21,7 @@ interface HeaderProps {
   onHeaderOptionChange: (option: string) => void;
   onAssigneeSelection: (option: string[]) => void;
   onSearchChange: (option: string) => void;
+  onPopoverCloseComplete: () => void; // Add this line
 }
 
 const Header = ({
@@ -29,7 +30,8 @@ const Header = ({
   onHeaderOptionChange,
   onAssigneeSelection,
   groupID,
-  onSearchChange
+  onSearchChange,
+  onPopoverCloseComplete
 }: HeaderProps) => {
   const { state, dispatch } = useUserContext();
   const activeTab = "all";
@@ -113,6 +115,7 @@ const Header = ({
   };
 
   const handlePopoverClose = () => {
+    console.log()
     //fetchPosts(currStatus, selectedHeaderOption);
   };
 
@@ -195,9 +198,8 @@ const Header = ({
                 multiple={true}
               />
             </View>
-            <CreatePost />
+            <CreatePost onPopoverCloseComplete={onPopoverCloseComplete}/>
           </View>
-
       </View>
     </View>
   );

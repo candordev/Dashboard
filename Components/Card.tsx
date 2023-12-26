@@ -14,7 +14,7 @@ import Text from "./Text";
 
 interface CardProps {
   issue: Post;
-  onPopoverClose: () => void; // Add this line
+  onPopoverCloseComplete: () => void; // Add this line
 }
 
 // const Card: React.FC<CardProps> = ({ issue }: any) => {
@@ -27,6 +27,7 @@ function Card(props: CardProps): JSX.Element {
 
   return (
     <Popover
+      onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
       from={
         <TouchableOpacity style={styles.card}>
           <View

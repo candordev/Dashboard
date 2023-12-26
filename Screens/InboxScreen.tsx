@@ -23,13 +23,18 @@ import {Endpoints} from '../utils/Endpoints';
 import {Notification} from '../utils/interfaces';
 import Text from '../Components/Native/Text';
 import { FlatList, ScrollView } from "react-native";
+import { useIsFocused } from '@react-navigation/native';
 
 type Props = PropsWithChildren<{
   route: any;
   navigation: any;
 }>;
 
+
+
+
 function NotificationsScreen({route, navigation}: Props): JSX.Element {
+  const isFocused = useIsFocused(); // Assuming you're using something like this
   const [notificationsEnabled, setNotificationsEnabled] =
     useState<boolean>(false);
 
@@ -60,7 +65,7 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
       stopped.current = false;
     }
     event.emit(eventNames.FETCH_NOTIFS);
-    console.debug(
+    console.log(
       'reset',
       reset,
       'skip',
@@ -113,6 +118,7 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (AppState.currentState === 'active') {
+        console.log("NOTIF HAPPENED")
         getNotifsStatus();
         onRefresh();
       }
@@ -131,23 +137,26 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
     };
   }, []);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     getNotifsStatus();
-  //     // return () => {
-  //     // TODO: Do something when the screen is unfocused
-  //     // Useful for cleanup functions
-  //     // };
-  //   }, []),
-  // );
-
   useEffect(() => {
     getNotifsStatus();
   }, []);
 
+  useEffect(() => {
+      onRefresh();
+  }, [isFocused]);
+
+
+
+  const handleCloseComplete = () =>{
+    console.log("THIS RAN")
+    fetchNotifs(true)
+   }
+
   const renderItem = ({item}: {item: Notification}) => {
-    return <NotifSection notif={item} navigation={navigation} />;
+    return <NotifSection onPopoverCloseComplete={handleCloseComplete} notif={item} navigation={navigation} />;
   };
+
+
 
   const renderHeader = () => {
     if (notificationsEnabled) {
@@ -192,12 +201,15 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
   }
 
   function onRefresh() {
+    console.log("is focused on refresh")
     refreshing.current = true;
     stopped.current = false;
     fetchNotifs(true);
     refreshing.current = false;
     setLoading(false);
+    event.emit(eventNames.NOTIFICATIONS_REFRESHED); // Emit an event here
   }
+  
 
   return (
     <View style={{flex: 1, backgroundColor: colors.white}}>

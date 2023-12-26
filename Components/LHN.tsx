@@ -17,6 +17,29 @@ const LHN = ({ props }: any) => {
       getUnreadDB()
 
   }, []);
+
+  useEffect(() => {
+    const handleRefresh = () => {
+        console.log("Notifications refreshed, updating unread count");
+        getUnreadDB();
+    };
+
+    event.on(eventNames.NOTIFICATIONS_REFRESHED, handleRefresh);
+
+    return () => {
+        event.off(eventNames.NOTIFICATIONS_REFRESHED, handleRefresh);
+    };
+}, []);
+
+    useEffect(() => {
+      // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
+      event.on(eventNames.FETCH_NOTIFS, getUnreadDB);
+
+      return () => {
+        // event.off(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
+        event.off(eventNames.FETCH_NOTIFS, getUnreadDB);
+      };
+    }, []);
   
   const getUnreadDB = useCallback(async () => {
     try {

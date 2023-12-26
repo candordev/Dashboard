@@ -9,4 +9,5 @@ export const enum eventNames {
     // FETCH_NOTIFIATIONS = "fetchNotifications",
     FORCE_SIGNOUT="forceSignout",
     FETCH_NOTIFS="fetchNotifs",
+    NOTIFICATIONS_REFRESHED="notfisRefreshed"
 }
