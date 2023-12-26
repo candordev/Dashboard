@@ -14,8 +14,10 @@ import Text from "./Text";
 import CreatePostView from "./CreatePostView";
 
 interface CreatePost {
-
+  onPopoverCloseComplete: () => void; // Add this line
 }
+
+
 
 // const Card: React.FC<CardProps> = ({ issue }: any) => {
 function CreatePost(props: CreatePost): JSX.Element {
@@ -31,8 +33,11 @@ function CreatePost(props: CreatePost): JSX.Element {
     };
 
 
+
+
   return (
     <Popover
+        onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
         from={(
           <TouchableOpacity style={styles.card} onPress={openPopup}>
             <Text style={styles.title}>Create Post</Text>

@@ -122,9 +122,10 @@ const AllScreen = ({ navigation }: any) => {
       console.error("Error loading posts. Please try again later.", error);
     }
   };
+  
 
-  const handlePopoverClose = () => {
-    fetchPosts(progressSelected, searchTerm, categorySelected);
+  const handlePopoverCloseComplete = () => {
+    fetchPosts(progressSelected, searchTerm, categorySelected, assigneesSelectedIds);
   };
 
   return (
@@ -136,6 +137,7 @@ const AllScreen = ({ navigation }: any) => {
         headerTitle={"All Issues"}
         groupID={state.leaderGroups[0]}
         onSearchChange={handleSearchChange}
+        onPopoverCloseComplete={handlePopoverCloseComplete}
       />
       <ScrollView
         horizontal
@@ -168,7 +170,10 @@ const AllScreen = ({ navigation }: any) => {
               key={`${name}-${refreshKey}`}
               data={posts}
               renderItem={({ item }) => (
-                <Card issue={item} onPopoverClose={handlePopoverClose} />
+                <Card 
+                issue={item} 
+                onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
+              />
               )}
             />
           </View>

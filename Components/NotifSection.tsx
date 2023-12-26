@@ -13,6 +13,7 @@ import Popover, { PopoverPlacement } from 'react-native-popover-view';
 type Props = {
   notif: Notification;
   navigation: any;
+  onPopoverCloseComplete: () => void; // Add this line
 };
 
 function imageURL(contentType: NotificationType) {
@@ -225,6 +226,7 @@ const NotifSection = (props: Props) => {
   
   return (
     <Popover
+    onCloseComplete={props.onPopoverCloseComplete}
     onOpenStart={handleNotificationClick}
     from={(
       <TouchableOpacity style={[styles.seenNotifCard, notif.seen ? {} : {backgroundColor: colors.purple0}]}>
