@@ -175,11 +175,22 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
 
                 }}   
               />
+              <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: "550",
+                      fontFamily: "Montserrat",
+                      marginTop: 20,
+                    }}
+                  >
+                    Constituent Info:
+            </Text>
 
               <View style={{ rowGap: 10 }}>
                     <MarkDone fetchStatusUpdates={props.fetchStatusUpdates} issueId={props.issue._id} step={props.issue.step}/>
                 {/* <CloseIssue /> */}
             </View>
+
         </ScrollView>
     );
 }

@@ -17,6 +17,8 @@ interface IssueLeftViewProps {
 function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
+
+
   
 
   useEffect(() => {
@@ -81,7 +83,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-      <IssueContent issueID={props.issue._id} title={props.issue.title} content={props.issue.content} />
+      <IssueContent date={props.issue.createdAt} issueID={props.issue._id} title={props.issue.title} content={props.issue.content} />
       {comments.map((comment: Comment, index) => {
         return (
           <View

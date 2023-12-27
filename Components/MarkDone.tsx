@@ -12,29 +12,19 @@ interface MarkDoneProps {
 }
 
 const MarkDone: React.FC<MarkDoneProps> = ({ issueId, fetchStatusUpdates, step}) => {
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [expanded, setExpanded] = useState(false);
+
     const [errorMessage, setErrorMessage] = useState("");
     const [stepNumber, setStepNumber] = useState<number>(step);
-    // const [uncomplete, setUncomplete] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // New state for loading status
 
-
-
-    // useEffect(() => {
-    //     setStepNumber(step)
-    //   }, []);
 
     const handlePress = async (uncomplete: boolean) => {
-
-        if (expanded) {
-            try{
-            let res = await customFetch(Endpoints.createStatusUpdate, {
+        setIsLoading(true); // Start loading
+        try{
+            let res = await customFetch(Endpoints.markDone, {
                 method: "POST",
                 body: JSON.stringify({
                   postID: issueId, 
-                  title: title, // Assuming issueId is available in this component
-                  content: content,
                   completed: !uncomplete,
                   uncomplete: uncomplete,
                 }),
@@ -58,68 +48,43 @@ const MarkDone: React.FC<MarkDoneProps> = ({ issueId, fetchStatusUpdates, step})
                 setErrorMessage('')
                 console.log("UPDATE POST successfully made");
                 fetchStatusUpdates(); // Call the fetchStatusUpdates function here
-                setContent('')
-                setTitle('')
+
                 //event.emit(eventNames.ISSUE_CATEGORY_SET);
                 // You can handle any additional state updates or notifications here
               }
             } catch (error) {
               console.error("Network error, please try again later.", error);
-            }      
-
-            // Handle the completion logic here
-            console.log("Title:", title, "Content:", content);
-        }
-        setExpanded(!expanded); // Toggle the expanded state
+            } finally {
+                setIsLoading(false); // End loading
+              }  
     };
 
-    const handleCompletedPress = () => {
-        // Implement the functionality for when step is at 3 and button is pressed
-        console.log("Completed button pressed");
-    };
 
     return (
-        <View style={expanded ? {borderColor: 'gray', borderWidth: 1, borderRadius: 8, backgroundColor: "white"} : {}}>
-        {errorMessage !== "" && (
+        <View>
+          {errorMessage !== "" && (
             <Text style={styles.errorMessage}>{errorMessage}</Text>
-        )}
-        {expanded && (
-                <View style={{ padding: 20, marginBottom: -50 }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={"Enter Title"}
-                        onChangeText={text => setTitle(text)}
-                        value={title}
-                        placeholderTextColor={'gray'}
-                    />
-                    <TextInput
-                        style={[styles.input, { height: 100 }]}
-                        placeholder={stepNumber === 3 ? ("Explain why you decided to uncomplete this post") : ("Enter Update Post Content")}
-                        onChangeText={text => setContent(text)}
-                        value={content}
-                        multiline
-                        placeholderTextColor={'gray'}
-                    />
-                </View>
-            )}
+          )}
           {stepNumber === 3 ? (
-                <TouchableOpacity
-                    style={styles.completedButton}
-                    onPress={() => handlePress(true)}
-                >
-                    <Text style={styles.completedButtonText}>{expanded ? 'Done' : 'Completed'}</Text>
-                </TouchableOpacity>
-            ) : (
-                <TouchableOpacity
-                    style={styles.toggleButton}
-                    onPress={() => handlePress(false)}
-                >
-                    <Text style={styles.toggleButtonText}>{expanded ? 'Done' : 'Mark Completed'}</Text>
-                </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              style={styles.completedButton}
+              onPress={() => handlePress(true)}
+              disabled={isLoading} // Disable button when loading
+            >
+              <Text style={styles.completedButtonText}>Completed</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.toggleButton}
+              onPress={() => handlePress(false)}
+              disabled={isLoading} // Disable button when loading
+            >
+              <Text style={styles.toggleButtonText}>Mark Completed</Text>
+            </TouchableOpacity>
+          )}
         </View>
-    );
-};
+      );
+    };
 
 const styles = StyleSheet.create({
     input: {
