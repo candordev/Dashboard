@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, ScrollView} from "react-native";
 import Text from "./Text";
 import colors from "../Styles/colors";
 import ProfileRow from "./ProfileRow";
@@ -17,6 +17,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { GooglePlacesAutocomplete, GooglePlaceData, GooglePlaceDetail } from 'react-native-google-places-autocomplete';
 import { getAuth } from "firebase/auth";
+
 
 
 
@@ -114,14 +115,16 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   };
 
     return (
-        <View
-            style={{
-                height: "100%",
-                flex: 1,
-                justifyContent: "space-between",
-            }}
+        <ScrollView
+        style={{
+          borderRadius: 10,
+          height: "100%",
+          flex: 1,
+          //justifyContent: "space-between",
+        }}
+            contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}
         >
-            <View style={{ rowGap: 10, zIndex: 2}}>
+            <View style={{ zIndex: 2}}>
                 <Assignees issue={props.issue} createPost={false}/>
                 <Category issueId={props.issue._id} createPost={false }/>
                    <Text
@@ -173,11 +176,11 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
                 }}   
               />
 
-            <View style={{ rowGap: 10 }}>
-                <MarkDone fetchStatusUpdates={props.fetchStatusUpdates} issueId={props.issue._id}/>
+              <View style={{ rowGap: 10 }}>
+                    <MarkDone fetchStatusUpdates={props.fetchStatusUpdates} issueId={props.issue._id} step={props.issue.step}/>
                 {/* <CloseIssue /> */}
             </View>
-        </View>
+        </ScrollView>
     );
 }
 

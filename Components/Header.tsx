@@ -22,6 +22,7 @@ interface HeaderProps {
   onAssigneeSelection: (option: string[]) => void;
   onSearchChange: (option: string) => void;
   onPopoverCloseComplete: () => void; // Add this line
+
 }
 
 const Header = ({
@@ -31,7 +32,7 @@ const Header = ({
   onAssigneeSelection,
   groupID,
   onSearchChange,
-  onPopoverCloseComplete
+  onPopoverCloseComplete,
 }: HeaderProps) => {
   const { state, dispatch } = useUserContext();
   const activeTab = "all";

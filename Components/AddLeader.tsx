@@ -8,9 +8,15 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useUserContext } from "../Hooks/useUserContext";
+import { emptyFields } from "../utils/interfaces";
+import { EdgeMode } from "react-native-safe-area-context";
+
+
+
 
 const AddLeader = (props: { 
   inviteLeader: (firstName: string, lastName: string, email: string, departmentID: string, departmentName: string) => void; 
+  inviteLeaderMissingFields: (emptyFields: emptyFields) => void; 
   createPost: Boolean;
 }) => {
   const {state, dispatch} = useUserContext();
@@ -30,6 +36,7 @@ const AddLeader = (props: {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [selectedDepartmentName, setSelectedDepartmentName] = useState("");
+  const[missingFields, setMissingFields] = useState<emptyFields>()
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -130,6 +137,19 @@ const AddLeader = (props: {
           if (expanded) {
             if(value != null && firstName.length > 0 && lastName.length > 0 && email.length > 0){
               props.inviteLeader(firstName, lastName, value, email, selectedDepartmentName)
+            }else{
+              const missingFields: emptyFields = {
+                firstName: firstName.length === 0,
+                lastName: lastName.length === 0,
+                email: email.length === 0,
+                department: value === null,
+              };
+              const isAnyFieldMissing = Object.values(missingFields).some(isMissing => isMissing);
+              if (isAnyFieldMissing) {
+                // If any field is missing, call inviteLeaderMissingFields
+                props.inviteLeaderMissingFields(missingFields);
+              }
+              
             }
             setExpanded(false);
           } else {

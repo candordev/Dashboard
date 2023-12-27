@@ -123,9 +123,12 @@ const AllScreen = ({ navigation }: any) => {
     }
   };
   
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePopoverCloseComplete = () => {
-    fetchPosts(progressSelected, searchTerm, categorySelected, assigneesSelectedIds);
+  const handlePopoverCloseComplete = async () => {
+    setIsLoading(true);
+    await fetchPosts(progressSelected, searchTerm, categorySelected, assigneesSelectedIds);
+    setIsLoading(false);
   };
 
   return (
@@ -171,8 +174,10 @@ const AllScreen = ({ navigation }: any) => {
               data={posts}
               renderItem={({ item }) => (
                 <Card 
+                key={item._id}
                 issue={item} 
                 onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
+                isDisabled={isLoading}
               />
               )}
             />

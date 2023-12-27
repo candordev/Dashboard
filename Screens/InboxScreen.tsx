@@ -145,15 +145,19 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
       onRefresh();
   }, [isFocused]);
 
+  
+  const [isLoading, setIsLoading] = useState(false);
+
 
 
   const handleCloseComplete = () =>{
-    console.log("THIS RAN")
+    setIsLoading(true);
     fetchNotifs(true)
+    setIsLoading(false);
    }
 
   const renderItem = ({item}: {item: Notification}) => {
-    return <NotifSection onPopoverCloseComplete={handleCloseComplete} notif={item} navigation={navigation} />;
+    return <NotifSection isDisabled={isLoading} onPopoverCloseComplete={handleCloseComplete} notif={item} navigation={navigation} />;
   };
 
 
