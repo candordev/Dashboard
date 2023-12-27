@@ -11,9 +11,30 @@ type IssueContent = {
   title: string;
   content: string;
   issueID: string;
+  date: string;
 };
 
 const IssueContent: React.FC<IssueContent> = (props) => {
+  const formatDate = (createdAt: string): string => {
+    const now = new Date();
+    const createdDate = new Date(createdAt); // Parse the string into a Date object
+    const diffMs = now.getTime() - createdDate.getTime(); // difference in milliseconds
+    const diffMins = Math.round(diffMs / 60000); // minutes
+    const diffHrs = Math.round(diffMins / 60); // hours
+    const diffDays = Math.round(diffHrs / 24); // days
+  
+    if (diffMins < 60) {
+      return `${diffMins} minutes ago`;
+    } else if (diffHrs < 24) {
+      return `${diffHrs} hours ago`;
+    } else if (diffDays < 7) {
+      return `${diffDays} days ago`;
+    } else {
+      // Format the date to show in "MM/DD/YYYY" format
+      return createdDate.toLocaleDateString();
+    }
+  };
+
   const [editing, setEditing] = useState(false);
 
   const [title, setTitle] = useState(props.title);
@@ -96,6 +117,19 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           >
             {title}
           </Text>
+          <Text
+                style={{
+                    fontSize: 13,
+                    fontWeight: "500",
+                    fontFamily: "Montserrat",
+                    color: "gray",
+                    marginBottom: 3,
+                    marginTop: 3
+                    //marginLeft: 5,
+                }}
+            >
+                 {formatDate(props.date)}
+            </Text>
           <Text style={{ fontSize: 14, marginTop: 5 }}>{content}</Text>
         </>
       )}

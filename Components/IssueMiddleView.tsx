@@ -17,6 +17,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   const [updates, setUpdates] = useState<Update[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [errorMessage, setMessage] = useState("");
 
   // useEffect(() => {
   //   console.log("INFNITE LOOP D");
@@ -48,6 +49,8 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
         const result: Update[] = resJson;
         console.log("status updates are", result);
         setUpdates([...result]);
+        setTitle('')
+        setContent('')
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
@@ -68,7 +71,8 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
 
       if (!res.ok) {
         const resJson = await res.json();
-        console.error(resJson.error);
+        console.error("Status update error", resJson.error);
+        setMessage(resJson.error)
       } else {
         await fetchStatusUpdates();
       }
@@ -104,6 +108,9 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
           <UpdateCard key={index} update={update} />
         ))}
       </ScrollView>
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
       <DoubleTextInput
         onFirstInputChange={setTitle}
         onSecondInputChange={setContent}
@@ -112,5 +119,18 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
     </View>
   );
 }
+const styles = StyleSheet.create({
+
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'left',
+    marginTop: 5,
+    marginLeft: 0,
+    fontFamily: "Montserrat",
+  },
+  // ... other styles ...
+});
 
 export default IssueMiddleView;
+
