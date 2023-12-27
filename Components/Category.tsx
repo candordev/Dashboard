@@ -30,6 +30,8 @@ const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChan
   const [items, setItems] = useState<DropdownItem[]>([]);
   const [valueChanged, setValueChanged] = useState(false);
   const [categories, setCategories] = useState<CategoryPost[]>([]);
+  const [categoryError, setCategoryError] = useState("");
+
 
   const getCategories = async () => {
     try {
@@ -146,6 +148,13 @@ useEffect(() => {
   };
 
   const handleNewCategory = async (newCategoryName: string) => {
+    setCategoryError("");
+
+    const categoryExists = items.some(item => item.label === newCategoryName);
+    if (categoryExists) {
+      setCategoryError("Category already exists.");
+      return;
+    }
     if(!createPost){
         try {
           const updatedValue = value
@@ -277,6 +286,9 @@ useEffect(() => {
       </View>
       <View>
         <OrFullWidth />
+        {categoryError !== "" && (
+          <Text style={styles.errorText}>{categoryError}</Text>
+         )}
         <AddCategory onCategoryAdded={handleNewCategory} />
       </View>
     </View>
@@ -288,6 +300,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.black,
     marginTop: 5,
+    fontFamily: "Montserrat",
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'left',
+    marginTop: 5,
+    marginLeft: 0,
     fontFamily: "Montserrat",
   },
   // ... other styles ...

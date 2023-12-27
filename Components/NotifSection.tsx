@@ -14,6 +14,7 @@ type Props = {
   notif: Notification;
   navigation: any;
   onPopoverCloseComplete: () => void; // Add this line
+  isDisabled: boolean;
 };
 
 function imageURL(contentType: NotificationType) {
@@ -229,7 +230,7 @@ const NotifSection = (props: Props) => {
     onCloseComplete={props.onPopoverCloseComplete}
     onOpenStart={handleNotificationClick}
     from={(
-      <TouchableOpacity style={[styles.seenNotifCard, notif.seen ? {} : {backgroundColor: colors.purple0}]}>
+      <TouchableOpacity disabled={props.isDisabled} style={[styles.seenNotifCard, notif.seen ? {} : {backgroundColor: colors.purple0}]}>
       <NotifPicture
           smallUrl={imageURL(notif.data?.contentType)}
           mainUrl={notif.picture}

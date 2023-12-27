@@ -28,6 +28,13 @@ export interface UserProfile {
   acceptedPost: boolean;
 }
 
+export interface emptyFields{
+  firstName: boolean,
+  lastName: boolean,
+  email: boolean,
+  department: boolean
+}
+
 export interface CategoryWithPosts {
   [categoryName: string]: Post[];
 }

@@ -7,7 +7,7 @@ import DropDownPicker, { ItemType, ValueType } from "react-native-dropdown-picke
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AddLeader from "./AddLeader";
 import OrFullWidth from "./OrFullWidth";
-import { Post, UserProfile } from "../utils/interfaces";
+import { Post, UserProfile, emptyFields } from "../utils/interfaces";
 import Icon from "react-native-vector-icons/Feather";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
@@ -39,6 +39,9 @@ function Assignees(props: AssigneesProps): JSX.Element {
   const [previousValue, setPreviousValue] = useState<string[]>([]);
   const [previousValueChild, setPreviousChildValue] = useState<string[]>([]);
   const [leaders, setLeaders] = useState<UserProfile[]>([]);
+  const [errorMessageLeader, setErrorMessageLeader] = useState<string>();
+  
+
 
 
   type Department = {
@@ -383,6 +386,28 @@ useEffect(()=>{
       await createLeaderAccount(firstName, lastName, departmentID, email, departmentName)
     }
   };
+  const handleEmptyFields = (emptyFields: emptyFields) => {
+    let errorMessage = "";
+  
+    if (emptyFields.firstName) {
+      errorMessage += "First name, ";
+    }
+    if (emptyFields.lastName) {
+      errorMessage += "Last name, ";
+    }
+    if (emptyFields.email) {
+      errorMessage += "Email, ";
+    }
+    if (emptyFields.department) {
+      errorMessage += "Department selection, ";
+    }
+
+    errorMessage += "is missing.";
+  
+    setErrorMessageLeader(errorMessage.trim());
+  };
+  
+  
 
   async function createLeaderAccount(firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) {
     try {
@@ -438,9 +463,12 @@ useEffect(()=>{
             if (!res.ok) {
               const resJson = await res.json();
               console.error("Error  EMAIL:", resJson.error);
+              setErrorMessageLeader(resJson.error);
             } else {
+              setErrorMessageLeader('')
               console.log("EMAIL successfully");
               updateDropdownAndSelection(departmentName, firstName, email);
+   
             }
           } catch (error) {
             console.error("Network error, please try again later.", error);
@@ -575,8 +603,16 @@ useEffect(()=>{
       <View>
     </View>
       <View>
-        <OrFullWidth />
-        <AddLeader inviteLeader={inviteLeader} createPost={props.createPost} />
+        <OrFullWidth />    
+          {errorMessageLeader &&(
+             <Text
+             style={{color: 'red'}}          
+             >
+              {errorMessageLeader}
+             </Text>
+          )}
+
+        <AddLeader inviteLeaderMissingFields={handleEmptyFields} inviteLeader={inviteLeader} createPost={props.createPost} />
       </View>
     </View>
   );

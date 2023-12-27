@@ -24,15 +24,15 @@ function CreatePost(props: CreatePost): JSX.Element {
   const { height, width } = useWindowDimensions();
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  
 
     const closePopup = () => {
       setIsPopupVisible(false);
     };
+
     const openPopup = () => {
       setIsPopupVisible(true);
     };
-
-
 
 
   return (
