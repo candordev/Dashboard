@@ -103,6 +103,8 @@ export interface Post {
   suggestedDepartments: Department[];
   deadline: Date;
   neighborhood: string;
+  postCreatedFrom: string;
+  proposalFromEmail: string;
 }
 
 export interface Leader {
