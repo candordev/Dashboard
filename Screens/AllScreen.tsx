@@ -80,7 +80,13 @@ const AllScreen = ({ navigation }: any) => {
     
   ) => {
     try {
-      console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      console.log("THE SELECTED ID's FOR ASSIGNEES", JSON.stringify([
+        status?.newSelected,
+        status?.assignedSelected,
+        status?.updatedSelected,
+        status?.completedSelected,
+      ]),);
+      
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
