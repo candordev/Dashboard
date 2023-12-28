@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import colors from '../Styles/colors';
 
 interface ButtonProps {
@@ -10,10 +10,11 @@ interface ButtonProps {
   textStyle?: any;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, style, textStyle, onPress }) => {
+const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({ text, style, textStyle, onPress, children }) => {
   return (
     <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
       <Text style={[styles.buttonText, textStyle]}>{text}</Text>
+      <View>{children}</View>
     </TouchableOpacity>
   );
 };
