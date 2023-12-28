@@ -30,7 +30,16 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
         return;
       }
       if (!isLogin) {
-        console.log("NEED TO SIGN UP..");
+        console.log("going to signupname")
+        navigation.navigate('signupStack', {
+            screen: 'signupsocial',
+            params: {
+              passedFirstName: firstName,
+              passedLastName: lastName,
+              passedEmail: email,
+              firebaseToken: token,
+            },
+          });
       }
     } catch (error: any) {
       console.error(error);

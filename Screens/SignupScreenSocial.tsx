@@ -10,141 +10,36 @@ import { Endpoints } from "../utils/Endpoints";
 import { openTermsAndConditions } from "../utils/utils";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
-type SignupScreenEmailDobProps = {
+type SignupScreenSocialProps = {
   route: any;
   navigation: any;
 };
 
-function SignupScreenEmailDob({
+function SignupScreenSocial({
   route,
   navigation,
-}: SignupScreenEmailDobProps): JSX.Element {
+}: SignupScreenSocialProps): JSX.Element {
+  const {passedFirstName, passedLastName, passedEmail, firebaseToken} = route.params;
+
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(passedEmail || "");
   const [emailError, setEmailError] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState(passedFirstName || "");
+  const [lastName, setLastName] = useState(passedLastName || "");
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [checkBox, setCheckBox] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState([
-    colors.white,
-    colors.white,
-    colors.white,
-    colors.white,
-    colors.white,
-    colors.white,
-  ]);
   const { signupUser, error, signUpWithEmail, setError } = useSignup();
-
-  const updatePassword = (inputPassword: string) => {
-    let arr = [...passwordError];
-
-    if (inputPassword.length >= 8) {
-      arr[0] = colors.white;
-    } else {
-      arr[0] = colors.red;
-    }
-
-    if (/[A-Z]/.test(inputPassword)) {
-      arr[1] = colors.white;
-    } else {
-      arr[1] = colors.red;
-    }
-
-    if (/[a-z]/.test(inputPassword)) {
-      arr[2] = colors.white;
-    } else {
-      arr[2] = colors.red;
-    }
-
-    if (/\d/.test(inputPassword)) {
-      arr[3] = colors.white;
-    } else {
-      arr[3] = colors.red;
-    }
-
-    if (/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(inputPassword)) {
-      arr[4] = colors.white;
-    } else {
-      arr[4] = colors.red;
-    }
-
-    if (inputPassword == confirmPassword) {
-      arr[5] = colors.white;
-    } else {
-      arr[5] = colors.red;
-    }
-
-    setPasswordError(arr);
-
-    setPassword(inputPassword);
-  };
-
-  const updateConfirmPassword = (inputPassword: string) => {
-    let arr = [...passwordError];
-
-    if (inputPassword == password) {
-      arr[5] = colors.white;
-    } else {
-      arr[5] = colors.red;
-    }
-
-    setPasswordError(arr);
-
-    setConfirmPassword(inputPassword);
-  };
 
   const handleSignup = async () => {
     setLoading(true);
 
-    console.log("DEBUG");
-
-    if (passwordError.some((color) => color !== colors.white)) {
-      setError("Please fulfill the password requirements below");
-      setLoading(false);
-      return;
-    } else if (!checkBox) {
-      setError("Please agree to our terms");
-      setLoading(false);
-      return;
-    }
-
-    console.log("we got here no error so should signup");
-
-    const token: string | undefined = await signUpWithEmail(email, password);
-
-    await signupUser(firstName, lastName, email, username, token ?? "");
+    await signupUser(firstName, lastName, email, username.trim(), firebaseToken);
   };
 
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleShowConfirmPassword = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
-  const verifyPassword = async () => {
-    console.log("The colors", passwordError);
-    if (passwordError.some((color) => color !== colors.white)) {
-      setError("Please fulfill the password requirements below");
-      setLoading(false);
-      return false;
-    } else if (!checkBox) {
-      setError("Please agree to our terms");
-      setLoading(false);
-      return false;
-    }
-    return true;
-  };
 
   const validateFields = async () => {
     try {
@@ -159,18 +54,15 @@ function SignupScreenEmailDob({
       const emailValid = await doesEmailExistFirebase();
       const usernameValid = await validateUsername();
       const nameValid = validateName();
-      const passwordValid = await verifyPassword();
-      console.log("username error", passwordValid);
 
       console.log(
-        "We here boi",
+        "We here for social auth",
         emailValid,
         usernameValid,
         nameValid,
-        passwordValid
       );
-      if (emailValid && usernameValid && nameValid && passwordValid) {
-        console.log("We here boi Ayy");
+
+      if (emailValid && usernameValid && nameValid) {
         handleSignup();
       }
 
@@ -426,42 +318,6 @@ function SignupScreenEmailDob({
 
           <View style={{ alignItems: "center", marginHorizontal: 30 }}>
             <View style={{ ...styles.inputContainer, width: "125%" }}>
-              <TextInput
-                placeholderTextColor={colors.lightgray}
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={updatePassword}
-                secureTextEntry={!showPassword}
-                autoFocus={true}
-              />
-              <Pressable onPress={toggleShowPassword} style={{ padding: 12 }}>
-                {showPassword ? (
-                  <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
-                ) : (
-                  <FeatherIcon name={"eye"} size={20} color={colors.gray} />
-                )}
-              </Pressable>
-            </View>
-            <View style={{ ...styles.inputContainer, width: "125%" }}>
-              <TextInput
-                placeholderTextColor={colors.lightgray}
-                style={styles.input}
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChangeText={updateConfirmPassword}
-                secureTextEntry={!showConfirmPassword}
-              />
-              <Pressable
-                onPress={toggleShowConfirmPassword}
-                style={{ padding: 12 }}
-              >
-                {showConfirmPassword ? (
-                  <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
-                ) : (
-                  <FeatherIcon name={"eye"} size={20} color={colors.gray} />
-                )}
-              </Pressable>
             </View>
             <Text
               style={{
@@ -513,36 +369,6 @@ function SignupScreenEmailDob({
               </View>
             </View>
             <View style={{}}>
-              <Text
-                style={{
-                  color: colors.white,
-                  fontSize: 15,
-                  //textAlign: 'left',
-                  marginLeft: -20,
-                }}
-              >
-                Passwords must contain:
-              </Text>
-              <View>
-                <Text style={{ color: passwordError[0], fontSize: 15 }}>
-                  8 characters
-                </Text>
-                <Text style={{ color: passwordError[1], fontSize: 15 }}>
-                  1 uppercase
-                </Text>
-                <Text style={{ color: passwordError[2], fontSize: 15 }}>
-                  1 lowercase
-                </Text>
-                <Text style={{ color: passwordError[3], fontSize: 15 }}>
-                  1 number
-                </Text>
-                <Text style={{ color: passwordError[4], fontSize: 15 }}>
-                  1 special character
-                </Text>
-                <Text style={{ color: passwordError[5], fontSize: 15 }}>
-                  Passwords match
-                </Text>
-              </View>
             </View>
           </View>
 
@@ -572,7 +398,7 @@ function SignupScreenEmailDob({
   );
 }
 
-export default SignupScreenEmailDob;
+export default SignupScreenSocial;
 
 function setError(arg0: string) {
   throw new Error("Function not implemented.");
