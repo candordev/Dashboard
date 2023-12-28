@@ -37,11 +37,11 @@ function Root() {
   //     getUnreadDB()
 
   // }, []);
-  
+
   // const getUnreadDB = useCallback(async () => {
   //   try {
   //     console.log("GET UNREAD NOTIF")
-  //     setUnread(await getUnreadNotifs());  
+  //     setUnread(await getUnreadNotifs());
   //   } catch (err) {
   //     console.error('Error getting notification count', err);
   //   }

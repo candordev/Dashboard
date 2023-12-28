@@ -3,25 +3,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import LinkButton from "../Components/LinkButton";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-//import  useSignup from "../Hooks/useSignup";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useSignup } from "../Hooks/useSignup";
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBm_R9VjtEnZvsC5M0JZLO3_xNBOT38NM4",
-  authDomain: "candor-9863e.firebaseapp.com",
-  projectId: "candor-9863e",
-  storageBucket: "candor-9863e.appspot.com",
-  messagingSenderId: "230275243650",
-  appId: "1:230275243650:web:401b24c1ec5628f9cf1e9b",
-  measurementId: "G-DCSB46Z23D"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 type LaunchcreenProps = {
   route: any;
@@ -30,58 +12,48 @@ type LaunchcreenProps = {
 
 function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
 
+  async function onGoogleButtonPress() {
+    try {
+      setError('');
+      setLoading(true);
+      const {token, firstName, lastName, email, isLogin} =
+        await logInWithGoogle();
+      if (!firstName || !email || !token) {
+        console.warn(
+          'Missing information from Google' +
+            token +
+            firstName +
+            lastName +
+            email,
+        );
+        setLoading(false);
+        return;
+      }
+      if (!isLogin) {
+        console.log("NEED TO SIGN UP..");
+      }
+    } catch (error: any) {
+      console.error(error);
+      setError(String(error.message));
+    } finally {
+      setLoading(false);
+    }
+  }
 
-
-
-  // async function onAppleButtonPress() {
-  //   try {
-  //     setError('');
-  //     setLoading(true);
-  //     const {token, firstName, lastName, email, isLogin} =
-  //       await logInWithApple();
-  //     if (!firstName || !email || !token) {
-  //       console.warn(
-  //         'Missing information from Apple',
-  //         token,
-  //         firstName,
-  //         lastName,
-  //         email,
-  //       );
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     if (!isLogin) {
-  //       navigation.navigate('signupStack', {
-  //         screen: 'signupname',
-  //         params: {
-  //           passedFirstName: firstName,
-  //           passedLastName: lastName,
-  //           email,
-  //           firebaseToken: token,
-  //         },
-  //       });
-  //     }
-  //   } catch (error: any) {
-  //     console.error(error);
-  //     setError(String(error.message));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
   const {
     loading,
     error,
     setLoading,
     setError,
-    // logInWithGoogle,
+    logInWithGoogle,
     // logInWithApple,
   } = useSignup();
-  
+
   const handleSignup = () => {
     setError('');
     navigation.navigate('signupStack');
   };
-  
+
 
 
   return (
@@ -118,7 +90,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           paddingHorizontal: 20,
         }}
       >
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
+        <TouchableOpacity style={{ backgroundColor: colors.white }} onPress={onGoogleButtonPress}>
           <Image
             source={require("../assets/socialIcons/google.png")}
             style={{ height: 17, width: 17 }}
@@ -128,7 +100,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           >
             Continue with Google
           </Text>
-        </LinkButton>
+        </TouchableOpacity>
         <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
           <Image
             source={require("../assets/socialIcons/apple.png")}
@@ -140,7 +112,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
             Continue with Apple
           </Text>
         </LinkButton>
-        <TouchableOpacity        
+        <TouchableOpacity
           style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center'}}
           onPress={handleSignup} // Add this line
         >
@@ -184,4 +156,3 @@ const styles = StyleSheet.create({
 });
 
 export default LaunchScreen;
-

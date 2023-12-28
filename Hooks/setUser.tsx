@@ -1,4 +1,3 @@
-import auth from 'firebase/auth';
 import { getAuth } from "firebase/auth";
 
 type setUserProps = {
