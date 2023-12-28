@@ -10,18 +10,6 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useSignup } from "../Hooks/useSignup";
 
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBm_R9VjtEnZvsC5M0JZLO3_xNBOT38NM4",
-  authDomain: "candor-9863e.firebaseapp.com",
-  projectId: "candor-9863e",
-  storageBucket: "candor-9863e.appspot.com",
-  messagingSenderId: "230275243650",
-  appId: "1:230275243650:web:401b24c1ec5628f9cf1e9b",
-  measurementId: "G-DCSB46Z23D"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 type LaunchcreenProps = {
   route: any;
