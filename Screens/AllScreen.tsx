@@ -138,7 +138,7 @@ const AllScreen = ({ navigation }: any) => {
         onStatusChange={handleStatusChange}
         onAssigneeSelection={handleAssigneeSelection}
         headerTitle={"All Issues"}
-        groupID={state.leaderGroups[0]}
+        groupID={(state.leaderGroups && state.leaderGroups[0])}
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
