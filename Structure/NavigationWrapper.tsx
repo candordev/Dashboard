@@ -40,6 +40,7 @@ function NavigationWrapper() {
 
     if (authUser && authUser != null && !isSignupOperation) {
       try {
+        console.log("IS SIGNUP OPERATION RAN")
         // Retrieve user token
         const token = await authUser.getIdToken();
         console.log("found token", token);
