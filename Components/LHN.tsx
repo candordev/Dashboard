@@ -1,5 +1,5 @@
 
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, FlexAlignType } from "react-native";
 import Text from "./Text";
 import { Link } from "@react-navigation/native";
 import colors from "../Styles/colors";
@@ -86,8 +86,8 @@ const NavItem = ({ route, icon, name, unreadCount }: NavItemProps) => {
       >
         <FeatherIcon name={icon} size={20} color={colors.white} />
         <Text style={styles.navItemText}>{name}</Text>
-        {unreadCount && unreadCount > 0 && (
-          <View style={styles.unreadBadge}>
+        {(unreadCount && unreadCount > 0) && (
+          <View style = {styles.unreadBadge}>
             <Text style={styles.unreadText}>{unreadCount}</Text>
           </View>
         )}
@@ -115,8 +115,8 @@ const styles = {
       height: 22,           // Set the same value for height to make it a circle
       borderRadius: 10,     // Half of width/height to make it a perfect circle
       marginLeft: 10,
-      justifyContent: 'center', // Center the text vertically
-      alignItems: 'center',     // Center the text horizontally
+      justifyContent: "center" as any,
+      alignItems: "center" as FlexAlignType,
     },
     unreadText: {
       color: 'white',
