@@ -47,6 +47,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       };
       console.log("THE LOCATION INPUT VALUE: ", props.issue.neighborhood)
       setInputValue(props.issue.neighborhood)
+      console.log("issue fields: ", props.issue)
 
       fetchToken();
     }, []);
@@ -70,6 +71,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
           } else {
             console.log("DEADLINE added successfully");
             setSelectedDate(date);
+           
             //event.emit(eventNames.ISSUE_CATEGORY_SET);
             // You can handle any additional state updates or notifications here
           }
@@ -175,17 +177,67 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
 
                 }}   
               />
-              <Text
+              <View
+                style={{
+                  borderColor: colors.lightestgray,
+                  borderWidth: 2,
+                  borderRadius: 10,
+                  padding: 10,
+                  rowGap: 5,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "550",
+                    fontFamily: "Montserrat",
+                  }}
+                >
+                  Post Details
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "400",
+                    fontFamily: "Montserrat",
+                  }}
+                >
+                  {'Post Created From: ' + (props.issue.postCreatedFrom ?? '')}
+                </Text>
+                {props.issue.proposalFromEmail ? (
+                  <Text
                     style={{
-                      fontSize: 18,
-                      fontWeight: "550",
+                      fontSize: 16,
+                      fontWeight: "400",
                       fontFamily: "Montserrat",
-                      marginTop: 20,
                     }}
                   >
-                    Constituent Info:
-            </Text>
-
+                    {'Email: ' + props.issue.proposalFromEmail}
+                  </Text>
+                ) : null}
+                {(props.issue.userProfile.firstName !== "Candor Website" || props.issue.userProfile.lastName !== "Bot") && (
+                  <>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "400",
+                        fontFamily: "Montserrat",
+                      }}
+                    >
+                      {'FirstName: ' + (props.issue.userProfile.firstName ?? '')}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "400",
+                        fontFamily: "Montserrat",
+                      }}
+                    >
+                      {'LastName: ' + (props.issue.userProfile.lastName ?? '')}
+                    </Text>
+                  </>
+                )}
+              </View>
               <View style={{ rowGap: 10 }}>
                     <MarkDone fetchStatusUpdates={props.fetchStatusUpdates} issueId={props.issue._id} step={props.issue.step}/>
                 {/* <CloseIssue /> */}
