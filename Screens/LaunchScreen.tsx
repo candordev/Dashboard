@@ -99,17 +99,19 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           paddingHorizontal: 20,
         }}
       >
-        <TouchableOpacity style={{ backgroundColor: colors.white }} onPress={onGoogleButtonPress}>
+        <TouchableOpacity
+          style={{ backgroundColor: colors.white, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center', marginVertical: 5,
+          paddingVertical: 10, flex: 1, flexDirection: 'row', columnGap: 8, marginBottom: 4}}
+          onPress={onGoogleButtonPress} // Add this line
+        >
           <Image
             source={require("../assets/socialIcons/google.png")}
             style={{ height: 17, width: 17 }}
           />
-          <Text
-            style={{ color: colors.black, fontWeight: "650", fontSize: 17 }}
-          >
+          <Text style={{ color: colors.black, fontWeight: "650", fontSize: 17}}>
             Continue with Google
           </Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
         {/* <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
           <Image
             source={require("../assets/socialIcons/apple.png")}
@@ -122,7 +124,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           </Text>
         </LinkButton> */}
         <TouchableOpacity
-          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center'}}
+          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 4,}}
           onPress={handleSignup} // Add this line
         >
           <Text style={{ color: colors.white, fontWeight: "650", fontSize: 17}}>
