@@ -132,8 +132,6 @@ function SignupScreenEmailDob({
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const { userID } = route.params ? route.params : { userID: null };
-
   const verifyPassword = async () => {
     console.log("The colors", passwordError);
     if (passwordError.some((color) => color !== colors.white)) {
@@ -575,7 +573,3 @@ function SignupScreenEmailDob({
 }
 
 export default SignupScreenEmailDob;
-
-function setError(arg0: string) {
-  throw new Error("Function not implemented.");
-}

@@ -69,7 +69,7 @@ export const customFetch = async (
 };
 
 export const openTermsAndConditions = () => {
-  const url = 'https://www.candornow.com/request-a-demo';
+  const url = 'https://www.candornow.com/legalterms';
   Linking.canOpenURL(url)
     .then(supported => {
       if (supported) {
@@ -92,7 +92,7 @@ const fetchPost = async (postId: string) => {
     );
     let resJson = await res.json();
     if (!res.ok) {
-     
+
     }
     if (res.ok) {
       const result: Post = resJson;
@@ -100,7 +100,7 @@ const fetchPost = async (postId: string) => {
       return result
     }
   } catch (error) {
-   
+
   }
 };
 
