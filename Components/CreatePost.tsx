@@ -62,9 +62,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 5,
     padding: 8,
-    borderRadius: 10,
+    borderRadius: 15,
     backgroundColor: colors.purple
   },
   title: {
