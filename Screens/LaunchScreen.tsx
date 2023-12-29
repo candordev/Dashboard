@@ -5,6 +5,8 @@ import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import { useSignup } from "../Hooks/useSignup";
 
+
+
 type LaunchcreenProps = {
   route: any;
   navigation: any;
