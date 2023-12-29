@@ -110,7 +110,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
             Continue with Google
           </Text>
         </TouchableOpacity>
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
+        {/* <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
           <Image
             source={require("../assets/socialIcons/apple.png")}
             style={{ height: 17, width: 17 }}
@@ -120,7 +120,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           >
             Continue with Apple
           </Text>
-        </LinkButton>
+        </LinkButton> */}
         <TouchableOpacity
           style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center'}}
           onPress={handleSignup} // Add this line
