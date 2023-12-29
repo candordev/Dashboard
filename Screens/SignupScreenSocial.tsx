@@ -9,6 +9,7 @@ import styles from "../Styles/styles";
 import { Endpoints } from "../utils/Endpoints";
 import { openTermsAndConditions } from "../utils/utils";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import ErrorMessage from "../Components/Native/ErrorMessage";
 
 type SignupScreenSocialProps = {
     route: any;
@@ -167,7 +168,7 @@ function SignupScreenSocial({
         </Text>
       </View>
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <View style={{ width: "80%" }}>
+        <View style={{ flex: 1, width: "80%", }}>
           {/* Name Input */}
           <View
             style={{
@@ -238,7 +239,6 @@ function SignupScreenSocial({
           </View>
 
           {/* Email Input */}
-          <View style={{ flex: 1, marginRight: 10, marginBottom: 5 }}>
             <View style={styles.inputContainer}>
                 <TextInput
                 placeholderTextColor={colors.lightgray}
@@ -253,24 +253,15 @@ function SignupScreenSocial({
                 autoCapitalize="none"
                 />
             </View>
-            <Text
+            <ErrorMessage
                 style={{
-                // position: "absolute", // Position absolute
-                // bottom: -20, // Adjust this value as needed
-                // left: 0,
-                // right: 0,
-                // color: emailError ? colors.red : "transparent",
-                // fontSize: 11,
-                // textAlign: "center",
-                // height: 448, // Increase height as needed
+                    fontSize: 11,
+                    textAlign: "center",
                 }}
-            >
-                {emailError || " ERROR_PLACE_HOLDER_TEXT_REMOVE_ME_WHEN_FIXED"}
-            </Text>
-          </View>
+                error={emailError}
+            />
 
           {/* Username Input */}
-          <View style={{ flex: 1, marginRight: 10, marginBottom: 5 }}>
             <View style={styles.inputContainer}>
                 <TextInput
                 placeholderTextColor={colors.lightgray}
@@ -283,38 +274,23 @@ function SignupScreenSocial({
                 }}
                 />
             </View>
-            <Text
+            <ErrorMessage
                 style={{
-                // position: "absolute", // Position absolute
-                // bottom: -20, // Adjust this value as needed
-                // left: 0,
-                // right: 0,
-                // color: emailError ? colors.red : "transparent",
-                // fontSize: 11,
-                // textAlign: "center",
-                // height: 448, // Increase height as needed
+                    fontSize: 11,
+                    textAlign: "center",
                 }}
-            >
-                {usernameError || " ERROR_PLACE_HOLDER_TEXT_REMOVE_ME_WHEN_FIXED"}
-            </Text>
-          </View>
+                error={usernameError}
+            />
 
 
           <View style={{ alignItems: "center", marginHorizontal: 30 }}>
-          <Text
+          <ErrorMessage
                 style={{
-                // position: "absolute", // Position absolute
-                // bottom: -20, // Adjust this value as needed
-                // left: 0,
-                // right: 0,
-                // color: emailError ? colors.red : "transparent",
-                // fontSize: 11,
-                // textAlign: "center",
-                // height: 448, // Increase height as needed
+                    fontSize: 11,
+                    textAlign: "center",
                 }}
-            >
-                {error || " ERROR_PLACE_HOLDER_TEXT_REMOVE_ME_WHEN_FIXED"}
-            </Text>
+                error={error}
+            />
             <View style={{ marginBottom: 10 }}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <input
