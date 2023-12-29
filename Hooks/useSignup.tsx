@@ -60,6 +60,9 @@ export const useSignup = () => {
             isLogin = false;
         try {
             setLoading(true);
+            // Check if your device supports Google Play
+            // await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+
             // Get the users ID token
             const auth = getAuth();
             const result = await signInWithPopup(auth, provider);
@@ -68,10 +71,14 @@ export const useSignup = () => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
 
             // Sign-in the user with the credential
-            token = credential?.accessToken;
+            const accessToken = credential?.accessToken;
 
             // The signed-in user info.
             const user = result.user;
+
+            token = await auth.currentUser?.getIdToken();
+            console.log("TOKEN found after google log in is", token)
+
 
             if (!token) {
                 throw new Error("No token found in logInWithGoogle");
@@ -86,6 +93,7 @@ export const useSignup = () => {
                 }
             }
             isLogin = await checkIfLogin(token);
+            console.log("IS LOGIN", isLogin)
             setLoading(false);
         } catch (error: any) {
             // Handle Errors here.
@@ -157,6 +165,7 @@ export const useSignup = () => {
     ) => {
         try {
             setIsSignupOperation(true);
+            console.log("SIGNUP USER DB", firstName, lastName, email, username, firebaseToken)
             let res = await fetch(Endpoints.signupFirebase, {
                 body: JSON.stringify({
                     firstName: firstName,
@@ -197,42 +206,8 @@ export const useSignup = () => {
     };
 };
 
-const signupUserDB = async (
-    firstName: string,
-    lastName: string,
-    email: string,
-    username: string,
-    firebaseToken: string
-) => {
-    try {
-        let res = await fetch(Endpoints.signupFirebase, {
-            body: JSON.stringify({
-                firstName: firstName,
-                lastName: lastName,
-                username: username,
-                email: email,
-                firebaseToken: firebaseToken,
-            }),
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-        });
-        let resJson = await res.json();
-        if (!res.ok) {
-            throw new Error(resJson.error);
-        }
-        if (res.ok) {
-            return resJson;
-        }
-    } catch (error: any) {
-        console.error(error);
-        throw String(error);
-    }
-};
-
 const checkIfLogin = async (firebaseToken: string): Promise<boolean> => {
+    console.log("CHECK IF LOGIN", firebaseToken)
     try {
         let res = await fetch(Endpoints.loginFirebase, {
             method: "POST",
@@ -249,9 +224,10 @@ const checkIfLogin = async (firebaseToken: string): Promise<boolean> => {
             throw resJson.error;
         }
         if (res.ok) {
-            // console.info('CHECK IF LOGIN', ' WAS TRUE')
+            console.info('CHECK IF LOGIN', ' WAS TRUE')
             return true;
         }
+        console.log('CHECK IF LOGIN', ' WAS FALSE')
         return false;
     } catch (e) {
         console.warn(e);
