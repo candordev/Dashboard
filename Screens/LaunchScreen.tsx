@@ -3,10 +3,6 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import LinkButton from "../Components/LinkButton";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-//import  useSignup from "../Hooks/useSignup";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useSignup } from "../Hooks/useSignup";
 
 
@@ -18,58 +14,57 @@ type LaunchcreenProps = {
 
 function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
 
+  async function onGoogleButtonPress() {
+    try {
+      setError('');
+      setLoading(true);
+      const {token, firstName, lastName, email, isLogin} =
+        await logInWithGoogle();
+      if (!firstName || !email || !token) {
+        console.warn(
+          'Missing information from Google' +
+            token +
+            firstName +
+            lastName +
+            email,
+        );
+        setLoading(false);
+        return;
+      }
+      if (!isLogin) {
+        console.log("going to signupname")
+        navigation.navigate('signupStack', {
+            screen: 'signupsocial',
+            params: {
+              passedFirstName: firstName,
+              passedLastName: lastName,
+              passedEmail: email,
+              firebaseToken: token,
+            },
+          });
+      }
+    } catch (error: any) {
+      console.error(error);
+      setError(String(error.message));
+    } finally {
+      setLoading(false);
+    }
+  }
 
-
-
-  // async function onAppleButtonPress() {
-  //   try {
-  //     setError('');
-  //     setLoading(true);
-  //     const {token, firstName, lastName, email, isLogin} =
-  //       await logInWithApple();
-  //     if (!firstName || !email || !token) {
-  //       console.warn(
-  //         'Missing information from Apple',
-  //         token,
-  //         firstName,
-  //         lastName,
-  //         email,
-  //       );
-  //       setLoading(false);
-  //       return;
-  //     }
-  //     if (!isLogin) {
-  //       navigation.navigate('signupStack', {
-  //         screen: 'signupname',
-  //         params: {
-  //           passedFirstName: firstName,
-  //           passedLastName: lastName,
-  //           email,
-  //           firebaseToken: token,
-  //         },
-  //       });
-  //     }
-  //   } catch (error: any) {
-  //     console.error(error);
-  //     setError(String(error.message));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
   const {
     loading,
     error,
     setLoading,
     setError,
-    // logInWithGoogle,
+    logInWithGoogle,
     // logInWithApple,
   } = useSignup();
-  
+
   const handleSignup = () => {
     setError('');
     navigation.navigate('signupStack');
   };
-  
+
 
 
   return (
@@ -106,18 +101,20 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           paddingHorizontal: 20,
         }}
       >
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
+        <TouchableOpacity
+          style={{ backgroundColor: colors.white, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center', marginVertical: 5,
+          paddingVertical: 10, flex: 1, flexDirection: 'row', columnGap: 8, marginBottom: 4}}
+          onPress={onGoogleButtonPress} // Add this line
+        >
           <Image
             source={require("../assets/socialIcons/google.png")}
             style={{ height: 17, width: 17 }}
           />
-          <Text
-            style={{ color: colors.black, fontWeight: "650", fontSize: 17 }}
-          >
+          <Text style={{ color: colors.black, fontWeight: "650", fontSize: 17}}>
             Continue with Google
           </Text>
-        </LinkButton>
-        <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
+      </TouchableOpacity>
+        {/* <LinkButton route={"/all"} style={{ backgroundColor: colors.white }}>
           <Image
             source={require("../assets/socialIcons/apple.png")}
             style={{ height: 17, width: 17 }}
@@ -127,9 +124,9 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           >
             Continue with Apple
           </Text>
-        </LinkButton>
-        <TouchableOpacity        
-          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center'}}
+        </LinkButton> */}
+        <TouchableOpacity
+          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 4,}}
           onPress={handleSignup} // Add this line
         >
           <Text style={{ color: colors.white, fontWeight: "650", fontSize: 17}}>
@@ -172,4 +169,3 @@ const styles = StyleSheet.create({
 });
 
 export default LaunchScreen;
-
