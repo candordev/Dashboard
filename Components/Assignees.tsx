@@ -3,7 +3,10 @@ import { Pressable, View } from "react-native";
 import colors from "../Styles/colors";
 import Text from "./Text";
 import ProfileRow from "./ProfileRow";
-import DropDownPicker, { ItemType, ValueType } from "react-native-dropdown-picker";
+import DropDownPicker, {
+  ItemType,
+  ValueType,
+} from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AddLeader from "./AddLeader";
 import OrFullWidth from "./OrFullWidth";
@@ -14,6 +17,7 @@ import { Endpoints } from "../utils/Endpoints";
 import { useUserContext } from "../Hooks/useUserContext";
 import CreatePost from "./CreatePost";
 import { create } from "domain";
+import PopoverComponentView from "./PopoverComponentView";
 
 interface AssigneesProps {
   issue?: Post;
@@ -23,26 +27,27 @@ interface AssigneesProps {
 }
 
 function Assignees(props: AssigneesProps): JSX.Element {
-  const {state, dispatch} = useUserContext();
+  const { state, dispatch } = useUserContext();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[]>([]);
   const [selectedChildren, setSelectedChildren] = useState<string[]>([]);
   const [items, setItems] = useState([
     //{ label: "Tanuj Dunthuluri", value: "Tanuj Dunthuluri" ,parent: 'Atishay Jain'},
     //{ label: "Shi Shi", value: "Shi Shi" ,parent: 'Atishay Jain'},
-    { label: "Akshat Pant", value: "Akshat Pant" ,parent: 'Department A'},
+    { label: "Akshat Pant", value: "Akshat Pant", parent: "Department A" },
     { label: "Department A", value: "Department A" },
     { label: "Department B", value: "Department B" },
-    { label: "Tanuj Dunthuluri", value: "Tanuj Dunthuluri" ,parent: 'Department B'},
-    { label: "Srikar Parsi", value: "Srikar Parsi" , parent: 'Department A'},
+    {
+      label: "Tanuj Dunthuluri",
+      value: "Tanuj Dunthuluri",
+      parent: "Department B",
+    },
+    { label: "Srikar Parsi", value: "Srikar Parsi", parent: "Department A" },
   ]);
   const [previousValue, setPreviousValue] = useState<string[]>([]);
   const [previousValueChild, setPreviousChildValue] = useState<string[]>([]);
   const [leaders, setLeaders] = useState<UserProfile[]>([]);
   const [errorMessageLeader, setErrorMessageLeader] = useState<string>();
-  
-
-
 
   type Department = {
     label: string;
@@ -62,290 +67,297 @@ function Assignees(props: AssigneesProps): JSX.Element {
     value: string;
     parent?: string;
   };
-  
+
   const fetchLeaders = async () => {
     try {
-        console.log("THESE THE LEADER GROUPS", state.leaderGroups[0])
-        // Initialize URLSearchParams
-        let params = new URLSearchParams({
-            //page: "1",
-            groupID: state.leaderGroups[0]
-        });
+      console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // Initialize URLSearchParams
+      let params = new URLSearchParams({
+        //page: "1",
+        groupID: state.leaderGroups[0],
+      });
 
-        // Add postID only if props.issue is defined
-        if (props.issue && props.issue._id) {
-            params.append('postID', props.issue._id);
-        }
+      // Add postID only if props.issue is defined
+      if (props.issue && props.issue._id) {
+        params.append("postID", props.issue._id);
+      }
 
-        let endpoint = Endpoints.getGroupLeadersForAcceptCustom + params;
+      let endpoint = Endpoints.getGroupLeadersForAcceptCustom + params;
 
-        const res = await customFetch(endpoint, {
-            method: 'GET',
-        });
+      const res = await customFetch(endpoint, {
+        method: "GET",
+      });
 
-        const resJson = await res.json();
-        if (!res.ok) {
-            console.error(resJson.error);
-            return;
-        }
+      const resJson = await res.json();
+      if (!res.ok) {
+        console.error(resJson.error);
+        return;
+      }
 
-        const result = resJson; // Assuming resJson is an array of UserProfile
-        console.log("leaders are", result);
-        setLeaders(result);
+      const result = resJson; // Assuming resJson is an array of UserProfile
+      console.log("leaders are", result);
+      setLeaders(result);
     } catch (error) {
-        console.error("Error loading posts. Please try again later.", error);
+      console.error("Error loading posts. Please try again later.", error);
     }
-};
+  };
 
-useEffect(()=>{
-  fetchLeaders()
-}, []);
+  useEffect(() => {
+    fetchLeaders();
+  }, []);
 
   useEffect(() => {
     //console.log("GROUP FOR A POST", props.issue.group)
     const departments: { [key: string]: Department } = {};
     const initialValues: string[] = [];
-  
-    leaders.forEach((leader) => {
-      console.log("suggested should be running")
-      const aiSuggests = isLeaderSuggestedByAI(leader.user);
-  
-      const departmentName = leader.departmentNames[0]
-        if (!departments[departmentName]) {
-          departments[departmentName] = {
-            label: departmentName,
-            value: departmentName,
-            children: [],
-            aiSuggests: aiSuggests,
-          };
-        } else if (aiSuggests) {
-          departments[departmentName].aiSuggests = true;
-        }
-  
-        departments[departmentName].children.push({
-          label: leader.firstName + ' ' +leader.lastName,
-          value: leader.username,
-          parent: departmentName,
-        });
-  
-        // If leader is accepted, add to initial values
-        if (leader.acceptedPost) {
-          currentSelectedChildrenRef.current.push(leader.username);
-          previousValueRefChild.current.push(leader.username)
-          previousValueRefChildB.current.push(leader.username)
-          if(!initialValues.includes(leader.departmentNames[0])){
-            initialValues.push(leader.departmentNames[0])
-          }     
-          initialValues.push(leader.username)
-        }
 
+    leaders.forEach((leader) => {
+      console.log("suggested should be running");
+      const aiSuggests = isLeaderSuggestedByAI(leader.user);
+
+      const departmentName = leader.departmentNames[0];
+      if (!departments[departmentName]) {
+        departments[departmentName] = {
+          label: departmentName,
+          value: departmentName,
+          children: [],
+          aiSuggests: aiSuggests,
+        };
+      } else if (aiSuggests) {
+        departments[departmentName].aiSuggests = true;
+      }
+
+      departments[departmentName].children.push({
+        label: leader.firstName + " " + leader.lastName,
+        value: leader.username,
+        parent: departmentName,
+      });
+
+      // If leader is accepted, add to initial values
+      if (leader.acceptedPost) {
+        currentSelectedChildrenRef.current.push(leader.username);
+        previousValueRefChild.current.push(leader.username);
+        previousValueRefChildB.current.push(leader.username);
+        if (!initialValues.includes(leader.departmentNames[0])) {
+          initialValues.push(leader.departmentNames[0]);
+        }
+        initialValues.push(leader.username);
+      }
     });
-  
-    const itemsArray: Item[] = Object.values(departments).sort((a, b) => {
-      if (a.aiSuggests && !b.aiSuggests) return -1;
-      if (!a.aiSuggests && b.aiSuggests) return 1;
-      return 0;
-    })
-    .flatMap(department => {
-      // Then map each department and its children to items
-      return [
-        {
-          label: department.aiSuggests ? `${department.label} [AI suggests]` : department.label, //The reason for two sometimes is because a suggested leader can be part of multiple departments in database rn
-          value: department.value,
-        },
-        ...department.children.map(child => ({
-          label: child.label,
-          value: child.value,
-          parent: department.value,
-        }))
-      ];
-    });
-  
+
+    const itemsArray: Item[] = Object.values(departments)
+      .sort((a, b) => {
+        if (a.aiSuggests && !b.aiSuggests) return -1;
+        if (!a.aiSuggests && b.aiSuggests) return 1;
+        return 0;
+      })
+      .flatMap((department) => {
+        // Then map each department and its children to items
+        return [
+          {
+            label: department.aiSuggests
+              ? `${department.label} [AI suggests]`
+              : department.label, //The reason for two sometimes is because a suggested leader can be part of multiple departments in database rn
+            value: department.value,
+          },
+          ...department.children.map((child) => ({
+            label: child.label,
+            value: child.value,
+            parent: department.value,
+          })),
+        ];
+      });
+
     setItems(itemsArray);
     setValue(initialValues);
   }, [leaders]);
-  
 
-
-
-  const isString = (value: any): value is string => typeof value === 'string';
-
+  const isString = (value: any): value is string => typeof value === "string";
 
   useEffect(() => {
-    console.log('Value state updated:', value);
-        setPreviousValue(value);
-        setPreviousChildValue(selectedChildren)
-        previousValueRefChild.current = previousValueChild;
-
-  }, [value, selectedChildren],);
+    console.log("Value state updated:", value);
+    setPreviousValue(value);
+    setPreviousChildValue(selectedChildren);
+    previousValueRefChild.current = previousValueChild;
+  }, [value, selectedChildren]);
 
   const previousValueRef = useRef<string[]>([]);
   const previousValueRefChild = useRef<string[]>([]);
   const previousValueRefChildB = useRef<string[]>([]);
   const currentSelectedChildrenRef = useRef<string[]>([]);
 
-
   useEffect(() => {
     // Update the ref when previousValue state changes
     previousValueRef.current = previousValue;
     previousValueRefChild.current = previousValueChild;
   }, [previousValue, previousValueChild]);
-  
 
   const onCloseDropDown = async () => {
-    if(!props.createPost && props.issue && props.issue._id){
-        const currentSelectedChildren = currentSelectedChildrenRef.current;
-        const previousSelectedChildren = previousValueRefChildB.current;
-      
-        // Check if selectedChildren has changed
-        const hasChildrenChanged = previousSelectedChildren.length !== currentSelectedChildren.length ||
-                                  previousSelectedChildren.some((child, index) => child !== currentSelectedChildren[index]);
-      
-        console.log("current child", currentSelectedChildren);
-        console.log("previous child", previousSelectedChildren);
-      
-        if (hasChildrenChanged) {
-          console.log("Selected children have changed. Making route call...");
-          // Make your route call here
+    if (!props.createPost && props.issue && props.issue._id) {
+      const currentSelectedChildren = currentSelectedChildrenRef.current;
+      const previousSelectedChildren = previousValueRefChildB.current;
 
-          try {
-            let res = await customFetch(Endpoints.setAssignees, {
-              method: "POST",
-              body: JSON.stringify({
-                postID: props.issue._id, 
-                assignees: currentSelectedChildren, // Assuming issueId is available in this component
-              }),
-            });
+      // Check if selectedChildren has changed
+      const hasChildrenChanged =
+        previousSelectedChildren.length !== currentSelectedChildren.length ||
+        previousSelectedChildren.some(
+          (child, index) => child !== currentSelectedChildren[index]
+        );
 
-            if (!res.ok) {
-              const resJson = await res.json();
-              console.error("Error adding ASSIGNEES:", resJson.error);
-            } else {
-              console.log("ASSIGNEES added successfully");
-              //event.emit(eventNames.ISSUE_CATEGORY_SET);
-              // You can handle any additional state updates or notifications here
-            }
-          } catch (error) {
-            console.error("Network error, please try again later.", error);
+      console.log("current child", currentSelectedChildren);
+      console.log("previous child", previousSelectedChildren);
+
+      if (hasChildrenChanged) {
+        console.log("Selected children have changed. Making route call...");
+        // Make your route call here
+
+        try {
+          let res = await customFetch(Endpoints.setAssignees, {
+            method: "POST",
+            body: JSON.stringify({
+              postID: props.issue._id,
+              assignees: currentSelectedChildren, // Assuming issueId is available in this component
+            }),
+          });
+
+          if (!res.ok) {
+            const resJson = await res.json();
+            console.error("Error adding ASSIGNEES:", resJson.error);
+          } else {
+            console.log("ASSIGNEES added successfully");
+            //event.emit(eventNames.ISSUE_CATEGORY_SET);
+            // You can handle any additional state updates or notifications here
           }
-
-
-          // // ...
-
-          // // Update the previousValueChild state
-          setPreviousChildValue(currentSelectedChildren);
-        } else {
-          console.log("No change in selected children.");
+        } catch (error) {
+          console.error("Network error, please try again later.", error);
         }
 
-        previousValueRefChildB.current = currentSelectedChildrenRef.current;
-  }else{
-    const currentSelectedChildren = currentSelectedChildrenRef.current;
-    if (props.onAssigneesChange) {
-      props.onAssigneesChange(currentSelectedChildren);
-    }
-    
-  }
-  };
-  
+        // // ...
 
-  const onUserSelect = (selectedItems: ItemType<string>[] | ItemType<string>) => {
+        // // Update the previousValueChild state
+        setPreviousChildValue(currentSelectedChildren);
+      } else {
+        console.log("No change in selected children.");
+      }
+
+      previousValueRefChildB.current = currentSelectedChildrenRef.current;
+    } else {
+      const currentSelectedChildren = currentSelectedChildrenRef.current;
+      if (props.onAssigneesChange) {
+        props.onAssigneesChange(currentSelectedChildren);
+      }
+    }
+  };
+
+  const onUserSelect = (
+    selectedItems: ItemType<string>[] | ItemType<string>
+  ) => {
     console.log("Value changed", selectedItems);
-  
+
     // Ensure selectedItems is always treated as an array
-    const selectedArray = Array.isArray(selectedItems) ? selectedItems : [selectedItems];
-  
+    const selectedArray = Array.isArray(selectedItems)
+      ? selectedItems
+      : [selectedItems];
+
     // Filter and convert to string array
     const currentValueAsString = selectedArray
-      .map(obj => obj.value)
+      .map((obj) => obj.value)
       .filter(isString);
-    
+
     console.log("Value changed", currentValueAsString);
-   
-  
+
     const previousValueSet = new Set<string>(previousValueRef.current);
     const currentValueSet = new Set<string>(previousValueRef.current);
     const currentValueB = new Set<string>(currentValueAsString);
     //const valAdded =  new Set<string>();
-    console.log("previousValueSet", previousValueRef.current)
+    console.log("previousValueSet", previousValueRef.current);
     const newSelectedChildren = new Set<string>(previousValueRefChild.current);
-    console.log("initial children", newSelectedChildren)
+    console.log("initial children", newSelectedChildren);
 
-  
-  
     // Handle selection of new values
-    currentValueAsString.forEach(val => {
+    currentValueAsString.forEach((val) => {
       //currentValueSet.add(val);
       if (!previousValueSet.has(val)) {
-        const childItem = items.find(item => item.value === val && item.parent);
-        if (childItem) { 
-          newSelectedChildren.add(childItem.value);    
-          console.log("children after child ite selected", newSelectedChildren)  
+        const childItem = items.find(
+          (item) => item.value === val && item.parent
+        );
+        if (childItem) {
+          newSelectedChildren.add(childItem.value);
+          console.log("children after child ite selected", newSelectedChildren);
           console.log("CHILD SELECT", val);
           if (childItem.parent && !currentValueSet.has(childItem.parent)) {
             currentValueSet.add(childItem.parent);
             //isStateChanged = true;
           }
-        } else {   
+        } else {
           console.log("PARENT SELECT");
-          const children = items.filter(item => item.parent === val);
-          children.forEach(child => currentValueSet.add(child.value));
-          children.forEach(child => newSelectedChildren.add(child.value));
+          const children = items.filter((item) => item.parent === val);
+          children.forEach((child) => currentValueSet.add(child.value));
+          children.forEach((child) => newSelectedChildren.add(child.value));
           //isStateChanged = true;
         }
-        console.log("This was THE value selected", val)
+        console.log("This was THE value selected", val);
         //valAdded.add(val)
       }
     });
-  
-    // Handle deselection
-    previousValueSet.forEach(val => {
-      if (!currentValueB.has(val)) {
-        const childItem = items.find(item => item.value === val && item.parent);
-        if (childItem) {
 
+    // Handle deselection
+    previousValueSet.forEach((val) => {
+      if (!currentValueB.has(val)) {
+        const childItem = items.find(
+          (item) => item.value === val && item.parent
+        );
+        if (childItem) {
           console.log("deselecting child");
-          const siblings = items.filter(item => item.parent === childItem.parent);
-          const isAnySiblingSelected = siblings.some(sibling => currentValueB.has(sibling.value));
-          newSelectedChildren.delete(childItem.value)
+          const siblings = items.filter(
+            (item) => item.parent === childItem.parent
+          );
+          const isAnySiblingSelected = siblings.some((sibling) =>
+            currentValueB.has(sibling.value)
+          );
+          newSelectedChildren.delete(childItem.value);
           if (!isAnySiblingSelected) {
             if (childItem.parent && currentValueSet.delete(childItem.parent)) {
-              
-              
             }
           }
         } else {
           console.log("deselecting parent");
-          const children = items.filter(item => item.parent === val);
-          children.forEach(child => {
+          const children = items.filter((item) => item.parent === val);
+          children.forEach((child) => {
             currentValueSet.delete(child.value);
-            newSelectedChildren.delete(child.value)
-           
+            newSelectedChildren.delete(child.value);
           });
         }
       }
     });
-  
+
     // Update state only if there's a change
     //if (isStateChanged) {
-      console.log("THIS IS THE FINAL VALUES TO BE SELECTED", Array.from(currentValueSet))
-      setValue(Array.from(currentValueSet)); 
-     
-      console.log("set Selected Children",Array.from(newSelectedChildren))
-      setSelectedChildren(Array.from(newSelectedChildren));
-      currentSelectedChildrenRef.current = Array.from(newSelectedChildren);
-      // const updatedPreviousValue = new Set([...valAdded, ...currentValueSet]);
-      // setPreviousValue(Array.from(updatedPreviousValue));
+    console.log(
+      "THIS IS THE FINAL VALUES TO BE SELECTED",
+      Array.from(currentValueSet)
+    );
+    setValue(Array.from(currentValueSet));
+
+    console.log("set Selected Children", Array.from(newSelectedChildren));
+    setSelectedChildren(Array.from(newSelectedChildren));
+    currentSelectedChildrenRef.current = Array.from(newSelectedChildren);
+    // const updatedPreviousValue = new Set([...valAdded, ...currentValueSet]);
+    // setPreviousValue(Array.from(updatedPreviousValue));
     //}
   };
-  
-  
 
-  const updateDropdownAndSelection = (departmentName: string, leaderFirstName: string, leaderEmail: string) => {
+  const updateDropdownAndSelection = (
+    departmentName: string,
+    leaderFirstName: string,
+    leaderEmail: string
+  ) => {
     let updatedItems = [...items];
-    let departmentExists = updatedItems.some(item => item.label === departmentName);
+    let departmentExists = updatedItems.some(
+      (item) => item.label === departmentName
+    );
     const newSelectedChildren = new Set<string>(previousValueRefChild.current);
-  
+
     // if (!departmentExists) {
     //   // Add new department
     //   updatedItems.push({
@@ -353,42 +365,57 @@ useEffect(()=>{
     //     value: departmentName
     //   });
     // }
-    console.log("department exists", departmentExists)
-    if(departmentExists){
+    console.log("department exists", departmentExists);
+    if (departmentExists) {
       // Add new leader as a separate item with a parent property
       updatedItems.push({
         label: leaderFirstName,
         value: leaderEmail,
-        parent: departmentName
+        parent: departmentName,
       });
     }
-  
+
     // Update items state
     setItems(updatedItems);
-    newSelectedChildren.add(leaderEmail)
+    newSelectedChildren.add(leaderEmail);
 
     if (props.onAssigneesChange && props.createPost) {
       props.onAssigneesChange(Array.from(newSelectedChildren));
-      
     }
     // Update selected values to include new leader and department
     let updatedValue = [...value, departmentName, leaderEmail];
     setValue(updatedValue);
-    setSelectedChildren(Array.from(newSelectedChildren))
+    setSelectedChildren(Array.from(newSelectedChildren));
   };
-  
-  
 
-  const inviteLeader = async (firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) => {
-    if(!props.createPost){
-      await sendEmailToLeader(firstName, lastName, departmentID, email, departmentName);
-    }else{
-      await createLeaderAccount(firstName, lastName, departmentID, email, departmentName)
+  const inviteLeader = async (
+    firstName: string,
+    lastName: string,
+    departmentID: string,
+    email: string,
+    departmentName: string
+  ) => {
+    if (!props.createPost) {
+      await sendEmailToLeader(
+        firstName,
+        lastName,
+        departmentID,
+        email,
+        departmentName
+      );
+    } else {
+      await createLeaderAccount(
+        firstName,
+        lastName,
+        departmentID,
+        email,
+        departmentName
+      );
     }
   };
   const handleEmptyFields = (emptyFields: emptyFields) => {
     let errorMessage = "";
-  
+
     if (emptyFields.firstName) {
       errorMessage += "First name, ";
     }
@@ -403,15 +430,18 @@ useEffect(()=>{
     }
 
     errorMessage += "is missing.";
-  
+
     setErrorMessageLeader(errorMessage.trim());
   };
-  
-  
 
-  async function createLeaderAccount(firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) {
+  async function createLeaderAccount(
+    firstName: string,
+    lastName: string,
+    departmentID: string,
+    email: string,
+    departmentName: string
+  ) {
     try {
-      
       let res = await customFetch(Endpoints.addLeaderCreatePost, {
         method: "POST",
         body: JSON.stringify({
@@ -437,82 +467,78 @@ useEffect(()=>{
     }
   }
 
+  async function sendEmailToLeader(
+    firstName: string,
+    lastName: string,
+    departmentID: string,
+    email: string,
+    departmentName: string
+  ) {
+    if (!props.createPost && props.issue && props.issue._id) {
+      const currentSelectedChildren = currentSelectedChildrenRef.current;
+      console.log("This is the department Name", departmentName);
+      try {
+        console.log("This is the email: ", email);
+        console.log("This is the issue ID: ", props.issue._id);
+        let res = await customFetch(Endpoints.sendEmailToLeader, {
+          method: "POST",
+          body: JSON.stringify({
+            postID: props.issue._id,
+            firstName: firstName,
+            lastName: lastName,
+            departmentID: departmentID,
+            email: email,
+            groupID: props.issue.group._id,
+            assigneeUsernames: currentSelectedChildren,
+          }),
+        });
 
-
-  async function sendEmailToLeader(firstName: string,lastName:string, departmentID: string, email: string, departmentName: string) {
-    if(!props.createPost &&  props.issue && props.issue._id){
-          const currentSelectedChildren = currentSelectedChildrenRef.current;
-          console.log("This is the department Name", departmentName)
-          try {
-            console.log("This is the email: ", email)
-            console.log("This is the issue ID: ", props.issue._id)
-            let res = await customFetch(Endpoints.sendEmailToLeader, {
-              method: "POST",
-              body: JSON.stringify({
-                postID: props.issue._id, 
-                firstName: firstName,
-                lastName: lastName,
-                departmentID: departmentID,
-                email: email,
-                groupID: props.issue.group._id,
-                assigneeUsernames: currentSelectedChildren,
-
-              }),
-            });
-
-            if (!res.ok) {
-              const resJson = await res.json();
-              console.error("Error  EMAIL:", resJson.error);
-              setErrorMessageLeader(resJson.error);
-            } else {
-              setErrorMessageLeader('')
-              console.log("EMAIL successfully");
-              updateDropdownAndSelection(departmentName, firstName, email);
-   
-            }
-          } catch (error) {
-            console.error("Network error, please try again later.", error);
-          }
-  }
+        if (!res.ok) {
+          const resJson = await res.json();
+          console.error("Error  EMAIL:", resJson.error);
+          setErrorMessageLeader(resJson.error);
+        } else {
+          setErrorMessageLeader("");
+          console.log("EMAIL successfully");
+          updateDropdownAndSelection(departmentName, firstName, email);
+        }
+      } catch (error) {
+        console.error("Network error, please try again later.", error);
+      }
+    }
   }
 
   const isLeaderSuggestedByAI = (leaderId: string) => {
-    if(!props.createPost && props.issue && props.issue._id){
-        // Ensure that there is at least one suggested department and it has leaders
-        console.log("suggested departments", props.issue.suggestedDepartments)
-        //console.log("suggested departments", props.issue.suggestedDepartments)
+    if (!props.createPost && props.issue && props.issue._id) {
+      // Ensure that there is at least one suggested department and it has leaders
+      console.log("suggested departments", props.issue.suggestedDepartments);
+      //console.log("suggested departments", props.issue.suggestedDepartments)
 
-        if (props.issue.suggestedDepartments.length > 0 && props.issue.suggestedDepartments[0].leaders.length > 0) {
-          console.log("First suggested department:", props.issue.suggestedDepartments[0]); // Log the first suggested department
-          console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
-      
-          return props.issue.suggestedDepartments[0].leaders.some(leader => leader._id === leaderId);
-        }
-        return false;
-  }
+      if (
+        props.issue.suggestedDepartments.length > 0 &&
+        props.issue.suggestedDepartments[0].leaders.length > 0
+      ) {
+        console.log(
+          "First suggested department:",
+          props.issue.suggestedDepartments[0]
+        ); // Log the first suggested department
+        console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
+
+        return props.issue.suggestedDepartments[0].leaders.some(
+          (leader) => leader._id === leaderId
+        );
+      }
+      return false;
+    }
   };
-  
 
   return (
-    <View
+    <PopoverComponentView
+      title="Assignees"
       style={{
-        borderColor: colors.lightestgray,
-        borderWidth: 2,
-        borderRadius: 10,
-        padding: 10,
-        rowGap: 10,
         zIndex: 2,
       }}
     >
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "550",
-          fontFamily: "Montserrat",
-        }}
-      >
-        Assignees
-      </Text>
       <DropDownPicker
         maxHeight={180}
         multipleText={`${selectedChildren.length} ${
@@ -531,7 +557,7 @@ useEffect(()=>{
           paddingTop: 7,
           paddingHorizontal: 4,
           borderBottomColor: colors.lightergray,
-          marginBottom: 5
+          marginBottom: 5,
         }}
         searchPlaceholder="Search..."
         // addCustomItem={true}
@@ -554,17 +580,17 @@ useEffect(()=>{
         listParentContainerStyle={{
           justifyContent: "center",
           alignItems: "center",
-          height: 20
+          height: 20,
         }}
         listParentLabelStyle={{
-          fontWeight: "bold"
+          fontWeight: "bold",
         }}
         listChildContainerStyle={{
           paddingLeft: 20,
-          height: 30
+          height: 30,
         }}
         listChildLabelStyle={{
-          color: "grey"
+          color: "grey",
         }}
         style={{
           borderColor: colors.lightgray,
@@ -600,22 +626,21 @@ useEffect(()=>{
       {selectedChildren.map((item, index) => {
         return <ProfileRow name={item} key={index} />;
       })}
+      <View></View>
       <View>
-    </View>
-      <View>
-        <OrFullWidth />    
-          {errorMessageLeader &&(
-             <Text
-             style={{color: 'red'}}          
-             >
-              {errorMessageLeader}
-             </Text>
-          )}
+        <OrFullWidth />
+        {errorMessageLeader && (
+          <Text style={{ color: "red" }}>{errorMessageLeader}</Text>
+        )}
 
-        <AddLeader inviteLeaderMissingFields={handleEmptyFields} inviteLeader={inviteLeader} createPost={props.createPost} />
+        <AddLeader
+          inviteLeaderMissingFields={handleEmptyFields}
+          inviteLeader={inviteLeader}
+          createPost={props.createPost}
+        />
       </View>
-    </View>
+    </PopoverComponentView>
   );
-};
+}
 
 export default Assignees;
