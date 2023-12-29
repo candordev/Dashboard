@@ -41,7 +41,7 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
           <TouchableOpacity
             onPress={() => setIsPopoverVisible(true)}
             style={{
-              backgroundColor: colors.black,
+              backgroundColor: colors.lightergray,
               borderRadius: 15,
               paddingHorizontal: 10,
               paddingVertical: 7,
@@ -50,8 +50,8 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
           >
             <Text
               style={{
-                fontWeight: "525" as any,
-                color: colors.white,
+                fontWeight: "550" as any,
+                color: colors.black,
                 fontFamily: "Montserrat",
                 fontSize: 15,
               }}
