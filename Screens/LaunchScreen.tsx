@@ -22,6 +22,7 @@ type LaunchcreenProps = {
 function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   
   const userId = route.params?.userId || '';
+  const postId = route.params?.postId || '';
 
 
 
@@ -51,7 +52,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
               passedLastName: lastName,
               passedEmail: email,
               firebaseToken: token,
-              ...(userId && { userId })
+              ...(userId && { userId }),
+              ...(postId && { postId })
             },
           });
       }
@@ -105,8 +107,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   const handleSignup = async () => {
     setError('');
     let userData: UserData | null = null;
-  
-    if (userId) {
+    console.log("THIS THE user Id", userId)
+    if (userId.length > 0 && userId != '' && userId != 'undefined' && userId != null) {
       userData = await getUserData(userId);
     }
 
@@ -115,6 +117,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     navigation.navigate('signupStack', {
       screen: 'signupemail',
       params: {
+        ...(postId && { postId }),
         ...(userId && { userId }),
         ...(userData?.firstName && { firstName: userData.firstName }),
         ...(userData?.lastName && { lastName: userData.lastName }),

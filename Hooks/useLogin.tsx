@@ -17,6 +17,7 @@ export const useLogin = () => {
     setError('');
 
     try {
+      const postId = ""
       let res = await fetch(Endpoints.loginFirebase, {
         method: 'POST',
         headers: {
@@ -36,7 +37,7 @@ export const useLogin = () => {
       }
       if (res.ok) {
         console.log("RESPONSE FROM LOGIN FIREBASE", resJson)
-        await setUser({resJson, setError, dispatch});
+        await setUser({resJson,postId, setError, dispatch});
       }
     } catch (error) {
       console.log("RESPONSE FROM LOGIN FIREBASE", error)

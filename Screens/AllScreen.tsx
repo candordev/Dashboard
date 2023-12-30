@@ -80,13 +80,7 @@ const AllScreen = ({ navigation }: any) => {
     
   ) => {
     try {
-      console.log("THE SELECTED ID's FOR ASSIGNEES", JSON.stringify([
-        status?.newSelected,
-        status?.assignedSelected,
-        status?.updatedSelected,
-        status?.completedSelected,
-      ]),);
-      
+      console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
@@ -144,7 +138,7 @@ const AllScreen = ({ navigation }: any) => {
         onStatusChange={handleStatusChange}
         onAssigneeSelection={handleAssigneeSelection}
         headerTitle={"All Issues"}
-        groupID={(state.leaderGroups && state.leaderGroups[0])}
+        groupID={state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined}
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
