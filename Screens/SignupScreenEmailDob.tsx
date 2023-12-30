@@ -19,6 +19,11 @@ function SignupScreenEmailDob({
   route,
   navigation,
 }: SignupScreenEmailDobProps): JSX.Element {
+
+  const { userId } =
+  route.params;
+
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");

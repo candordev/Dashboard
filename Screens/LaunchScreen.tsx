@@ -13,6 +13,10 @@ type LaunchcreenProps = {
 };
 
 function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
+  
+  const userId = route.params?.userId || '';
+
+
 
   async function onGoogleButtonPress() {
     try {
@@ -40,6 +44,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
               passedLastName: lastName,
               passedEmail: email,
               firebaseToken: token,
+              ...(userId && { userId })
             },
           });
       }
@@ -62,7 +67,12 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
 
   const handleSignup = () => {
     setError('');
-    navigation.navigate('signupStack');
+    navigation.navigate('signupStack', {
+      screen: 'signupemail',
+      params: {
+        ...(userId && { userId })
+      },
+    });
   };
 
 

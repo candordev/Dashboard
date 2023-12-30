@@ -20,7 +20,7 @@ function SignupScreenSocial({
     route,
     navigation,
 }: SignupScreenSocialProps): JSX.Element {
-    const { passedFirstName, passedLastName, passedEmail, firebaseToken } =
+    const { passedFirstName, passedLastName, passedEmail, firebaseToken, userId } =
         route.params;
 
     const [username, setUsername] = useState("");

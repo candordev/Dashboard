@@ -73,6 +73,7 @@ function NavigationWrapper() {
 
   const linking = {
     prefixes: [
+      'http://localhost:19006', 'https://candorteam.netlify.app'
       /* your linking prefixes */
     ],
     config: {
@@ -83,7 +84,7 @@ function NavigationWrapper() {
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",
-        launch: "launch",
+        launch: 'launch/:userId',
         login: "login",
         NotFound: "404",
       },
