@@ -1,24 +1,14 @@
-import { getAuth } from "firebase/auth";
-import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
+import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { ScrollView, View } from "react-native";
-import {
-  GooglePlaceData,
-  GooglePlaceDetail,
-  GooglePlacesAutocomplete,
-} from "react-native-google-places-autocomplete";
-import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
-import { Endpoints } from "../utils/Endpoints";
 import { Post } from "../utils/interfaces";
-import { customFetch } from "../utils/utils";
 import Assignees from "./Assignees";
 import Category from "./Category";
-import MarkDone from "./MarkDone";
-import Text from "./Text";
 import Deadline from "./Deadline";
 import Location from "./Location";
+import MarkDone from "./MarkDone";
+import Text from "./Text";
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
@@ -26,7 +16,6 @@ interface IssueRightViewProps {
 }
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
-
   return (
     <ScrollView
       style={{
@@ -40,7 +29,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       <Assignees issue={props.issue} createPost={false} />
       <Category issueId={props.issue._id} createPost={false} />
       <Deadline issue={props.issue} />
-      <Location />
+      <Location issue={props.issue} />
       <View
         style={{
           borderColor: colors.lightestgray,

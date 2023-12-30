@@ -14,7 +14,7 @@ import {
 import { getAuth } from "firebase/auth";
 
 type LocationProps = {
-  issue?: Post;
+  issue: Post;
 };
 
 const Location: React.FC<LocationProps> = (props) => {
@@ -34,8 +34,8 @@ const Location: React.FC<LocationProps> = (props) => {
         setIdToken(token);
       }
     };
-    console.log("THE LOCATION INPUT VALUE: ", props.issue ? props.issue.neighborhood : "");
-    setInputValue(props.issue ? props.issue.neighborhood : "");
+    console.log("THE LOCATION INPUT VALUE: ", props.issue.neighborhood);
+    setInputValue(props.issue.neighborhood);
     console.log("issue fields: ", props.issue);
 
     fetchToken();
@@ -52,7 +52,7 @@ const Location: React.FC<LocationProps> = (props) => {
         method: "POST",
         body: JSON.stringify({
           address: address,
-          postID: props.issue ? props.issue._id : "",
+          postID: props.issue._id,
         }),
       });
 
