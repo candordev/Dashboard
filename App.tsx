@@ -5,7 +5,6 @@ import "react-native-gesture-handler";
 import NavigationWrapper from "./Structure/NavigationWrapper";
 import { UserProvider } from "./Structure/UserContext";
 
-
 export default function App() {
   const [fontsLoaded] = useFonts({
     Montserrat: require("./assets/fonts/Montserrat-VariableFont_wght.ttf"),
@@ -23,10 +22,10 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  
+
   return (
     <UserProvider>
-          <NavigationWrapper />
+      <NavigationWrapper />
     </UserProvider>
   );
 }
