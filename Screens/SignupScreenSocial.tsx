@@ -52,7 +52,7 @@ function SignupScreenSocial({
 
         console.log("we got here no error so should signup");
 
-        await signupUser(firstName, lastName, email, username.trim(), firebaseToken ?? "");
+        await signupUser(firstName, lastName, email, username.trim(), firebaseToken ?? "", "", userId);
     };
 
     const validateFields = async () => {

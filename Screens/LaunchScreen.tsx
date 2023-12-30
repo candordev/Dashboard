@@ -4,7 +4,14 @@ import LinkButton from "../Components/LinkButton";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import { useSignup } from "../Hooks/useSignup";
+import { Endpoints } from "../utils/Endpoints";
+import { useDrawerProgress } from "@react-navigation/drawer";
 
+interface UserData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
 
 
 type LaunchcreenProps = {
@@ -65,15 +72,58 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     // logInWithApple,
   } = useSignup();
 
-  const handleSignup = () => {
+    
+
+
+  async function getUserData(userId: string): Promise<UserData | null> {
+    try {
+      console.log("THIS THE USER ID", userId)
+
+      const queryParams = new URLSearchParams({ userID: userId });
+
+      const response = await fetch(`${Endpoints.getUser}?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      const resJson = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(resJson.error);
+      }
+  
+      return resJson as UserData;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return null;
+    }
+  }
+  
+
+  const handleSignup = async () => {
     setError('');
+    let userData: UserData | null = null;
+  
+    if (userId) {
+      userData = await getUserData(userId);
+    }
+
+    console.log("This the user data: ", userData)
+  
     navigation.navigate('signupStack', {
       screen: 'signupemail',
       params: {
-        ...(userId && { userId })
+        ...(userId && { userId }),
+        ...(userData?.firstName && { firstName: userData.firstName }),
+        ...(userData?.lastName && { lastName: userData.lastName }),
+        ...(userData?.email && { email: userData.email }),
       },
     });
   };
+  
+
 
 
 
