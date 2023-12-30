@@ -76,6 +76,7 @@ export const Endpoints = {
   getTopMembers: `${BASE_URL}/group/getTopMembers?`,
   signupFirebase: `${BASE_URL}/user/signupFirebase`,
   loginFirebase: `${BASE_URL}/user/loginFirebase`,
+  getUser:  `${BASE_URL}/user/getUser`,
   finishFirebaseLogin: `${BASE_URL}/user/finishFirebaseLogin`,
   getAcceptedPosts: `${BASE_URL}/userActivity/acceptedProposals?`,
   getUpdatedPosts: `${BASE_URL}/userActivity/updatedProposals?`,
@@ -106,6 +107,7 @@ export const Endpoints = {
   getPrivateChats:  `${BASE_URL}/comment/getPrivateChats?`,
   editPost:  `${BASE_URL}/post/editPost?`,
   markDone:  `${BASE_URL}/post/markDone?`
+
 
 
 

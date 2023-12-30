@@ -15,7 +15,6 @@ export const setUser = async ({
   try {
     // await Keychain.setGenericPassword(resJson.user.username, resJson.refreshToken);
     token = (await getAuth().currentUser?.getIdToken()) ?? '';
-
     console.log('resJson', resJson);
     // console.log('token', token);
     // user: profile.user,
