@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import "react-native-gesture-handler";
 import NavigationWrapper from "./Structure/NavigationWrapper";
 import { UserProvider } from "./Structure/UserContext";
+import { PostIdProvider } from "./Structure/PostContext"
 
 
 export default function App() {
@@ -25,8 +26,10 @@ export default function App() {
   }
   
   return (
-    <UserProvider>
-          <NavigationWrapper />
-    </UserProvider>
+    <PostIdProvider>
+      <UserProvider>
+            <NavigationWrapper />
+      </UserProvider>
+    </PostIdProvider>
   );
 }

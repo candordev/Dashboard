@@ -130,7 +130,8 @@ export const useSignup = () => {
         username: string,
         firebaseToken: string,
         inputError: string = "",
-        userId: string = ""
+        userId: string = "",
+        postId: string, // add "" later
     ) => {
         setLoading(true);
         setError("");
@@ -151,7 +152,7 @@ export const useSignup = () => {
                 firebaseToken,
                 userId
             );
-            setUser({ resJson, setError, dispatch });
+            setUser({ resJson,postId, setError, dispatch });
         } catch (error: any) {
             setLoading(false);
             console.error(error);

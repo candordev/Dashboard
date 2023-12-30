@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import LinkButton from "../Components/LinkButton";
 import Text from "../Components/Text";
@@ -6,6 +6,8 @@ import colors from "../Styles/colors";
 import { useSignup } from "../Hooks/useSignup";
 import { Endpoints } from "../utils/Endpoints";
 import { useDrawerProgress } from "@react-navigation/drawer";
+import { usePostId } from '../Structure/PostContext';
+import { useUserContext } from "../Hooks/useUserContext";
 
 interface UserData {
   firstName?: string;
@@ -22,6 +24,36 @@ type LaunchcreenProps = {
 function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   
   const userId = route.params?.userId || '';
+  const routePostId = route.params?.postId || '';
+  const { state } = useUserContext();
+
+
+  const { postId, setPostId } = usePostId(); // Ensure this hook returns both postId and setPostId
+
+  // Update postId in context when routePostId changes
+  // useEffect(() => {
+  //   console.log("GOT HEREEEE" )
+  //   if (routePostId && routePostId !== postId) {
+  //     setPostId(routePostId);
+  //   }
+  // }, [routePostId, postId, setPostId]);
+
+  useEffect(() => {
+    console.log("Checking route for postId");
+    if (routePostId && routePostId !== postId) {
+      setPostId(routePostId);
+    }
+  }, [routePostId, postId, setPostId]); // Depend on routePostId, postId, and setPostId
+  
+
+  useEffect(() => {
+    if (postId && state.token) {
+      console.log("PostId is set, navigating to root");
+      navigation.navigate('root');
+    }
+  }, [postId, state.token, navigation]); // Depend on postId and state.token
+  
+
 
 
 
@@ -51,7 +83,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
               passedLastName: lastName,
               passedEmail: email,
               firebaseToken: token,
-              ...(userId && { userId })
+              ...(userId && { userId }),
+              ...(postId && { postId })
             },
           });
       }
@@ -105,8 +138,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   const handleSignup = async () => {
     setError('');
     let userData: UserData | null = null;
-  
-    if (userId) {
+    console.log("THIS THE user Id", userId)
+    if (userId.length > 0 && userId != '' && userId != 'undefined' && userId != null) {
       userData = await getUserData(userId);
     }
 
@@ -115,6 +148,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     navigation.navigate('signupStack', {
       screen: 'signupemail',
       params: {
+        ...(postId && { postId }),
         ...(userId && { userId }),
         ...(userData?.firstName && { firstName: userData.firstName }),
         ...(userData?.lastName && { lastName: userData.lastName }),
