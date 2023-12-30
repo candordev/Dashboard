@@ -95,14 +95,16 @@ function NavigationWrapper() {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="launch" component={LaunchScreen} />
+        {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
         {state.token ? (
           <>
+            <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="root" component={Root} />
             {/* other authenticated screens */}
           </>
         ) : (
           <>
+            <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="login" component={LoginScreen} />
             <Stack.Screen
               name="signupStack"

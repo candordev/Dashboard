@@ -50,6 +50,9 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     if (postId && state.token) {
       console.log("PostId is set, navigating to root");
       navigation.navigate('root');
+    }else if(state.token){
+      console.log("no post ID but going to root")
+      navigation.navigate('root');
     }
   }, [postId, state.token, navigation]); // Depend on postId and state.token
   
