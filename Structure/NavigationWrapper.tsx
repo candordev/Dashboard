@@ -95,22 +95,19 @@ function NavigationWrapper() {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="launch" component={LaunchScreen} />
         {state.token ? (
-          // If authenticated, show the Root screen
           <>
-          <Stack.Screen name="root" component={Root} />    
+            <Stack.Screen name="root" component={Root} />
+            {/* other authenticated screens */}
           </>
         ) : (
-          // If not authenticated, show the LoginScreen
           <>
-            <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="login" component={LoginScreen} />
             <Stack.Screen
               name="signupStack"
               component={SignupStack}
-              options={() => ({
-                headerShown: false,
-              })}
+              options={{ headerShown: false }}
             />
           </>
         )}

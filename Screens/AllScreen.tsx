@@ -11,6 +11,7 @@ import { customFetch } from "../utils/utils";
 import { ProgressSelector } from "../utils/interfaces";
 import OuterView from "../Components/OuterView";
 import { useUserContext } from "../Hooks/useUserContext";
+import { usePostId } from "../Structure/PostContext";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -36,6 +37,7 @@ const AllScreen = ({ navigation }: any) => {
 
   const isFocused = useIsFocused(); // Assuming you're using something like this
   const {state} = useUserContext();
+  const {postId}= usePostId();
 
   useEffect(() => {
     console.log("Component mounted, fetching posts initially");
@@ -131,6 +133,21 @@ const AllScreen = ({ navigation }: any) => {
     setIsLoading(false);
   };
 
+  const [initialPostId, setInitialPostId] = useState<string | null>(null);
+  const [hasInitialOpenOccurred, setHasInitialOpenOccurred] = useState(false);
+  const hasInitialOpen = async () => {
+    setHasInitialOpenOccurred(true);
+  };
+
+  useEffect(() => {
+    console.log("THS THE ST: ", state);
+    // Check if postId exists and set it
+    if (postId && !hasInitialOpenOccurred) {
+      setInitialPostId(postId);
+    }
+  }, []);
+
+
   return (
     <OuterView style={{paddingHorizontal: 40,}}>
       <Header
@@ -178,6 +195,8 @@ const AllScreen = ({ navigation }: any) => {
                 issue={item} 
                 onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
                 isDisabled={isLoading}
+                hasInitialOpen={hasInitialOpen}
+                initialOpen={item._id === initialPostId && !hasInitialOpenOccurred}
               />
               )}
             />

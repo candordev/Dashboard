@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -16,21 +16,41 @@ import { formatDate } from "../utils/utils";
 interface CardProps {
   issue: Post;
   onPopoverCloseComplete: () => void; // Add this line
+  hasInitialOpen: () => void; // Add this line
   isDisabled: boolean;
 }
 
 // const Card: React.FC<CardProps> = ({ issue }: any) => {
-function Card(props: CardProps): JSX.Element {
+function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
   const { height, width } = useWindowDimensions();
 
   const issueContent = props.issue.content.substring(0, 100).toString();
   console.log(issueContent); // Add this to check what `issue` contains
 
+  const [isPopoverVisible, setIsPopoverVisible] = useState(false);
+
+
+  useEffect(() => {
+    if (props.initialOpen) {
+      setIsPopoverVisible(true);
+      props.hasInitialOpen();
+        }
+  }, [props.initialOpen]);
+
+  const togglePopover = () => {
+    setIsPopoverVisible(!isPopoverVisible);
+  };
+
   return (
     <Popover
-      onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
+      isVisible={isPopoverVisible}
+      onRequestClose={togglePopover}
+      onCloseComplete={() => {
+        setIsPopoverVisible(false);
+        props.onPopoverCloseComplete();
+      }}
       from={
-        <TouchableOpacity style={styles.card} disabled={props.isDisabled}>
+        <TouchableOpacity style={styles.card} disabled={props.isDisabled} onPress={togglePopover}>
           <View
             style={{
               flexDirection: "row",
