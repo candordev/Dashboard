@@ -7,9 +7,14 @@ import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { getUnreadNotifs } from "../utils/utils";
 import React, { useCallback, useEffect, useState } from "react";
+import {useSignout} from '../Hooks/useSignout';
+import { useUserContext } from "../Hooks/useUserContext";
+
 
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
+  const {state, dispatch} = useUserContext();
+ 
 
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
@@ -75,7 +80,7 @@ const LHN = (props: any) => {
       <View style={{ flex: 1 }} />
       <NavItem
         name="Sign out"
-        onPress={() => props.signOut()}
+        onPress={() => useSignout({dispatch})}
         icon="log-out"
         selected={false}
       />
