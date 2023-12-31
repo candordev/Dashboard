@@ -1,5 +1,4 @@
 import React from "react";
-import "react-datepicker/dist/react-datepicker.css";
 import { ScrollView, View } from "react-native";
 import colors from "../Styles/colors";
 import { Post } from "../utils/interfaces";
