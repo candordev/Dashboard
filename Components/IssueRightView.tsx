@@ -122,7 +122,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
     >
       <View style={{ zIndex: 2 }}>
+        <View style={{ zIndex: 4 }}>
         <Assignees issue={props.issue} createPost={false} />
+        </View>
         <Category issueId={props.issue._id} createPost={false} />
         <Text
           style={{
