@@ -106,7 +106,8 @@ export const Endpoints = {
   getNeighborhoodCreatePost:  `${BASE_URL}/userActivity/getNeighborhoodCreatePost?`,
   getPrivateChats:  `${BASE_URL}/comment/getPrivateChats?`,
   editPost:  `${BASE_URL}/post/editPost?`,
-  markDone:  `${BASE_URL}/post/markDone?`
+  markDone:  `${BASE_URL}/post/markDone?`,
+  sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`
 
 
 

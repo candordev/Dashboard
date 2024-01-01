@@ -99,19 +99,17 @@ const renderComment = (comment: Comment, index: number) => {
 async function postComment() {
   console.log("COMMENT POSTED")
   try {
-    let res: Response = await customFetch(Endpoints.createComment, {
+    let res: Response = await customFetch(Endpoints.sendPoliticianChat, {
       method: "POST",
       body: JSON.stringify({
         content: newCommentContent,
         postID: props.issueID,
-        parentID: undefined,
-        privateChat: "true",
       }),
     });
 
     let resJson = await res.json();
     if (!res.ok) {
-      console.error(resJson.error);
+      console.error("ERROR HAPPENDED: ", resJson.error);
     } else {
       fetchPrivateChat();
     }
@@ -181,6 +179,7 @@ authorSelf: {
     padding: 10,
     borderRadius: 10,
     flexDirection: 'row-reverse', 
+    maxWidth: '80%', // maximum width of 80%
     
 },
 authorOther: {
@@ -191,6 +190,7 @@ authorOther: {
     margin: 5,
     padding: 10,
     borderRadius: 10,
+    maxWidth: '80%', // maximum width of 80%
 },
 userName: {
     color: colors.purple,
