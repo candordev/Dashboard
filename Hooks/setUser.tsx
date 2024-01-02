@@ -2,20 +2,22 @@ import { getAuth } from "firebase/auth";
 
 type setUserProps = {
   resJson: any;
+  postId: string;
   setError?: any;
   dispatch: any;
 };
 
 export const setUser = async ({
   resJson,
+  postId,
   dispatch,
   setError = () => {},
+
 }: setUserProps) => {
   let token = '';
   try {
     // await Keychain.setGenericPassword(resJson.user.username, resJson.refreshToken);
     token = (await getAuth().currentUser?.getIdToken()) ?? '';
-
     console.log('resJson', resJson);
     // console.log('token', token);
     // user: profile.user,
@@ -58,6 +60,7 @@ export const setUser = async ({
       _id: resJson.user,
       leaderPoints: resJson.leaderPoints,
       leaderGroups: resJson.leaderGroups,
+      postId: postId
     };
 
     console.log('This is the user', user);

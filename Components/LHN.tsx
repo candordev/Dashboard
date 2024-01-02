@@ -12,6 +12,8 @@ import { useSignout } from "../Hooks/useSignout";
 
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
+  const {state, dispatch} = useUserContext();
+ 
 
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
@@ -56,8 +58,6 @@ const LHN = (props: any) => {
       console.error("Error getting notification count", err);
     }
   }, []);
-
-  const { state, dispatch } = useUserContext();
 
   return (
     <View style={styles.container}>

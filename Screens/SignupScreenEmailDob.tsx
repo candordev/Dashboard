@@ -19,12 +19,22 @@ function SignupScreenEmailDob({
   route,
   navigation,
 }: SignupScreenEmailDobProps): JSX.Element {
+
+  
+
+
+
+
+  const { postId ,userId, firstName: initialFirstName, lastName: initialLastName, email: initialEmail } = route.params;
+
+
+
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail || "");
   const [emailError, setEmailError] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState(initialFirstName || "");
+  const [lastName, setLastName] = useState(initialLastName || "");
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [checkBox, setCheckBox] = useState(false);
@@ -42,7 +52,8 @@ function SignupScreenEmailDob({
     colors.white,
     colors.white,
   ]);
-  const { signupUser, error, signUpWithEmail, setError } = useSignup();
+
+  const {signupUser, error, signUpWithEmail, setError } = useSignup();
 
   const updatePassword = (inputPassword: string) => {
     let arr = [...passwordError];
@@ -121,7 +132,7 @@ function SignupScreenEmailDob({
 
     const token: string | undefined = await signUpWithEmail(email, password);
 
-    await signupUser(firstName, lastName, email, username, token ?? "");
+    await signupUser(firstName, lastName, email, username, token ?? "", "",userId, postId);
   };
 
   const toggleShowPassword = () => {
