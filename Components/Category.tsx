@@ -10,6 +10,7 @@ import OrFullWidth from "./OrFullWidth";
 import Text from "./Text";
 import { CategoryPost } from "../utils/interfaces";
 import { useUserContext } from "../Hooks/useUserContext";
+import OuterComponentView from "./PopoverComponentView";
 
 type DropdownItem = {
   label: string;
@@ -213,24 +214,12 @@ useEffect(() => {
   };
 
   return (
-    <View
+    <OuterComponentView
       style={{
-        borderColor: colors.lightestgray,
-        borderWidth: 2,
-        borderRadius: 10,
-        padding: 10,
         zIndex: 1,
       }}
+      title="Category"
     >
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "550",
-          fontFamily: "Montserrat",
-        }}
-      >
-        Category
-      </Text>
       <DropDownPicker
         multiple={true}
         open={open}
@@ -291,7 +280,7 @@ useEffect(() => {
          )}
         <AddCategory onCategoryAdded={handleNewCategory} />
       </View>
-    </View>
+    </OuterComponentView>
   );
 };
 

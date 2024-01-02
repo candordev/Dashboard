@@ -180,11 +180,10 @@ authorSelf: {
     borderRadius: 10,
     flexDirection: 'row-reverse', 
     maxWidth: '80%', // maximum width of 80%
-    
 },
 authorOther: {
     textAlign: 'left',
-    backgroundColor: 'lightgray',
+    backgroundColor: colors.lightestgray,
     color: 'black',
     alignSelf: 'flex-start',
     margin: 5,
@@ -194,7 +193,7 @@ authorOther: {
 },
 userName: {
     color: colors.purple,
-    fontWeight: 500,
+    fontWeight: "500",
     alignSelf: 'flex-start',
     marginBottom: 0,
     marginLeft: 5

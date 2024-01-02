@@ -4,8 +4,7 @@ import { useCallback, useState } from "react";
 import "react-native-gesture-handler";
 import NavigationWrapper from "./Structure/NavigationWrapper";
 import { UserProvider } from "./Structure/UserContext";
-import { PostIdProvider } from "./Structure/PostContext"
-
+import { PostIdProvider } from "./Structure/PostContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -24,11 +23,11 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  
+
   return (
     <PostIdProvider>
       <UserProvider>
-            <NavigationWrapper />
+        <NavigationWrapper />
       </UserProvider>
     </PostIdProvider>
   );

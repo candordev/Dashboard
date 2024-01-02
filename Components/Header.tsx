@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { Post, Status, UserProfile } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
-import Card from "./Card";
 import CreatePost from "./CreatePost";
 import DropDown from "./DropDown";
 import OptionPicker from "./OptionPicker";

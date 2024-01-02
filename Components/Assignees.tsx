@@ -1,23 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
-import colors from "../Styles/colors";
-import Text from "./Text";
-import ProfileRow from "./ProfileRow";
-import DropDownPicker, {
-  ItemType,
-  ValueType,
-} from "react-native-dropdown-picker";
+import { View } from "react-native";
+import DropDownPicker, { ItemType } from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import { useUserContext } from "../Hooks/useUserContext";
+import colors from "../Styles/colors";
+import { Endpoints } from "../utils/Endpoints";
+import { Post, UserProfile, emptyFields } from "../utils/interfaces";
+import { customFetch } from "../utils/utils";
 import AddLeader from "./AddLeader";
 import OrFullWidth from "./OrFullWidth";
-import { Post, UserProfile, emptyFields } from "../utils/interfaces";
-import Icon from "react-native-vector-icons/Feather";
-import { customFetch } from "../utils/utils";
-import { Endpoints } from "../utils/Endpoints";
-import { useUserContext } from "../Hooks/useUserContext";
-import CreatePost from "./CreatePost";
-import { create } from "domain";
-import PopoverComponentView from "./PopoverComponentView";
+import OuterComponentView from "./PopoverComponentView";
+import ProfileRow from "./ProfileRow";
+import Text from "./Text";
 
 interface AssigneesProps {
   issue?: Post;
@@ -533,7 +527,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   };
 
   return (
-    <PopoverComponentView
+    <OuterComponentView
       title="Assignees"
       style={{
         zIndex: 2,
@@ -639,7 +633,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           createPost={props.createPost}
         />
       </View>
-    </PopoverComponentView>
+    </OuterComponentView>
   );
 }
 

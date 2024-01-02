@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch, formatDate } from "../utils/utils";
@@ -46,13 +46,14 @@ const IssueContent: React.FC<IssueContent> = (props) => {
   };
 
   return (
-    <View
+    <ScrollView
       style={{
         backgroundColor: colors.white,
         padding: 10,
         borderWidth: 2,
         borderRadius: 10,
         borderColor: colors.lightestgray,
+        maxHeight: '50%',
       }}
     >
       {editing ? (
@@ -133,7 +134,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           fontWeight: "500",
         }}
       />
-    </View>
+    </ScrollView>
   );
 };
 

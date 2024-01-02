@@ -7,9 +7,8 @@ import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { getUnreadNotifs } from "../utils/utils";
 import React, { useCallback, useEffect, useState } from "react";
-import {useSignout} from '../Hooks/useSignout';
 import { useUserContext } from "../Hooks/useUserContext";
-
+import { useSignout } from "../Hooks/useSignout";
 
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
@@ -80,7 +79,9 @@ const LHN = (props: any) => {
       <View style={{ flex: 1 }} />
       <NavItem
         name="Sign out"
-        onPress={() => useSignout({dispatch})}
+        onPress={() => {
+          useSignout({ dispatch });
+        }}
         icon="log-out"
         selected={false}
       />
@@ -118,7 +119,7 @@ const NavItem = ({
             columnGap: 10,
             backgroundColor: selected ? colors.white : colors.black,
             borderRadius: 12.5,
-            width: '100%',
+            width: "100%",
           }}
         >
           <FeatherIcon

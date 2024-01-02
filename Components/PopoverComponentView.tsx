@@ -3,25 +3,25 @@ import { View } from "react-native";
 import colors from "../Styles/colors";
 import Text from "./Text";
 
-type PopoverComponentViewProps = {
+type OuterComponentViewProps = {
   title?: string;
   children: React.ReactNode;
   style?: any;
 };
 
-const PopoverComponentView: React.FC<PopoverComponentViewProps> = ({
+const OuterComponentView: React.FC<OuterComponentViewProps> = ({
   title,
   children,
   style,
 }) => {
   return (
     <View
-      style={{
+      style={[{
         borderColor: colors.lightestgray,
         borderWidth: 2,
         borderRadius: 10,
         padding: 10,
-      }}
+      }, style]}
     >
       {title && (
         <Text
@@ -40,4 +40,4 @@ const PopoverComponentView: React.FC<PopoverComponentViewProps> = ({
   );
 };
 
-export default PopoverComponentView;
+export default OuterComponentView;
