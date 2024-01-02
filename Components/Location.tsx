@@ -89,6 +89,7 @@ const Location: React.FC<LocationProps> = (props) => {
             Authorization: "Bearer " + idToken,
           },
         }}
+        styles={{borderWidth: 1,}}
       />
     </OuterComponentView>
   );

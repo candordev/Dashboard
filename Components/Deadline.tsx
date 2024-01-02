@@ -1,10 +1,13 @@
-import React, { createElement, useState } from "react";
+import React, { createElement, forwardRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Endpoints } from "../utils/Endpoints";
 import { Post } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
 import OuterComponentView from "./PopoverComponentView";
+import colors from "../Styles/colors";
+import 'react-datepicker/dist/react-datepicker.css';
+import '../Styles/DatePickerStyles.css';
 
 type DeadlineProps = {
   issue?: Post;
@@ -39,17 +42,11 @@ const Deadline: React.FC<DeadlineProps> = (props) => {
 
   return (
     <OuterComponentView title={"Deadline"} style={{ zIndex: 1 }}>
-      {/* <DatePicker
+      <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}
-        showTimeSelect
-        dateFormat="Pp"
-      /> */}
-      {createElement("input", {
-        type: "date",
-        value: selectedDate?.toISOString().split("T")[0],
-        onInput: handleDateChange,
-      })}
+        className="custom-datepicker"
+      />
     </OuterComponentView>
   );
 };

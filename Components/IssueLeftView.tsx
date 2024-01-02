@@ -18,9 +18,6 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
 
-
-  
-
   useEffect(() => {
     fetchComments();
   }, []);
@@ -49,8 +46,6 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       console.error("Error loading posts. Please try again later.", error);
     }
   }
-
-
 
   async function postComment() {
     try {
@@ -84,7 +79,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       }}
     >
       <IssueContent date={props.issue.createdAt} issueID={props.issue._id} title={props.issue.title} content={props.issue.content} />
-      {comments.map((comment: Comment, index) => {
+      {/* {comments.map((comment: Comment, index) => {
         return (
           <View
             style={{
@@ -102,7 +97,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
             </Text>
           </View>
         );
-      })}
+      })} */}
       <PrivateChat issueID={props.issue._id}/>
     </View>
   );

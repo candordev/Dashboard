@@ -9,6 +9,7 @@ import Location from "./Location";
 import MarkDone from "./MarkDone";
 import Text from "./Text";
 
+
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
   issue: Post;
