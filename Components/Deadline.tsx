@@ -6,19 +6,27 @@ import { Post } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
 import OuterComponentView from "./PopoverComponentView";
 import colors from "../Styles/colors";
-import 'react-datepicker/dist/react-datepicker.css';
-import '../Styles/DatePickerStyles.css';
+import "react-datepicker/dist/react-datepicker.css";
+import "../Styles/DatePickerStyles.css";
 
 type DeadlineProps = {
   issue?: Post;
+  createPost?: boolean;
+  onChange? : (date: Date | null) => void;
 };
 
 const Deadline: React.FC<DeadlineProps> = (props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(
-    new Date(props.issue ? props.issue.deadline : "")
+    props.issue ? new Date(props.issue.deadline) : null
   );
 
   const handleDateChange = async (date: Date | null) => {
+    if (props.createPost && props.onChange) {
+      setSelectedDate(date);
+      props.onChange(date);
+      return;
+    }
+
     try {
       let res = await customFetch(Endpoints.setDeadline, {
         method: "POST",

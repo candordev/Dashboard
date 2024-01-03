@@ -232,9 +232,8 @@ useEffect(() => {
         onClose={handleDropdownClose} // Handle when dropdown closes
         dropDownDirection="BOTTOM"
         style={{
-          borderColor: colors.lightgray,
-          borderWidth: 1,
-          backgroundColor: colors.white,
+          borderWidth: 0,
+          backgroundColor: colors.lightestgray,
           marginTop: 10,
           minHeight: 30,
         }}
@@ -247,9 +246,10 @@ useEffect(() => {
         listMode="SCROLLVIEW"
         dropDownContainerStyle={[
           {
+            borderWidth: 0,
             borderTopWidth: 1,
-            backgroundColor: colors.white,
-            borderColor: colors.lightgray,
+            backgroundColor: colors.lightestgray,
+            borderColor: colors.lightergray,
             marginTop: 10,
             height: 120
           },

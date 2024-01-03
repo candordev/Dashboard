@@ -541,15 +541,14 @@ function Assignees(props: AssigneesProps): JSX.Element {
         searchable={true}
         searchTextInputStyle={{
           backgroundColor: colors.white,
-          borderColor: colors.lightgray,
-          borderWidth: 1,
           borderRadius: 10,
+          borderWidth: 0,
         }}
         searchContainerStyle={{
-          borderBottomWidth: 1,
+          borderWidth: 0,
           paddingBottom: 7,
           paddingTop: 7,
-          paddingHorizontal: 4,
+          paddingHorizontal: 7,
           borderBottomColor: colors.lightergray,
           marginBottom: 5,
         }}
@@ -588,8 +587,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
         }}
         style={{
           borderColor: colors.lightgray,
-          borderWidth: 1,
-          backgroundColor: colors.white,
+          borderWidth: 0,
+          backgroundColor: colors.lightestgray,
           minHeight: 30,
         }}
         placeholder="Select users"
@@ -602,8 +601,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
         listMode="SCROLLVIEW"
         dropDownContainerStyle={[
           {
-            borderTopWidth: 1,
-            backgroundColor: colors.white,
+            borderWidth: 0,
+            backgroundColor: colors.lightestgray,
             borderColor: colors.lightgray,
           },
         ]}

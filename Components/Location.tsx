@@ -1,20 +1,23 @@
+import { getAuth } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
-import colors from "../Styles/colors";
-import OuterComponentView from "./PopoverComponentView";
-import DatePicker from "react-datepicker";
-import { customFetch } from "../utils/utils";
-import { Endpoints } from "../utils/Endpoints";
-import { Post } from "../utils/interfaces";
 import {
   GooglePlaceData,
   GooglePlaceDetail,
   GooglePlacesAutocomplete,
 } from "react-native-google-places-autocomplete";
-import { getAuth } from "firebase/auth";
+import colors from "../Styles/colors";
+import { Endpoints } from "../utils/Endpoints";
+import { Post } from "../utils/interfaces";
+import { customFetch } from "../utils/utils";
+import OuterComponentView from "./PopoverComponentView";
 
 type LocationProps = {
-  issue: Post;
+  issue?: Post;
+  createPost?: boolean;
+  onChange?: (
+    data: GooglePlaceData,
+    details: GooglePlaceDetail | null
+  ) => Promise<string>;
 };
 
 const Location: React.FC<LocationProps> = (props) => {
@@ -34,8 +37,8 @@ const Location: React.FC<LocationProps> = (props) => {
         setIdToken(token);
       }
     };
-    console.log("THE LOCATION INPUT VALUE: ", props.issue.neighborhood);
-    setInputValue(props.issue.neighborhood);
+    console.log("THE LOCATION INPUT VALUE: ", props.issue?.neighborhood ?? "");
+    setInputValue(props.issue?.neighborhood ?? "");
     console.log("issue fields: ", props.issue);
 
     fetchToken();
@@ -45,6 +48,13 @@ const Location: React.FC<LocationProps> = (props) => {
     data: GooglePlaceData,
     details: GooglePlaceDetail | null
   ) => {
+    if (props.createPost && props.onChange) {
+      const neighborhood: string = await props.onChange(data, details);
+      setInputValue(neighborhood);
+      setKey((prevKey) => prevKey + 1);
+      return;
+    }
+
     const address = data.description; // Or use details.formatted_address
 
     try {
@@ -52,7 +62,7 @@ const Location: React.FC<LocationProps> = (props) => {
         method: "POST",
         body: JSON.stringify({
           address: address,
-          postID: props.issue._id,
+          postID: props.issue?._id ?? "",
         }),
       });
 
@@ -89,7 +99,14 @@ const Location: React.FC<LocationProps> = (props) => {
             Authorization: "Bearer " + idToken,
           },
         }}
-        styles={{borderWidth: 1,}}
+        styles={{
+          textInput: {
+            fontSize: 16,
+            borderWidth: 1,
+            borderColor: colors.lightgray,
+            borderRadius: 10,
+          },
+        }}
       />
     </OuterComponentView>
   );
