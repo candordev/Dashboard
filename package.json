@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/lodash": "^4.14.202",
     "@types/react": "~18.2.14",
     "@types/react-datepicker": "^4.19.4",
     "@types/react-native-vector-icons": "^6.4.17",

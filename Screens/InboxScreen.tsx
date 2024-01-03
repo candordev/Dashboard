@@ -95,6 +95,7 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
         setLoading(false);
         throw new Error(resJson.error)
       } else {
+
         const newNotifs: Notification[] = resJson.notifications;
         if (newNotifs.length > 0) {
           skip.current += newNotifs.length;
