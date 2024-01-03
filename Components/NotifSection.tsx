@@ -9,6 +9,8 @@ import {event, eventNames} from '../Events';
 import NotifPicture from '../Screens/NotifPicture';
 import IssueView from './IssueView';
 import Popover, { PopoverPlacement } from 'react-native-popover-view';
+import { formatDate } from "../utils/utils"; // Make sure this path is correct
+
 
 type Props = {
   notif: Notification;
@@ -230,44 +232,45 @@ const NotifSection = (props: Props) => {
     onCloseComplete={props.onPopoverCloseComplete}
     onOpenStart={handleNotificationClick}
     from={(
-      <TouchableOpacity disabled={props.isDisabled} style={[styles.seenNotifCard, notif.seen ? {} : {backgroundColor: colors.purple0}]}>
-      <NotifPicture
-          smallUrl={imageURL(notif.data?.contentType)}
-          mainUrl={notif.picture}
-          type={'big'}
-        />
-        <View style={{flex: 1}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingRight: 5,
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={[
-                styles.sectionTitle,
-                {marginTop: 0, flex: -1, fontSize: 16, fontWeight: '600'},
-              ]}
-              numberOfLines={1}>
-              {notif.title}
-            </Text>
-            <Text
+        <TouchableOpacity disabled={props.isDisabled} style={[styles.seenNotifCard, notif.seen ? {} : {backgroundColor: colors.purple0}]}>
+          <NotifPicture
+            smallUrl={imageURL(notif.data?.contentType)}
+            mainUrl={notif.picture}
+            type={'big'}
+          />
+          <View style={{flex: 1}}>
+            <View
               style={{
-                fontSize: 13,
-                color: colors.gray,
-                flexWrap: 'nowrap',
-                textAlign: 'left',
+                flexDirection: 'row',
+                paddingRight: 5,
+                justifyContent: 'flex-start',
+                alignItems: 'center',
               }}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  {marginTop: 0, flex: -1, fontSize: 16, fontWeight: '600'},
+                ]}
+                numberOfLines={1}>
+                {notif.title}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: colors.gray,
+                  paddingLeft: 10, // Add some space between the title and the date
+                  flexWrap: 'nowrap',
+                }}>
+                {formatDate(notif.fireDate)} {/* Display the formatted date */}
+              </Text>
+            </View>
+            <Text
+              style={[styles.sectionDescription, {flex: 1}]}
+              numberOfLines={2}>
+              {notif.content}
             </Text>
           </View>
-          <Text
-            style={[styles.sectionDescription, {flex: 1}]}
-            numberOfLines={2}>
-            {notif.content}
-          </Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
        )}
        placement={PopoverPlacement.FLOATING}
        popoverStyle={{

@@ -217,7 +217,7 @@ useEffect(() => {
   return (
     <OuterComponentView
       style={style}
-      title="Category"
+      title="Tag"
     >
       <DropDownPicker
         multiple={true}
