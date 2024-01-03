@@ -31,7 +31,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         createPost={false}
         style={{ zIndex: 1 }}
       />
-      <Deadline issue={props.issue} />
+      <Deadline issue={props.issue} style={{zIndex: 1}}/>
       <Location issue={props.issue} />
       <View
         style={{

@@ -13,6 +13,7 @@ type DeadlineProps = {
   issue?: Post;
   createPost?: boolean;
   onChange? : (date: Date | null) => void;
+  style?: any;
 };
 
 const Deadline: React.FC<DeadlineProps> = (props) => {
@@ -49,11 +50,13 @@ const Deadline: React.FC<DeadlineProps> = (props) => {
   };
 
   return (
-    <OuterComponentView title={"Deadline"} style={{ zIndex: 1 }}>
+    <OuterComponentView title={"Deadline"} style={props.style}>
       <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}
         className="custom-datepicker"
+        //force popover to drop down
+        popperPlacement="bottom-start"
       />
     </OuterComponentView>
   );

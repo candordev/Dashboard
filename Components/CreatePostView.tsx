@@ -93,7 +93,7 @@ function CreatePostView(props: any) {
   const handleSelect = async (
     data: GooglePlaceData,
     details: GooglePlaceDetail | null
-  ) : Promise<string> => {
+  ): Promise<string> => {
     // FIX THIS TO CALL THE CREATPOSTSETNEIGHBORHOODROUTE
     const address = data.description; // Or use details.formatted_address
     setLocation(address);
@@ -167,15 +167,19 @@ function CreatePostView(props: any) {
         value={email}
         onChangeText={setEmail}
       />
-
+      <Deadline createPost={true} onChange={handleDateChange} style={{zIndex: 4}}/>
       <Assignees
         createPost={true}
         onAssigneesChange={handleAssigneesChange}
         onAssigneesChangeEmail={handleAssigneesChangeEmail}
-        style={{zIndex: 3}}
+        style={{ zIndex: 3 }}
       />
 
-      <Category createPost={true} onCategoryChange={handleCategoryChange} style={{zIndex: 2}}/>
+      <Category
+        createPost={true}
+        onCategoryChange={handleCategoryChange}
+        style={{ zIndex: 2 }}
+      />
 
       {/* <Text
         style={{
@@ -197,7 +201,6 @@ function CreatePostView(props: any) {
           popperPlacement="bottom"
         />
       </View> */}
-      <Deadline createPost={true} onChange={handleDateChange} />
       {/* <Text
         style={{
           fontSize: 18,
@@ -227,7 +230,10 @@ function CreatePostView(props: any) {
           },
         }}
       /> */}
-      <Location createPost={true} onChange={async (data, details) => handleSelect(data, details)} />
+      <Location
+        createPost={true}
+        onChange={async (data, details) => handleSelect(data, details)}
+      />
 
       {/* <Text style={additionalStyles.errorMessage}>{errorMessage}</Text> */}
       <TouchableOpacity
@@ -257,6 +263,7 @@ const additionalStyles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: "center",
+    marginTop: 30,
   },
   container: {
     flex: 1,
