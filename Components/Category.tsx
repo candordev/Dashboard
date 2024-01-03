@@ -21,10 +21,11 @@ interface CategoryProps {
   issueId?: string; // Assuming issueId is a string
   createPost: boolean;
   onCategoryChange?: (option: string[] | null) => void;
+  style?: any;
   // ... other props if any
 }
 
-const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChange }) => {
+const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChange, style }) => {
   const {state, dispatch} = useUserContext();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[] | null>(null);
@@ -215,9 +216,7 @@ useEffect(() => {
 
   return (
     <OuterComponentView
-      style={{
-        zIndex: 1,
-      }}
+      style={style}
       title="Category"
     >
       <DropDownPicker

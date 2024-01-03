@@ -172,9 +172,10 @@ function CreatePostView(props: any) {
         createPost={true}
         onAssigneesChange={handleAssigneesChange}
         onAssigneesChangeEmail={handleAssigneesChangeEmail}
+        style={{zIndex: 3}}
       />
 
-      <Category createPost={true} onCategoryChange={handleCategoryChange} />
+      <Category createPost={true} onCategoryChange={handleCategoryChange} style={{zIndex: 2}}/>
 
       {/* <Text
         style={{

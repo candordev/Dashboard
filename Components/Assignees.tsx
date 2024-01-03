@@ -18,6 +18,7 @@ interface AssigneesProps {
   createPost: Boolean;
   onAssigneesChange?: (option: string[]) => void;
   onAssigneesChangeEmail?: (option: string) => void;
+  style? : any;
 }
 
 function Assignees(props: AssigneesProps): JSX.Element {
@@ -529,9 +530,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   return (
     <OuterComponentView
       title="Assignees"
-      style={{
-        zIndex: 2,
-      }}
+      style={props.style}
     >
       <DropDownPicker
         maxHeight={180}

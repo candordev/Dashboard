@@ -9,7 +9,6 @@ import Location from "./Location";
 import MarkDone from "./MarkDone";
 import Text from "./Text";
 
-
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
   issue: Post;
@@ -26,8 +25,12 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       }}
       contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
     >
-      <Assignees issue={props.issue} createPost={false} />
-      <Category issueId={props.issue._id} createPost={false} />
+      <Assignees issue={props.issue} createPost={false} style={{ zIndex: 2 }} />
+      <Category
+        issueId={props.issue._id}
+        createPost={false}
+        style={{ zIndex: 1 }}
+      />
       <Deadline issue={props.issue} />
       <Location issue={props.issue} />
       <View
