@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: colors.lightlightgray,
+    backgroundColor: colors.lightestgray,
     borderRadius: 7,
     paddingVertical: 7,
     paddingHorizontal: 10,
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     // shadowOffset: {width: 0, height: 1},
     // shadowOpacity: 0.2,
     // shadowRadius: 2,
-    borderColor: colors.lightlightgray,
+    borderColor: colors.lightestgray,
     borderWidth: 1.5,
     padding: 30,
     // paddingHorizontal: 15,
@@ -409,8 +409,8 @@ const styles = StyleSheet.create({
   },
 
   pollItem: {
-    borderColor: colors.lightlightgray,
-    backgroundColor: colors.lightlightgray,
+    borderColor: colors.lightestgray,
+    backgroundColor: colors.lightestgray,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
@@ -449,15 +449,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purple,
     paddingBottom: 100,
   },
-  inputAkshat: {
-    width: "60%",
-    height: 40,
+  textInput: {
+    borderColor: colors.lightgray,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
     backgroundColor: colors.white,
-    borderRadius: 15,
-    marginBottom: 10,
-    paddingHorizontal: 10,
     outlineStyle: "none",
-  },
+  }
+
 });
 
 export default styles;
