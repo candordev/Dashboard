@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput } from "react-native";
 import colors from "../Styles/colors";
 import { debounce } from "lodash";
+import styles from "../Styles/styles";
+
 
 interface ExpandableTextInputProps {
   onInputChange: (text: string) => void;
@@ -21,10 +23,7 @@ function ExpandableTextInput(props: ExpandableTextInputProps): JSX.Element {
 
   return (
     <TextInput
-      style={[
-        styles.input,
-        { height: Math.max(40, height)},
-      ]}
+      style={[styles.textInput, { height: Math.max(40, height) }]}
       placeholder="Add a comment..."
       placeholderTextColor={colors.gray}
       multiline={true}
@@ -35,25 +34,6 @@ function ExpandableTextInput(props: ExpandableTextInputProps): JSX.Element {
       onSubmitEditing={props.onSubmit}
     />
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "column",
-    borderColor: colors.lightgray,
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    backgroundColor: colors.white,
-  },
-  input: {
-    borderColor: colors.lightgray,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    backgroundColor: colors.white,
-    outlineStyle: "none",
-  },
-});
+}
 
 export default ExpandableTextInput;
