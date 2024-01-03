@@ -218,7 +218,7 @@ useEffect(() => {
       style={{
         zIndex: 1,
       }}
-      title="Category"
+      title="Tag"
     >
       <DropDownPicker
         multiple={true}

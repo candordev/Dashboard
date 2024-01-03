@@ -7,6 +7,7 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import ProfilePicture from "./ProfilePicture";
+import { debounce } from "lodash";
 
 
 interface PrivateChatProps {
@@ -18,6 +19,8 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   const [privateComments, setPrivateComments] = useState<Comment[]>([]);
   const [newCommentContent, setNewCommentContent] = useState("");
 
+
+
   const formatDate = (createdAt: string): string => {
     const now = new Date();
     const createdDate = new Date(createdAt); // Parse the string into a Date object
@@ -25,6 +28,8 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     const diffMins = Math.round(diffMs / 60000); // minutes
     const diffHrs = Math.round(diffMins / 60); // hours
     const diffDays = Math.round(diffHrs / 24); // days
+
+
   
     if (diffMins < 60) {
       return `${diffMins} minutes ago`;
