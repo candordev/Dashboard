@@ -197,6 +197,7 @@ export interface Comment {
   totalCommentsUnder?: number;
   blocked: boolean;
   postTitle: string;
+  isWhisper: boolean;
 }
 
 export enum UserReaction {
