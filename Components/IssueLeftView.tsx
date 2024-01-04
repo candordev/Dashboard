@@ -103,7 +103,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           </View>
         );
       })}
-      <PrivateChat issueID={props.issue._id}/>
+      <PrivateChat issue={props.issue}/>
     </View>
   );
 }

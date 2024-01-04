@@ -2,17 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, ScrollView, Text } from "react-native";
 import colors from "../Styles/colors";
 import ExpandableTextInput from "./ExpandableTextInput";
-import { Comment } from "../utils/interfaces";
+import { Comment, Post } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import ProfilePicture from "./ProfilePicture";
 import DropDown from "./DropDown";
-import { min, set } from "react-native-reanimated";
-import { ActivityIndicator } from "react-native";
 
 interface PrivateChatProps {
-  issueID: string;
+  issue: Post;
 }
 
 function PrivateChat(props: PrivateChatProps): JSX.Element {
@@ -26,14 +24,8 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   const [chatMode, setChatMode] = useState("everyone");
   const [chatModeItems, setChatModeItems] = useState([
     { label: 'Everyone', value: 'everyone' },
-    { label: 'Private', value: 'private' }
+    { label: 'Constituent', value: 'constituent' }
   ]);
-
-  // const [isLoading, setIsLoading] = useState(false);
-
-
-
-
   const formatDate = (createdAt: string): string => {
     const now = new Date();
     const createdDate = new Date(createdAt); // Parse the string into a Date object
@@ -58,12 +50,11 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   // useEffect(() => {
   //   fetchPrivateChat()
   // }, []);
-
   useEffect(() => {
     setPrivateComments([]); 
     fetchPrivateChat();
-    console.log("WEMBY ", props.issueID);
-  }, [props.issueID]); 
+    console.log("The Issue ID IS ", props.issue._id);
+  }, [props.issue._id]); 
 
 // Define the initial state with appropriate types and default values
 let lastAuthorId = '';
@@ -130,7 +121,7 @@ async function postComment() {
       method: "POST",
       body: JSON.stringify({
         content: newCommentContent,
-        postID: props.issueID,
+        postID: props.issue._id,
         parentID: undefined,
         privateChat: "true",
       }),
@@ -140,35 +131,18 @@ async function postComment() {
       console.error(resJson.error);
     } else {
       fetchPrivateChat();
-      console.log("GG's Comment Posted to Everyone")
+      console.log("Comment Posted to Everyone")
     }
   } catch (error) {
     console.error("Error loading posts. Please try again later.", error);
   }
 }
-async function handleOnChatSubmit() {
+async function postConstituentComment() {
   try {
-    // Post the comment
-    let res = await customFetch(Endpoints.createComment, {
+    let res = await customFetch(Endpoints.sendConstituentChat, {
       method: "POST",
       body: JSON.stringify({
-        content: newCommentContent,
-        postID: props.issueID,
-        parentID: undefined,
-        privateChat: "true",
-      }),
-    });
-    let resJson = await res.json();
-    if (!res.ok) {
-      console.error(resJson.error);
-      return; // Exit if the comment wasn't posted successfully
-    }
-
-    // Send the follow-up message if the comment was posted successfully
-    res = await customFetch(Endpoints.sendConstituentChat, {
-      method: "POST",
-      body: JSON.stringify({
-        postID: props.issueID,
+        postID: props.issue._id,
         content: newCommentContent,
         user: state._id,
       }),
@@ -181,60 +155,18 @@ async function handleOnChatSubmit() {
 
     // Only after both actions are successful, fetch the updated chat
     fetchPrivateChat();
-    console.log("Comment Posted and Message Sent");
-    console.log("This is the NEW Message: ", newCommentContent);
+    console.log("Comment Posted and Message Sent: ", newCommentContent);
   } catch (error) {
     console.error("Error handling chat submission. Please try again later.", error);
   }
 }
-
-
-
-// async function handleOnChatSubmit() {
-//   try {
-//     // Post the comment
-//     let res: Response = await customFetch(Endpoints.createComment, {
-//       method: "POST",
-//       body: JSON.stringify({
-//         content: newCommentContent,
-//         postID: props.issueID,
-//         parentID: undefined,
-//         privateChat: "true",
-//       }),
-//     });
-//     let resJson = await res.json();
-//     if (!res.ok) {
-//       console.error(resJson.error);
-//       return; 
-//     }
-//     res = await customFetch(Endpoints.sendConstituentChat, {
-//       method: "POST",
-//       body: JSON.stringify({
-//         postID : props.issueID,
-//         content: newCommentContent,
-//         user: state._id,
-//       }),
-//     });
-//     let resText = await res.text();
-//     if (!res.ok) {
-//       console.error(resText);
-//       return; // don't re-render if failed 
-//     }
-//     // trigger the re-render
-//     fetchPrivateChat();
-//     console.log("Comment Posted and Message Sent");
-//     console.log("This is the Message: ", newCommentContent);
-//   } catch (error) {
-//     console.error("Error handling chat submission. Please try again later.", error);
-//   }
-// }
 
   async function fetchPrivateChat() {
     try {
         const res: Response = await customFetch(
           Endpoints.getPrivateChats +
             new URLSearchParams({
-              postID: props.issueID,
+              postID: props.issue._id,
               skip: "0",
             }),
           {
@@ -246,7 +178,6 @@ async function handleOnChatSubmit() {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
-        // console.log("newComments: ", newComments)
         setPrivateComments(newComments);
       }
     } catch (error) {
@@ -268,9 +199,9 @@ async function handleOnChatSubmit() {
             setItems={setChatModeItems}
             multiple={false}
             styles={{
-              dropdownStyle: {}, // Example style override
-              textStyle: { color: colors.purple, fontSize: 15, fontWeight: '500'},
-              dropDownContainerStyle: {},
+              dropdownStyle : {},
+              textStyle: { color: colors.purple, fontSize: 15, fontWeight: '500' ,zIndex: 1000},
+              dropdownContainerStyle: {zIndex: 100}
             }}
           />
         </View>
@@ -285,7 +216,7 @@ async function handleOnChatSubmit() {
       </ScrollView>
         <ExpandableTextInput
             onInputChange={(text) => setNewCommentContent(text)}
-            onSubmit={chatMode == "private" ? handleOnChatSubmit : postComment}
+            onSubmit={chatMode == "constituent" ? postConstituentComment : postComment}
         />
     </View>
   );
@@ -296,10 +227,10 @@ export default PrivateChat;
 const styles = StyleSheet.create({
 
  titleDropdownContainer: {
-  flexDirection: 'row', // Place children in a row
-  alignItems: 'center', // Center children vertically
-  justifyContent: 'space-between', // Space between the title and dropdown
-  padding: 5, // Add padding as needed
+  flexDirection: 'row', 
+  alignItems: 'center', 
+  justifyContent: 'space-between',
+  padding: 5, 
 },
 userName: {
   color: colors.purple,
@@ -314,7 +245,6 @@ commentContainer: {
 dateText: {
   color: 'gray',
   marginLeft: 8
-  // Add any other styling you need for the date text
 },
 authorSelf: {
     textAlign: 'right',
