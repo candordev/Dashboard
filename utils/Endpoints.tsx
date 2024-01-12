@@ -107,7 +107,9 @@ export const Endpoints = {
   getPrivateChats:  `${BASE_URL}/comment/getPrivateChats?`,
   editPost:  `${BASE_URL}/post/editPost?`,
   markDone:  `${BASE_URL}/post/markDone?`,
-  sendConstituentChat: `${BASE_URL}/comment/sendConstituentChat?`,
   sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`
+
+
+
 
 };
