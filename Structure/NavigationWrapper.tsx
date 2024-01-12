@@ -73,6 +73,7 @@ function NavigationWrapper() {
 
   const linking = {
     prefixes: [
+      'http://localhost:19006', 'https://candorteam.netlify.app'
       /* your linking prefixes */
     ],
     config: {
@@ -83,7 +84,7 @@ function NavigationWrapper() {
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",
-        launch: "launch",
+        launch: 'launch/:userId/:postId',
         login: "login",
         NotFound: "404",
       },
@@ -94,22 +95,21 @@ function NavigationWrapper() {
   return (
     <NavigationContainer linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
         {state.token ? (
-          // If authenticated, show the Root screen
           <>
-          <Stack.Screen name="root" component={Root} />    
+            <Stack.Screen name="launch" component={LaunchScreen} />
+            <Stack.Screen name="root" component={Root} />
+            {/* other authenticated screens */}
           </>
         ) : (
-          // If not authenticated, show the LoginScreen
           <>
             <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="login" component={LoginScreen} />
             <Stack.Screen
               name="signupStack"
               component={SignupStack}
-              options={() => ({
-                headerShown: false,
-              })}
+              options={{ headerShown: false }}
             />
           </>
         )}

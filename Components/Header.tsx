@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { Post, Status, UserProfile } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
-import Card from "./Card";
 import CreatePost from "./CreatePost";
 import DropDown from "./DropDown";
 import OptionPicker from "./OptionPicker";
@@ -22,7 +21,6 @@ interface HeaderProps {
   onAssigneeSelection: (option: string[]) => void;
   onSearchChange: (option: string) => void;
   onPopoverCloseComplete: () => void; // Add this line
-
 }
 
 const Header = ({
@@ -47,7 +45,6 @@ const Header = ({
     console.log("SEARCH PHRASE CHANGED: ", searchPhrase);
     onSearchChange(searchPhrase);
   }, [searchPhrase]);
-
 
   const [leaders, setLeaders] = useState<UserProfile[]>([]); // State to store leaders
 
@@ -116,7 +113,7 @@ const Header = ({
   };
 
   const handlePopoverClose = () => {
-    console.log()
+    console.log();
     //fetchPosts(currStatus, selectedHeaderOption);
   };
 
@@ -125,8 +122,7 @@ const Header = ({
       style={{
         alignItems: "center",
         backgroundColor: colors.background,
-        paddingTop: 15,
-        paddingBottom: 15,
+        paddingVertical: 15,
         zIndex: 1,
       }}
     >
@@ -134,6 +130,7 @@ const Header = ({
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
+          alignItems: "center",
           width: "100%",
         }}
       >
@@ -147,20 +144,8 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-        <View
-          style={{ flexDirection: "row", justifyContent: "flex-end", flex: 1 }}
-        >
-          <OptionPicker onOptionChange={onHeaderOptionChange} />
-          <TouchableOpacity onPress={handleSignOut}>
-            <Text
-              style={{ color: colors.black, fontWeight: "600", fontSize: 16 }}
-            >
-              Sign Out
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <OptionPicker onOptionChange={onHeaderOptionChange} />
       </View>
-
       <View
         style={{
           marginTop: 15,
@@ -170,37 +155,25 @@ const Header = ({
           columnGap: 10,
         }}
       >
-        <View style={{ flex: 1 }}>
+        <View style={{ width: "40%" }}>
           <SearchBar
             searchPhrase={searchPhrase}
             setSearchPhrase={setSearchPhrase}
             placeholder="Search Issue..."
           />
         </View>
-
-        {/* Search Results */}
-       
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              width: "50%",
-              columnGap: 10,
-            }}
-          >
-            <StatusPicker onStatusChange={onStatusChange} />
-            <View style={{ flex: 1 }}>
-              <DropDown
-                placeholder="Select assignee"
-                value={assigneeValues}
-                setValue={handleAssigneeSelection}
-                items={assigneeItems}
-                setItems={setAssigneeItems}
-                multiple={true}
-              />
-            </View>
-            <CreatePost onPopoverCloseComplete={onPopoverCloseComplete}/>
-          </View>
+        <StatusPicker onStatusChange={onStatusChange} />
+        <View style={{ flex: 1 }}>
+          <DropDown
+            placeholder="Select assignee"
+            value={assigneeValues}
+            setValue={handleAssigneeSelection}
+            items={assigneeItems}
+            setItems={setAssigneeItems}
+            multiple={true}
+          />
+        </View>
+        <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
       </View>
     </View>
   );

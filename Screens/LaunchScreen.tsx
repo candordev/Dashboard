@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import LinkButton from "../Components/LinkButton";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import { useSignup } from "../Hooks/useSignup";
+import { Endpoints } from "../utils/Endpoints";
+import { useDrawerProgress } from "@react-navigation/drawer";
+import { usePostId } from '../Structure/PostContext';
+import { useUserContext } from "../Hooks/useUserContext";
 
+interface UserData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
 
 
 type LaunchcreenProps = {
@@ -13,6 +22,43 @@ type LaunchcreenProps = {
 };
 
 function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
+  
+  const userId = route.params?.userId || '';
+  const routePostId = route.params?.postId || '';
+  const { state } = useUserContext();
+
+
+  const { postId, setPostId } = usePostId(); // Ensure this hook returns both postId and setPostId
+
+  // Update postId in context when routePostId changes
+  // useEffect(() => {
+  //   console.log("GOT HEREEEE" )
+  //   if (routePostId && routePostId !== postId) {
+  //     setPostId(routePostId);
+  //   }
+  // }, [routePostId, postId, setPostId]);
+
+  useEffect(() => {
+    console.log("Checking route for postId");
+    if (routePostId && routePostId !== postId) {
+      setPostId(routePostId);
+    }
+  }, [routePostId, postId, setPostId]); // Depend on routePostId, postId, and setPostId
+  
+
+  useEffect(() => {
+    if (postId && state.token) {
+      console.log("PostId is set, navigating to root");
+      navigation.navigate('root');
+    }else if(state.token){
+      console.log("no post ID but going to root")
+      navigation.navigate('root');
+    }
+  }, [postId, state.token, navigation]); // Depend on postId and state.token
+  
+
+
+
 
   async function onGoogleButtonPress() {
     try {
@@ -40,6 +86,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
               passedLastName: lastName,
               passedEmail: email,
               firebaseToken: token,
+              ...(userId && { userId }),
+              ...(postId && { postId })
             },
           });
       }
@@ -60,10 +108,59 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     // logInWithApple,
   } = useSignup();
 
-  const handleSignup = () => {
+    
+
+
+  async function getUserData(userId: string): Promise<UserData | null> {
+    try {
+      console.log("THIS THE USER ID", userId)
+
+      const queryParams = new URLSearchParams({ userID: userId });
+
+      const response = await fetch(`${Endpoints.getUser}?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      const resJson = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(resJson.error);
+      }
+  
+      return resJson as UserData;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return null;
+    }
+  }
+  
+
+  const handleSignup = async () => {
     setError('');
-    navigation.navigate('signupStack');
+    let userData: UserData | null = null;
+    console.log("THIS THE user Id", userId)
+    if (userId.length > 0 && userId != '' && userId != 'undefined' && userId != null) {
+      userData = await getUserData(userId);
+    }
+
+    console.log("This the user data: ", userData)
+  
+    navigation.navigate('signupStack', {
+      screen: 'signupemail',
+      params: {
+        ...(postId && { postId }),
+        ...(userId && { userId }),
+        ...(userData?.firstName && { firstName: userData.firstName }),
+        ...(userData?.lastName && { lastName: userData.lastName }),
+        ...(userData?.email && { email: userData.email }),
+      },
+    });
   };
+  
+
 
 
 

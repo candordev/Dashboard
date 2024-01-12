@@ -7,10 +7,9 @@ import AllScreen from "./AllScreen";
 import SuggestedScreen from "./SuggestedScreen";
 import YourScreen from "./YourScreen";
 import InboxScreen from "./InboxScreen";
-import {event, eventNames} from '../Events';
-import {AppState, Pressable} from 'react-native';
-import {getUnreadNotifs} from '../utils/utils';
-
+import { event, eventNames } from "../Events";
+import { AppState, Pressable } from "react-native";
+import { getUnreadNotifs } from "../utils/utils";
 
 const Drawer = createDrawerNavigator();
 
@@ -27,9 +26,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-
 function Root() {
-  console.log("AABBCCDD")
+  console.log("AABBCCDD");
   // const [unread, setUnread] = useState<number>(0);
 
   // useEffect(() => {
@@ -58,10 +56,10 @@ function Root() {
         headerShown: false,
       }}
     >
-      <Drawer.Screen name="all" component={AllScreen} />
+      <Drawer.Screen name="all" component={AllScreen} options={{title: "Candor - Issues"}}/>
       {/* <Drawer.Screen name="your" component={YourScreen} />
       <Drawer.Screen name="suggested" component={SuggestedScreen} /> */}
-      <Drawer.Screen name="inbox" component={InboxScreen} />
+      <Drawer.Screen name="inbox" component={InboxScreen} options={{title: "Candor - Inbox"}}/>
     </Drawer.Navigator>
   );
 }

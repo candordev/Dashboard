@@ -7,7 +7,12 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import ProfilePicture from "./ProfilePicture";
+
 import DropDown from "./DropDown";
+
+import { debounce } from "lodash";
+
+
 
 interface PrivateChatProps {
   issue: Post;
@@ -21,6 +26,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   const scrollViewRef = useRef<ScrollView>(null);
   
 
+
   const [chatMode, setChatMode] = useState("everyone");
   const [chatModeItems, setChatModeItems] = useState([
     { label: 'Everyone', value: 'everyone' },
@@ -33,6 +39,8 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     const diffMins = Math.round(diffMs / 60000); // minutes
     const diffHrs = Math.round(diffMins / 60); // hours
     const diffDays = Math.round(diffHrs / 24); // days
+
+
   
     if (diffMins < 60) {
       return `${diffMins} minutes ago`;
@@ -118,18 +126,19 @@ const renderComment = (comment: Comment, index: number) => {
 
 async function postComment() {
   try {
-    let res: Response = await customFetch(Endpoints.createComment, {
+    let res: Response = await customFetch(Endpoints.sendPoliticianChat, {
       method: "POST",
       body: JSON.stringify({
         content: newCommentContent,
         postID: props.issue._id,
         parentID: undefined,
         privateChat: "true",
+
       }),
     });
     let resJson = await res.json();
     if (!res.ok) {
-      console.error(resJson.error);
+      console.error("ERROR HAPPENDED: ", resJson.error);
     } else {
       fetchPrivateChat();
       console.log("Comment Posted to Everyone")
@@ -285,16 +294,23 @@ authorSelf: {
     padding: 10,
     borderRadius: 10,
     flexDirection: 'row-reverse',
-    
 },
 authorOther: {
     textAlign: 'left',
-    backgroundColor: 'lightgray',
+    backgroundColor: colors.lightestgray,
     color: 'black',
     alignSelf: 'flex-start',
     margin: 5,
     padding: 10,
     borderRadius: 10,
+    maxWidth: '80%', // maximum width of 80%
+
+userName: {
+    color: colors.purple,
+    fontWeight: "500",
+    alignSelf: 'flex-start',
+    marginBottom: 0,
+    marginLeft: 5
 },
 
   chatContainer: {

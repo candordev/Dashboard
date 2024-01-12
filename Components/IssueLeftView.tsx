@@ -9,6 +9,7 @@ import { customFetch } from "../utils/utils";
 import { Comment } from "../utils/interfaces";
 import PrivateChat from "./PrivateChat";
 import IssueContent from "./IssueContent";
+import { debounce } from "lodash";
 
 interface IssueLeftViewProps {
   issue: Post;
@@ -17,9 +18,6 @@ interface IssueLeftViewProps {
 function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
-
-
-  
 
   useEffect(() => {
     fetchComments();
@@ -49,8 +47,6 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       console.error("Error loading posts. Please try again later.", error);
     }
   }
-
-
 
   async function postComment() {
     try {
@@ -84,7 +80,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       }}
     >
       <IssueContent date={props.issue.createdAt} issueID={props.issue._id} title={props.issue.title} content={props.issue.content} />
-      {comments.map((comment: Comment, index) => {
+      {/* {comments.map((comment: Comment, index) => {
         return (
           <View
             style={{
@@ -104,6 +100,9 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         );
       })}
       <PrivateChat issue={props.issue}/>
+
+      })} */}
+      <PrivateChat issueID={props.issue}/>
     </View>
   );
 }

@@ -7,14 +7,14 @@
 // }
 
 // local
-export const BASE_URL : string = `http://localhost:4000/api`;
+// export const BASE_URL : string = `http://localhost:4000/api`;
 //export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
 // export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
 // PRODUCTION
-// export const BASE_URL: string = `https://candoradmin.com/api`;
+export const BASE_URL: string = `https://candoradmin.com/api`;
 
 export const Endpoints = {
   base: BASE_URL,
@@ -76,6 +76,7 @@ export const Endpoints = {
   getTopMembers: `${BASE_URL}/group/getTopMembers?`,
   signupFirebase: `${BASE_URL}/user/signupFirebase`,
   loginFirebase: `${BASE_URL}/user/loginFirebase`,
+  getUser:  `${BASE_URL}/user/getUser`,
   finishFirebaseLogin: `${BASE_URL}/user/finishFirebaseLogin`,
   getAcceptedPosts: `${BASE_URL}/userActivity/acceptedProposals?`,
   getUpdatedPosts: `${BASE_URL}/userActivity/updatedProposals?`,
@@ -108,4 +109,5 @@ export const Endpoints = {
   markDone:  `${BASE_URL}/post/markDone?`,
   sendConstituentChat: `${BASE_URL}/comment/sendConstituentChat?`,
   sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`
+
 };

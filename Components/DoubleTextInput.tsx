@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import colors from "../Styles/colors";
+import { debounce } from 'lodash';
+
 
 interface DoubleTextInputProps {
   onFirstInputChange: (text: string) => void;
@@ -11,6 +13,14 @@ interface DoubleTextInputProps {
 function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
   const [heightFirstInput, setHeightFirstInput] = useState(40);
   const [heightSecondInput, setHeightSecondInput] = useState(40);
+
+  const updateFirstInputHeight = debounce((height) => {
+    setHeightFirstInput(height);
+  }, 1); // Adjust the debounce time as needed
+
+  const updateSecondInputHeight = debounce((height) => {
+    setHeightSecondInput(height);
+  }, 1);
 
   return (
     <View style={styles.container}>
@@ -23,7 +33,7 @@ function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
         placeholderTextColor={colors.gray}
         multiline
         onContentSizeChange={(event) => {
-          setHeightFirstInput(event.nativeEvent.contentSize.height);
+          updateFirstInputHeight(event.nativeEvent.contentSize.height);
         }}
         onChangeText={props.onFirstInputChange}
       />
@@ -34,9 +44,9 @@ function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
         ]}
         placeholder="Content"
         placeholderTextColor={colors.gray}
-        // multiline
+        multiline
         onContentSizeChange={(event) => {
-          setHeightSecondInput(event.nativeEvent.contentSize.height);
+          updateSecondInputHeight(event.nativeEvent.contentSize.height);
         }}
         onChangeText={props.onSecondInputChange}
         onSubmitEditing={props.onSubmit}

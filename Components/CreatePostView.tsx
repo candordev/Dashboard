@@ -15,6 +15,9 @@ import { customFetch } from "../utils/utils";
 import Assignees from "./Assignees";
 import Category from "./Category";
 import Text from "./Text";
+import styles from "../Styles/styles";
+import Deadline from "./Deadline";
+import Location from "./Location";
 
 function CreatePostView(props: any) {
   // State to store input values
@@ -90,7 +93,7 @@ function CreatePostView(props: any) {
   const handleSelect = async (
     data: GooglePlaceData,
     details: GooglePlaceDetail | null
-  ) => {
+  ): Promise<string> => {
     // FIX THIS TO CALL THE CREATPOSTSETNEIGHBORHOODROUTE
     const address = data.description; // Or use details.formatted_address
     setLocation(address);
@@ -107,12 +110,15 @@ function CreatePostView(props: any) {
         console.error("Error setting neighborhood:", resJson.error);
       } else {
         console.log("THE NEIGHBORHOOD: ", resJson.neighborhood);
+        setNeighborhood(resJson.neighborhood);
+        return resJson.neighborhood;
         setNeighborhood(resJson.neighborhood); // Update the input box with the neighborhood
         setKey((prevKey) => prevKey + 1);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
     }
+    return "";
   };
 
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>([]);
@@ -135,36 +141,47 @@ function CreatePostView(props: any) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={additionalStyles.container}
+      contentContainerStyle={{ rowGap: 10 }}
+    >
       <TextInput
-        style={styles.input}
+        style={styles.textInput}
         placeholder="Title"
+        placeholderTextColor={colors.lightgray}
         value={title}
         onChangeText={setTitle}
       />
       <TextInput
-        style={[styles.input, styles.contentInput]}
+        style={[styles.textInput, additionalStyles.contentInput]}
         placeholder="Content"
+        placeholderTextColor={colors.lightgray}
         value={content}
         onChangeText={setContent}
         multiline
       />
       <TextInput
-        style={styles.input}
+        style={styles.textInput}
         placeholder="Constituent Email"
+        placeholderTextColor={colors.lightgray}
         value={email}
         onChangeText={setEmail}
       />
-
+      <Deadline createPost={true} onChange={handleDateChange} style={{zIndex: 4}}/>
       <Assignees
         createPost={true}
         onAssigneesChange={handleAssigneesChange}
         onAssigneesChangeEmail={handleAssigneesChangeEmail}
+        style={{ zIndex: 3 }}
       />
 
-      <Category createPost={true} onCategoryChange={handleCategoryChange} />
+      <Category
+        createPost={true}
+        onCategoryChange={handleCategoryChange}
+        style={{ zIndex: 2 }}
+      />
 
-      <Text
+      {/* <Text
         style={{
           fontSize: 18,
           fontWeight: "550",
@@ -183,8 +200,8 @@ function CreatePostView(props: any) {
           dateFormat="Pp"
           popperPlacement="bottom"
         />
-      </View>
-      <Text
+      </View> */}
+      {/* <Text
         style={{
           fontSize: 18,
           fontWeight: "550",
@@ -212,17 +229,24 @@ function CreatePostView(props: any) {
             Authorization: "Bearer " + idToken,
           },
         }}
+      /> */}
+      <Location
+        createPost={true}
+        onChange={async (data, details) => handleSelect(data, details)}
       />
 
-      <Text style={styles.errorMessage}>{errorMessage}</Text>
-      <TouchableOpacity style={styles.toggleButton} onPress={handleDone}>
-        <Text style={styles.toggleButtonText}>Done</Text>
+      {/* <Text style={additionalStyles.errorMessage}>{errorMessage}</Text> */}
+      <TouchableOpacity
+        style={additionalStyles.toggleButton}
+        onPress={handleDone}
+      >
+        <Text style={additionalStyles.toggleButtonText}>Done</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
+const additionalStyles = StyleSheet.create({
   errorMessage: {
     color: "red", // or any color you prefer for error messages
     padding: 10,
@@ -239,20 +263,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: "center",
-    marginTop: 60,
+    marginTop: 30,
   },
   container: {
     flex: 1,
     padding: 10,
     // alignItems: 'center',
     // justifyContent: 'center',
-  },
-  input: {
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
   },
   contentInput: {
     height: 100, // Adjust height for multiline content input

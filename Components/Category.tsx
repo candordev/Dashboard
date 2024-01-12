@@ -10,6 +10,7 @@ import OrFullWidth from "./OrFullWidth";
 import Text from "./Text";
 import { CategoryPost } from "../utils/interfaces";
 import { useUserContext } from "../Hooks/useUserContext";
+import OuterComponentView from "./PopoverComponentView";
 
 type DropdownItem = {
   label: string;
@@ -20,10 +21,11 @@ interface CategoryProps {
   issueId?: string; // Assuming issueId is a string
   createPost: boolean;
   onCategoryChange?: (option: string[] | null) => void;
+  style?: any;
   // ... other props if any
 }
 
-const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChange }) => {
+const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChange, style }) => {
   const {state, dispatch} = useUserContext();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[] | null>(null);
@@ -213,24 +215,10 @@ useEffect(() => {
   };
 
   return (
-    <View
-      style={{
-        borderColor: colors.lightestgray,
-        borderWidth: 2,
-        borderRadius: 10,
-        padding: 10,
-        zIndex: 1,
-      }}
+    <OuterComponentView
+      style={style}
+      title="Tag"
     >
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "550",
-          fontFamily: "Montserrat",
-        }}
-      >
-        Category
-      </Text>
       <DropDownPicker
         multiple={true}
         open={open}
@@ -243,9 +231,8 @@ useEffect(() => {
         onClose={handleDropdownClose} // Handle when dropdown closes
         dropDownDirection="BOTTOM"
         style={{
-          borderColor: colors.lightgray,
-          borderWidth: 1,
-          backgroundColor: colors.white,
+          borderWidth: 0,
+          backgroundColor: colors.lightestgray,
           marginTop: 10,
           minHeight: 30,
         }}
@@ -258,9 +245,10 @@ useEffect(() => {
         listMode="SCROLLVIEW"
         dropDownContainerStyle={[
           {
+            borderWidth: 0,
             borderTopWidth: 1,
-            backgroundColor: colors.white,
-            borderColor: colors.lightgray,
+            backgroundColor: colors.lightestgray,
+            borderColor: colors.lightergray,
             marginTop: 10,
             height: 120
           },
@@ -291,7 +279,7 @@ useEffect(() => {
          )}
         <AddCategory onCategoryAdded={handleNewCategory} />
       </View>
-    </View>
+    </OuterComponentView>
   );
 };
 

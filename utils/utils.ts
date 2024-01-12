@@ -200,5 +200,25 @@ export const getUnreadNotifs = async (): Promise<number> => {
   }
 };
 
+export const formatDate = (createdAt: string): string => {
+  const now = new Date();
+  const createdDate = new Date(createdAt); // Parse the string into a Date object
+  const diffMs = now.getTime() - createdDate.getTime(); // difference in milliseconds
+  const diffMins = Math.round(diffMs / 60000); // minutes
+  const diffHrs = Math.round(diffMins / 60); // hours
+  const diffDays = Math.round(diffHrs / 24); // days
+
+  if (diffMins < 60) {
+    return `${diffMins} minutes ago`;
+  } else if (diffHrs < 24) {
+    return `${diffHrs} hours ago`;
+  } else if (diffDays < 7) {
+    return `${diffDays} days ago`;
+  } else {
+    // Format the date to show in "MM/DD/YYYY" format
+    return createdDate.toLocaleDateString();
+  }
+};
+
 export const delay = (ms: number): Promise<void> =>
   new Promise(resolve => setTimeout(resolve, ms));

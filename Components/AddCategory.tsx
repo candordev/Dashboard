@@ -19,7 +19,7 @@ const AddCategory = ({ onCategoryAdded }: any) => {
     <View style={{ rowGap: 10 }}>
       {expanded && (
         <TextInput
-          placeholder="Category Name"
+          placeholder="Tag Name"
           placeholderTextColor={colors.gray}
           value={categoryName}
           onChangeText={setCategoryName}
@@ -28,7 +28,7 @@ const AddCategory = ({ onCategoryAdded }: any) => {
       )}
       <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.buttonText}>
-          {expanded ? "Done" : "Add Category"}
+          {expanded ? "Done" : "Add Tag"}
         </Text>
       </TouchableOpacity>
     </View>
