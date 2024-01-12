@@ -19,6 +19,10 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
 
+
+
+
+
   useEffect(() => {
     fetchComments();
   }, []);
@@ -98,11 +102,8 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
             </Text>
           </View>
         );
-      })}
-      <PrivateChat issue={props.issue}/>
-
       })} */}
-      <PrivateChat issueID={props.issue}/>
+      <PrivateChat issueID={props.issue._id}/>
     </View>
   );
 }

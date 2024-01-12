@@ -1,37 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Text } from "react-native";
 import colors from "../Styles/colors";
 import ExpandableTextInput from "./ExpandableTextInput";
-import { Comment, Post } from "../utils/interfaces";
+import { Comment } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import ProfilePicture from "./ProfilePicture";
-
-import DropDown from "./DropDown";
-
 import { debounce } from "lodash";
 
 
-
 interface PrivateChatProps {
-  issue: Post;
+  issueID: string;
 }
 
 function PrivateChat(props: PrivateChatProps): JSX.Element {
   const {state, dispatch} = useUserContext();
   const [privateComments, setPrivateComments] = useState<Comment[]>([]);
   const [newCommentContent, setNewCommentContent] = useState("");
-  
-  const scrollViewRef = useRef<ScrollView>(null);
-  
 
 
-  const [chatMode, setChatMode] = useState("everyone");
-  const [chatModeItems, setChatModeItems] = useState([
-    { label: 'Everyone', value: 'everyone' },
-    { label: 'Constituent', value: 'constituent' }
-  ]);
+
   const formatDate = (createdAt: string): string => {
     const now = new Date();
     const createdDate = new Date(createdAt); // Parse the string into a Date object
@@ -55,15 +44,11 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   };
 
   // <Text style={styles.userName}>{`${comment.profile.firstName} ${comment.profile.lastName}  ${formatDate(comment.)}`}</Text>
-  // useEffect(() => {
-  //   fetchPrivateChat()
-  // }, []);
+
+
   useEffect(() => {
-    setPrivateComments([]); 
-    fetchPrivateChat();
-    console.log("The Issue ID IS ", props.issue._id);
-    console.log("The user is ", state._id);
-  }, [props.issue._id]); 
+    fetchPrivateChat()
+  }, []);
 
 // Define the initial state with appropriate types and default values
 let lastAuthorId = '';
@@ -72,7 +57,7 @@ let lastCommentDate = new Date(0);
 const renderComment = (comment: Comment, index: number) => {
   const isAuthor = String(comment.authorID).trim() === String(state._id).trim();
   let showDate = false;
-  
+
   if (lastAuthorId !== comment.authorID) {
       showDate = true;
   } else {
@@ -81,23 +66,17 @@ const renderComment = (comment: Comment, index: number) => {
           showDate = true;
       }
   }
+
   lastAuthorId = comment.authorID;
   lastCommentDate = new Date(comment.date);
+
   return (
     <View key={comment._id} style={styles.commentContainer}>
-        {comment.isWhisper ? (
-            <View style={styles.whisperCommentContainer}>
-                <Text style={styles.whisperCommentText}>
-                    {comment.content}
-                </Text>
-            </View>
-        ) : (
-          <>
-          <View style={styles.nameAndDateContainer}>
+        <View style={styles.nameAndDateContainer}>
             {!isAuthor && (
                 <>
                     <Text style={styles.userName}>
-                        {comment.contentType == "constituentChat" ? "Constituent Chat Response" : `${comment.profile.firstName} ${comment.profile.lastName}`}
+                        {`${comment.profile.firstName} ${comment.profile.lastName}`}
                     </Text>
                     {showDate && (
                         <Text style={styles.dateText}>
@@ -117,173 +96,84 @@ const renderComment = (comment: Comment, index: number) => {
                 {comment.content}
             </Text>
         </View>
-          </>
-        )}
     </View>
 );
 };
 
 
 async function postComment() {
+  console.log("COMMENT POSTED")
   try {
     let res: Response = await customFetch(Endpoints.sendPoliticianChat, {
       method: "POST",
       body: JSON.stringify({
         content: newCommentContent,
-        postID: props.issue._id,
-        parentID: undefined,
-        privateChat: "true",
-
+        postID: props.issueID,
       }),
     });
+
     let resJson = await res.json();
     if (!res.ok) {
       console.error("ERROR HAPPENDED: ", resJson.error);
     } else {
       fetchPrivateChat();
-      console.log("Comment Posted to Everyone")
     }
   } catch (error) {
     console.error("Error loading posts. Please try again later.", error);
   }
 }
 
-async function postPoliticianComment(commentId : any) {
-  try {
-    let res = await customFetch(Endpoints.sendPoliticianChat, {
-      method: "POST",
-      body: JSON.stringify({
-        postID: props.issue._id,
-        commentId: commentId,
-        user: state._id,
-      }),
-    });
-    let resText = await res.text();
-    if (!res.ok) {
-      console.error(resText);
-      return; 
-    }
-    console.log(" BANCHERO Comment Posted to Politician");
-  } catch (error) {
-    console.error("Error sending chat to politician. Please try again later.", error);
-  }
-}
 
-async function postConstituentComment() {
-  try {
-    let res = await customFetch(Endpoints.sendConstituentChat, {
-      method: "POST",
-      body: JSON.stringify({
-        postID: props.issue._id,
-        content: newCommentContent,
-        user: state._id,
-      }),
-    });
-    if (res.ok) {
-      let resJson = await res.json();
-      // Check if the response has 'success' and 'commentId'
-      if (resJson.success && resJson.commentId) {
-        const commentID = resJson.commentId; // Use the 'commentId' from the response
-        await postPoliticianComment(commentID);
-        fetchPrivateChat();
-        console.log("Comment Posted and Message Sent: ", newCommentContent);
-      } else {
-        // Handle the case where the response does not have 'success' or 'commentId'
-        console.error("Failed to post constituent comment: Missing 'success' or 'commentId'");
-      }
-    } else {
-      console.error("Response from sendConstituentChat was not OK.");
-      // Optionally handle the error response here
-    }
-  } catch (error) {
-    console.error("Error in postConstituentComment: ", error);
-  }
-}
 
   async function fetchPrivateChat() {
     try {
-        const res: Response = await customFetch(
-          Endpoints.getPrivateChats +
-            new URLSearchParams({
-              postID: props.issue._id,
-              skip: "0",
-            }),
-          {
-            method: "GET",
-          }
-        );
+      const res: Response = await customFetch(
+        Endpoints.getPrivateChats +
+          new URLSearchParams({
+            postID: props.issueID,
+            skip: "0",
+          }),
+        {
+          method: "GET",
+        }
+      );
+
       let resJson = await res.json();
       if (!res.ok) {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
+        console.log("newComments: ", newComments)
         setPrivateComments(newComments);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
-    } 
+    }
   }
   return (
     <View style={styles.chatContainer}>
-      <View style={styles.titleDropdownContainer}>
-        <View style={{minHeight: 75, flex: 1, paddingTop: 8}}> {/* minHeight 75 bc dropdown component option minHeight = 37 -> 2 options >= 74 to be able to select them */}
-          <Text style={styles.chatTitle}>Private Chat</Text>
-        </View>  
-        <View style={{minHeight: 75, flex: 1}}>
-        <DropDown
-            placeholder="Chat Type"
-            value={chatMode}
-            setValue={setChatMode}
-            items={chatModeItems}
-            setItems={setChatModeItems}
-            multiple={false}
-            styles={{
-              dropdownStyle : {},
-              textStyle: { color: colors.purple, fontSize: 15, fontWeight: '500' ,zIndex: 1000},
-              dropdownContainerStyle: {zIndex: 100}
-            }}
-          />
-        </View>
-      </View>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.messageContainer}
-        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
-        onLayout={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
-      >
-        {privateComments.map(renderComment)}
-      </ScrollView>
+        <Text style={styles.chatTitle}>Private Chat</Text>
+        <ScrollView style={styles.messageContainer}>
+            {privateComments.map(renderComment)}
+        </ScrollView>
         <ExpandableTextInput
             onInputChange={(text) => setNewCommentContent(text)}
-            onSubmit={chatMode == "constituent" ? postConstituentComment : postComment}
+            onSubmit={postComment}
         />
     </View>
-  );
+);
 };
 
 export default PrivateChat;
-
 const styles = StyleSheet.create({
 
- titleDropdownContainer: {
-  flexDirection: 'row', 
-  alignItems: 'center', 
-  justifyContent: 'space-between',
-  padding: 5, 
-},
-userName: {
-  color: colors.purple,
-  fontWeight: "500",
-  alignSelf: 'flex-start',
-  marginBottom: 0,
-  marginLeft: 5
-},
 commentContainer: {
     marginVertical: 1,
 },
 dateText: {
   color: 'gray',
   marginLeft: 8
+  // Add any other styling you need for the date text
 },
 authorSelf: {
     textAlign: 'right',
@@ -293,7 +183,8 @@ authorSelf: {
     margin: 5,
     padding: 10,
     borderRadius: 10,
-    flexDirection: 'row-reverse',
+    flexDirection: 'row-reverse', 
+    maxWidth: '80%', // maximum width of 80%
 },
 authorOther: {
     textAlign: 'left',
@@ -304,7 +195,7 @@ authorOther: {
     padding: 10,
     borderRadius: 10,
     maxWidth: '80%', // maximum width of 80%
-
+},
 userName: {
     color: colors.purple,
     fontWeight: "500",
@@ -312,7 +203,6 @@ userName: {
     marginBottom: 0,
     marginLeft: 5
 },
-
   chatContainer: {
       borderColor: colors.lightestgray,
       borderWidth: 2,
@@ -325,11 +215,10 @@ userName: {
       fontSize: 18,
       fontWeight: "600",
       fontFamily: "Montserrat",
-      flex: 1,
   },
   messageContainer: {
       flex: 1,
-      marginTop: 15
+      marginTop: 10
   },
   nameAndDateContainer: {
     flexDirection: 'row',
@@ -340,18 +229,4 @@ authorSelfDate: {
   color: 'gray',
   marginLeft: 'auto', // Pushes the date to the far left
 },
-
-whisperCommentContainer: {
-  maxWidth: '80%', 
-  alignSelf: 'center', 
-  margin: 5,
-},
-
-whisperCommentText: {
-  color: 'gray',
-  fontSize: 12, // readable font size
-  textDecorationLine: 'underline',
-  textAlign: 'center',
-},
 });
-
