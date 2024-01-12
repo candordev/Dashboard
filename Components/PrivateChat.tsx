@@ -54,6 +54,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     setPrivateComments([]); 
     fetchPrivateChat();
     console.log("The Issue ID IS ", props.issue._id);
+    console.log("The user is ", state._id);
   }, [props.issue._id]); 
 
 // Define the initial state with appropriate types and default values
@@ -88,7 +89,7 @@ const renderComment = (comment: Comment, index: number) => {
             {!isAuthor && (
                 <>
                     <Text style={styles.userName}>
-                        {`${comment.profile.firstName} ${comment.profile.lastName}`}
+                        {comment.contentType == "constituentChat" ? "Constituent Chat Response" : `${comment.profile.firstName} ${comment.profile.lastName}`}
                     </Text>
                     {showDate && (
                         <Text style={styles.dateText}>
@@ -137,6 +138,28 @@ async function postComment() {
     console.error("Error loading posts. Please try again later.", error);
   }
 }
+
+async function postPoliticianComment(commentId : any) {
+  try {
+    let res = await customFetch(Endpoints.sendPoliticianChat, {
+      method: "POST",
+      body: JSON.stringify({
+        postID: props.issue._id,
+        commentId: commentId,
+        user: state._id,
+      }),
+    });
+    let resText = await res.text();
+    if (!res.ok) {
+      console.error(resText);
+      return; 
+    }
+    console.log(" BANCHERO Comment Posted to Politician");
+  } catch (error) {
+    console.error("Error sending chat to politician. Please try again later.", error);
+  }
+}
+
 async function postConstituentComment() {
   try {
     let res = await customFetch(Endpoints.sendConstituentChat, {
@@ -147,17 +170,24 @@ async function postConstituentComment() {
         user: state._id,
       }),
     });
-    let resText = await res.text();
-    if (!res.ok) {
-      console.error(resText);
-      return; // Exit if the follow-up message wasn't sent successfully
+    if (res.ok) {
+      let resJson = await res.json();
+      // Check if the response has 'success' and 'commentId'
+      if (resJson.success && resJson.commentId) {
+        const commentID = resJson.commentId; // Use the 'commentId' from the response
+        await postPoliticianComment(commentID);
+        fetchPrivateChat();
+        console.log("Comment Posted and Message Sent: ", newCommentContent);
+      } else {
+        // Handle the case where the response does not have 'success' or 'commentId'
+        console.error("Failed to post constituent comment: Missing 'success' or 'commentId'");
+      }
+    } else {
+      console.error("Response from sendConstituentChat was not OK.");
+      // Optionally handle the error response here
     }
-
-    // Only after both actions are successful, fetch the updated chat
-    fetchPrivateChat();
-    console.log("Comment Posted and Message Sent: ", newCommentContent);
   } catch (error) {
-    console.error("Error handling chat submission. Please try again later.", error);
+    console.error("Error in postConstituentComment: ", error);
   }
 }
 
@@ -308,3 +338,4 @@ whisperCommentText: {
   textAlign: 'center',
 },
 });
+
