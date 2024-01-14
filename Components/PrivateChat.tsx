@@ -45,16 +45,9 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
       return createdDate.toLocaleDateString();
     }
   };
-
-  // <Text style={styles.userName}>{`${comment.profile.firstName} ${comment.profile.lastName}  ${formatDate(comment.)}`}</Text>
-  // useEffect(() => {
-  //   fetchPrivateChat()
-  // }, []);
   useEffect(() => {
     setPrivateComments([]); 
     fetchPrivateChat();
-    console.log("The Issue ID IS ", props.issue._id);
-    console.log("The user is ", state._id);
   }, [props.issue._id]); 
 
 // Define the initial state with appropriate types and default values
@@ -139,27 +132,6 @@ async function postComment() {
   }
 }
 
-async function postPoliticianComment(commentId : any) {
-  try {
-    let res = await customFetch(Endpoints.sendPoliticianChat, {
-      method: "POST",
-      body: JSON.stringify({
-        postID: props.issue._id,
-        commentId: commentId,
-        user: state._id,
-      }),
-    });
-    let resText = await res.text();
-    if (!res.ok) {
-      console.error(resText);
-      return; 
-    }
-    console.log(" BANCHERO Comment Posted to Politician");
-  } catch (error) {
-    console.error("Error sending chat to politician. Please try again later.", error);
-  }
-}
-
 async function postConstituentComment() {
   try {
     let res = await customFetch(Endpoints.sendConstituentChat, {
@@ -174,10 +146,9 @@ async function postConstituentComment() {
       let resJson = await res.json();
       // Check if the response has 'success' and 'commentId'
       if (resJson.success && resJson.commentId) {
-        const commentID = resJson.commentId; // Use the 'commentId' from the response
-        await postPoliticianComment(commentID);
+        // const commentID = resJson.commentId; // Use the 'commentId' from the response
+        // await postPoliticianComment(commentID);
         fetchPrivateChat();
-        console.log("Comment Posted and Message Sent: ", newCommentContent);
       } else {
         // Handle the case where the response does not have 'success' or 'commentId'
         console.error("Failed to post constituent comment: Missing 'success' or 'commentId'");
