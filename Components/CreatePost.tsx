@@ -27,6 +27,8 @@ function CreatePost(props: CreatePost): JSX.Element {
     setIsPopupVisible(true);
   };
 
+  
+
   return (
     <Popover
       onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
