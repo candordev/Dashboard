@@ -15,7 +15,7 @@ import { usePostId } from "../Structure/PostContext";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -27,24 +27,35 @@ const AllScreen = ({ navigation }: any) => {
     updatedSelected: true,
     completedSelected: true,
   });
-  const [categorySelected, setCategorySelected] = useState<
-    string | undefined
-  >("Tag");
+  const [categorySelected, setCategorySelected] = useState<string | undefined>(
+    "Tag"
+  );
 
   const [assigneesSelectedIds, setAssigneesSelectedIds] = useState<
     string[] | undefined
   >();
 
   const isFocused = useIsFocused(); // Assuming you're using something like this
-  const {state} = useUserContext();
-  const {postId}= usePostId();
+  const { state } = useUserContext();
+  const { postId } = usePostId();
 
   useEffect(() => {
     console.log("Component mounted, fetching posts initially");
 
     console.log("Event triggered, fetching posts");
-    fetchPosts(progressSelected,searchTerm, categorySelected, assigneesSelectedIds);
-  }, [progressSelected, categorySelected, isFocused, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
+    fetchPosts(
+      progressSelected,
+      searchTerm,
+      categorySelected,
+      assigneesSelectedIds
+    );
+  }, [
+    progressSelected,
+    categorySelected,
+    isFocused,
+    assigneesSelectedIds,
+    searchTerm,
+  ]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     console.log("Received status:", status);
@@ -78,8 +89,7 @@ const AllScreen = ({ navigation }: any) => {
     status: ProgressSelector | undefined,
     searchTerm: string,
     headerOption?: string,
-    selectedAssigneeIds?: string[],
-    
+    selectedAssigneeIds?: string[]
   ) => {
     try {
       console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
@@ -124,12 +134,17 @@ const AllScreen = ({ navigation }: any) => {
       console.error("Error loading posts. Please try again later.", error);
     }
   };
-  
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePopoverCloseComplete = async () => {
     setIsLoading(true);
-    await fetchPosts(progressSelected, searchTerm, categorySelected, assigneesSelectedIds);
+    await fetchPosts(
+      progressSelected,
+      searchTerm,
+      categorySelected,
+      assigneesSelectedIds
+    );
     setIsLoading(false);
   };
 
@@ -147,9 +162,8 @@ const AllScreen = ({ navigation }: any) => {
     }
   }, []);
 
-
   return (
-    <OuterView style={{paddingHorizontal: 40,}}>
+    <OuterView style={{ paddingHorizontal: 40 }}>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
@@ -190,14 +204,16 @@ const AllScreen = ({ navigation }: any) => {
               key={`${name}-${refreshKey}`}
               data={posts}
               renderItem={({ item }) => (
-                <Card 
-                key={item._id}
-                issue={item} 
-                onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
-                isDisabled={isLoading}
-                hasInitialOpen={hasInitialOpen}
-                initialOpen={item._id === initialPostId && !hasInitialOpenOccurred}
-              />
+                <Card
+                  key={item._id}
+                  issue={item}
+                  onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
+                  isDisabled={isLoading}
+                  hasInitialOpen={hasInitialOpen}
+                  initialOpen={
+                    item._id === initialPostId && !hasInitialOpenOccurred
+                  }
+                />
               )}
             />
           </View>
