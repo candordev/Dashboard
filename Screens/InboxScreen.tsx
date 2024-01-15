@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   ActivityIndicator,
   AppState,
@@ -13,25 +13,25 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-} from 'react-native';
-import NotifSection from '../Components/NotifSection';
-import {event, eventNames} from '../Events';
-import {useUserContext} from '../Hooks/useUserContext';
-import colors from '../Styles/colors';
-import styles from '../Styles/styles';
-import {Endpoints} from '../utils/Endpoints';
-import {Notification} from '../utils/interfaces';
-import Text from '../Components/Native/Text';
+} from "react-native";
+import NotifSection from "../Components/NotifSection";
+import { event, eventNames } from "../Events";
+import { useUserContext } from "../Hooks/useUserContext";
+import colors from "../Styles/colors";
+import styles from "../Styles/styles";
+import { Endpoints } from "../utils/Endpoints";
+import { Notification, Post } from "../utils/interfaces";
+import Text from "../Components/Native/Text";
 import { FlatList, ScrollView } from "react-native";
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from "@react-navigation/native";
+import IssueView from "../Components/IssueView";
 
 type Props = PropsWithChildren<{
   route: any;
   navigation: any;
 }>;
 
-
-function NotificationsScreen({route, navigation}: Props): JSX.Element {
+function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   const isFocused = useIsFocused(); // Assuming you're using something like this
   const [notificationsEnabled, setNotificationsEnabled] =
     useState<boolean>(false);
@@ -41,14 +41,14 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const stopped = useRef<boolean>(false);
   const refreshing = useRef<boolean>(false);
-  const {state} = useUserContext();
+  const { state } = useUserContext();
+
+  const [selectedPost, setSelectedPost] = useState<Post | null>();
 
   const getNotifsStatus = async () => {
     try {
-
     } catch (err) {
       console.error(err);
-    
     }
   };
 
@@ -64,14 +64,14 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
     }
     event.emit(eventNames.FETCH_NOTIFS);
     console.log(
-      'reset',
+      "reset",
       reset,
-      'skip',
+      "skip",
       skip.current,
-      'stopped',
+      "stopped",
       stopped.current,
-      'notifs',
-      notifs.length,
+      "notifs",
+      notifs.length
     );
     try {
       const endpoint =
@@ -80,20 +80,19 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
           skip: skip.current.toString(),
         });
       let res = await fetch(endpoint, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + state.token,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + state.token,
         },
       });
 
       let resJson = await res.json();
       if (!res.ok) {
         setLoading(false);
-        throw new Error(resJson.error)
+        throw new Error(resJson.error);
       } else {
-
         const newNotifs: Notification[] = resJson.notifications;
         if (newNotifs.length > 0) {
           skip.current += newNotifs.length;
@@ -115,9 +114,9 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
   }
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (AppState.currentState === 'active') {
-        console.log("NOTIF HAPPENED")
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (AppState.currentState === "active") {
+        console.log("NOTIF HAPPENED");
         getNotifsStatus();
         onRefresh();
       }
@@ -141,25 +140,28 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
   }, []);
 
   useEffect(() => {
-      onRefresh();
+    onRefresh();
   }, [isFocused]);
 
-  
   const [isLoading, setIsLoading] = useState(false);
 
-
-
-  const handleCloseComplete = () =>{
+  const handleCloseComplete = () => {
     setIsLoading(true);
-    fetchNotifs(true)
+    fetchNotifs(true);
     setIsLoading(false);
-   }
-
-  const renderItem = ({item}: {item: Notification}) => {
-    return <NotifSection isDisabled={isLoading} onPopoverCloseComplete={handleCloseComplete} notif={item} navigation={navigation} />;
   };
 
-
+  const renderItem = ({ item }: { item: Notification }) => {
+    return (
+      <NotifSection
+        isDisabled={isLoading}
+        onPopoverCloseComplete={handleCloseComplete}
+        notif={item}
+        navigation={navigation}
+        setSelectedPost={setSelectedPost}
+      />
+    );
+  };
 
   const renderHeader = () => {
     if (notificationsEnabled) {
@@ -169,7 +171,8 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
     return (
       <TouchableOpacity
         style={styles.settingsButton}
-        onPress={openNotificationSettings}>
+        onPress={openNotificationSettings}
+      >
         <Text style={additionalStyles.buttonText}>Enable Notifications</Text>
       </TouchableOpacity>
     );
@@ -178,15 +181,15 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
   function renderFooter() {
     if (loading) {
       return (
-        <View style={{marginVertical: 20}}>
+        <View style={{ marginVertical: 20 }}>
           <ActivityIndicator size="small" color={colors.purple} />
         </View>
       );
     }
     if (notifs.length == 0) {
       return (
-        <View style={{marginTop: 20}}>
-          <Text style={{color: colors.gray, textAlign: 'center'}}>
+        <View style={{ marginTop: 20 }}>
+          <Text style={{ color: colors.gray, textAlign: "center" }}>
             No notifications yet
           </Text>
         </View>
@@ -196,15 +199,15 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
 
   function handleEndReached() {
     if (!loading && !stopped.current) {
-      console.debug('FETCHING');
+      console.debug("FETCHING");
       fetchNotifs(false);
     } else {
-      console.debug('PREVENTED');
+      console.debug("PREVENTED");
     }
   }
 
   function onRefresh() {
-    console.log("is focused on refresh")
+    console.log("is focused on refresh");
     refreshing.current = true;
     stopped.current = false;
     fetchNotifs(true);
@@ -212,29 +215,37 @@ function NotificationsScreen({route, navigation}: Props): JSX.Element {
     setLoading(false);
     event.emit(eventNames.NOTIFICATIONS_REFRESHED); // Emit an event here
   }
-  
 
   return (
-    <View style={{flex: 1, backgroundColor: colors.white}}>
-      <FlatList
-        data={notifs}
-        renderItem={renderItem}
-        ListFooterComponent={renderFooter}
-        onEndReached={handleEndReached}
-        onEndReachedThreshold={0.5} // increase this to render next posts earlier
-        indicatorStyle={colors.theme == 'dark' ? 'white' : 'black'}
-        showsVerticalScrollIndicator={true}
-        ListFooterComponentStyle={{flexGrow: 1, justifyContent: 'center'}}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing.current}
-            onRefresh={onRefresh}
-            title="Pull to refresh"
-            tintColor={colors.purple}
-            titleColor={colors.purple}
-          />
-        }
-      />
+    <View
+      style={{ flex: 1, backgroundColor: colors.white, flexDirection: "row" }}
+    >
+      <View
+        style={{ flex: 1, borderWidth: 2.5, borderColor: colors.lightergray }}
+      >
+        <FlatList
+          data={notifs}
+          renderItem={renderItem}
+          ListFooterComponent={renderFooter}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.8} // increase this to render next posts earlier
+          indicatorStyle={colors.theme == "dark" ? "white" : "black"}
+          showsVerticalScrollIndicator={true}
+          ListFooterComponentStyle={{ flexGrow: 1, justifyContent: "center" }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing.current}
+              onRefresh={onRefresh}
+              title="Pull to refresh"
+              tintColor={colors.purple}
+              titleColor={colors.purple}
+            />
+          }
+        />
+      </View>
+      <View style={{ flex: 3 }}>
+        {selectedPost && <View style={{backgroundColor: colors.lightergray, padding: 7, paddingLeft: 4, flex: 1}}><IssueView issue={selectedPost} style={{borderRadius: 10}}/></View>}
+      </View>
     </View>
   );
 }
@@ -246,7 +257,7 @@ const additionalStyles = StyleSheet.create({
   },
   buttonText: {
     color: colors.white,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
