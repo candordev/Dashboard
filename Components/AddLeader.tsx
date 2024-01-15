@@ -26,7 +26,7 @@ const AddLeader = (props: {
   const [expanded, setExpanded] = useState(false);
   const [items, setItems] = useState([
           //{ label: "Tanuj Dunthuluri", value: "Tanuj Dunthuluri" ,parent: 'Atishay Jain'},
-      //{ label: "Shi Shi", value: "Shi Shi" ,parent: 'Atishay Jain'},
+    //{ label: "Shi Shi", value: "Shi Shi" ,parent: 'Atishay Jain'},
       { label: "Akshat Pant", value: "Akshat Pant" ,parent: 'Department A'},
       { label: "Department A", value: "Department A" },
       { label: "Department B", value: "Department B" },
