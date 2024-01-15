@@ -71,8 +71,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             {"Email: " + props.issue.proposalFromEmail}
           </Text>
         ) : null}
-        {(props.issue.userProfile.firstName !== "Candor Website" ||
-          props.issue.userProfile.lastName !== "Bot") && (
+        {props.issue.postCreatedFrom !== "forwardedEmail" &&
+        props.issue.userProfile.firstName !== "Candor Website" &&
+        props.issue.userProfile.lastName !== "Bot" && (
           <>
             <Text
               style={{
@@ -91,6 +92,31 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               }}
             >
               {"LastName: " + (props.issue.userProfile.lastName ?? "")}
+            </Text>
+          </>
+        )}
+
+      {props.issue.postCreatedFrom === "forwardedEmail" &&
+        props.issue.emailFirstName &&
+        props.issue.emailLastName && (
+          <>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+                fontFamily: "Montserrat",
+              }}
+            >
+              {"FirstName: " + (props.issue.emailFirstName ?? "")}
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "400",
+                fontFamily: "Montserrat",
+              }}
+            >
+              {"LastName: " + (props.issue.emailLastName ?? "")}
             </Text>
           </>
         )}
