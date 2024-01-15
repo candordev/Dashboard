@@ -105,6 +105,8 @@ export interface Post {
   neighborhood: string;
   postCreatedFrom: string;
   proposalFromEmail: string;
+  emailFirstName: string;
+  emailLastName: String
 }
 
 export interface Leader {
