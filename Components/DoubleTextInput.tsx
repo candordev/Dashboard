@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import colors from "../Styles/colors";
 import { debounce } from 'lodash';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 interface DoubleTextInputProps {
@@ -37,6 +38,7 @@ function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
         }}
         onChangeText={props.onFirstInputChange}
       />
+      <View style={styles.rowContainer}>
       <TextInput
         style={[
           styles.input,
@@ -49,13 +51,25 @@ function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
           updateSecondInputHeight(event.nativeEvent.contentSize.height);
         }}
         onChangeText={props.onSecondInputChange}
-        onSubmitEditing={props.onSubmit}
+        // onSubmitEditing={props.onSubmit}
       />
+       <Icon
+        name="paper-plane"
+        size={20}
+        color="lightgray"
+        onPress={props.onSubmit}
+        style={{ marginLeft: 'auto', marginRight: 2}} // Aligns the icon to the right
+      />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center", // Aligns items vertically center in the row
+  },
   container: {
     flexDirection: "column",
     borderColor: colors.lightgray,
