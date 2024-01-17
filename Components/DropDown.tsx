@@ -17,7 +17,6 @@ const DropDown = (props: PropTypes) => {
 
   return (
     <DropDownPicker
-     
       maxHeight={165}
       open={open}
       multiple={props.multiple}
@@ -31,7 +30,8 @@ const DropDown = (props: PropTypes) => {
         // borderColor: colors.lightergray,
         // borderWidth: 2,
         zIndex: 0,
-        borderWidth: 0,
+        borderWidth: open ? 1: 0,
+        borderColor: colors.lightergray,
         borderRadius: 15,
         backgroundColor: colors.white,
         minHeight: 37,
@@ -48,7 +48,7 @@ const DropDown = (props: PropTypes) => {
       listMode="SCROLLVIEW"
       dropDownContainerStyle={[
         {
-          borderWidth: 0,
+          borderWidth: open ? 1: 0,
           borderTopWidth: 1,
           backgroundColor: colors.white,
           borderColor: colors.lightergray,

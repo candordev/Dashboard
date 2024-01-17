@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, View } from "react-native";
+import { ActivityIndicator, FlatList, ScrollView, View } from "react-native";
 import Card from "../Components/Card";
 import Header from "../Components/Header";
 import Text from "../Components/Text";
@@ -16,6 +16,7 @@ import { usePostId } from "../Structure/PostContext";
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -52,7 +53,6 @@ const AllScreen = ({ navigation }: any) => {
   }, [
     progressSelected,
     categorySelected,
-    isFocused,
     assigneesSelectedIds,
     searchTerm,
   ]); // Depend on currStatus to refetch when it changes
@@ -93,6 +93,7 @@ const AllScreen = ({ navigation }: any) => {
   ) => {
     try {
       console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
@@ -132,6 +133,8 @@ const AllScreen = ({ navigation }: any) => {
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,52 +176,58 @@ const AllScreen = ({ navigation }: any) => {
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
-      <ScrollView
-        horizontal
-        style={{
-          backgroundColor: colors.background,
-        }}
-      >
-        {Object.entries(categoriesWithPosts).map(([name, posts]) => (
-          <View
-            key={name}
-            style={{
-              width: 350, // Adjust as needed
-              marginRight: 20,
-              // Other styles
-            }}
-          >
-            <Text
+      {loading ? (
+        <View style={{ marginVertical: 3 }}>
+          <ActivityIndicator color={colors.purple} size={"small"} />
+        </View>
+      ) : (
+        <ScrollView
+          horizontal
+          style={{
+            backgroundColor: colors.background,
+          }}
+        >
+          {Object.entries(categoriesWithPosts).map(([name, posts]) => (
+            <View
+              key={name}
               style={{
-                fontSize: 18,
-                fontWeight: "550",
-                color: colors.black,
-                marginBottom: 10,
-                marginTop: 10,
-                fontFamily: "Montserrat",
+                width: 350, // Adjust as needed
+                marginRight: 20,
+                // Other styles
               }}
             >
-              {name}
-            </Text>
-            <FlatList
-              key={`${name}-${refreshKey}`}
-              data={posts}
-              renderItem={({ item }) => (
-                <Card
-                  key={item._id}
-                  issue={item}
-                  onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
-                  isDisabled={isLoading}
-                  hasInitialOpen={hasInitialOpen}
-                  initialOpen={
-                    item._id === initialPostId && !hasInitialOpenOccurred
-                  }
-                />
-              )}
-            />
-          </View>
-        ))}
-      </ScrollView>
+              <Text
+                style={{
+                  fontSize: 17,
+                  fontWeight: "550",
+                  color: colors.black,
+                  marginBottom: 10,
+                  marginTop: 10,
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {name}
+              </Text>
+              <FlatList
+                key={`${name}-${refreshKey}`}
+                data={posts}
+                renderItem={({ item }) => (
+                  <Card
+                    key={item._id}
+                    issue={item}
+                    onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
+                    isDisabled={isLoading}
+                    hasInitialOpen={hasInitialOpen}
+                    initialOpen={
+                      item._id === initialPostId && !hasInitialOpenOccurred
+                    }
+                  />
+                )}
+              />
+            </View>
+          ))}
+        </ScrollView>
+      )}
     </OuterView>
   );
 };
