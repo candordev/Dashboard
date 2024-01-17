@@ -25,6 +25,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   
   const userId = route.params?.userId || '';
   const routePostId = route.params?.postId || '';
+  const groupId = route.params?.groupId || '';
   const { state } = useUserContext();
 
 
@@ -87,7 +88,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
               passedEmail: email,
               firebaseToken: token,
               ...(userId && { userId }),
-              ...(postId && { postId })
+              ...(postId && { postId }),
+              ...(groupId && { groupId }),
             },
           });
       }
@@ -151,6 +153,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     navigation.navigate('signupStack', {
       screen: 'signupemail',
       params: {
+        ...(groupId && { groupId }),
         ...(postId && { postId }),
         ...(userId && { userId }),
         ...(userData?.firstName && { firstName: userData.firstName }),
