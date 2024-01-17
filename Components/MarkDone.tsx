@@ -79,7 +79,7 @@ const MarkDone: React.FC<MarkDoneProps> = ({ issueId, fetchStatusUpdates, step})
               onPress={() => handlePress(false)}
               disabled={isLoading} // Disable button when loading
             >
-              <Text style={styles.toggleButtonText}>Mark Completed</Text>
+              <Text style={styles.toggleButtonText}>Mark Complete</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         color: 'black'
-
     },
     toggleButton: {
         backgroundColor: colors.black,
