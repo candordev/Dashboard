@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat",
       },
       completedButton: {
-        backgroundColor: colors.green, // Adjust the color as needed
+        backgroundColor: colors.darkGray, // Adjust the color as needed
         borderRadius: 10,
         paddingVertical: 10,
         alignItems: 'center',
