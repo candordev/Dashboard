@@ -8,10 +8,12 @@ import Deadline from "./Deadline";
 import Location from "./Location";
 import MarkDone from "./MarkDone";
 import Text from "./Text";
+import DeletePost from "./DeletePost";
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
   issue: Post;
+  onPopoverCloseComplete: () => void; // Add this line
 }
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
@@ -127,6 +129,10 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
           issueId={props.issue._id}
           step={props.issue.step}
         />
+        <DeletePost
+          issueId={props.issue._id}
+          onPopoverCloseComplete={props.onPopoverCloseComplete}
+          />
         {/* <CloseIssue /> */}
       </View>
     </ScrollView>
