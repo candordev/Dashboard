@@ -84,7 +84,7 @@ function NavigationWrapper() {
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",
-        launch: 'launch/:userId/:postId',
+        launch: 'launch/:userId/:postId/:groupId',
         login: "login",
         NotFound: "404",
       },

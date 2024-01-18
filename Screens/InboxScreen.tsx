@@ -31,8 +31,6 @@ type Props = PropsWithChildren<{
 }>;
 
 
-
-
 function NotificationsScreen({route, navigation}: Props): JSX.Element {
   const isFocused = useIsFocused(); // Assuming you're using something like this
   const [notificationsEnabled, setNotificationsEnabled] =

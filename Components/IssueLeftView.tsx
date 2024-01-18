@@ -9,7 +9,6 @@ import { customFetch } from "../utils/utils";
 import { Comment } from "../utils/interfaces";
 import PrivateChat from "./PrivateChat";
 import IssueContent from "./IssueContent";
-import { debounce } from "lodash";
 
 interface IssueLeftViewProps {
   issue: Post;
@@ -18,7 +17,7 @@ interface IssueLeftViewProps {
 function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
-
+  
   useEffect(() => {
     fetchComments();
   }, []);
@@ -79,7 +78,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-      <IssueContent date={props.issue.createdAt} issueID={props.issue._id} title={props.issue.title} content={props.issue.content} />
+      <IssueContent date={props.issue.createdAt} issueID={props.issue._id} title={props.issue.title} content={props.issue.content}/>
       {/* {comments.map((comment: Comment, index) => {
         return (
           <View
@@ -98,10 +97,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
             </Text>
           </View>
         );
-      })}
-      <PrivateChat issue={props.issue}/>
-
-      })} */}
+      })}*/}
       <PrivateChat issue={props.issue}/>
     </View>
   );

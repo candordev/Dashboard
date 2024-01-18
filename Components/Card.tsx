@@ -84,7 +84,7 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
         height: height * 0.9,
       }}
     >
-      <IssueView issue={props.issue} />
+      <IssueView issue={props.issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
     </Popover>
   );
 }
