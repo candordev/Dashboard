@@ -10,6 +10,7 @@ type PropTypes = {
   items: any;
   setItems: any;
   multiple: boolean;
+  styles?: any;
 };
 
 const DropDown = (props: PropTypes) => {
@@ -35,6 +36,7 @@ const DropDown = (props: PropTypes) => {
         borderRadius: 15,
         backgroundColor: colors.white,
         minHeight: 37,
+        ...props.styles?.dropdownStyle,
       }}
       placeholder={props.placeholder}
       placeholderStyle={{ color: colors.gray }}
@@ -44,6 +46,7 @@ const DropDown = (props: PropTypes) => {
         fontFamily: "OpenSans",
         fontWeight: '500' as any,
         paddingLeft: 5,
+        ...props.styles?.textStyle, // Apply custom text styles here
       }}
       listMode="SCROLLVIEW"
       dropDownContainerStyle={[
@@ -53,6 +56,7 @@ const DropDown = (props: PropTypes) => {
           backgroundColor: colors.white,
           borderColor: colors.lightergray,
           borderRadius: 15,
+          ...props.styles?.dropDownContainerStyle, // Apply custom dropdown container styles here
         },
       ]}
       ArrowDownIconComponent={() => (
