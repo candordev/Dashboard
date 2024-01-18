@@ -61,7 +61,7 @@ const AllScreen = ({ navigation }: any) => {
     fetchPosts(
       progressSelected,
       searchTerm,
-      categorySelected,
+      categorySelected === "Map" ? "Tag" : categorySelected,
       assigneesSelectedIds
     );
   }, [
@@ -232,9 +232,6 @@ const AllScreen = ({ navigation }: any) => {
 
   return (
     <OuterView style={{ paddingHorizontal: 40 }}>
-      <View style={{flexDirection: 'row'}}>
-          <Button text={isMapView ? "Map" : "List"} onPress={toggleMapView} style={{flex: 1/20}}/>
-        </View>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
@@ -244,7 +241,7 @@ const AllScreen = ({ navigation }: any) => {
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
-      {!isMapView ? (<ScrollView
+      {categorySelected !== "Map" ? (<ScrollView
         horizontal
         style={{
           backgroundColor: colors.background,

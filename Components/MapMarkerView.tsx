@@ -36,10 +36,10 @@ type MarkerData = {
 
 const defaultProps = {
     center: {
-        lat: 38.9918837,
-        lng: -77,
+        lat: 33.7,
+        lng: -84.4,
     },
-    zoom: 8,
+    zoom: 11,
 };
 
 interface MarkerProps {
@@ -144,14 +144,14 @@ const MapMarkerView = ({ posts }: MapMarkerViewProps) => {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, borderRadius: 10, overflow: 'hidden' }}>
             <GoogleMapReact
                 bootstrapURLKeys={{
                     key: "AIzaSyD-DMOdct5BYGr0zv9UHIZ3Sk9ZWWdJEUY",
                 }}
                 defaultCenter={defaultProps.center}
                 defaultZoom={defaultProps.zoom}
-                style={{ borderRadius: 10 }}
+                style={{ borderRadius: 10,  border: "none", }}
             >
                 {markers.map((marker, index) => (
                     <Marker
