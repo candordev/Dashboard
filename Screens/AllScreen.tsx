@@ -255,7 +255,7 @@ const AllScreen = ({ navigation }: any) => {
                       {isDeleting ? (
                         <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>Loading...</Text>
                       ) : (
-                        <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>Delete</Text>
+                        <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', marginTop: -4 }}>Delete</Text>
                       )}
                     </TouchableOpacity>
                 </View>
