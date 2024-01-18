@@ -62,15 +62,15 @@ const LHN = (props: any) => {
   return (
     <View style={styles.container}>
       <NavItem
-        name={"Map"}
-        route="/map"
-        icon="map"
-        selected={navIndex == 0}
-      />
-      <NavItem
         name={"All Issues"}
         route="/all"
         icon="list"
+        selected={navIndex == 0}
+      />
+      <NavItem
+        name={"Map"}
+        route="/map"
+        icon="map"
         selected={navIndex == 1}
       />
       {/* <NavItem name={"Your Issues"} route="/your" icon="list" />

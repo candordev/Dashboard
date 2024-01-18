@@ -3,7 +3,9 @@ import { Post } from "../utils/interfaces";
 import Text from "./Text";
 import { View } from "react-native";
 import colors from "../Styles/colors";
-import { Marker } from "react-native-maps";
+import GoogleMapReact from 'google-map-react';
+
+const AnyReactComponent = ({ text } : any) => <div>{text}</div>;
 
 type MapMarkerViewProps = {
   posts: Post[];
@@ -47,13 +49,13 @@ const MapMarkerView = ({ posts }: MapMarkerViewProps) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {markers.map((marker, index) => (
+      {/* {markers.map((marker, index) => (
         <Marker
           key={index}
           coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
           title={marker.title}
         />
-      ))}
+      ))} */}
     </View>
   );
 };
