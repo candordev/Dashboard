@@ -15,7 +15,6 @@
     "@react-navigation/drawer": "^6.6.6",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
-    "@teovilla/react-native-web-maps": "^0.9.4",
     "eventemitter3": "^5.0.1",
     "expo": "~49.0.15",
     "expo-font": "~11.4.0",
@@ -29,14 +28,12 @@
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-google-places-autocomplete": "^2.5.6",
-    "react-native-maps": "^1.9.1",
     "react-native-popover-view": "^5.1.8",
     "react-native-reanimated": "~2.2.4",
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "react-native-vector-icons": "^10.0.2",
-    "react-native-web": "~0.19.6",
-    "react-native-web-maps": "^0.3.0"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
