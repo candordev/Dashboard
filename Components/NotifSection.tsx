@@ -21,6 +21,7 @@ import NotifPicture from "../Screens/NotifPicture";
 import IssueView from "./IssueView";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
 import { formatDate } from "../utils/utils"; // Make sure this path is correct
+import { set } from "lodash";
 
 type Props = {
   notif: Notification;
@@ -28,6 +29,7 @@ type Props = {
   onPopoverCloseComplete: () => void; // Add this line
   isDisabled: boolean;
   setSelectedPost: (post: Post | undefined) => void;
+  selectedPost: Post | null | undefined;
 };
 
 function imageURL(contentType: NotificationType) {
@@ -82,10 +84,15 @@ const fetchPost = async (postId: string | undefined) => {
 const NotifSection = (props: Props) => {
   const [notif, setNotif] = useState<Notification>(props.notif);
   const [popoverVisible, setPopoverVisible] = useState(false);
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsSelected(props.selectedPost?._id === notif.data?.postID);
+  }, [props.selectedPost]);
 
   const fetchAndSetPost = async () => {
     try {
-      const post = await fetchPost(props.notif.data?.postID);
+      const post = await fetchPost(notif.data?.postID);
       console.log("NOTIF WAS CLICKED", post);
       props.setSelectedPost(post);
     } catch (error) {
@@ -145,6 +152,7 @@ const NotifSection = (props: Props) => {
       if (!res.ok) {
         throw new Error(resJson.error);
       }
+      setNotif((notif: Notification) => ({ ...notif, seen: true }));
       event.emit(eventNames.FETCH_NOTIFS);
       console.log("POST REQUEST HAPPENED");
       fetchAndSetPost();
@@ -234,6 +242,7 @@ const NotifSection = (props: Props) => {
         notif.seen
           ? {}
           : { borderLeftColor: colors.purple, borderLeftWidth: 4 },
+          isSelected ? { backgroundColor: colors.lightestgray } : {},
       ]}
     >
       <NotifPicture

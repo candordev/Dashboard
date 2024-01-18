@@ -159,6 +159,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         notif={item}
         navigation={navigation}
         setSelectedPost={setSelectedPost}
+        selectedPost={selectedPost}
       />
     );
   };

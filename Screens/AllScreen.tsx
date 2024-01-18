@@ -21,6 +21,7 @@ const AllScreen = ({ navigation }: any) => {
 
   const { height, width } = useWindowDimensions();
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{

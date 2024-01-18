@@ -26,7 +26,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
   } ,[props.title])
 
   useEffect(() => {
-    setTitle(props.content);
+    setContent(props.content);
   } ,[props.content])
 
   const handleDone = async () => {
