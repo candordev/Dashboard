@@ -62,10 +62,16 @@ const LHN = (props: any) => {
   return (
     <View style={styles.container}>
       <NavItem
+        name={"Map"}
+        route="/map"
+        icon="map"
+        selected={navIndex == 0}
+      />
+      <NavItem
         name={"All Issues"}
         route="/all"
         icon="list"
-        selected={navIndex == 0}
+        selected={navIndex == 1}
       />
       {/* <NavItem name={"Your Issues"} route="/your" icon="list" />
       <NavItem name={"Suggested Issues"} route="/suggested" icon="list" /> */}
@@ -74,7 +80,7 @@ const LHN = (props: any) => {
         route="/inbox"
         icon="inbox"
         unreadCount={unread}
-        selected={navIndex == 1}
+        selected={navIndex == 2}
       />
       <View style={{ flex: 1 }} />
       <NavItem

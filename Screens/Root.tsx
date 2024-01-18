@@ -10,6 +10,7 @@ import InboxScreen from "./InboxScreen";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { getUnreadNotifs } from "../utils/utils";
+import MapScreen from "./MapScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -56,6 +57,7 @@ function Root() {
         headerShown: false,
       }}
     >
+      <Drawer.Screen name="map" component={MapScreen} options={{title: "Candor - Map"}}/>
       <Drawer.Screen name="all" component={AllScreen} options={{title: "Candor - Issues"}}/>
       {/* <Drawer.Screen name="your" component={YourScreen} />
       <Drawer.Screen name="suggested" component={SuggestedScreen} /> */}
