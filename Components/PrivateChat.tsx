@@ -26,7 +26,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 
   const [chatMode, setChatMode] = useState("authorities");
   const [chatModeItems, setChatModeItems] = useState([
-    { label: 'Authorites', value: 'authorities' },
+    { label: 'Authorities', value: 'authorities' },
     { label: 'Constituent', value: 'constituent' }
   ]);
   const formatDate = (createdAt: string): string => {
