@@ -20,6 +20,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [issue, setIssue] = React.useState<Post>(props.issue);
 
   React.useEffect(() => {
+    
     setIssue(props.issue);
   }, [props.issue]);
 

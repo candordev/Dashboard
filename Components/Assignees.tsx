@@ -48,6 +48,16 @@ function Assignees(props: AssigneesProps): JSX.Element {
     console.log("selected children", selectedChildren);
   }, [selectedChildren]);
 
+  useEffect(() => {
+    setSelectedChildren([]);
+    setPreviousChildValue([]);
+    setPreviousValue([])
+    setLeaders([])
+    setValue([])
+    setItems([])
+    setOpen(false)
+  }, [props.issue]);
+
   type Department = {
     label: string;
     value: string;
@@ -103,7 +113,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   useEffect(() => {
     fetchLeaders();
-  }, [props]);
+  }, [props.issue]);
 
   useEffect(() => {
     //console.log("GROUP FOR A POST", props.issue.group)
