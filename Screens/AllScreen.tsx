@@ -18,13 +18,19 @@ import { ProgressSelector } from "../utils/interfaces";
 import OuterView from "../Components/OuterView";
 import { useUserContext } from "../Hooks/useUserContext";
 import { usePostId } from "../Structure/PostContext";
-import Popover, { PopoverPlacement } from "react-native-popover-view";
+import Popover, { PopoverPlacement } from 'react-native-popover-view';
+import Button from "../Components/Button";
+import MapMarkerView from "../Components/MapMarkerView";
+
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const { height, width } = useWindowDimensions();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [isMapView, setIsMapView] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -55,13 +61,12 @@ const AllScreen = ({ navigation }: any) => {
     fetchPosts(
       progressSelected,
       searchTerm,
-      categorySelected,
+      categorySelected === "Map" ? "Tag" : categorySelected,
       assigneesSelectedIds
     );
   }, [
     progressSelected,
     categorySelected,
-    isFocused,
     assigneesSelectedIds,
     searchTerm,
   ]); // Depend on currStatus to refetch when it changes
@@ -94,6 +99,19 @@ const AllScreen = ({ navigation }: any) => {
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
+  useEffect(() => {
+    console.log("Categories with posts updated:", categoriesWithPosts);
+    Object.values(categoriesWithPosts).forEach((posts: Post[]) => {
+      posts.forEach((post: Post) => {
+        if (post.location) {
+          console.log("printing post that has location: ", post);
+        } else {
+          console.log("printing post that has no location: ", post);
+        }
+      });
+    });
+  }, [categoriesWithPosts])
+
   const fetchPosts = async (
     status: ProgressSelector | undefined,
     searchTerm: string,
@@ -102,6 +120,7 @@ const AllScreen = ({ navigation }: any) => {
   ) => {
     try {
       console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
@@ -141,6 +160,8 @@ const AllScreen = ({ navigation }: any) => {
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -205,6 +226,10 @@ const AllScreen = ({ navigation }: any) => {
     setPopoverVisible(false); // Close the popover after action
   };
 
+  function toggleMapView() {
+    setIsMapView(isMapView => !isMapView);
+  }
+
   return (
     <OuterView style={{ paddingHorizontal: 40 }}>
       <Header
@@ -216,7 +241,7 @@ const AllScreen = ({ navigation }: any) => {
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
-      <ScrollView
+      {categorySelected !== "Map" ? (<ScrollView
         horizontal
         style={{
           backgroundColor: colors.background,
@@ -358,7 +383,9 @@ const AllScreen = ({ navigation }: any) => {
             />
           </View>
         ))}
-      </ScrollView>
+      </ScrollView>) : (
+        <MapMarkerView posts={categoriesWithPosts} />
+      )}
     </OuterView>
   );
 };

@@ -34,6 +34,7 @@ export default {
     theme: 'light',
     // background: '#FAFCFF',
     background: 'rgb(240, 243, 253)',
+    darkerBackground: 'rgb(225, 228, 238)',
     // background: 'rgb(200, 200, 255)',
     beige: 'rgb(250, 248, 245)',
 }

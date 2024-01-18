@@ -30,7 +30,9 @@ const DropDown = (props: PropTypes) => {
       style={{
         // borderColor: colors.lightergray,
         // borderWidth: 2,
-        borderWidth: 0,
+        zIndex: 0,
+        borderWidth: open ? 1: 0,
+        borderColor: colors.lightergray,
         borderRadius: 15,
         backgroundColor: colors.white,
         minHeight: 37,
@@ -49,7 +51,7 @@ const DropDown = (props: PropTypes) => {
       listMode="SCROLLVIEW"
       dropDownContainerStyle={[
         {
-          borderWidth: 0,
+          borderWidth: open ? 1: 0,
           borderTopWidth: 1,
           backgroundColor: colors.white,
           borderColor: colors.lightergray,
