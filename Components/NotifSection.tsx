@@ -83,19 +83,21 @@ const NotifSection = (props: Props) => {
   const [notif, setNotif] = useState<Notification>(props.notif);
   const [popoverVisible, setPopoverVisible] = useState(false);
 
-  useEffect(() => {
-    if (props.notif.data?.contentType !== NotificationType.reminder) {
-      const fetchAndSetPost = async () => {
-        try {
-          const post = await fetchPost(props.notif.data?.postID);
-          props.setSelectedPost(post);
-        } catch (error) {
-          console.error("Error fetching post:", error);
-        }
-      };
-      fetchAndSetPost();
+  const fetchAndSetPost = async () => {
+    try {
+      const post = await fetchPost(props.notif.data?.postID);
+      console.log("NOTIF WAS CLICKED", post);
+      props.setSelectedPost(post);
+    } catch (error) {
+      console.error("Error fetching post:", error);
     }
-  }, [props.notif.data]);
+  };
+
+  // useEffect(() => {
+  //   if (props.notif.data?.contentType !== NotificationType.reminder) {
+  //     fetchAndSetPost();
+  //   }
+  // }, [props.notif.data]);
 
   useEffect(() => {
     setNotif(props.notif);
@@ -145,6 +147,7 @@ const NotifSection = (props: Props) => {
       }
       event.emit(eventNames.FETCH_NOTIFS);
       console.log("POST REQUEST HAPPENED");
+      fetchAndSetPost();
     } catch (error) {
       console.error("Error marking notification as seen: ", error);
       throw error;
@@ -225,6 +228,7 @@ const NotifSection = (props: Props) => {
   return (
     <TouchableOpacity
       disabled={props.isDisabled}
+      onPress={handleNotificationClick}
       style={[
         styles.seenNotifCard,
         notif.seen
@@ -246,7 +250,7 @@ const NotifSection = (props: Props) => {
           }}
         >
           <Text style={{ fontWeight: "600", flex: 1 }} numberOfLines={1}>
-            {notif.title + "jfdkls;ajf"}
+            {notif.title}
           </Text>
           <Text
             style={{

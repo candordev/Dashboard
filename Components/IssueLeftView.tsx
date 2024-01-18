@@ -18,9 +18,13 @@ interface IssueLeftViewProps {
 function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
+  const [issue, setIssue] = useState<Post>(props.issue);
 
 
-
+  useEffect(() => {
+    console.log("title changed to", props.issue.title)
+    setIssue(props.issue);
+  }, [props.issue]);
 
 
   useEffect(() => {
@@ -32,7 +36,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       const res: Response = await customFetch(
         Endpoints.getComments +
           new URLSearchParams({
-            postID: props.issue._id,
+            postID: issue._id,
             skip: "0",
           }),
         {
@@ -58,7 +62,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         method: "POST",
         body: JSON.stringify({
           content: content,
-          postID: props.issue._id,
+          postID: issue._id,
           parentID: undefined,
         }),
       });
@@ -83,7 +87,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-      <IssueContent date={props.issue.createdAt} issueID={props.issue._id} title={props.issue.title} content={props.issue.content} />
+      <IssueContent date={issue.createdAt} issueID={issue._id} title={issue.title} content={issue.content} />
       {/* {comments.map((comment: Comment, index) => {
         return (
           <View
@@ -103,7 +107,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           </View>
         );
       })} */}
-      <PrivateChat issueID={props.issue._id}/>
+      <PrivateChat issueID={issue._id}/>
     </View>
   );
 }

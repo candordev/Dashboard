@@ -216,6 +216,10 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
     event.emit(eventNames.NOTIFICATIONS_REFRESHED); // Emit an event here
   }
 
+  useEffect(() => {
+    console.log("HAS BEEN CHANGED TO: ", selectedPost);
+  }, [selectedPost])
+
   return (
     <View
       style={{ flex: 1, backgroundColor: colors.white, flexDirection: "row" }}
