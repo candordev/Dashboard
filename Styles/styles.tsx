@@ -456,8 +456,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: colors.white,
     outlineStyle: "none",
+  },
+  markerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   }
-
 });
 
 export default styles;

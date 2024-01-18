@@ -25,8 +25,6 @@ const AllScreen = ({ navigation }: any) => {
 
   const [isMapView, setIsMapView] = useState(false);
 
-  const [posts, setPosts] = useState<Post[]>([]); // Initialize posts state to an empty array
-
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
   }>({});
@@ -149,7 +147,6 @@ const AllScreen = ({ navigation }: any) => {
       if (res.ok) {
         console.log("resJson DEBUG: ", resJson);
         setCategoriesWithPosts(resJson);
-        setPosts(resJson);
         setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
@@ -333,10 +330,7 @@ const AllScreen = ({ navigation }: any) => {
           </View>
         ))}
       </ScrollView>) : (
-        <MapMarkerView posts={posts} />
-        // <View>
-        //   <Text>Map</Text>
-        // </View>
+        <MapMarkerView posts={categoriesWithPosts} />
       )}
     </OuterView>
   );
