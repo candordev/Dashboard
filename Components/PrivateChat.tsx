@@ -15,18 +15,18 @@ import { debounce } from "lodash";
 interface PrivateChatProps {
   issue: Post;
 }
-
 function PrivateChat(props: PrivateChatProps): JSX.Element {
   const {state, dispatch} = useUserContext();
   const [privateComments, setPrivateComments] = useState<Comment[]>([]);
   const [newCommentContent, setNewCommentContent] = useState("");
   
   const scrollViewRef = useRef<ScrollView>(null);
+  const[inputText, setInputText] = useState<string>("");
   
 
-  const [chatMode, setChatMode] = useState("everyone");
+  const [chatMode, setChatMode] = useState("authorities");
   const [chatModeItems, setChatModeItems] = useState([
-    { label: 'Everyone', value: 'everyone' },
+    { label: 'Authorites', value: 'authorities' },
     { label: 'Constituent', value: 'constituent' }
   ]);
   const formatDate = (createdAt: string): string => {
@@ -48,10 +48,17 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
       return createdDate.toLocaleDateString();
     }
   };
+  useEffect(() => {  
+    fetchPrivateChat();
+    console.log("ISSUE IS : ", props.issue._id)
+  }, [chatMode]); 
+
+
   useEffect(() => {
     setPrivateComments([]); 
-    fetchPrivateChat();
+    // fetchPrivateChat();
   }, [props.issue._id]); 
+
 
 // Define the initial state with appropriate types and default values
 let lastAuthorId = '';
@@ -112,15 +119,16 @@ const renderComment = (comment: Comment, index: number) => {
 };
 
 
-async function postComment() {
+async function postPoliticianComment() {
   try {
-    let res: Response = await customFetch(Endpoints.createComment, {
+    let res: Response = await customFetch(Endpoints.sendPoliticianChat, {
       method: "POST",
       body: JSON.stringify({
         content: newCommentContent,
         postID: props.issue._id,
-        parentID: undefined,
-        privateChat: "true",
+        user: state._id,
+        // parentID: undefined,
+        // privateChat: "true",
       }),
     });
     let resJson = await res.json();
@@ -128,7 +136,8 @@ async function postComment() {
       console.error(resJson.error);
     } else {
       fetchPrivateChat();
-      console.log("Comment Posted to Everyone")
+      console.log("Comment Posted to Affiliated Politicians", resJson)
+      
     }
   } catch (error) {
     console.error("Error loading posts. Please try again later.", error);
@@ -173,7 +182,17 @@ async function postConstituentComment() {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
-        setPrivateComments(newComments);
+        console.log("newComments TOTAL: ", newComments.length);
+        let filteredComments: Comment[] = [];
+        if (chatMode === "constituent") {
+          filteredComments = resJson.filter((comment: Comment) => comment.contentType === "constituentChat" || comment.isWhisper);
+          console.log("filteredComments for const: ", filteredComments.length);
+        } else { 
+          filteredComments = resJson.filter((comment: Comment) => comment.contentType !== "constituentChat" && !comment.isWhisper);
+          console.log("filteredComments for everyone: ", filteredComments.length);
+          console.log("WEMBY POLITICIANS: ", props.issue.acceptedPoliticians);
+        } 
+        setPrivateComments(filteredComments);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
@@ -182,23 +201,25 @@ async function postConstituentComment() {
   return (
     <View style={chatStyles.chatContainer}>
       <View style={chatStyles.titleDropdownContainer}>
-        <View style={{minHeight: 75, flex: 1, paddingTop: 8}}> {/* minHeight 75 bc dropdown component option minHeight = 37 -> 2 options >= 74 to be able to select them */}
+        <View style={{flex: 1}}> 
           <Text style={chatStyles.chatTitle}>Private Chat</Text>
         </View>  
-        <View style={{minHeight: 75, flex: 1}}>
-        <DropDown
-            placeholder="Chat Type"
-            value={chatMode}
-            setValue={setChatMode}
-            items={chatModeItems}
-            setItems={setChatModeItems}
-            multiple={false}
-            styles={{
-              dropdownStyle : {},
-              textStyle: { color: colors.purple, fontSize: 15, fontWeight: '500' ,zIndex: 1000},
-              dropdownContainerStyle: {zIndex: 100}
-            }}
-          />
+        <View style={{flex: 1}}>
+          {props.issue.proposalFromEmail.includes("@") ? (  
+              <DropDown
+              placeholder="Chat Type"
+              value={chatMode}
+              setValue={setChatMode}
+              items={chatModeItems}
+              setItems={setChatModeItems}
+              multiple={false}
+              styles={{
+                dropdownStyle : {},
+                textStyle: { color: colors.purple, fontSize: 15, fontWeight: '500'},
+                dropdownContainerStyle: {}
+              }}
+            />
+            ) : null}
         </View>
       </View>
       <ScrollView
@@ -213,8 +234,15 @@ async function postConstituentComment() {
           style={[styles.textInput, { height: 40}]}
           placeholder="Add a comment..."
           placeholderTextColor={colors.gray}
-          onChangeText={(text) => setNewCommentContent(text)}
-          onSubmitEditing={chatMode == "constituent" ? postConstituentComment : postComment}
+          onChangeText={(text) => {
+            setNewCommentContent(text);
+            setInputText(text)
+          }}
+          onSubmitEditing={() => {
+            chatMode == "constituent" ? postConstituentComment() : postPoliticianComment();
+            setInputText('');
+          }}
+          value={inputText}
         />
     </View>
   );
@@ -227,8 +255,9 @@ const chatStyles = StyleSheet.create({
  titleDropdownContainer: {
   flexDirection: 'row', 
   alignItems: 'center', 
-  justifyContent: 'space-between',
+  justifyContent: 'space-between', 
   padding: 5, 
+  zIndex: 10,
 },
 userName: {
   color: colors.purple,
@@ -236,6 +265,7 @@ userName: {
   alignSelf: 'flex-start',
   marginBottom: 0,
   marginLeft: 5
+
 },
 commentContainer: {
     marginVertical: 1,
