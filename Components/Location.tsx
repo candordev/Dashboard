@@ -94,7 +94,7 @@ const Location: React.FC<LocationProps> = (props) => {
         }}
         requestUrl={{
           useOnPlatform: "web", // or "all"
-          url: "http://184.72.74.25:4000/api/userActivity/google-places-proxy", // or any proxy server that hits https://maps.googleapis.com/maps/api
+          url: "http://candoradmin.com/api/userActivity/google-places-proxy", // or any proxy server that hits https://maps.googleapis.com/maps/api
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
