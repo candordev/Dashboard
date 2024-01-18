@@ -7,6 +7,8 @@ import colors from "../Styles/colors";
 import { Endpoints } from '../utils/Endpoints';
 import { customFetch } from '../utils/utils';
 import { useUserContext } from '../Hooks/useUserContext';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // or another icon library
+
 
 interface CSVImportComponentProps {
   onImportSuccess?: () => void; // Add this line
@@ -63,6 +65,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
                   visible: true,
                   anonymous: false,
                   postCreatedFrom: "dashboard import",
+                  
                   //proposalFromEmail: email,
                   categoryNames: [postData.tags],
                   deadline: postData.deadline,
@@ -118,7 +121,8 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
         onRequestClose={() => setIsPopoverVisible(false)} // Allow closing the popover
           from={
             <TouchableOpacity style={styles.card}  onPress={togglePopover}>
-              <Text style={styles.title}>Import CSV</Text>
+              {/* <Text style={styles.title}>Import CSV</Text> */}
+              <Icon name="file-upload" size={23} color="#000" /> {/* Example icon */}
             </TouchableOpacity>
           }
           placement={PopoverPlacement.FLOATING}
@@ -161,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 8,
     borderRadius: 15,
-    backgroundColor: colors.purple,
+    backgroundColor: colors.lightergray,
   },
   title: {
     fontSize: 15,
