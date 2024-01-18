@@ -18,7 +18,7 @@ interface AssigneesProps {
   createPost: Boolean;
   onAssigneesChange?: (option: string[]) => void;
   onAssigneesChangeEmail?: (option: string) => void;
-  style? : any;
+  style?: any;
 }
 
 function Assignees(props: AssigneesProps): JSX.Element {
@@ -385,7 +385,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
     // Update selected values to include new leader and department
     let updatedValue = [...value, departmentName, leaderEmail];
     setValue(updatedValue);
-    console.log("set Selected Children in UPDATE DROPDOWN", Array.from(newSelectedChildren));
+    console.log(
+      "set Selected Children in UPDATE DROPDOWN",
+      Array.from(newSelectedChildren)
+    );
     setSelectedChildren(Array.from(newSelectedChildren));
   };
 
@@ -534,10 +537,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   };
 
   return (
-    <OuterComponentView
-      title="Assignees"
-      style={props.style}
-    >
+    <OuterComponentView title="Assignees" style={props.style}>
       <DropDownPicker
         maxHeight={180}
         multipleText={`${selectedChildren.length} ${
@@ -569,11 +569,6 @@ function Assignees(props: AssigneesProps): JSX.Element {
         categorySelectable={true}
         onSelectItem={onUserSelect}
         onClose={onCloseDropDown}
-        //onChangeValue={onChangeValue} // Custom logic for selection changes
-        // onChangeValue={(currentValue) => {
-        //   console.log("Current Value:", currentValue);
-        //   // Add any additional logic you need to handle the value change
-        // }}
         dropDownDirection="BOTTOM"
         listParentContainerStyle={{
           justifyContent: "center",
@@ -591,10 +586,11 @@ function Assignees(props: AssigneesProps): JSX.Element {
           color: "grey",
         }}
         style={{
-          borderColor: colors.lightgray,
-          borderWidth: 0,
+          borderWidth: open ? 1 : 0,
+          borderColor: colors.lightergray,
           backgroundColor: colors.lightestgray,
-          minHeight: 30,
+          borderRadius: 15,
+          minHeight: 37,
         }}
         placeholder="Select users"
         textStyle={{
@@ -606,9 +602,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
         listMode="SCROLLVIEW"
         dropDownContainerStyle={[
           {
-            borderWidth: 0,
+            borderWidth: open ? 1 : 0,
             backgroundColor: colors.lightestgray,
-            borderColor: colors.lightgray,
+            borderColor: colors.lightergray,
+            borderRadius: 15,
           },
         ]}
         ArrowDownIconComponent={() => (

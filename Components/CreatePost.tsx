@@ -32,7 +32,7 @@ function CreatePost(props: CreatePost): JSX.Element {
       onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
       from={
         <TouchableOpacity style={styles.card} onPress={openPopup}>
-          <Text style={styles.title}>Create Post</Text>
+          <Text style={styles.title}>Create Issue</Text>
         </TouchableOpacity>
       }
       isVisible={isPopupVisible}

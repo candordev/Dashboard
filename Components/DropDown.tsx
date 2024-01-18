@@ -10,6 +10,8 @@ type PropTypes = {
   items: any;
   setItems: any;
   multiple: boolean;
+  backgroundColor?: string;
+  onClose?: () => void;
 };
 
 const DropDown = (props: PropTypes) => {
@@ -27,30 +29,29 @@ const DropDown = (props: PropTypes) => {
       setItems={props.setItems}
       dropDownDirection="BOTTOM"
       style={{
-        // borderColor: colors.lightergray,
-        // borderWidth: 2,
         zIndex: 0,
-        borderWidth: open ? 1: 0,
+        borderWidth: open ? 1 : 0,
         borderColor: colors.lightergray,
         borderRadius: 15,
-        backgroundColor: colors.white,
+        backgroundColor: props.backgroundColor ?? colors.white,
         minHeight: 37,
       }}
+      onClose={props.onClose}
       placeholder={props.placeholder}
       placeholderStyle={{ color: colors.gray }}
       textStyle={{
         fontSize: 15,
         color: colors.black,
         fontFamily: "OpenSans",
-        fontWeight: '500' as any,
+        fontWeight: "500" as any,
         paddingLeft: 5,
       }}
       listMode="SCROLLVIEW"
       dropDownContainerStyle={[
         {
-          borderWidth: open ? 1: 0,
+          borderWidth: open ? 1 : 0,
           borderTopWidth: 1,
-          backgroundColor: colors.white,
+          backgroundColor: props.backgroundColor ?? colors.white,
           borderColor: colors.lightergray,
           borderRadius: 15,
         },
