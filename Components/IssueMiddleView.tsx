@@ -8,6 +8,8 @@ import { Post, Update } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 
+
+
 interface IssueMiddleViewProps {
   issue: Post;
   updateTrigger: Boolean;
@@ -119,7 +121,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
       <DoubleTextInput
         onFirstInputChange={setTitle}
         onSecondInputChange={setContent}
-        onSubmit={addUpdate}
+        onSubmit={addUpdate} // Pass the addUpdate function
       />
     </View>
   );

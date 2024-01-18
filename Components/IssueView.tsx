@@ -9,6 +9,7 @@ import { Post } from "../utils/interfaces";
 
 interface IssueViewProps {
   issue: Post;
+  onPopoverCloseComplete: () => void; // Add this line
   style?: any;
 }
 
@@ -39,12 +40,9 @@ function IssueView(props: IssueViewProps): JSX.Element {
         props.style,
       ]}
     >
-      <IssueLeftView issue={issue} />
-      <IssueMiddleView updateTrigger={updateTrigger} issue={issue} />
-      <IssueRightView
-        fetchStatusUpdates={handleUpdateTrigger}
-        issue={issue}
-      />
+      <IssueLeftView issue={props.issue}/>
+      <IssueMiddleView updateTrigger={updateTrigger} issue={props.issue}/>
+      <IssueRightView fetchStatusUpdates={handleUpdateTrigger} issue={props.issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
     </View>
   );
 }

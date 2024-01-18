@@ -8,10 +8,12 @@ import Deadline from "./Deadline";
 import Location from "./Location";
 import MarkDone from "./MarkDone";
 import Text from "./Text";
+import DeletePost from "./DeletePost";
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
   issue: Post;
+  onPopoverCloseComplete: () => void; // Add this line
 }
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
@@ -77,29 +79,55 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             {"Email: " + issue.proposalFromEmail}
           </Text>
         ) : null}
-        {(issue.userProfile.firstName !== "Candor Website" ||
-          issue.userProfile.lastName !== "Bot") && (
-          <>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "400",
-                fontFamily: "Montserrat",
-              }}
-            >
-              {"FirstName: " + (issue.userProfile.firstName ?? "")}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "400",
-                fontFamily: "Montserrat",
-              }}
-            >
-              {"LastName: " + (issue.userProfile.lastName ?? "")}
-            </Text>
-          </>
-        )}
+        {issue.postCreatedFrom !== "forwardedEmail" &&
+          issue.userProfile.firstName !== "Candor Website" &&
+          issue.userProfile.lastName !== "Bot" && (
+            <>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"FirstName: " + (issue.userProfile.firstName ?? "")}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"LastName: " + (issue.userProfile.lastName ?? "")}
+              </Text>
+            </>
+          )}
+
+        {issue.postCreatedFrom === "forwardedEmail" &&
+          issue.emailFirstName &&
+          issue.emailLastName && (
+            <>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"FirstName: " + (issue.emailFirstName ?? "")}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"LastName: " + (issue.emailLastName ?? "")}
+              </Text>
+            </>
+          )}
       </View>
       <View style={{ rowGap: 10 }}>
         <MarkDone

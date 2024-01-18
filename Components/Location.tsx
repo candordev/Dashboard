@@ -57,6 +57,8 @@ const Location: React.FC<LocationProps> = (props) => {
 
     const address = data.description; // Or use details.formatted_address
 
+    console.log("The data needed", data);
+
     try {
       let res = await customFetch(Endpoints.setNeighborhood, {
         method: "POST",

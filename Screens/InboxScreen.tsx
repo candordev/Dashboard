@@ -248,7 +248,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         />
       </View>
       <View style={{ flex: 3 }}>
-        {selectedPost && <View style={{backgroundColor: colors.lightergray, padding: 7, paddingLeft: 4, flex: 1}}><IssueView issue={selectedPost} style={{borderRadius: 10}}/></View>}
+        {selectedPost && <View style={{backgroundColor: colors.lightergray, padding: 7, paddingLeft: 4, flex: 1}}><IssueView issue={selectedPost} style={{borderRadius: 10}} onPopoverCloseComplete={() => {}}/></View>}
       </View>
     </View>
   );

@@ -9,7 +9,6 @@ import { customFetch } from "../utils/utils";
 import { Comment } from "../utils/interfaces";
 import PrivateChat from "./PrivateChat";
 import IssueContent from "./IssueContent";
-import { debounce } from "lodash";
 
 interface IssueLeftViewProps {
   issue: Post;
