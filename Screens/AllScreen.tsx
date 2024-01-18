@@ -1,6 +1,12 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import {
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import Card from "../Components/Card";
 import Header from "../Components/Header";
 import Text from "../Components/Text";
@@ -12,16 +18,13 @@ import { ProgressSelector } from "../utils/interfaces";
 import OuterView from "../Components/OuterView";
 import { useUserContext } from "../Hooks/useUserContext";
 import { usePostId } from "../Structure/PostContext";
-import Popover, { PopoverPlacement } from 'react-native-popover-view';
-
-
+import Popover, { PopoverPlacement } from "react-native-popover-view";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
-  
+
   const { height, width } = useWindowDimensions();
   const [searchTerm, setSearchTerm] = useState("");
-
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -172,33 +175,29 @@ const AllScreen = ({ navigation }: any) => {
 
   const [isDeleting, setIsDeleting] = useState(false);
 
-
   const handleRemoveCategory = async (categoryName: any) => {
     try {
       let res: Response = await customFetch(Endpoints.deleteCategory, {
-        method: 'DELETE',
+        method: "DELETE",
         body: JSON.stringify({
           groupID: state.leaderGroups[0],
-          categoryName: categoryName
+          categoryName: categoryName,
         }),
       });
 
       const resJson = await res.json();
 
       if (!res.ok) {
-        console.log("category deletion request failed")
+        console.log("category deletion request failed");
       } else {
-        console.log("categroy deleted")
+        console.log("categroy deleted");
         setIsDeleting(true); // Start loading
         await handlePopoverCloseComplete();
         setIsDeleting(false); // Start loading
       }
     } catch (error: any) {
-     console.log(error)
+      console.log(error);
     }
-
-
-
 
     // Call your route and handle the action here
     console.log(`Remove category: ${categoryName}`);
@@ -225,44 +224,97 @@ const AllScreen = ({ navigation }: any) => {
       >
         {Object.entries(categoriesWithPosts).map(([name, posts], index) => (
           <View key={name} style={{ width: 350, marginRight: 20 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ fontSize: 18, fontWeight: '550', color: colors.black, marginBottom: 10, marginTop: 10, fontFamily: 'Montserrat' }}>
-              {name}
-            </Text>
-            {index !== 0 && (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "550",
+                  color: colors.black,
+                  marginBottom: 10,
+                  marginTop: 10,
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {name}
+              </Text>
+              {index !== 0 && (
                 <Popover
-                    // onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
-                    from={
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 18, color: colors.black, fontWeight: '550'}}>•••</Text>
-                        </TouchableOpacity>
-                    }
-                    // isVisible={isPopupVisible}
-                    // onRequestClose={closePopup}
-                    placement={PopoverPlacement.FLOATING}
-                    popoverStyle={{
-                        borderRadius: 10,
-                        width: width * 0.13,
-                        height: height * 0.16,
-                    }}
+                  // onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
+                  from={
+                    <TouchableOpacity>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: colors.black,
+                          fontWeight: "550",
+                        }}
+                      >
+                        •••
+                      </Text>
+                    </TouchableOpacity>
+                  }
+                  // isVisible={isPopupVisible}
+                  // onRequestClose={closePopup}
+                  placement={PopoverPlacement.FLOATING}
+                  popoverStyle={{
+                    borderRadius: 10,
+                    width: width * 0.13,
+                    height: height * 0.16,
+                  }}
                 >
-                <View>
-                    <Text style={{ textAlign: 'center', fontWeight: 'bold', padding: 10 }}>Are you sure you want to delete this category?</Text>
+                  <View>
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        padding: 10,
+                      }}
+                    >
+                      Are you sure you want to delete this category?
+                    </Text>
                     <TouchableOpacity
                       onPress={() => handleRemoveCategory(name)}
-                      style={{ backgroundColor: 'red', padding: 10, marginTop: 55, borderRadius: 5, marginHorizontal: 10 }}
+                      style={{
+                        backgroundColor: "red",
+                        padding: 10,
+                        marginTop: 55,
+                        borderRadius: 5,
+                        marginHorizontal: 10,
+                      }}
                     >
                       {isDeleting ? (
-                        <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>Loading...</Text>
+                        <Text
+                          style={{
+                            color: "white",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Loading...
+                        </Text>
                       ) : (
-                        <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', marginTop: -4 }}>Delete</Text>
+                        <Text
+                          style={{
+                            color: "white",
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            marginTop: -4,
+                          }}
+                        >
+                          Delete
+                        </Text>
                       )}
                     </TouchableOpacity>
-                </View>
-
+                  </View>
                 </Popover>
-            )}
-    {/* <Popover
+              )}
+              {/* <Popover
                 isVisible={popoverVisible}
                 onRequestClose={() => setPopoverVisible(false)}
                 from={(
@@ -287,8 +339,7 @@ const AllScreen = ({ navigation }: any) => {
                   </TouchableOpacity>
                 </View>
       </Popover> */}
-
-          </View>
+            </View>
             <FlatList
               key={`${name}-${refreshKey}`}
               data={posts}
