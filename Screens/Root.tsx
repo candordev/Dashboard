@@ -56,10 +56,23 @@ function Root() {
         headerShown: false,
       }}
     >
-      <Drawer.Screen name="all" component={AllScreen} options={{title: "Candor - Issues"}}/>
+      <Drawer.Screen
+        name="all"
+        component={AllScreen}
+        options={{ title: "Candor - Issues" }}
+      />
+      {/* <Drawer.Screen
+        name="map"
+        component={MapScreen}
+        options={{ title: "Candor - Map" }}
+      /> */}
       {/* <Drawer.Screen name="your" component={YourScreen} />
       <Drawer.Screen name="suggested" component={SuggestedScreen} /> */}
-      <Drawer.Screen name="inbox" component={InboxScreen} options={{title: "Candor - Inbox"}}/>
+      <Drawer.Screen
+        name="inbox"
+        component={InboxScreen}
+        options={{ title: "Candor - Inbox" }}
+      />
     </Drawer.Navigator>
   );
 }
