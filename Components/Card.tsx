@@ -29,12 +29,11 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
 
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
 
-
   useEffect(() => {
     if (props.initialOpen) {
       setIsPopoverVisible(true);
       props.hasInitialOpen();
-        }
+    }
   }, [props.initialOpen]);
 
   const togglePopover = () => {
@@ -50,30 +49,33 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
         props.onPopoverCloseComplete();
       }}
       from={
-        <TouchableOpacity style={styles.card} disabled={props.isDisabled} onPress={togglePopover}>
+        <TouchableOpacity
+          style={styles.card}
+          disabled={props.isDisabled}
+          onPress={togglePopover}
+        >
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "center",
               marginBottom: 5,
             }}
           >
-            <Text style={styles.title}>{props.issue.title}</Text>
+            <View style={{flex: 1}}>
+              <Text style={[styles.title, {marginBottom: 3,}]}>{props.issue.title}</Text>
+              <Text
+                style={{
+                  fontSize: 13,
+                  fontWeight: "500",
+                  fontFamily: "Montserrat",
+                  color: "gray",
+                }}
+              >
+                {formatDate(props.issue.createdAt)}
+              </Text>
+            </View>
             <ProgressBar step={props.issue.step} />
           </View>
-          <Text
-                style={{
-                    fontSize: 13,
-                    fontWeight: "500",
-                    fontFamily: "Montserrat",
-                    color: "gray",
-                    marginBottom: 3,
-                    //marginLeft: 5,
-                }}
-            >
-                 {formatDate(props.issue.createdAt)}
-            </Text>
           <Text style={styles.content}>{issueContent}</Text>
         </TouchableOpacity>
       }
@@ -84,7 +86,7 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
         height: height * 0.9,
       }}
     >
-      <IssueView issue={props.issue} />
+      <IssueView issue={props.issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
     </Popover>
   );
 }
@@ -97,11 +99,11 @@ const styles = StyleSheet.create({
     marginVertical: 7,
   },
   title: {
-    fontSize: 17,
-    fontWeight: "650" as any,
+    fontSize: 15.5,
+    fontWeight: "600",
   },
   content: {
-    fontSize: 15,
+    fontSize: 14,
   },
 });
 

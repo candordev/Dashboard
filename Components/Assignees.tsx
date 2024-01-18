@@ -44,6 +44,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
   const [leaders, setLeaders] = useState<UserProfile[]>([]);
   const [errorMessageLeader, setErrorMessageLeader] = useState<string>();
 
+  useEffect(() => {
+    console.log("selected children", selectedChildren);
+  }, [selectedChildren]);
+
   type Department = {
     label: string;
     value: string;
@@ -99,7 +103,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   useEffect(() => {
     fetchLeaders();
-  }, []);
+  }, [props]);
 
   useEffect(() => {
     //console.log("GROUP FOR A POST", props.issue.group)
@@ -188,6 +192,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   }, [previousValue, previousValueChild]);
 
   const onCloseDropDown = async () => {
+    console.log("Close dropdown", selectedChildren);
     if (!props.createPost && props.issue && props.issue._id) {
       const currentSelectedChildren = currentSelectedChildrenRef.current;
       const previousSelectedChildren = previousValueRefChildB.current;
@@ -380,6 +385,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
     // Update selected values to include new leader and department
     let updatedValue = [...value, departmentName, leaderEmail];
     setValue(updatedValue);
+    console.log("set Selected Children in UPDATE DROPDOWN", Array.from(newSelectedChildren));
     setSelectedChildren(Array.from(newSelectedChildren));
   };
 

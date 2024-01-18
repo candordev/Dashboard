@@ -12,7 +12,7 @@ import { Endpoints } from "../utils/Endpoints";
 
 interface IssueMiddleViewProps {
   issue: Post;
-  updateTrigger: Boolean; 
+  updateTrigger: Boolean;
 }
 
 function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
@@ -20,6 +20,11 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [errorMessage, setMessage] = useState("");
+  const [issue, setIssue] = useState<Post>(props.issue);
+
+  useEffect(() => {
+    setIssue(props.issue);
+  }, [props.issue]);
 
   // useEffect(() => {
   //   console.log("INFNITE LOOP D");
@@ -36,7 +41,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
       endpoint =
         Endpoints.getPostProgress +
         new URLSearchParams({
-          postID: props.issue._id,
+          postID: issue._id,
         });
 
       const res: Response = await customFetch(endpoint, {
@@ -66,7 +71,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
         body: JSON.stringify({
           title: title,
           content: content,
-          postID: props.issue._id,
+          postID: issue._id,
           completed: false,
         }),
       });
@@ -135,4 +140,3 @@ const styles = StyleSheet.create({
 });
 
 export default IssueMiddleView;
-

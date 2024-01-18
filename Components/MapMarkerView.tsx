@@ -94,7 +94,7 @@ const Marker = (props: MarkerProps) => {
                 height: height * 0.9,
             }}
         >
-            <IssueView issue={props.issue} />
+            <IssueView issue={props.issue} onPopoverCloseComplete={() => {}}/>
         </Popover>
     );
 };
