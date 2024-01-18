@@ -13,15 +13,19 @@ import OuterView from "../Components/OuterView";
 import { useUserContext } from "../Hooks/useUserContext";
 import { usePostId } from "../Structure/PostContext";
 import Popover, { PopoverPlacement } from 'react-native-popover-view';
-
+import Button from "../Components/Button";
+import MapMarkerView from "../Components/MapMarkerView";
 
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
-  
+
   const { height, width } = useWindowDimensions();
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [isMapView, setIsMapView] = useState(false);
+
+  const [posts, setPosts] = useState<Post[]>([]); // Initialize posts state to an empty array
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -91,6 +95,19 @@ const AllScreen = ({ navigation }: any) => {
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
+  useEffect(() => {
+    console.log("Categories with posts updated:", categoriesWithPosts);
+    Object.values(categoriesWithPosts).forEach((posts: Post[]) => {
+      posts.forEach((post: Post) => {
+        if (post.location) {
+          console.log("printing post that has location: ", post);
+        } else {
+          console.log("printing post that has no location: ", post);
+        }
+      });
+    });
+  }, [categoriesWithPosts])
+
   const fetchPosts = async (
     status: ProgressSelector | undefined,
     searchTerm: string,
@@ -132,6 +149,7 @@ const AllScreen = ({ navigation }: any) => {
       if (res.ok) {
         console.log("resJson DEBUG: ", resJson);
         setCategoriesWithPosts(resJson);
+        setPosts(resJson);
         setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
@@ -206,8 +224,15 @@ const AllScreen = ({ navigation }: any) => {
     setPopoverVisible(false); // Close the popover after action
   };
 
+  function toggleMapView() {
+    setIsMapView(isMapView => !isMapView);
+  }
+
   return (
     <OuterView style={{ paddingHorizontal: 40 }}>
+      <View style={{flexDirection: 'row'}}>
+          <Button text={isMapView ? "Map" : "List"} onPress={toggleMapView} style={{flex: 1/20}}/>
+        </View>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
@@ -217,7 +242,7 @@ const AllScreen = ({ navigation }: any) => {
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
-      <ScrollView
+      {!isMapView ? (<ScrollView
         horizontal
         style={{
           backgroundColor: colors.background,
@@ -307,7 +332,12 @@ const AllScreen = ({ navigation }: any) => {
             />
           </View>
         ))}
-      </ScrollView>
+      </ScrollView>) : (
+        <MapMarkerView posts={posts} />
+        // <View>
+        //   <Text>Map</Text>
+        // </View>
+      )}
     </OuterView>
   );
 };

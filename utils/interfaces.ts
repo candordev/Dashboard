@@ -107,6 +107,8 @@ export interface Post {
   proposalFromEmail: string;
   emailFirstName: string;
   emailLastName: String
+  lng: String;
+  lat: String;
 }
 
 export interface Leader {
