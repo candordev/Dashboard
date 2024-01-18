@@ -70,7 +70,7 @@ const SelectableButton = (props: PropType) => {
       style={[
         styles.button,
         {
-          backgroundColor: props.selected ? colors.black : colors.lightergray,
+          backgroundColor: props.selected ? colors.black : colors.darkerBackground,
         },
       ]}
     >
@@ -89,14 +89,14 @@ const SelectableButton = (props: PropType) => {
 const styles = StyleSheet.create({
   container: {
     zIndex: 0,
-    backgroundColor: colors.lightergray,
+    backgroundColor: colors.darkerBackground,
     borderRadius: 15,
     flexDirection: "row",
     columnGap: 7,
     height: 37,
   },
   button: { borderRadius: 15, paddingHorizontal: 10, justifyContent: "center" },
-  text: { fontWeight: "500" },
+  text: { fontWeight: "550" as any },
 });
 
 export default StatusPicker;

@@ -1,6 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   ScrollView,
   TouchableOpacity,
@@ -25,6 +26,7 @@ const AllScreen = ({ navigation }: any) => {
 
   const { height, width } = useWindowDimensions();
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -58,13 +60,7 @@ const AllScreen = ({ navigation }: any) => {
       categorySelected,
       assigneesSelectedIds
     );
-  }, [
-    progressSelected,
-    categorySelected,
-    isFocused,
-    assigneesSelectedIds,
-    searchTerm,
-  ]); // Depend on currStatus to refetch when it changes
+  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     console.log("Received status:", status);
@@ -102,6 +98,7 @@ const AllScreen = ({ navigation }: any) => {
   ) => {
     try {
       console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
@@ -141,6 +138,8 @@ const AllScreen = ({ navigation }: any) => {
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -216,6 +215,11 @@ const AllScreen = ({ navigation }: any) => {
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
+      {loading && (
+        <View style={{ marginVertical: 3 }}>
+          <ActivityIndicator color={colors.purple} size={"small"} />
+        </View>
+      )}
       <ScrollView
         horizontal
         style={{
@@ -233,7 +237,7 @@ const AllScreen = ({ navigation }: any) => {
             >
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: 17,
                   fontWeight: "550",
                   color: colors.black,
                   marginBottom: 10,
@@ -314,31 +318,6 @@ const AllScreen = ({ navigation }: any) => {
                   </View>
                 </Popover>
               )}
-              {/* <Popover
-                isVisible={popoverVisible}
-                onRequestClose={() => setPopoverVisible(false)}
-                from={(
-                  <TouchableOpacity onPress={() => setPopoverVisible(true)}>
-                    <Text style={{ fontSize: 18, color: colors.black, fontWeight: '550' }}>•••</Text>
-                  </TouchableOpacity>
-                )}
-                placement={PopoverPlacement.FLOATING}
-                popoverStyle={{
-                  borderRadius: 10,
-                  width: width * 0.2,
-                  height: height * 0.2,
-                }}
-              >
-                <View>
-                  <Text>Are you sure you want to delete this category?</Text>
-                  <TouchableOpacity
-                    onPress={() => handleRemoveCategory(name)}
-                    style={{ backgroundColor: 'red', padding: 10, marginTop: 10, borderRadius: 5 }}
-                  >
-                    <Text style={{ color: 'white', textAlign: 'center' }}>Delete</Text>
-                  </TouchableOpacity>
-                </View>
-      </Popover> */}
             </View>
             <FlatList
               key={`${name}-${refreshKey}`}
