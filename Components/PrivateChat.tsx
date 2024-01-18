@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import { View, StyleSheet, ScrollView, Text, TextInput } from "react-native";
 import colors from "../Styles/colors";
 import ExpandableTextInput from "./ExpandableTextInput";
 import { Comment, Post } from "../utils/interfaces";
@@ -7,7 +7,8 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import ProfilePicture from "./ProfilePicture";
-import DropDown from "./DropDown";
+import DropDown from "./DropDown";;
+import styles from "../Styles/styles";
 
 interface PrivateChatProps {
   issue: Post;
@@ -69,35 +70,35 @@ const renderComment = (comment: Comment, index: number) => {
   lastAuthorId = comment.authorID;
   lastCommentDate = new Date(comment.date);
   return (
-    <View key={comment._id} style={styles.commentContainer}>
+    <View key={comment._id} style={chatStyles.commentContainer}>
         {comment.isWhisper ? (
-            <View style={styles.whisperCommentContainer}>
-                <Text style={styles.whisperCommentText}>
+            <View style={chatStyles.whisperCommentContainer}>
+                <Text style={chatStyles.whisperCommentText}>
                     {comment.content}
                 </Text>
             </View>
         ) : (
           <>
-          <View style={styles.nameAndDateContainer}>
+          <View style={chatStyles.nameAndDateContainer}>
             {!isAuthor && (
                 <>
-                    <Text style={styles.userName}>
+                    <Text style={chatStyles.userName}>
                         {comment.contentType == "constituentChat" ? "Constituent Chat Response" : `${comment.profile.firstName} ${comment.profile.lastName}`}
                     </Text>
                     {showDate && (
-                        <Text style={styles.dateText}>
+                        <Text style={chatStyles.dateText}>
                             {formatDate(comment.date)}
                         </Text>
                     )}
                 </>
             )}
             {isAuthor && showDate && (
-                <Text style={styles.authorSelfDate}>
+                <Text style={chatStyles.authorSelfDate}>
                     {formatDate(comment.date)}
                 </Text>
             )}
         </View>
-        <View style={isAuthor ? styles.authorSelf : styles.authorOther}>
+        <View style={isAuthor ? chatStyles.authorSelf : chatStyles.authorOther}>
             <Text style={isAuthor ? { color: 'white' } : { color: 'black' }}>
                 {comment.content}
             </Text>
@@ -143,16 +144,7 @@ async function postConstituentComment() {
       }),
     });
     if (res.ok) {
-      let resJson = await res.json();
-      // Check if the response has 'success' and 'commentId'
-      if (resJson.success && resJson.commentId) {
-        // const commentID = resJson.commentId; // Use the 'commentId' from the response
-        // await postPoliticianComment(commentID);
-        fetchPrivateChat();
-      } else {
-        // Handle the case where the response does not have 'success' or 'commentId'
-        console.error("Failed to post constituent comment: Missing 'success' or 'commentId'");
-      }
+      fetchPrivateChat();
     } else {
       console.error("Response from sendConstituentChat was not OK.");
       // Optionally handle the error response here
@@ -186,10 +178,10 @@ async function postConstituentComment() {
     } 
   }
   return (
-    <View style={styles.chatContainer}>
-      <View style={styles.titleDropdownContainer}>
+    <View style={chatStyles.chatContainer}>
+      <View style={chatStyles.titleDropdownContainer}>
         <View style={{minHeight: 75, flex: 1, paddingTop: 8}}> {/* minHeight 75 bc dropdown component option minHeight = 37 -> 2 options >= 74 to be able to select them */}
-          <Text style={styles.chatTitle}>Private Chat</Text>
+          <Text style={chatStyles.chatTitle}>Private Chat</Text>
         </View>  
         <View style={{minHeight: 75, flex: 1}}>
         <DropDown
@@ -209,15 +201,18 @@ async function postConstituentComment() {
       </View>
       <ScrollView
         ref={scrollViewRef}
-        style={styles.messageContainer}
+        style={chatStyles.messageContainer}
         onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
         onLayout={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
       >
         {privateComments.map(renderComment)}
       </ScrollView>
-        <ExpandableTextInput
-            onInputChange={(text) => setNewCommentContent(text)}
-            onSubmit={chatMode == "constituent" ? postConstituentComment : postComment}
+        <TextInput
+          style={[styles.textInput, { height: 40}]}
+          placeholder="Add a comment..."
+          placeholderTextColor={colors.gray}
+          onChangeText={(text) => setNewCommentContent(text)}
+          onSubmitEditing={chatMode == "constituent" ? postConstituentComment : postComment}
         />
     </View>
   );
@@ -225,7 +220,7 @@ async function postConstituentComment() {
 
 export default PrivateChat;
 
-const styles = StyleSheet.create({
+const chatStyles = StyleSheet.create({
 
  titleDropdownContainer: {
   flexDirection: 'row', 
