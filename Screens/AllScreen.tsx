@@ -25,6 +25,7 @@ const AllScreen = ({ navigation }: any) => {
 
   const { height, width } = useWindowDimensions();
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -61,7 +62,6 @@ const AllScreen = ({ navigation }: any) => {
   }, [
     progressSelected,
     categorySelected,
-    isFocused,
     assigneesSelectedIds,
     searchTerm,
   ]); // Depend on currStatus to refetch when it changes
@@ -102,6 +102,7 @@ const AllScreen = ({ navigation }: any) => {
   ) => {
     try {
       console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
@@ -141,6 +142,8 @@ const AllScreen = ({ navigation }: any) => {
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
+    } finally {
+      setLoading(false);
     }
   };
 
