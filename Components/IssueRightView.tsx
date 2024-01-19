@@ -21,6 +21,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
 
   React.useEffect(() => {
     
+    
     setIssue(props.issue);
   }, [props.issue]);
 
