@@ -143,11 +143,8 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-        
           {groupID && <DownloadPDF groupID={groupID as string} />}
-         
           <OptionPicker onOptionChange={onHeaderOptionChange} />
-
       </View>
       <View
         style={{
