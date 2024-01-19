@@ -427,6 +427,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
       );
     }
   };
+
+
   const handleEmptyFields = (emptyFields: emptyFields) => {
     let errorMessage = "";
 

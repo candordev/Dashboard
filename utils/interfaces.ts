@@ -35,6 +35,11 @@ export interface emptyFields{
   department: boolean
 }
 
+export interface emptyFieldsDepartment{
+  departmentDescription: boolean,
+  departmentName: boolean
+}
+
 export interface CategoryWithPosts {
   [categoryName: string]: Post[];
 }

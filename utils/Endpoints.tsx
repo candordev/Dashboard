@@ -109,7 +109,8 @@ export const Endpoints = {
   markDone:  `${BASE_URL}/post/markDone?`,
   sendConstituentChat: `${BASE_URL}/comment/sendConstituentChat?`,
   sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`,
-  deleteCategory: `${BASE_URL}/group/deleteCategory?`
+  deleteCategory: `${BASE_URL}/group/deleteCategory?`,
+  addDepartment: `${BASE_URL}/department/createDepartment?`
 
 
 };
