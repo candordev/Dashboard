@@ -137,6 +137,10 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
           issueId={issue._id}
           step={issue.step}
         />
+        <DeletePost
+          issueId={issue._id}
+          onPopoverCloseComplete={props.onPopoverCloseComplete}
+        />
         {/* <CloseIssue /> */}
       </View>
     </ScrollView>

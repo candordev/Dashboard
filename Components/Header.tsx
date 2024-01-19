@@ -12,6 +12,7 @@ import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
+import DownloadPDF from "./DownloadPDF";
 
 interface HeaderProps {
   onStatusChange: (status: Status) => void;
@@ -142,7 +143,11 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-        <OptionPicker onOptionChange={onHeaderOptionChange} />
+        
+          {groupID && <DownloadPDF groupID={groupID as string} />}
+         
+          <OptionPicker onOptionChange={onHeaderOptionChange} />
+
       </View>
       <View
         style={{
