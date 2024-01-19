@@ -76,7 +76,8 @@ const Category: React.FC<CategoryProps> = ({
 
   useEffect(() => {
     getCategories();
-  }, []); // Depend on categories prop
+  }, [issueId]); // Depend on categories prop
+
 
   useEffect(() => {
     // Map categories to dropdown items

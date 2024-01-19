@@ -42,7 +42,7 @@ const Location: React.FC<LocationProps> = (props) => {
     console.log("issue fields: ", props.issue);
 
     fetchToken();
-  }, []);
+  }, [props.issue]);
 
   const handleSelect = async (
     data: GooglePlaceData,
