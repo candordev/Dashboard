@@ -69,12 +69,13 @@ const AddLeader = (props: {
         const data = await response.json();
         if (response.ok) {
           console.log("DEPARTMENTS FETCHED DATA", data);
-          setItems(
-            data.map((dept: { name: any; _id: any }) => ({
-              label: dept.name,
-              value: dept._id,
-            }))
-          );
+          const departmentItems = data.map((dept: { name: any; _id: any; }) => ({
+            label: dept.name,
+            value: dept._id,
+          }));
+  
+          // Prepend the "Add Department" option to the department items
+          setItems([{ label: "Add Department", value: "add_department" }, ...departmentItems]);
         } else {
           // Handle error in response
           console.error("Error fetching departments: ", data.error);
@@ -89,6 +90,8 @@ const AddLeader = (props: {
     //setItems(departments)
   }, []);
 
+  
+
 
   // const handleValueChange = (newValues: ValueType[] | null) => {
   //   console.log("Selected values changed to:", newValues);
@@ -99,16 +102,18 @@ const AddLeader = (props: {
   // };
 
   const handleDeparmentSelection = (selectedValue: ValueType | null) => {
-    const selectedDepartment = items.find((item) => item.value === (selectedValue as string));
-    // console.log("selected Value", selectedValue)
-    // console.log("items", items)
-    // console.log("selected dept bool", selectedDepartment)
-    // if (selectedDepartment) {
       console.log("DEPARTMENT SELECTED", selectedValue as string);
       setSelectedDepartmentName(selectedValue as string);
+      console.log("yuhh", selectedDepartmentName)
       setValue(selectedValue as string); // This should now be valid
-   // }
   };
+
+  useEffect(() => {
+    if(selectedDepartmentName == "add_department"){
+      setExpandedAddDep(true);
+    }
+  }, [selectedDepartmentName]);
+
   
 
   async function addDepartment(
@@ -161,8 +166,9 @@ const AddLeader = (props: {
               />
             </>
       )}
-      {expanded && (
+      {expanded &&  (
         <>
+           {expandedAddDep && 
             <TouchableOpacity //NEEDS TO BE FIXED
                 style={{
                   backgroundColor: colors.purple,
@@ -198,6 +204,7 @@ const AddLeader = (props: {
                   } 
                 }}
               >
+           
                 <Text
                   style={{
                     fontFamily: "Montserrat",
@@ -206,9 +213,11 @@ const AddLeader = (props: {
                     fontWeight: "600",
                   }}
                 > 
-                  {expandedAddDep ? "Done" : "Add Department"}
+                  Done
                 </Text>
+          
       </TouchableOpacity> 
+    }
       {/* placeholder="Select category"
         value={value}
         setValue={handleValueChange}
