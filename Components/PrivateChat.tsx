@@ -1,26 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, ScrollView, Text, TextInput } from "react-native";
 import colors from "../Styles/colors";
 import ExpandableTextInput from "./ExpandableTextInput";
-import { Comment } from "../utils/interfaces";
+import { Comment, Post } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import ProfilePicture from "./ProfilePicture";
+import DropDown from "./DropDown";;
+import styles from "../Styles/styles";
 import { debounce } from "lodash";
 
 
 interface PrivateChatProps {
-  issueID: string;
+  issue: Post;
 }
-
 function PrivateChat(props: PrivateChatProps): JSX.Element {
   const {state, dispatch} = useUserContext();
   const [privateComments, setPrivateComments] = useState<Comment[]>([]);
   const [newCommentContent, setNewCommentContent] = useState("");
+  
+  const scrollViewRef = useRef<ScrollView>(null);
+  const[inputText, setInputText] = useState<string>("");
+  
 
-
-
+  const [chatMode, setChatMode] = useState("authorities");
+  const [chatModeItems, setChatModeItems] = useState([
+    { label: 'Authorities', value: 'authorities' },
+    { label: 'Constituent', value: 'constituent' }
+  ]);
   const formatDate = (createdAt: string): string => {
     const now = new Date();
     const createdDate = new Date(createdAt); // Parse the string into a Date object
@@ -28,8 +36,6 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     const diffMins = Math.round(diffMs / 60000); // minutes
     const diffHrs = Math.round(diffMins / 60); // hours
     const diffDays = Math.round(diffHrs / 24); // days
-
-
   
     if (diffMins < 60) {
       return `${diffMins} minutes ago`;
@@ -42,13 +48,17 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
       return createdDate.toLocaleDateString();
     }
   };
-
-  // <Text style={styles.userName}>{`${comment.profile.firstName} ${comment.profile.lastName}  ${formatDate(comment.)}`}</Text>
+  useEffect(() => {  
+    fetchPrivateChat();
+    console.log("ISSUE IS : ", props.issue._id)
+  }, [chatMode]); 
 
 
   useEffect(() => {
-    fetchPrivateChat()
-  }, []);
+    setPrivateComments([]); 
+    // fetchPrivateChat();
+  }, [props.issue._id]); 
+
 
 // Define the initial state with appropriate types and default values
 let lastAuthorId = '';
@@ -57,7 +67,7 @@ let lastCommentDate = new Date(0);
 const renderComment = (comment: Comment, index: number) => {
   const isAuthor = String(comment.authorID).trim() === String(state._id).trim();
   let showDate = false;
-
+  
   if (lastAuthorId !== comment.authorID) {
       showDate = true;
   } else {
@@ -66,114 +76,203 @@ const renderComment = (comment: Comment, index: number) => {
           showDate = true;
       }
   }
-
   lastAuthorId = comment.authorID;
   lastCommentDate = new Date(comment.date);
-
   return (
-    <View key={comment._id} style={styles.commentContainer}>
-        <View style={styles.nameAndDateContainer}>
+    <View key={comment._id} style={chatStyles.commentContainer}>
+        {comment.isWhisper ? (
+            <View style={chatStyles.whisperCommentContainer}>
+                <Text style={chatStyles.whisperCommentText}>
+                    {comment.content}
+                </Text>
+            </View>
+        ) : (
+          <>
+          <View style={chatStyles.nameAndDateContainer}>
             {!isAuthor && (
                 <>
-                    <Text style={styles.userName}>
-                        {`${comment.profile.firstName} ${comment.profile.lastName}`}
+                    <Text style={chatStyles.userName}>
+                        {comment.contentType == "constituentChat" ? "Constituent Chat Response" : `${comment.profile.firstName} ${comment.profile.lastName}`}
                     </Text>
                     {showDate && (
-                        <Text style={styles.dateText}>
+                        <Text style={chatStyles.dateText}>
                             {formatDate(comment.date)}
                         </Text>
                     )}
                 </>
             )}
             {isAuthor && showDate && (
-                <Text style={styles.authorSelfDate}>
+                <Text style={chatStyles.authorSelfDate}>
                     {formatDate(comment.date)}
                 </Text>
             )}
         </View>
-        <View style={isAuthor ? styles.authorSelf : styles.authorOther}>
+        <View style={isAuthor ? chatStyles.authorSelf : chatStyles.authorOther}>
             <Text style={isAuthor ? { color: 'white' } : { color: 'black' }}>
                 {comment.content}
             </Text>
         </View>
+          </>
+        )}
     </View>
 );
 };
 
 
-async function postComment() {
-  console.log("COMMENT POSTED")
+async function postPoliticianComment() {
   try {
     let res: Response = await customFetch(Endpoints.sendPoliticianChat, {
       method: "POST",
       body: JSON.stringify({
         content: newCommentContent,
-        postID: props.issueID,
+        postID: props.issue._id,
+        user: state._id,
+        // parentID: undefined,
+        // privateChat: "true",
       }),
     });
-
     let resJson = await res.json();
     if (!res.ok) {
-      console.error("ERROR HAPPENDED: ", resJson.error);
+      console.error(resJson.error);
     } else {
       fetchPrivateChat();
+      console.log("Comment Posted to Affiliated Politicians", resJson)
+      
     }
   } catch (error) {
     console.error("Error loading posts. Please try again later.", error);
   }
 }
 
-
+async function postConstituentComment() {
+  try {
+    let res = await customFetch(Endpoints.sendConstituentChat, {
+      method: "POST",
+      body: JSON.stringify({
+        postID: props.issue._id,
+        content: newCommentContent,
+        user: state._id,
+      }),
+    });
+    if (res.ok) {
+      fetchPrivateChat();
+    } else {
+      console.error("Response from sendConstituentChat was not OK.");
+      // Optionally handle the error response here
+    }
+  } catch (error) {
+    console.error("Error in postConstituentComment: ", error);
+  }
+}
 
   async function fetchPrivateChat() {
     try {
-      const res: Response = await customFetch(
-        Endpoints.getPrivateChats +
-          new URLSearchParams({
-            postID: props.issueID,
-            skip: "0",
-          }),
-        {
-          method: "GET",
-        }
-      );
-
+        const res: Response = await customFetch(
+          Endpoints.getPrivateChats +
+            new URLSearchParams({
+              postID: props.issue._id,
+              skip: "0",
+            }),
+          {
+            method: "GET",
+          }
+        );
       let resJson = await res.json();
       if (!res.ok) {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
-        console.log("newComments: ", newComments)
-        setPrivateComments(newComments);
+        console.log("newComments TOTAL: ", newComments.length);
+        let filteredComments: Comment[] = [];
+        if (chatMode === "constituent") {
+          filteredComments = resJson.filter((comment: Comment) => comment.contentType === "constituentChat" || comment.isWhisper);
+          console.log("filteredComments for const: ", filteredComments.length);
+        } else { 
+          filteredComments = resJson.filter((comment: Comment) => comment.contentType !== "constituentChat" && !comment.isWhisper);
+          console.log("filteredComments for everyone: ", filteredComments.length);
+          console.log("WEMBY POLITICIANS: ", props.issue.acceptedPoliticians);
+        } 
+        setPrivateComments(filteredComments);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
-    }
+    } 
   }
   return (
-    <View style={styles.chatContainer}>
-        <Text style={styles.chatTitle}>Private Chat</Text>
-        <ScrollView style={styles.messageContainer}>
-            {privateComments.map(renderComment)}
-        </ScrollView>
-        <ExpandableTextInput
-            onInputChange={(text) => setNewCommentContent(text)}
-            onSubmit={postComment}
+    <View style={chatStyles.chatContainer}>
+      <View style={chatStyles.titleDropdownContainer}>
+        <View style={{flex: 1}}> 
+          <Text style={chatStyles.chatTitle}>Private Chat</Text>
+        </View>  
+        <View style={{flex: 1}}>
+          {props.issue.proposalFromEmail.includes("@") ? (  
+              <DropDown
+              placeholder="Chat Type"
+              value={chatMode}
+              setValue={setChatMode}
+              items={chatModeItems}
+              setItems={setChatModeItems}
+              multiple={false}
+              styles={{
+                dropdownStyle : {},
+                textStyle: { color: colors.purple, fontSize: 15, fontWeight: '500'},
+                dropdownContainerStyle: {}
+              }}
+            />
+            ) : null}
+        </View>
+      </View>
+      <ScrollView
+        ref={scrollViewRef}
+        style={chatStyles.messageContainer}
+        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
+        onLayout={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
+      >
+        {privateComments.map(renderComment)}
+      </ScrollView>
+        <TextInput
+          style={[styles.textInput, { height: 40}]}
+          placeholder="Add a comment..."
+          placeholderTextColor={colors.gray}
+          onChangeText={(text) => {
+            setNewCommentContent(text);
+            setInputText(text)
+          }}
+          onSubmitEditing={() => {
+            chatMode == "constituent" ? postConstituentComment() : postPoliticianComment();
+            setInputText('');
+          }}
+          value={inputText}
         />
     </View>
-);
+  );
 };
 
 export default PrivateChat;
-const styles = StyleSheet.create({
 
+const chatStyles = StyleSheet.create({
+
+ titleDropdownContainer: {
+  flexDirection: 'row', 
+  alignItems: 'center', 
+  justifyContent: 'space-between', 
+  padding: 5, 
+  zIndex: 10,
+},
+userName: {
+  color: colors.purple,
+  fontWeight: "500",
+  alignSelf: 'flex-start',
+  marginBottom: 0,
+  marginLeft: 5
+
+},
 commentContainer: {
     marginVertical: 1,
 },
 dateText: {
   color: 'gray',
   marginLeft: 8
-  // Add any other styling you need for the date text
 },
 authorSelf: {
     textAlign: 'right',
@@ -183,26 +282,19 @@ authorSelf: {
     margin: 5,
     padding: 10,
     borderRadius: 10,
-    flexDirection: 'row-reverse', 
-    maxWidth: '80%', // maximum width of 80%
+    flexDirection: 'row-reverse',
+    
 },
 authorOther: {
     textAlign: 'left',
-    backgroundColor: colors.lightestgray,
+    backgroundColor: 'lightgray',
     color: 'black',
     alignSelf: 'flex-start',
     margin: 5,
     padding: 10,
     borderRadius: 10,
-    maxWidth: '80%', // maximum width of 80%
 },
-userName: {
-    color: colors.purple,
-    fontWeight: "500",
-    alignSelf: 'flex-start',
-    marginBottom: 0,
-    marginLeft: 5
-},
+
   chatContainer: {
       borderColor: colors.lightestgray,
       borderWidth: 2,
@@ -215,10 +307,11 @@ userName: {
       fontSize: 18,
       fontWeight: "600",
       fontFamily: "Montserrat",
+      flex: 1,
   },
   messageContainer: {
       flex: 1,
-      marginTop: 10
+      marginTop: 15
   },
   nameAndDateContainer: {
     flexDirection: 'row',
@@ -228,5 +321,18 @@ userName: {
 authorSelfDate: {
   color: 'gray',
   marginLeft: 'auto', // Pushes the date to the far left
+},
+
+whisperCommentContainer: {
+  maxWidth: '80%', 
+  alignSelf: 'center', 
+  margin: 5,
+},
+
+whisperCommentText: {
+  color: 'gray',
+  fontSize: 12, // readable font size
+  textDecorationLine: 'underline',
+  textAlign: 'center',
 },
 });

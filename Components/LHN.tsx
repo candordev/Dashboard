@@ -13,7 +13,7 @@ import { useSignout } from "../Hooks/useSignout";
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
   const {state, dispatch} = useUserContext();
- 
+
 
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
@@ -67,6 +67,12 @@ const LHN = (props: any) => {
         icon="list"
         selected={navIndex == 0}
       />
+      {/* <NavItem
+        name={"Map"}
+        route="/map"
+        icon="map"
+        selected={navIndex == 1}
+      /> */}
       {/* <NavItem name={"Your Issues"} route="/your" icon="list" />
       <NavItem name={"Suggested Issues"} route="/suggested" icon="list" /> */}
       <NavItem
@@ -74,7 +80,7 @@ const LHN = (props: any) => {
         route="/inbox"
         icon="inbox"
         unreadCount={unread}
-        selected={navIndex == 1}
+        selected={navIndex == 2}
       />
       <View style={{ flex: 1 }} />
       <NavItem

@@ -11,6 +11,7 @@ import Text from "./Text";
 import { CategoryPost } from "../utils/interfaces";
 import { useUserContext } from "../Hooks/useUserContext";
 import OuterComponentView from "./PopoverComponentView";
+import DropDown from "./DropDown";
 
 type DropdownItem = {
   label: string;
@@ -25,8 +26,13 @@ interface CategoryProps {
   // ... other props if any
 }
 
-const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChange, style }) => {
-  const {state, dispatch} = useUserContext();
+const Category: React.FC<CategoryProps> = ({
+  issueId,
+  createPost,
+  onCategoryChange,
+  style,
+}) => {
+  const { state, dispatch } = useUserContext();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string[] | null>(null);
   const [items, setItems] = useState<DropdownItem[]>([]);
@@ -34,45 +40,43 @@ const Category: React.FC<CategoryProps> = ({ issueId, createPost, onCategoryChan
   const [categories, setCategories] = useState<CategoryPost[]>([]);
   const [categoryError, setCategoryError] = useState("");
 
-
   const getCategories = async () => {
     try {
-        console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
-        
-        // Initialize URLSearchParams
-        let params = new URLSearchParams({
-            groupID: state.leaderGroups[0] // This parameter is always included
-        });
+      console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
 
-        // Add postID only if issueId is defined
-        if (issueId && !createPost) {
-            params.append('postID', issueId);
-        }
+      // Initialize URLSearchParams
+      let params = new URLSearchParams({
+        groupID: state.leaderGroups[0], // This parameter is always included
+      });
 
-        let endpoint = Endpoints.getCategoryForPost + params;
+      // Add postID only if issueId is defined
+      if (issueId && !createPost) {
+        params.append("postID", issueId);
+      }
 
-        const res = await customFetch(endpoint, {
-            method: 'GET',
-        });
+      let endpoint = Endpoints.getCategoryForPost + params;
 
-        const resJson = await res.json();
-        if (!res.ok) {
-            console.error(resJson.error);
-            return;
-        }
+      const res = await customFetch(endpoint, {
+        method: "GET",
+      });
 
-        const result = resJson; // Assuming resJson is an array of CategoryPost
-        console.log("CATEGORIES ARE...", result);
-        setCategories(result);
+      const resJson = await res.json();
+      if (!res.ok) {
+        console.error(resJson.error);
+        return;
+      }
+
+      const result = resJson; // Assuming resJson is an array of CategoryPost
+      console.log("CATEGORIES ARE...", result);
+      setCategories(result);
     } catch (error) {
-        console.error("Error loading categories. Please try again later.", error);
+      console.error("Error loading categories. Please try again later.", error);
     }
-};
+  };
 
-
-useEffect(() => {
-  getCategories();
-}, []); // Depend on categories prop
+  useEffect(() => {
+    getCategories();
+  }, [issueId]); // Depend on categories prop
 
 
   useEffect(() => {
@@ -91,9 +95,8 @@ useEffect(() => {
     setValue(checkedCategories.length > 0 ? checkedCategories : null);
   }, [categories]); // Depend on categories prop
 
-
   const handleValueChange = (newValues: ValueType[] | null) => {
-    console.log("Selected values changed to:", newValues);
+    console.log("new valee", newValues as string[])
     if (newValues != null) {
       setValue(newValues as string[]); // Use type assertion here
       setValueChanged(true); // Indicate that the value has changed
@@ -117,7 +120,7 @@ useEffect(() => {
   };
 
   const handleDropdownClose = async () => {
-    if (valueChanged && !createPost ) {
+    if (valueChanged && !createPost) {
       console.log("Dropdown closed with new value:", value);
       //setValue(value)
 
@@ -142,8 +145,8 @@ useEffect(() => {
       }
 
       setValueChanged(false);
-    }else{
-      if(onCategoryChange){
+    } else {
+      if (onCategoryChange) {
         onCategoryChange(value);
       }
     }
@@ -152,116 +155,76 @@ useEffect(() => {
   const handleNewCategory = async (newCategoryName: string) => {
     setCategoryError("");
 
-    const categoryExists = items.some(item => item.label === newCategoryName);
+    const categoryExists = items.some((item) => item.label === newCategoryName);
     if (categoryExists) {
       setCategoryError("Category already exists.");
       return;
     }
-    if(!createPost){
-        try {
-          const updatedValue = value
-            ? [...new Set([...value, newCategoryName])]
-            : [newCategoryName];
+    if (!createPost) {
+      try {
+        const updatedValue = value
+          ? [...new Set([...value, newCategoryName])]
+          : [newCategoryName];
 
+        let res = await customFetch(Endpoints.addCategory, {
+          method: "POST",
+          body: JSON.stringify({
+            postID: issueId,
+            names: updatedValue,
+          }),
+        });
 
-          let res = await customFetch(Endpoints.addCategory, {
-            method: "POST",
-            body: JSON.stringify({
-              postID: issueId,
-              names: updatedValue,
-            }),
-          });
-
-          if (!res.ok) {
-            const resJson = await res.json();
-            console.error("Error adding new category:", resJson.error);
-          } else {
-            console.log("New Category added successfully");
-            updateDropdownAndSelection(newCategoryName);
-
-          }
-        } catch (error) {
-          console.error("Network error, please try again later.", error);
-    }
-  }else{
-    try {
-      const updatedValue = value
-        ? [...new Set([...value, newCategoryName])]
-        : [newCategoryName];
-
-
-      let res = await customFetch(Endpoints.addCategoryCreatePost, {
-        method: "POST",
-        body: JSON.stringify({
-          groupID: state.leaderGroups[0],
-          names: [newCategoryName],
-        }),
-      });
-
-      if (!res.ok) {
-        const resJson = await res.json();
-        console.error("Error adding new category:", resJson.error);
-      } else {
-        console.log("New Category added successfully");
-        updateDropdownAndSelection(newCategoryName);
-        if(onCategoryChange){
-          onCategoryChange(updatedValue);
+        if (!res.ok) {
+          const resJson = await res.json();
+          console.error("Error adding new category:", resJson.error);
+        } else {
+          console.log("New Category added successfully");
+          updateDropdownAndSelection(newCategoryName);
         }
+      } catch (error) {
+        console.error("Network error, please try again later.", error);
       }
-    } catch (error) {
-      console.error("Network error, please try again later.", error);
-}
-  }
+    } else {
+      try {
+        const updatedValue = value
+          ? [...new Set([...value, newCategoryName])]
+          : [newCategoryName];
+
+        let res = await customFetch(Endpoints.addCategoryCreatePost, {
+          method: "POST",
+          body: JSON.stringify({
+            groupID: state.leaderGroups[0],
+            names: [newCategoryName],
+          }),
+        });
+
+        if (!res.ok) {
+          const resJson = await res.json();
+          console.error("Error adding new category:", resJson.error);
+        } else {
+          console.log("New Category added successfully");
+          updateDropdownAndSelection(newCategoryName);
+          if (onCategoryChange) {
+            onCategoryChange(updatedValue);
+          }
+        }
+      } catch (error) {
+        console.error("Network error, please try again later.", error);
+      }
+    }
   };
 
   return (
-    <OuterComponentView
-      style={style}
-      title="Tag"
-    >
-      <DropDownPicker
-        multiple={true}
-        open={open}
+    <OuterComponentView style={style} title="Tag">
+      <DropDown
+        placeholder="Select category"
         value={value}
+        setValue={handleValueChange}
         items={items}
-        setOpen={setOpen}
-        setValue={setValue} // Directly set value using the provided setter
         setItems={setItems}
-        onChangeValue={handleValueChange}
-        onClose={handleDropdownClose} // Handle when dropdown closes
-        dropDownDirection="BOTTOM"
-        style={{
-          borderWidth: 0,
-          backgroundColor: colors.lightestgray,
-          marginTop: 10,
-          minHeight: 30,
-        }}
-        textStyle={{
-          fontSize: 15,
-          color: colors.black,
-          fontWeight: "500",
-          fontFamily: "Montserrat",
-        }}
-        listMode="SCROLLVIEW"
-        dropDownContainerStyle={[
-          {
-            borderWidth: 0,
-            borderTopWidth: 1,
-            backgroundColor: colors.lightestgray,
-            borderColor: colors.lightergray,
-            marginTop: 10,
-            height: 120
-          },
-        ]}
-        ArrowDownIconComponent={() => (
-          <FeatherIcon name={"chevron-down"} size={20} color={colors.gray} />
-        )}
-        ArrowUpIconComponent={() => (
-          <FeatherIcon name={"chevron-up"} size={20} color={colors.gray} />
-        )}
-        TickIconComponent={() => (
-          <FeatherIcon name={"check"} size={17} color={colors.gray} />
-        )}
+        multiple={true}
+        backgroundColor={colors.lightestgray}
+        onClose={handleDropdownClose}
       />
       {/* View to display selected categories */}
       <View style={{ marginTop: 15 }}>
@@ -276,7 +239,7 @@ useEffect(() => {
         <OrFullWidth />
         {categoryError !== "" && (
           <Text style={styles.errorText}>{categoryError}</Text>
-         )}
+        )}
         <AddCategory onCategoryAdded={handleNewCategory} />
       </View>
     </OuterComponentView>
@@ -291,9 +254,9 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 14,
-    textAlign: 'left',
+    textAlign: "left",
     marginTop: 5,
     marginLeft: 0,
     fontFamily: "Montserrat",

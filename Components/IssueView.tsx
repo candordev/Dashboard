@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import Text from "./Text";
 import colors from "../Styles/colors";
@@ -9,31 +9,43 @@ import { Post } from "../utils/interfaces";
 
 interface IssueViewProps {
   issue: Post;
+  onPopoverCloseComplete: () => void; // Add this line
+  style?: any;
 }
 
 function IssueView(props: IssueViewProps): JSX.Element {
   const [updateTrigger, setUpdateTrigger] = useState(false);
+  const [issue, setIssue] = useState<Post>(props.issue);
+
+  useEffect(() => {
+    console.log("IssueView mounted, setting issue", props.issue)
+    setIssue(props.issue);
+  }, [props.issue]);
 
   const handleUpdateTrigger = () => {
-    setUpdateTrigger(prev => !prev); // Toggle the trigger to force re-render
+    setUpdateTrigger((prev) => !prev); // Toggle the trigger to force re-render
   };
 
   return (
     <View
-      style={{
-        padding: 10,
-        alignItems: "center",
-        flexDirection: "row",
-        flex: 1,
-        columnGap: 10,
-      }}
+      style={[
+        {
+          padding: 10,
+          alignItems: "center",
+          flexDirection: "row",
+          flex: 1,
+          columnGap: 10,
+          backgroundColor: colors.white,
+        },
+        props.style,
+      ]}
     >
       <IssueLeftView issue={props.issue}/>
       <IssueMiddleView updateTrigger={updateTrigger} issue={props.issue}/>
-      <IssueRightView fetchStatusUpdates={handleUpdateTrigger} issue={props.issue}/>
+      <IssueRightView fetchStatusUpdates={handleUpdateTrigger} issue={props.issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

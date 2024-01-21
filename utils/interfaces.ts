@@ -35,6 +35,11 @@ export interface emptyFields{
   department: boolean
 }
 
+export interface emptyFieldsDepartment{
+  departmentDescription: boolean,
+  departmentName: boolean
+}
+
 export interface CategoryWithPosts {
   [categoryName: string]: Post[];
 }
@@ -105,6 +110,10 @@ export interface Post {
   neighborhood: string;
   postCreatedFrom: string;
   proposalFromEmail: string;
+  emailFirstName: string;
+  emailLastName: String
+  lng: String;
+  lat: String;
 }
 
 export interface Leader {
@@ -197,6 +206,8 @@ export interface Comment {
   totalCommentsUnder?: number;
   blocked: boolean;
   postTitle: string;
+  isWhisper: boolean;
+  contentType: string;
 }
 
 export enum UserReaction {

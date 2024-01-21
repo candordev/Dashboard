@@ -107,9 +107,10 @@ export const Endpoints = {
   getPrivateChats:  `${BASE_URL}/comment/getPrivateChats?`,
   editPost:  `${BASE_URL}/post/editPost?`,
   markDone:  `${BASE_URL}/post/markDone?`,
-  sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`
-
-
+  sendConstituentChat: `${BASE_URL}/comment/sendConstituentChat?`,
+  sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`,
+  deleteCategory: `${BASE_URL}/group/deleteCategory?`,
+  addDepartment: `${BASE_URL}/department/createDepartment?`
 
 
 };

@@ -34,7 +34,7 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
           fontWeight: "500",
         }}
       >
-        Separate By:
+        View By:
       </Text>
       <Popover
         from={
@@ -70,7 +70,7 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
         onRequestClose={() => setIsPopoverVisible(false)}
       >
         <View>
-          {["Deadline", "Location", "Department", "Tag"].map((option) => (
+          {["Deadline", "Location", "Department", "Tag", "Map"].map((option) => (
             <Pressable
               key={option}
               style={{

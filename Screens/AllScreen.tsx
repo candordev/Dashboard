@@ -1,6 +1,13 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import Card from "../Components/Card";
 import Header from "../Components/Header";
 import Text from "../Components/Text";
@@ -12,10 +19,19 @@ import { ProgressSelector } from "../utils/interfaces";
 import OuterView from "../Components/OuterView";
 import { useUserContext } from "../Hooks/useUserContext";
 import { usePostId } from "../Structure/PostContext";
+import Popover, { PopoverPlacement } from "react-native-popover-view";
+import Button from "../Components/Button";
+import MapMarkerView from "../Components/MapMarkerView";
+import FeatherIcon from "react-native-vector-icons/Feather";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('')
+
+  const { height, width } = useWindowDimensions();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [isMapView, setIsMapView] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
     [key: string]: Post[];
@@ -27,24 +43,29 @@ const AllScreen = ({ navigation }: any) => {
     updatedSelected: true,
     completedSelected: true,
   });
-  const [categorySelected, setCategorySelected] = useState<
-    string | undefined
-  >("Tag");
+  const [categorySelected, setCategorySelected] = useState<string | undefined>(
+    "Tag"
+  );
 
   const [assigneesSelectedIds, setAssigneesSelectedIds] = useState<
     string[] | undefined
   >();
 
   const isFocused = useIsFocused(); // Assuming you're using something like this
-  const {state} = useUserContext();
-  const {postId}= usePostId();
+  const { state } = useUserContext();
+  const { postId } = usePostId();
 
   useEffect(() => {
     console.log("Component mounted, fetching posts initially");
 
     console.log("Event triggered, fetching posts");
-    fetchPosts(progressSelected,searchTerm, categorySelected, assigneesSelectedIds);
-  }, [progressSelected, categorySelected, isFocused, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
+    fetchPosts(
+      progressSelected,
+      searchTerm,
+      categorySelected === "Map" ? "Tag" : categorySelected,
+      assigneesSelectedIds
+    );
+  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     console.log("Received status:", status);
@@ -74,15 +95,28 @@ const AllScreen = ({ navigation }: any) => {
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
+  useEffect(() => {
+    console.log("Categories with posts updated:", categoriesWithPosts);
+    Object.values(categoriesWithPosts).forEach((posts: Post[]) => {
+      posts.forEach((post: Post) => {
+        if (post.location) {
+          console.log("printing post that has location: ", post);
+        } else {
+          console.log("printing post that has no location: ", post);
+        }
+      });
+    });
+  }, [categoriesWithPosts]);
+
   const fetchPosts = async (
     status: ProgressSelector | undefined,
     searchTerm: string,
     headerOption?: string,
-    selectedAssigneeIds?: string[],
-    
+    selectedAssigneeIds?: string[]
   ) => {
     try {
       console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
       }
@@ -122,14 +156,21 @@ const AllScreen = ({ navigation }: any) => {
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePopoverCloseComplete = async () => {
     setIsLoading(true);
-    await fetchPosts(progressSelected, searchTerm, categorySelected, assigneesSelectedIds);
+    await fetchPosts(
+      progressSelected,
+      searchTerm,
+      categorySelected,
+      assigneesSelectedIds
+    );
     setIsLoading(false);
   };
 
@@ -147,9 +188,46 @@ const AllScreen = ({ navigation }: any) => {
     }
   }, []);
 
+  const [popoverVisible, setPopoverVisible] = useState(false);
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleRemoveCategory = async (categoryName: any) => {
+    try {
+      let res: Response = await customFetch(Endpoints.deleteCategory, {
+        method: "DELETE",
+        body: JSON.stringify({
+          groupID: state.leaderGroups[0],
+          categoryName: categoryName,
+        }),
+      });
+
+      const resJson = await res.json();
+
+      if (!res.ok) {
+        console.log("category deletion request failed");
+      } else {
+        console.log("categroy deleted");
+        setIsDeleting(true); // Start loading
+        await handlePopoverCloseComplete();
+        setIsDeleting(false); // Start loading
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+
+    // Call your route and handle the action here
+    console.log(`Remove category: ${categoryName}`);
+    // Update state or UI as needed after removing the category
+    setPopoverVisible(false); // Close the popover after action
+  };
+
+  function toggleMapView() {
+    setIsMapView((isMapView) => !isMapView);
+  }
 
   return (
-    <OuterView style={{paddingHorizontal: 40,}}>
+    <OuterView style={{ paddingHorizontal: 40 }}>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
@@ -159,50 +237,127 @@ const AllScreen = ({ navigation }: any) => {
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
       />
-      <ScrollView
-        horizontal
-        style={{
-          backgroundColor: colors.background,
-        }}
-      >
-        {Object.entries(categoriesWithPosts).map(([name, posts]) => (
-          <View
-            key={name}
-            style={{
-              width: 350, // Adjust as needed
-              marginRight: 20,
-              // Other styles
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "550",
-                color: colors.black,
-                marginBottom: 10,
-                marginTop: 10,
-                fontFamily: "Montserrat",
-              }}
-            >
-              {name}
-            </Text>
-            <FlatList
-              key={`${name}-${refreshKey}`}
-              data={posts}
-              renderItem={({ item }) => (
-                <Card 
-                key={item._id}
-                issue={item} 
-                onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
-                isDisabled={isLoading}
-                hasInitialOpen={hasInitialOpen}
-                initialOpen={item._id === initialPostId && !hasInitialOpenOccurred}
+      {loading && (
+        <ActivityIndicator
+          size="small"
+          color={colors.purple}
+          style={{ marginBottom: 10 }}
+        />
+      )}
+      {categorySelected !== "Map" ? (
+        <ScrollView
+          horizontal
+          style={{
+            backgroundColor: colors.background,
+          }}
+        >
+          {Object.entries(categoriesWithPosts).map(([name, posts], index) => (
+            <View key={name} style={{ width: 350, marginRight: 20 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "550",
+                    color: colors.black,
+                    marginBottom: 10,
+                    marginTop: 10,
+                    fontFamily: "Montserrat",
+                  }}
+                >
+                  {name}
+                </Text>
+                {index !== 0 && (
+                  <Popover
+                    // onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
+                    from={
+                      <TouchableOpacity>
+                        <FeatherIcon name={"more-vertical"} size={20} />
+                      </TouchableOpacity>
+                    }
+                    // isVisible={isPopupVisible}
+                    // onRequestClose={closePopup}
+                    placement={PopoverPlacement.FLOATING}
+                    popoverStyle={{
+                      borderRadius: 10,
+                      width: width * 0.13,
+                      height: height * 0.16,
+                    }}
+                  >
+                    <View>
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          padding: 10,
+                        }}
+                      >
+                        Are you sure you want to delete this category?
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => handleRemoveCategory(name)}
+                        style={{
+                          backgroundColor: "red",
+                          padding: 10,
+                          marginTop: 55,
+                          borderRadius: 5,
+                          marginHorizontal: 10,
+                        }}
+                      >
+                        {isDeleting ? (
+                          <Text
+                            style={{
+                              color: "white",
+                              textAlign: "center",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Loading...
+                          </Text>
+                        ) : (
+                          <Text
+                            style={{
+                              color: "white",
+                              textAlign: "center",
+                              fontWeight: "bold",
+                              marginTop: -4,
+                            }}
+                          >
+                            Delete
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    </View>
+                  </Popover>
+                )}
+              </View>
+              <FlatList
+                key={`${name}-${refreshKey}`}
+                data={posts}
+                renderItem={({ item }) => (
+                  <Card
+                    key={item._id}
+                    issue={item}
+                    onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
+                    isDisabled={isLoading}
+                    hasInitialOpen={hasInitialOpen}
+                    initialOpen={
+                      item._id === initialPostId && !hasInitialOpenOccurred
+                    }
+                  />
+                )}
               />
-              )}
-            />
-          </View>
-        ))}
-      </ScrollView>
+            </View>
+          ))}
+        </ScrollView>
+      ) : (
+        <MapMarkerView posts={categoriesWithPosts} />
+      )}
     </OuterView>
   );
 };

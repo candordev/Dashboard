@@ -42,7 +42,7 @@ const Location: React.FC<LocationProps> = (props) => {
     console.log("issue fields: ", props.issue);
 
     fetchToken();
-  }, []);
+  }, [props.issue]);
 
   const handleSelect = async (
     data: GooglePlaceData,
@@ -56,6 +56,8 @@ const Location: React.FC<LocationProps> = (props) => {
     }
 
     const address = data.description; // Or use details.formatted_address
+
+    console.log("The data needed", data);
 
     try {
       let res = await customFetch(Endpoints.setNeighborhood, {
@@ -92,7 +94,8 @@ const Location: React.FC<LocationProps> = (props) => {
         }}
         requestUrl={{
           useOnPlatform: "web", // or "all"
-          url: "http://184.72.74.25:4000/api/userActivity/google-places-proxy", // or any proxy server that hits https://maps.googleapis.com/maps/api
+          url: "https://candoradmin.com/api/userActivity/google-places-proxy", // or any proxy server that hits https://maps.googleapis.com/maps/api
+
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",

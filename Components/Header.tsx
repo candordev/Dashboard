@@ -34,18 +34,15 @@ const Header = ({
   onPopoverCloseComplete,
 }: HeaderProps) => {
   const { state, dispatch } = useUserContext();
-  const activeTab = "all";
-
-  const [categoryValue, setCategoryValue] = useState<string[]>([]);
-
-
   const [searchPhrase, setSearchPhrase] = useState("");
-  const [posts, setPosts] = useState<Post[]>([]); // Ensure this is an array of Post
-  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    console.log("SEARCH PHRASE CHANGED: ", searchPhrase);
-    onSearchChange(searchPhrase);
+    const timer = setTimeout(() => {
+      console.log("SEARCH PHRASE CHANGED: ", searchPhrase);
+      onSearchChange(searchPhrase);
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [searchPhrase]);
 
   const [leaders, setLeaders] = useState<UserProfile[]>([]); // State to store leaders

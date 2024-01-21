@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import colors from "../Styles/colors";
@@ -19,6 +19,15 @@ const IssueContent: React.FC<IssueContent> = (props) => {
 
   const [title, setTitle] = useState(props.title);
   const [content, setContent] = useState(props.content);
+
+  useEffect(() => {
+    console.log("title changed to", props.title)
+    setTitle(props.title);
+  } ,[props.title])
+
+  useEffect(() => {
+    setContent(props.content);
+  } ,[props.content])
 
   const handleDone = async () => {
     try {

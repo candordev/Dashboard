@@ -1,4 +1,4 @@
-import React, { createElement, forwardRef, useState } from "react";
+import React, { createElement, forwardRef, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Endpoints } from "../utils/Endpoints";
@@ -20,6 +20,10 @@ const Deadline: React.FC<DeadlineProps> = (props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(
     props.issue ? new Date(props.issue.deadline) : null
   );
+
+  useEffect(() => {
+    setSelectedDate(props.issue ? new Date(props.issue.deadline) : null)
+  }, [props.issue]); // Depend on categories prop
 
   const handleDateChange = async (date: Date | null) => {
     if (props.createPost && props.onChange) {

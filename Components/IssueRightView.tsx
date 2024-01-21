@@ -8,14 +8,24 @@ import Deadline from "./Deadline";
 import Location from "./Location";
 import MarkDone from "./MarkDone";
 import Text from "./Text";
+import DeletePost from "./DeletePost";
 
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
   issue: Post;
+  onPopoverCloseComplete: () => void; // Add this line
 }
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
+  const [issue, setIssue] = React.useState<Post>(props.issue);
+
+  React.useEffect(() => {
+    
+    
+    setIssue(props.issue);
+  }, [props.issue]);
+
   return (
     <ScrollView
       style={{
@@ -26,14 +36,14 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       }}
       contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
     >
-      <Assignees issue={props.issue} createPost={false} style={{ zIndex: 2 }} />
+      <Assignees issue={issue} createPost={false} style={{ zIndex: 2 }} />
       <Category
-        issueId={props.issue._id}
+        issueId={issue._id}
         createPost={false}
         style={{ zIndex: 1 }}
       />
-      <Deadline issue={props.issue} style={{zIndex: 1}}/>
-      <Location issue={props.issue} />
+      <Deadline issue={issue} style={{zIndex: 1}}/>
+      <Location issue={issue} />
       <View
         style={{
           borderColor: colors.lightestgray,
@@ -59,9 +69,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             fontFamily: "Montserrat",
           }}
         >
-          {"Post Created From: " + (props.issue.postCreatedFrom ?? "")}
+          {"Post Created From: " + (issue.postCreatedFrom ?? "")}
         </Text>
-        {props.issue.proposalFromEmail ? (
+        {issue.proposalFromEmail ? (
           <Text
             style={{
               fontSize: 16,
@@ -69,38 +79,64 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               fontFamily: "Montserrat",
             }}
           >
-            {"Email: " + props.issue.proposalFromEmail}
+            {"Email: " + issue.proposalFromEmail}
           </Text>
         ) : null}
-        {(props.issue.userProfile.firstName !== "Candor Website" ||
-          props.issue.userProfile.lastName !== "Bot") && (
-          <>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "400",
-                fontFamily: "Montserrat",
-              }}
-            >
-              {"FirstName: " + (props.issue.userProfile.firstName ?? "")}
-            </Text>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "400",
-                fontFamily: "Montserrat",
-              }}
-            >
-              {"LastName: " + (props.issue.userProfile.lastName ?? "")}
-            </Text>
-          </>
-        )}
+        {issue.postCreatedFrom !== "forwardedEmail" &&
+          issue.userProfile.firstName !== "Candor Website" &&
+          issue.userProfile.lastName !== "Bot" && (
+            <>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"FirstName: " + (issue.userProfile.firstName ?? "")}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"LastName: " + (issue.userProfile.lastName ?? "")}
+              </Text>
+            </>
+          )}
+
+        {issue.postCreatedFrom === "forwardedEmail" &&
+          issue.emailFirstName &&
+          issue.emailLastName && (
+            <>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"FirstName: " + (issue.emailFirstName ?? "")}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "400",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                {"LastName: " + (issue.emailLastName ?? "")}
+              </Text>
+            </>
+          )}
       </View>
       <View style={{ rowGap: 10 }}>
         <MarkDone
           fetchStatusUpdates={props.fetchStatusUpdates}
-          issueId={props.issue._id}
-          step={props.issue.step}
+          issueId={issue._id}
+          step={issue.step}
         />
         {/* <CloseIssue /> */}
       </View>
