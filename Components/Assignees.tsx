@@ -437,7 +437,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
     departmentName: string
   ) {
     try {
-      let res = await customFetch(Endpoints.addLeaderCreatePost, {
+      let res = await customFetch(Endpoints.addLexaderCreatePost, {
         method: "POST",
         body: JSON.stringify({
           firstName: firstName,

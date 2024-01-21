@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Text from "./Text";
 import { StyleSheet,Button, TouchableOpacity, useWindowDimensions, View } from 'react-native';
@@ -37,6 +38,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
   };
 
   const handleImport = () => {
+    // Before calling the route call a sepaerate route that checks to see what emails have a email associated with them otherwise need to work with a addLeader functionality where for the email its firstName, lastName, department  
     if (file) {
       setIsLoading(true); // Set loading to true when the import starts
       Papa.parse<CSVRow>(file, {
