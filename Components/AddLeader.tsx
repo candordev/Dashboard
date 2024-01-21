@@ -111,6 +111,8 @@ const AddLeader = (props: {
   useEffect(() => {
     if(selectedDepartmentName == "add_department"){
       setExpandedAddDep(true);
+    }else{
+      setExpandedAddDep(false);
     }
   }, [selectedDepartmentName]);
 
