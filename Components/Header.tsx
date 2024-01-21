@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
@@ -12,6 +12,7 @@ import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
+import CSVImportComponent from "./CSVImportComponent";
 
 interface HeaderProps {
   onStatusChange: (status: Status) => void;
@@ -115,6 +116,13 @@ const Header = ({
     //fetchPosts(currStatus, selectedHeaderOption);
   };
 
+  const handleImportSuccess = () => {
+    console.log("Import successful");
+    onPopoverCloseComplete(); // Call the callback on successful import
+    // You may want to refresh the data or perform other actions here
+  };
+
+
   return (
     <View
       style={{
@@ -172,6 +180,9 @@ const Header = ({
           />
         </View>
         <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
+        <CSVImportComponent 
+        onImportSuccess={handleImportSuccess} 
+      />
       </View>
     </View>
   );
@@ -215,6 +226,19 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "#ccc", // Color for the dividers
     zIndex: 1000,
+  },
+  card: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 8,
+    borderRadius: 15,
+    backgroundColor: colors.purple,
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: "650" as any,
+    color: "white",
   },
 });
 
