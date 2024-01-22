@@ -96,7 +96,7 @@ const Category: React.FC<CategoryProps> = ({
   }, [categories]); // Depend on categories prop
 
   const handleValueChange = (newValues: ValueType[] | null) => {
-    console.log("Selected values changed to:", newValues);
+    console.log("new valee", newValues as string[])
     if (newValues != null) {
       setValue(newValues as string[]); // Use type assertion here
       setValueChanged(true); // Indicate that the value has changed

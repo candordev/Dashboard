@@ -10,6 +10,7 @@ import MarkDone from "./MarkDone";
 import Text from "./Text";
 import DeletePost from "./DeletePost";
 
+
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
   issue: Post;
