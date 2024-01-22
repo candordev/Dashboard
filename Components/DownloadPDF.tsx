@@ -8,6 +8,7 @@ interface DownloadPDFProps {
     groupID: string;
 }
 
+// for use later when we move this to settings
 const DownloadPDF: React.FC<DownloadPDFProps> = ({ groupID }) => {
 
     const [errorMessage, setErrorMessage] = useState("");

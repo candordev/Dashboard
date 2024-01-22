@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
-import { Post, Status, UserProfile } from "../utils/interfaces";
+import { Status, UserProfile } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
+import CSVImportComponent from "./CSVImportComponent";
 import CreatePost from "./CreatePost";
 import DropDown from "./DropDown";
 import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
-import DownloadPDF from "./DownloadPDF";
-import CSVImportComponent from "./CSVImportComponent";
 
 interface HeaderProps {
   onStatusChange: (status: Status) => void;
@@ -123,7 +122,6 @@ const Header = ({
     // You may want to refresh the data or perform other actions here
   };
 
-
   return (
     <View
       style={{
@@ -151,8 +149,7 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-          {groupID && <DownloadPDF groupID={groupID as string} />}
-          <OptionPicker onOptionChange={onHeaderOptionChange} />
+        <OptionPicker onOptionChange={onHeaderOptionChange} />
       </View>
       <View
         style={{
@@ -182,9 +179,7 @@ const Header = ({
           />
         </View>
         <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
-        <CSVImportComponent 
-        onImportSuccess={handleImportSuccess} 
-      />
+        <CSVImportComponent onImportSuccess={handleImportSuccess} />
       </View>
     </View>
   );
