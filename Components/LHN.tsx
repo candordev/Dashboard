@@ -5,15 +5,14 @@ import colors from "../Styles/colors";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
-import { getUnreadNotifs } from "../utils/utils";
+import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import React, { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
 
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
-  const {state, dispatch} = useUserContext();
-
+  const { state, dispatch } = useUserContext();
 
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
@@ -89,6 +88,16 @@ const LHN = (props: any) => {
           useSignout({ dispatch });
         }}
         icon="log-out"
+        selected={false}
+      />
+      <NavItem
+        name="Download"
+        onPress={() => {
+          downloadPDF(
+            state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined
+          );
+        }}
+        icon="download"
         selected={false}
       />
     </View>
