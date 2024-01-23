@@ -10,6 +10,8 @@ import { Endpoints } from "../utils/Endpoints";
 import { Post } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
 import OuterComponentView from "./PopoverComponentView";
+import { deepStrictEqual } from "assert";
+import Text from "./Text";
 
 type LocationProps = {
   issue?: Post;
@@ -24,6 +26,7 @@ const Location: React.FC<LocationProps> = (props) => {
   const [key, setKey] = useState(0); // Initialize a key state
   const [inputValue, setInputValue] = useState("");
   const [idToken, setIdToken] = useState<string | "">("");
+  const [fullAddress, setFullAddress] = useState("");
 
   const auth = getAuth();
 
@@ -39,6 +42,7 @@ const Location: React.FC<LocationProps> = (props) => {
     };
     console.log("THE LOCATION INPUT VALUE: ", props.issue?.neighborhood ?? "");
     setInputValue(props.issue?.neighborhood ?? "");
+    setFullAddress(props.issue?.location ?? "")
     console.log("issue fields: ", props.issue);
 
     fetchToken();
@@ -56,6 +60,7 @@ const Location: React.FC<LocationProps> = (props) => {
     }
 
     const address = data.description; // Or use details.formatted_address
+    setFullAddress(address)
 
     console.log("The data needed", data);
 
@@ -84,9 +89,16 @@ const Location: React.FC<LocationProps> = (props) => {
 
   return (
     <OuterComponentView title={"Location"}>
+      <Text style={{
+            fontSize: 15,
+            fontWeight: "525",
+            fontFamily: "Montserrat",
+          }}>
+           {"Address: "}
+      </Text>
       <GooglePlacesAutocomplete
         key={key} // Use the key here
-        placeholder={inputValue ? inputValue : "Search"}
+        placeholder={fullAddress ? fullAddress : "Search"}
         onPress={handleSelect}
         query={{
           key: "AIzaSyD-DMOdct5BYGr0zv9UHIZ3Sk9ZWWdJEUY",
@@ -104,15 +116,57 @@ const Location: React.FC<LocationProps> = (props) => {
         }}
         styles={{
           textInput: {
-            fontSize: 16,
+            fontSize: 15,
             borderWidth: 1,
             borderColor: colors.lightgray,
             borderRadius: 10,
+            marginTop: 5,
+            fontFamily: "Montserrat",
           },
         }}
       />
+      {inputValue && (
+        <>
+      <Text style={{
+            fontSize: 15,
+            fontWeight: "525",
+            fontFamily: "Montserrat",
+            marginTop: 5,
+            marginBottom: 5
+          }}>
+           {"Neighborhood: "}
+      </Text>
+      <Text style={{
+            fontSize: 15,
+            fontWeight: "400",
+            fontFamily: "Montserrat",
+            marginLeft: 11
+          }}>
+          {inputValue}
+      </Text>
+      </>
+      )}
     </OuterComponentView>
   );
 };
+
+//  <Text
+//           style={{
+//             fontSize: 18,
+//             fontWeight: "550",
+//             fontFamily: "Montserrat",
+//           }}
+//         >
+//           Post Details
+//         </Text>
+//         <Text
+//           style={{
+//             fontSize: 16,
+//             fontWeight: "400",
+//             fontFamily: "Montserrat",
+//           }}
+//         >
+//           {"Post Created From: " + (issue.postCreatedFrom ?? "")}
+//         </Text> 
 
 export default Location;
