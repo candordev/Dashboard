@@ -110,7 +110,8 @@ export const Endpoints = {
   sendConstituentChat: `${BASE_URL}/comment/sendConstituentChat?`,
   sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`,
   deleteCategory: `${BASE_URL}/group/deleteCategory?`,
-  addDepartment: `${BASE_URL}/department/createDepartment?`
+  addDepartment: `${BASE_URL}/department/createDepartment?`,
+  getUsernameByEmails: `${BASE_URL}/userActivity/getUsernameByEmails?`
 
 
 };

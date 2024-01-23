@@ -22,11 +22,12 @@ const AddLeader = (props: {
   ) => void;
   inviteLeaderMissingFields: (emptyFields: emptyFields) => void;
   createPost: Boolean;
+  emailImport: string;
 }) => {
   const { state, dispatch } = useUserContext();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(props.emailImport || "");
   const [expanded, setExpanded] = useState(false);
   const [departmentDescription , setDepartmentDescription] = useState("");
   const [departmentName , setDepartmentName] = useState("");
@@ -189,7 +190,6 @@ const AddLeader = (props: {
                           const missingFields: emptyFieldsDepartment = {
                             departmentName: departmentName.length === 0,
                             departmentDescription: departmentDescription.length === 0,
-        
                           };
                           const isAnyFieldMissing = Object.values(missingFields).some(
                             (isMissing) => isMissing
