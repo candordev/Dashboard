@@ -64,7 +64,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         </Text>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: "400",
             fontFamily: "Montserrat",
           }}
@@ -74,7 +74,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         {issue.proposalFromEmail ? (
           <Text
             style={{
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: "400",
               fontFamily: "Montserrat",
             }}
@@ -88,7 +88,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             <>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: "400",
                   fontFamily: "Montserrat",
                 }}
@@ -97,7 +97,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               </Text>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: "400",
                   fontFamily: "Montserrat",
                 }}
@@ -113,7 +113,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             <>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: "400",
                   fontFamily: "Montserrat",
                 }}
@@ -122,7 +122,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               </Text>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: "400",
                   fontFamily: "Montserrat",
                 }}

@@ -272,7 +272,7 @@ const AllScreen = ({ navigation }: any) => {
                 >
                   {name}
                 </Text>
-                {index !== 0 && (
+                {index !== 0 && categorySelected === "Tag" && (
                   <Popover
                     // onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
                     from={
@@ -333,7 +333,7 @@ const AllScreen = ({ navigation }: any) => {
                         )}
                       </TouchableOpacity>
                     </View>
-                  </Popover>
+                  </Popover>  
                 )}
               </View>
               <FlatList
