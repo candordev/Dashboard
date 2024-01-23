@@ -111,6 +111,6 @@ export const Endpoints = {
   sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`,
   deleteCategory: `${BASE_URL}/group/deleteCategory?`,
   addDepartment: `${BASE_URL}/department/createDepartment?`,
-  getUsernameByEmails: `${BASE_URL}/userActivity/getUsernameByEmails?`
+  getUsernameByEmails: `${BASE_URL}/userActivity/getUsernameByEmails?`,
   requestPDFInfo: `${BASE_URL}/group/requestPDFInfo?`,
 };
