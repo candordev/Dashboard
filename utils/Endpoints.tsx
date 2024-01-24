@@ -7,14 +7,14 @@
 // }
 
 // local
-//export const BASE_URL : string = `http://localhost:4000/api`;
+export const BASE_URL : string = `http://localhost:4000/api`;
 //export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
 // export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
 // PRODUCTION
-export const BASE_URL: string = `https://candoradmin.com/api`;
+//export const BASE_URL: string = `https://candoradmin.com/api`;
 
 export const Endpoints = {
   base: BASE_URL,
@@ -113,4 +113,5 @@ export const Endpoints = {
   addDepartment: `${BASE_URL}/department/createDepartment?`,
   getUsernameByEmails: `${BASE_URL}/userActivity/getUsernameByEmails?`,
   requestPDFInfo: `${BASE_URL}/group/requestPDFInfo?`,
+  mergePost: `${BASE_URL}/userActivity/mergePost?`,
 };

@@ -56,6 +56,7 @@ const Location: React.FC<LocationProps> = (props) => {
       const neighborhood: string = await props.onChange(data, details);
       setInputValue(neighborhood);
       setKey((prevKey) => prevKey + 1);
+      setFullAddress(data.description)
       return;
     }
 
