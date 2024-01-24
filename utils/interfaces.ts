@@ -114,6 +114,9 @@ export interface Post {
   emailLastName: String
   lng: String;
   lat: String;
+  mergedPosts: Post[],
+  suggestedSimilarPost: Post
+  merged: Boolean
 }
 
 export interface Leader {

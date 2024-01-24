@@ -62,7 +62,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
         borderWidth: 2,
         borderRadius: 10,
         borderColor: colors.lightestgray,
-        maxHeight: '50%',
+        maxHeight: '30%',
       }}
     >
       {editing ? (
@@ -117,7 +117,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           >
             {formatDate(props.date)}
           </Text>
-          <Text style={{ fontSize: 14, marginTop: 5 }}>{content}</Text>
+          <Text style={{ fontSize: 14, marginTop: 5}}>{content}</Text>
         </>
       )}
       <Button

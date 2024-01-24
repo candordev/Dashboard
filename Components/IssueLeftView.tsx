@@ -9,6 +9,7 @@ import { customFetch } from "../utils/utils";
 import { Comment } from "../utils/interfaces";
 import PrivateChat from "./PrivateChat";
 import IssueContent from "./IssueContent";
+import SimilarPost from "./SimilarPost";
 
 interface IssueLeftViewProps {
   issue: Post;
@@ -18,6 +19,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
   const [issue, setIssue] = useState<Post>(props.issue);
+  const [displaySimilarPost, setDisplaySimilarPost] = useState<Boolean>(true);
 
 
   useEffect(() => {
@@ -27,6 +29,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
 
 
   useEffect(() => {
+    console.log("the issue details: ", props.issue)
     fetchComments();
   }, []);
 
@@ -77,6 +80,11 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     }
   }
 
+
+  const handleClose = () => {
+    setDisplaySimilarPost(false);
+  };
+
   return (
     <View
       style={{
@@ -106,6 +114,19 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           </View>
         );
       })}*/}
+        {
+          props.issue.suggestedSimilarPost && displaySimilarPost&& (
+            <SimilarPost
+              title={props.issue.suggestedSimilarPost.title}
+              content={props.issue.suggestedSimilarPost.content}
+              date={props.issue.suggestedSimilarPost.date}
+              ogPostID={props.issue._id}
+              mergePostID={props.issue.suggestedSimilarPost._id}
+              merged={props.issue.suggestedSimilarPost.merged}
+              onClose={handleClose}
+            />
+          )
+        } 
       <PrivateChat issue={props.issue}/>
     </View>
   );
