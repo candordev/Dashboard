@@ -78,7 +78,6 @@ const Category: React.FC<CategoryProps> = ({
     getCategories();
   }, [issueId]); // Depend on categories prop
 
-
   useEffect(() => {
     // Map categories to dropdown items
     const dropdownItems = categories.map((category) => ({
@@ -96,7 +95,7 @@ const Category: React.FC<CategoryProps> = ({
   }, [categories]); // Depend on categories prop
 
   const handleValueChange = (newValues: ValueType[] | null) => {
-    console.log("new valee", newValues as string[])
+    console.log("new valee", newValues as string[]);
     if (newValues != null) {
       setValue(newValues as string[]); // Use type assertion here
       setValueChanged(true); // Indicate that the value has changed
@@ -248,10 +247,9 @@ const Category: React.FC<CategoryProps> = ({
 
 const styles = StyleSheet.create({
   categoryText: {
+    marginBottom: 5,
     fontSize: 16,
-    color: colors.black,
-    marginTop: 5,
-    fontFamily: "Montserrat",
+    fontWeight: '500'
   },
   errorText: {
     color: "red",

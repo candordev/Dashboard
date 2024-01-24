@@ -285,8 +285,7 @@ const AllScreen = ({ navigation }: any) => {
                     placement={PopoverPlacement.FLOATING}
                     popoverStyle={{
                       borderRadius: 10,
-                      width: width * 0.13,
-                      height: height * 0.16,
+                      width: 200,
                     }}
                   >
                     <View>

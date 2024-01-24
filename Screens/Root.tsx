@@ -1,15 +1,11 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import LHN from "../Components/LHN";
 import AllScreen from "./AllScreen";
-import SuggestedScreen from "./SuggestedScreen";
-import YourScreen from "./YourScreen";
 import InboxScreen from "./InboxScreen";
-import { event, eventNames } from "../Events";
-import { AppState, Pressable } from "react-native";
-import { getUnreadNotifs } from "../utils/utils";
+import SettingsScreen from "./SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -72,6 +68,11 @@ function Root() {
         name="inbox"
         component={InboxScreen}
         options={{ title: "Candor - Inbox" }}
+      />
+      <Drawer.Screen
+        name="settings"
+        component={SettingsScreen}
+        options={{ title: "Candor - Settings" }}
       />
     </Drawer.Navigator>
   );

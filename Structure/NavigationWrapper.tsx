@@ -82,7 +82,7 @@ function NavigationWrapper() {
         /* configuration for matching screens with paths */
         root: "root",
         all: "all",
-        map: "map",
+        settings: "settings",
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",

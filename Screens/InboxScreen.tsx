@@ -25,6 +25,7 @@ import Text from "../Components/Native/Text";
 import { FlatList, ScrollView } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import IssueView from "../Components/IssueView";
+import OuterView from "../Components/OuterView";
 
 type Props = PropsWithChildren<{
   route: any;
@@ -219,14 +220,24 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
 
   useEffect(() => {
     console.log("HAS BEEN CHANGED TO: ", selectedPost);
-  }, [selectedPost])
+  }, [selectedPost]);
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: colors.white, flexDirection: "row" }}
+    <OuterView
+      style={{
+        flex: 1,
+        backgroundColor: colors.white,
+        flexDirection: "row",
+        padding: 0,
+        overflow: "hidden",
+      }}
     >
       <View
-        style={{ flex: 1, borderWidth: 2.5, borderColor: colors.lightergray }}
+        style={{
+          flex: 1,
+          borderColor: colors.lightestgray,
+          borderRightWidth: 2.5,
+        }}
       >
         <FlatList
           data={notifs}
@@ -249,9 +260,24 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         />
       </View>
       <View style={{ flex: 3 }}>
-        {selectedPost && <View style={{backgroundColor: colors.lightergray, padding: 7, paddingLeft: 4, flex: 1}}><IssueView issue={selectedPost} style={{borderRadius: 10}} onPopoverCloseComplete={() => {}}/></View>}
+        {selectedPost && (
+          <View
+            style={{
+              backgroundColor: colors.background,
+              padding: 7,
+              paddingLeft: 4,
+              flex: 1,
+            }}
+          >
+            <IssueView
+              issue={selectedPost}
+              style={{ borderRadius: 10 }}
+              onPopoverCloseComplete={() => {}}
+            />
+          </View>
+        )}
       </View>
-    </View>
+    </OuterView>
   );
 }
 

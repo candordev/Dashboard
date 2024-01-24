@@ -10,7 +10,6 @@ import MarkDone from "./MarkDone";
 import Text from "./Text";
 import DeletePost from "./DeletePost";
 
-
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
   issue: Post;
@@ -21,8 +20,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [issue, setIssue] = React.useState<Post>(props.issue);
 
   React.useEffect(() => {
-    
-    
     setIssue(props.issue);
   }, [props.issue]);
 
@@ -32,17 +29,16 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         borderRadius: 10,
         height: "100%",
         flex: 1,
-        //justifyContent: "space-between",
       }}
-      contentContainerStyle={{ flexGrow: 1, justifyContent: "space-between" }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: "space-between",
+        rowGap: 10,
+      }}
     >
-      <Assignees issue={issue} createPost={false} style={{ zIndex: 2 }} />
-      <Category
-        issueId={issue._id}
-        createPost={false}
-        style={{ zIndex: 1 }}
-      />
-      <Deadline issue={issue} style={{zIndex: 1}}/>
+      <Assignees issue={issue} createPost={false} style={{ zIndex: 3 }} />
+      <Category issueId={issue._id} createPost={false} style={{ zIndex: 2 }} />
+      <Deadline issue={issue} style={{ zIndex: 1 }} />
       <Location issue={issue} />
       <View
         style={{
@@ -132,18 +128,16 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             </>
           )}
       </View>
-      <View style={{ rowGap: 10 }}>
-        <MarkDone
-          fetchStatusUpdates={props.fetchStatusUpdates}
-          issueId={issue._id}
-          step={issue.step}
-        />
-        <DeletePost
-          issueId={issue._id}
-          onPopoverCloseComplete={props.onPopoverCloseComplete}
-        />
-        {/* <CloseIssue /> */}
-      </View>
+      <MarkDone
+        fetchStatusUpdates={props.fetchStatusUpdates}
+        issueId={issue._id}
+        step={issue.step}
+      />
+      <DeletePost
+        issueId={issue._id}
+        onPopoverCloseComplete={props.onPopoverCloseComplete}
+      />
+      {/* <CloseIssue /> */}
     </ScrollView>
   );
 }

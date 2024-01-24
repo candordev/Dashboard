@@ -79,6 +79,12 @@ const LHN = (props: any) => {
         route="/inbox"
         icon="inbox"
         unreadCount={unread}
+        selected={navIndex == 1}
+      />
+      <NavItem
+        name={"Settings"}
+        route="/settings"
+        icon="settings"
         selected={navIndex == 2}
       />
       <View style={{ flex: 1 }} />

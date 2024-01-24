@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
         borderBottomColor: colors.lightgray,
         borderBottomWidth: 1,
         padding: 10,
-        marginBottom: 10,
         color: 'black'
 
     },
@@ -72,7 +71,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 10,
         alignItems: 'center',
-        marginTop: 20,
     },
     toggleButtonText: {
         fontFamily: "Montserrat",
@@ -87,20 +85,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontFamily: "Montserrat",
       },
-      completedButton: {
-        backgroundColor: colors.green, // Adjust the color as needed
-        borderRadius: 10,
-        paddingVertical: 10,
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    completedButtonText: {
-        color: 'white',
-        fontSize: 18,
-        fontWeight: '600',
-        fontFamily: "Montserrat",
-    },
-
 });
 
 export default DeletePost;
