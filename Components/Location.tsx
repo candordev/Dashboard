@@ -151,23 +151,5 @@ const Location: React.FC<LocationProps> = (props) => {
   );
 };
 
-//  <Text
-//           style={{
-//             fontSize: 18,
-//             fontWeight: "550",
-//             fontFamily: "Montserrat",
-//           }}
-//         >
-//           Post Details
-//         </Text>
-//         <Text
-//           style={{
-//             fontSize: 16,
-//             fontWeight: "400",
-//             fontFamily: "Montserrat",
-//           }}
-//         >
-//           {"Post Created From: " + (issue.postCreatedFrom ?? "")}
-//         </Text> 
 
 export default Location;

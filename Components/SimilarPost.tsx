@@ -83,7 +83,7 @@ const SimilarPost: React.FC<SimilarPostProps> = ({ title, content, date, ogPostI
                     textStyle={{
                     color: colors.white,
                     fontSize: 12,
-                    fontWeight: "500",
+                    fontWeight: "500"
                     }}
                 />
                 ) : (
