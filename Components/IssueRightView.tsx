@@ -219,11 +219,13 @@ const editButtonStyle = {
   backgroundColor: colors.lightestgray,
   paddingHorizontal: 10,
   paddingVertical: 5,
+  borderRadius: 15
 };
 
 const doneButtonStyle = {
   ...editButtonStyle,
   backgroundColor: colors.purple,
+  borderRadius: 15
 };
 
 export default IssueRightView;
