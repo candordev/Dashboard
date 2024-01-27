@@ -181,9 +181,10 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    console.log("THS THE ST: ", state);
+    console.log("THS THE ST: ", postId, !hasInitialOpenOccurred);
     // Check if postId exists and set it
     if (postId && !hasInitialOpenOccurred) {
+      console.log("here set")
       setInitialPostId(postId);
     }
   }, []);

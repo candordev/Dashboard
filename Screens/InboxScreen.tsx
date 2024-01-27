@@ -13,6 +13,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text
 } from "react-native";
 import NotifSection from "../Components/NotifSection";
 import { event, eventNames } from "../Events";
@@ -20,8 +21,9 @@ import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
 import { Endpoints } from "../utils/Endpoints";
-import { Notification, Post } from "../utils/interfaces";
-import Text from "../Components/Native/Text";
+import { Notification, NotificationType, Post } from "../utils/interfaces";
+import Hyperlink from 'react-native-hyperlink';
+
 import { FlatList, ScrollView } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import IssueView from "../Components/IssueView";
@@ -43,6 +45,8 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   const stopped = useRef<boolean>(false);
   const refreshing = useRef<boolean>(false);
   const { state } = useUserContext();
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>();
+
 
   const [selectedPost, setSelectedPost] = useState<Post | null>();
 
@@ -159,6 +163,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         onPopoverCloseComplete={handleCloseComplete}
         notif={item}
         navigation={navigation}
+        setSelectedNotification={setSelectedNotification}
         setSelectedPost={setSelectedPost}
         selectedPost={selectedPost}
       />
@@ -260,7 +265,19 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         />
       </View>
       <View style={{ flex: 3 }}>
-        {selectedPost && (
+      {selectedNotification && selectedNotification.data?.contentType === NotificationType.reminder ? (
+          <View style={{ padding: 20 }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 15 }}>
+              {selectedNotification.title}
+            </Text>
+            <Hyperlink linkDefault={true} linkStyle={{ color: colors.purple }}>
+              <Text style={{ fontSize: 16 }}>
+                {selectedNotification.content}
+              </Text>
+            </Hyperlink>
+          </View>
+        ) :
+        selectedPost && (
           <View
             style={{
               backgroundColor: colors.background,

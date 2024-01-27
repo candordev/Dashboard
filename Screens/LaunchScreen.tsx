@@ -39,8 +39,10 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   //   }
   // }, [routePostId, postId, setPostId]);
 
+  //http://localhost:19006/launch/undefined/6590f6dff2861756c5e1b941
+
   useEffect(() => {
-    console.log("Checking route for postId");
+    console.log("Checking route for postId: ", routePostId);
     if (routePostId && routePostId !== postId) {
       setPostId(routePostId);
     }

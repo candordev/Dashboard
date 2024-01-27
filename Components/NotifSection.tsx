@@ -29,6 +29,8 @@ type Props = {
   onPopoverCloseComplete: () => void; // Add this line
   isDisabled: boolean;
   setSelectedPost: (post: Post | undefined) => void;
+  setSelectedNotification: (post: Notification | undefined) => void;
+
   selectedPost: Post | null | undefined;
 };
 
@@ -95,6 +97,7 @@ const NotifSection = (props: Props) => {
       const post = await fetchPost(notif.data?.postID);
       console.log("NOTIF WAS CLICKED", post);
       props.setSelectedPost(post);
+      props.setSelectedNotification(notif)
     } catch (error) {
       console.error("Error fetching post:", error);
     }
@@ -107,6 +110,7 @@ const NotifSection = (props: Props) => {
   // }, [props.notif.data]);
 
   useEffect(() => {
+    console.log("THIS IS THE NOTIF: ", props.notif)
     setNotif(props.notif);
   }, [props.notif]);
 

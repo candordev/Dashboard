@@ -31,6 +31,7 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
 
   useEffect(() => {
     if (props.initialOpen) {
+      console.log("inital Open found")
       setIsPopoverVisible(true);
       props.hasInitialOpen();
     }
