@@ -168,7 +168,7 @@ function CreatePostView(props: any) {
         onChangeText={setEmail}
       />
       <Deadline createPost={true} onChange={handleDateChange} style={{zIndex: 4}}/>
-      <Assignees
+    <Assignees
         createPost={true}
         onAssigneesChange={handleAssigneesChange}
         onAssigneesChangeEmail={handleAssigneesChangeEmail}
