@@ -17,13 +17,23 @@ import InboxScreen from "../Screens/InboxScreen";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { getUnreadNotifs } from "../utils/utils";
+import { NotificationProvider } from "../Structure/NotificationContext"; // Update the import path as necessary
+import NotificationPopup from "../Components/NotificationPopup";
+import { useNavigationContainerRef } from '@react-navigation/native';
+
+
+
+
 
 const Stack = createStackNavigator();
 
 function NavigationWrapper() {
+  const navigationRef = useNavigationContainerRef();
   const { isSignupOperation } = useSignup();
   const { state, dispatch } = useUserContext();
   const { loginUser } = useLogin();
+  // const navigation = useNavigation();
+
 
   useEffect(() => {
     console.log("INFNITE LOOP H");
@@ -93,29 +103,36 @@ function NavigationWrapper() {
     },
   };
 
+
+
   return (
-    <NavigationContainer linking={linking}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
-        {state.token ? (
-          <>
-            <Stack.Screen name="launch" component={LaunchScreen} />
-            <Stack.Screen name="root" component={Root} />
-            {/* other authenticated screens */}
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="launch" component={LaunchScreen} />
-            <Stack.Screen name="login" component={LoginScreen} />
-            <Stack.Screen
-              name="signupStack"
-              component={SignupStack}
-              options={{ headerShown: false }}
-            />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+     <>
+      <NavigationContainer ref={navigationRef} linking={linking}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
+          {state.token ? (
+            <>
+              <Stack.Screen name="launch" component={LaunchScreen} />
+              <Stack.Screen name="root" component={Root} />
+              <Stack.Screen name="inbox" component={InboxScreen} />
+              
+              {/* other authenticated screens */}
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="launch" component={LaunchScreen} />
+              <Stack.Screen name="login" component={LoginScreen} />
+              <Stack.Screen
+                name="signupStack"
+                component={SignupStack}
+                options={{ headerShown: false }}
+              />
+              
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+      </>
   );
 }
 

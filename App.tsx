@@ -5,6 +5,8 @@ import "react-native-gesture-handler";
 import NavigationWrapper from "./Structure/NavigationWrapper";
 import { UserProvider } from "./Structure/UserContext";
 import { PostIdProvider } from "./Structure/PostContext";
+import { NotificationProvider } from "./Structure/NotificationContext";
+import NotificationPopup from "./Components/NotificationPopup";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -27,8 +29,12 @@ export default function App() {
   return (
     <PostIdProvider>
       <UserProvider>
-        <NavigationWrapper />
+        <NotificationProvider> 
+          {/* <NotificationPopup /> Include NotificationPopup only once */}
+          <NavigationWrapper />
+        </NotificationProvider> 
       </UserProvider>
     </PostIdProvider>
   );
+  
 }

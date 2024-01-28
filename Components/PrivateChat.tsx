@@ -10,6 +10,8 @@ import ProfilePicture from "./ProfilePicture";
 import DropDown from "./DropDown";
 import styles from "../Styles/styles";
 import { debounce } from "lodash";
+import io from 'socket.io-client';
+
 
 interface PrivateChatProps {
   issue: Post;
@@ -50,8 +52,69 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     fetchPrivateChat();
     console.log("ISSUE IS : ", props.issue._id);
   }, [chatMode]);
+// Inside your React component
+// useEffect(() => {
+//   const socket = io("http://localhost:4000", {
+//     withCredentials: false,
+//     // Add any additional options here
+//   });
+
+//   socket.on('connect', () => {
+//     console.log('Connected to Socket.io server');
+//     socket.emit('join-post', props.issue._id);
+//   });
+
+//   socket.on('connect_error', (err) => {
+//     console.error('Connection error:', err.message);
+//   });
+
+//   socket.on('new-comment', (newComment) => {
+//     console.log
+//     setPrivateComments((prevComments) => [...prevComments, newComment]);
+//   });
+
+//   return () => {
+//     socket.disconnect();
+//   };
+// }, [props.issue._id]);
+
+useEffect(() => {
+      if(chatMode == "authorities"){
+      const socket = io("https://candoradmin.com", {
+        withCredentials: false,
+        // Add any additional options here
+      });
+
+      // Construct the room name based on chatMode and postID
+      const roomName = `${chatMode}_${props.issue._id}`;
+
+      console.log("ROOM NAME", roomName)
+
+      socket.on('connect', () => {
+        console.log('Connected to Socket.io server');
+        // Join the room specific to the chatMode and postID
+        socket.emit('join-post', roomName);
+      });
+
+      socket.on('connect_error', (err) => {
+        console.error('Connection error:', err.message);
+      });
+
+      socket.on('new-comment', (newComment) => {
+        console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
+        setPrivateComments((prevComments) => [...prevComments, newComment]);
+      });
+      
+      return () => {
+        // Leave the room when the component unmounts or chatMode/postID changes
+        socket.emit('leave-room', roomName);
+        socket.disconnect();
+      };
+    }
+}, [props.issue._id, chatMode]); // Add chatMode to the dependency array
 
   useEffect(() => {
+    
     setPrivateComments([]);
     // fetchPrivateChat();
   }, [props.issue._id]);

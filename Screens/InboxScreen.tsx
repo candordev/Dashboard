@@ -28,6 +28,10 @@ import { FlatList, ScrollView } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import IssueView from "../Components/IssueView";
 import OuterView from "../Components/OuterView";
+import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+import NotificationPopup from "../Components/NotificationPopup";
+import { customFetch } from "../utils/utils";
+
 
 type Props = PropsWithChildren<{
   route: any;
@@ -36,8 +40,12 @@ type Props = PropsWithChildren<{
 
 function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   const isFocused = useIsFocused(); // Assuming you're using something like this
+  const { notifications } = useNotification();
+  const selectedNotificationFromPopup = route.params?.selectedNotification;
+
   const [notificationsEnabled, setNotificationsEnabled] =
     useState<boolean>(false);
+    
 
   let [notifs, setNotifs] = useState<Notification[]>([]);
   let skip = useRef<number>(0);
@@ -48,7 +56,32 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>();
 
 
+
   const [selectedPost, setSelectedPost] = useState<Post | null>();
+
+  const fetchPost = async (postId: string | undefined) => {
+    try {
+      if (postId) {
+        let res: Response = await customFetch(
+          Endpoints.getPostById +
+            new URLSearchParams({
+              postID: postId,
+            }),
+          {
+            method: "GET",
+          }
+        );
+        let resJson = await res.json();
+        if (!res.ok) {
+        }
+        if (res.ok) {
+          const result: Post = resJson;
+          // console.info("fetched post is ", result);
+          return result;
+        }
+      }
+    } catch (error) {}
+  };
 
   const getNotifsStatus = async () => {
     try {
@@ -146,7 +179,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
 
   useEffect(() => {
     onRefresh();
-  }, [isFocused]);
+  }, [isFocused, notifications]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -213,14 +246,22 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
     }
   }
 
-  function onRefresh() {
+  async function onRefresh() {
     console.log("is focused on refresh");
     refreshing.current = true;
     stopped.current = false;
-    fetchNotifs(true);
+    await fetchNotifs(true); 
     refreshing.current = false;
     setLoading(false);
     event.emit(eventNames.NOTIFICATIONS_REFRESHED); // Emit an event here
+
+    console.log("selectedNotif", selectedNotificationFromPopup)
+    if (selectedNotificationFromPopup) {
+      console.log("selectedNotif3", selectedNotificationFromPopup)
+      setSelectedNotification(selectedNotificationFromPopup);
+      const post = await fetchPost(selectedNotificationFromPopup.data.postID)
+      setSelectedPost(post)
+    }
   }
 
   useEffect(() => {
@@ -228,6 +269,8 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   }, [selectedPost]);
 
   return (
+    <>
+    <NotificationPopup navigation={navigation}/>
     <OuterView
       style={{
         flex: 1,
@@ -295,6 +338,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         )}
       </View>
     </OuterView>
+    </>
   );
 }
 

@@ -23,6 +23,7 @@ import Popover, { PopoverPlacement } from "react-native-popover-view";
 import Button from "../Components/Button";
 import MapMarkerView from "../Components/MapMarkerView";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import NotificationPopup from "../Components/NotificationPopup";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -228,6 +229,8 @@ const AllScreen = ({ navigation }: any) => {
   }
 
   return (
+    <>
+    <NotificationPopup navigation={navigation}/>
     <OuterView style={{ paddingHorizontal: 40 }}>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
@@ -359,6 +362,7 @@ const AllScreen = ({ navigation }: any) => {
         <MapMarkerView posts={categoriesWithPosts} />
       )}
     </OuterView>
+    </>
   );
 };
 

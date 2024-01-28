@@ -9,10 +9,18 @@ import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import React, { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
+import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+
 
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
+  const { notifications } = useNotification();
+
+
+  useEffect(() => {
+      setUnread(1+unread)
+  }, [notifications]);
 
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
