@@ -30,7 +30,6 @@ type Props = {
   isDisabled: boolean;
   setSelectedPost: (post: Post | undefined) => void;
   setSelectedNotification: (post: Notification | undefined) => void;
-
   selectedPost: Post | null | undefined;
 };
 
@@ -103,48 +102,13 @@ const NotifSection = (props: Props) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (props.notif.data?.contentType !== NotificationType.reminder) {
-  //     fetchAndSetPost();
-  //   }
-  // }, [props.notif.data]);
 
   useEffect(() => {
     console.log("THIS IS THE NOTIF: ", props.notif)
     setNotif(props.notif);
   }, [props.notif]);
 
-  // const fetchNotif = async () => {
-  //   // console.log("fetching notif");
-  //   try {
-  //     let res: Response = await customFetch(
-  //       Endpoints.getNotification +
-  //         new URLSearchParams({
-  //           notificationID: notif._id,
-  //         }),
-  //       {
-  //         method: 'GET',
-  //       },
-  //     );
-  //     let resJson = await res.json();
-  //     if (!res.ok) {
 
-  //     }
-  //     if (res.ok) {
-  //       const result: Notification = resJson.notification;
-  //       setNotif(notif => result);
-  //       // console.log("notif: ", result);
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     if (error instanceof Error) {
-
-  //     } else {
-
-  //     }
-  // }
-
-  // };
 
   const handleNotificationClick = async () => {
     try {
@@ -167,75 +131,6 @@ const NotifSection = (props: Props) => {
   };
 
   const { height, width } = useWindowDimensions();
-
-  // return (
-  //   <Popover
-  //     onCloseComplete={props.onPopoverCloseComplete}
-  //     onOpenStart={handleNotificationClick}
-  //     from={
-  //       <TouchableOpacity
-  //         disabled={props.isDisabled}
-  //         style={[
-  //           styles.seenNotifCard,
-  //           notif.seen ? {} : { borderLeftColor: colors.purple, borderLeftWidth: 4, },
-  //         ]}
-  //       >
-  //         <NotifPicture
-  //           smallUrl={imageURL(notif.data?.contentType)}
-  //           mainUrl={notif.picture}
-  //           type={"big"}
-  //         />
-  //         <View style={{ flex: 1 }}>
-  //           <View
-  //             style={{
-  //               flexDirection: "row",
-  //               justifyContent: "space-between",
-  //               alignItems: "center",
-  //             }}
-  //           >
-  //             <Text style={{ fontWeight: "600", flex: 1 }} numberOfLines={1}>
-  //               {notif.title + "jfdkls;ajf"}
-  //             </Text>
-  //             <Text
-  //               style={{
-  //                 fontSize: 14,
-  //                 color: colors.gray,
-  //                 flexWrap: "nowrap",
-  //                 marginLeft: 5,
-  //               }}
-  //               numberOfLines={1}
-  //             >
-  //               {formatDate(notif.fireDate)} {/* Display the formatted date */}
-  //             </Text>
-  //           </View>
-  //           <Text
-  //             style={[styles.sectionDescription, { flex: 1 }]}
-  //             numberOfLines={2}
-  //           >
-  //             {notif.content}
-  //           </Text>
-  //         </View>
-  //       </TouchableOpacity>
-  //     }
-  //     placement={PopoverPlacement.FLOATING}
-  //     popoverStyle={{
-  //       borderRadius: 10,
-  //       width: width * 0.7,
-  //       height: height * 0.9,
-  //     }}
-  //   >
-  //     {props.notif.data?.contentType === NotificationType.reminder ? (
-  //       <View style={{ padding: 20 }}>
-  //         <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 15 }}>
-  //           {props.notif.title}
-  //         </Text>
-  //         <Text style={{ fontSize: 16 }}>{props.notif.content}</Text>
-  //       </View>
-  //     ) : (
-  //       selectedPost && <IssueView issue={selectedPost} />
-  //     )}
-  //   </Popover>
-  // );
 
   return (
     <TouchableOpacity

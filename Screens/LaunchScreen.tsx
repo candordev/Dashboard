@@ -8,6 +8,7 @@ import { Endpoints } from "../utils/Endpoints";
 import { useDrawerProgress } from "@react-navigation/drawer";
 import { usePostId } from '../Structure/PostContext';
 import { useUserContext } from "../Hooks/useUserContext";
+import NotificationPopup from "../Components/NotificationPopup";
 
 interface UserData {
   firstName?: string;
@@ -170,6 +171,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
 
 
   return (
+    <> 
+    <NotificationPopup navigation={navigation}/>
     <View style={styles.container}>
       <Text
         style={{
@@ -247,6 +250,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
         </TouchableOpacity>
       </View>
     </View>
+    </>
   );
 };
 
