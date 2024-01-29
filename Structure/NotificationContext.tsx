@@ -6,13 +6,17 @@ import io from 'socket.io-client';
 
 
 interface NotificationContextType {
-  notifications: Notification[];
-  addNotification: (notification: Notification) => void;
-}
+    notifications: Notification[];
+    addNotification: (notification: Notification) => void;
+    removeNotification: (notificationId: string) => void; // Add this line
+  }
+  
 
 const NotificationContext = createContext<NotificationContextType>({
   notifications: [],
-  addNotification: () => {}
+  addNotification: () => {},
+  removeNotification: () => {}
+
 });
 
 export const useNotification = () => useContext(NotificationContext);
@@ -57,10 +61,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     const addNotification = (notification: Notification) => {
       setNotifications((prevNotifications) => [...prevNotifications, notification]);
     };
+
+    const removeNotification = (notificationId: string) => {
+        setNotifications((prevNotifications) =>
+          prevNotifications.filter((notif) => notif._id !== notificationId)
+        );
+      };
   
-    return (
-      <NotificationContext.Provider value={{ notifications, addNotification }}>
-        {children}
-      </NotificationContext.Provider>
-    );
-  };
+      return (
+        <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
+          {children}
+        </NotificationContext.Provider>
+      );
+    };
