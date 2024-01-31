@@ -228,6 +228,8 @@ const AllScreen = ({ navigation }: any) => {
     setIsMapView((isMapView) => !isMapView);
   }
 
+
+
   return (
     <>
     <NotificationPopup navigation={navigation}/>
