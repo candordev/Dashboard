@@ -24,22 +24,29 @@ export const customFetch = async (
 ): Promise<Response> => {
   try {
     const token: string = await getAuthToken();
-    if (!token || token == "") {
+    if (!token || token === "") {
       throw new Error("No auth token provided on fetch");
     }
+
+    // Determine headers based on the type of the request body
+    const headers = new Headers({
+      Accept: "application/json",
+      Authorization: "Bearer " + token,
+    });
+    if (!(options.body instanceof FormData)) {
+      headers.append("Content-Type", "application/json");
+    }
+
     let res = await Promise.race([
       fetch(endpoint, {
         ...options,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
+        headers: headers,
       }),
       new Promise<Response>((_, reject) =>
         setTimeout(() => reject(new Error("Timeout")), constants.TIMEOUT)
       ),
     ]);
+    
     if (res.status === 403) {
       // authentication error
       //event.emit(eventNames.FORCE_SIGNOUT);

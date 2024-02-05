@@ -87,11 +87,12 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
 
 
 
-  const handleImport = () => {
-    //DO BELOW NEXT - Akshat 1/21/2024
+  const handleImport = async () => {
+    //BELOW IS DONE - Akshat 1/31/2024
     // Before calling the route call a sepaerate route that checks to see what emails have a email associated with them otherwise need to work with a addLeader functionality where for the email its firstName, lastName, department. Then call createDashboard route with assignee username as their emails since their emails are anyways username when createLeader happens.  
     if (file) {
-      setIsLoading(true); // Set loading to true when the import starts
+      await setIsLoading(true); // Set loading to true when the import starts
+      await handleFileUpload(file);
       Papa.parse<CSVRow>(file, {
         header: true,
         skipEmptyLines: true,
@@ -120,11 +121,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           console.log("yuhh2", assigneesWithoutAccount)
 
           await setAssigneesToAdd(assigneesWithoutAccount);
-
-     
-          
-
-
 
           const usernameMap = new Map(emailCheckResults.map((result: { email: any; username: any; }) => [result.email, result.username]));
           console.log("yuhh 2.1", usernameMap)
@@ -158,8 +154,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
   const firstRenderRef = useRef(true);
 
   useEffect(() => {
-    
-  
     console.log("assignees to add ", assigneesToAdd.length);
     if (assigneesToAdd.length === 0 && render === true) {
       console.log("create Posts ran!!");
@@ -299,6 +293,29 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
       console.error("Network error, please try again later.", error);
     }
   }
+
+  async function handleFileUpload(file: File | Blob) {
+    try {
+      const formData = new FormData(); 
+      formData.append('file', file);
+
+      let res = await customFetch(Endpoints.csvUpload, {
+        method: "POST",
+        body: formData
+      });
+
+      if (!res.ok) {
+        const resJson = await res.json();
+        console.error("Error with creating an account:", resJson.error);
+      } else {
+         console.log("emailed akshatpant@ufl.edu the csv")
+       
+      }
+    } catch (error) {
+      console.error("Network error, please try again later.", error);
+    }
+  }
+
 
   const inviteLeader = async (
     firstName: string,
