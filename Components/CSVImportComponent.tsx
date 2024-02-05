@@ -103,17 +103,27 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
 
           
           rows.forEach(row => {
-            const key = `${row.Name}candorKey${row.Notes}candorKey${row['Section/Column']}candorKey${row['Due Date']}`;
-            const group = groupedRows.get(key) || new Set();
-            group.add(row['Assignee Email']);
-            allAssignees.add(row['Assignee Email']);
-            groupedRows.set(key, group);
+            // Check if 'Name' and 'Notes' are not empty
+            if (row.Name && row.Notes) {
+              const key = `${row.Name}candorKey${row.Notes}candorKey${row['Section/Column']}candorKey${row['Due Date']}`;
+              const group = groupedRows.get(key) || new Set();
+              
+              // Add to group and allAssignees only if 'Assignee Email' is present
+              if (row['Assignee Email'] && row['Assignee Email'].trim()) {
+                group.add(row['Assignee Email'].trim());
+                allAssignees.add(row['Assignee Email'].trim());
+              }
+              
+              groupedRows.set(key, group);
+            }
           });
   
           console.log("yuhh1", groupedRows)
           console.log("yuhh1.01", allAssignees)
           // Check all unique assignees
-          const emailCheckResults = await checkEmailAccounts(Array.from(allAssignees));
+          const nonEmptyAssignees = Array.from(allAssignees).filter(email => email && email);
+
+          const emailCheckResults = await checkEmailAccounts(Array.from(nonEmptyAssignees));
           console.log("yuhh1.1", emailCheckResults)
           const assigneesWithoutAccount = emailCheckResults
           .filter((result: { account: any; }) => !result.account)
@@ -154,7 +164,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
   const firstRenderRef = useRef(true);
 
   useEffect(() => {
-    console.log("assignees to add ", assigneesToAdd.length);
+    console.log("assignees to add ", assigneesToAdd);
     if (assigneesToAdd.length === 0 && render === true) {
       console.log("create Posts ran!!");
       createDashboardPosts();
