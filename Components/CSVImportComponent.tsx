@@ -235,16 +235,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
 
   }
   
-  const handleLeaderAdded = async () => {
-      if (currentLeaderIndex < assigneesToAdd.length - 1) {
-        // Move to the next leader in the list
-        await setCurrentLeaderIndex(currentLeaderIndex + 1);
-        console.log("yuhh leader index updated", assigneesToAdd[currentLeaderIndex] )
-      } else {
-        createDashboardPosts();
-      }
-    }
-
 
   const handleEmptyFields = (emptyFields: emptyFields) => {
     let errorMessage = "";
@@ -334,14 +324,35 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
     email: string,
     departmentName: string
   ) => {
-     await handleLeaderAdded();
-      await createLeaderAccount(
-        firstName,
-        lastName,
-        departmentID,
-        email,
-        departmentName
-      );
+    //  await createLeaderAccount(
+    //     firstName,
+    //     lastName,
+    //     departmentID,
+    //     email,
+    //     departmentName
+    //   );
+
+      if (currentLeaderIndex < assigneesToAdd.length - 1) {
+        // Move to the next leader in the list
+        await setCurrentLeaderIndex(currentLeaderIndex + 1);
+        await createLeaderAccount(
+          firstName,
+          lastName,
+          departmentID,
+          email,
+          departmentName
+        );
+        console.log("yuhh leader index updated", assigneesToAdd[currentLeaderIndex] )
+      } else {
+        await createLeaderAccount(
+          firstName,
+          lastName,
+          departmentID,
+          email,
+          departmentName
+        );
+        await createDashboardPosts();
+      }
   };
 
   
