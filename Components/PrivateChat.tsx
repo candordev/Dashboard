@@ -114,9 +114,8 @@ useEffect(() => {
 }, [props.issue._id, chatMode]); // Add chatMode to the dependency array
 
   useEffect(() => {
-    
     setPrivateComments([]);
-    // fetchPrivateChat();
+    fetchPrivateChat();
   }, [props.issue._id]);
 
   // Define the initial state with appropriate types and default values

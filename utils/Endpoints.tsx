@@ -114,4 +114,5 @@ export const Endpoints = {
   getUsernameByEmails: `${BASE_URL}/userActivity/getUsernameByEmails?`,
   requestPDFInfo: `${BASE_URL}/group/requestPDFInfo?`,
   mergePost: `${BASE_URL}/userActivity/mergePost?`,
+  csvUpload:  `${BASE_URL}/userActivity/csvUpload`,
 };
