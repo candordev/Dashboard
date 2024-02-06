@@ -150,8 +150,9 @@ const AllScreen = ({ navigation }: any) => {
       let resJson = await res.json();
       if (res.ok) {
         console.log("resJson DEBUG: ", resJson);
-        setCategoriesWithPosts(resJson);
-        setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
+        await setCategoriesWithPosts(resJson);
+        await setRefreshKey((prevKey) => prevKey + 1); 
+       // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
       }

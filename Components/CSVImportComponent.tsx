@@ -161,7 +161,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
     setIsPopoverVisible(!isPopoverVisible);
   };
 
-  const firstRenderRef = useRef(true);
 
   useEffect(() => {
     console.log("assignees to add ", assigneesToAdd);
@@ -174,7 +173,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
 
 
   const createDashboardPosts = async () => {
-    setAllLeadersAdded(true);
+    await setAllLeadersAdded(true);
     // All leaders have been added
     let hasError = false;
        for (const group of groupedData) {   
@@ -231,8 +230,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             }
             setIsPopoverVisible(false); // Close the popover on success
           }
-
-
   }
   
 
