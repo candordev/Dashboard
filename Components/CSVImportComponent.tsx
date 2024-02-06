@@ -376,8 +376,9 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             }
           : {
               borderRadius: 10,
-              width: width * 0.16,
-              height: height * 0.18,
+              width: width * 0.18,
+              height: height * 0.20,
+              paddingHorizontal: 20,
             }
       }
     >
@@ -407,18 +408,36 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             onChange={handleFileChange}
             style={{
               marginTop: 10,
-              marginBottom: 80,
+              marginBottom: 50,
               padding: 5,
               borderColor: 'gray',
               borderWidth: 1,
-              borderRadius: 5,
+              borderRadius: 40,
             }}
           />
-          <Button
+          {/* <Button
             title={isLoading ? "Importing..." : "Import CSV"}
             onPress={handleImport}
             disabled={!file || isLoading}
-          />
+          /> */}
+          <TouchableOpacity
+            onPress={handleImport}
+            disabled={!file || isLoading}
+            style={{
+              marginTop: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: 12,
+              paddingHorizontal: 32,
+              borderRadius: 4,
+              elevation: 3,
+              backgroundColor: file ? colors.purple : '#DDD', // Use colors.purple if file is selected, else a placeholder color
+            }}
+          >
+            <Text style={{ fontSize: 16, color: 'white' }}>
+              {isLoading ? "Importing..." : "Import CSV"}
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
     </Popover>
