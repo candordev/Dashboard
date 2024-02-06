@@ -81,7 +81,8 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 
 useEffect(() => {
       // if(chatMode == "authorities"){
-      const socket = io("https://candoradmin.com", {
+      const localSocket = "http://localhost:4000"
+      const socket = io(localSocket, {
       withCredentials: false,
       // Add any additional options here
     });
