@@ -11,6 +11,7 @@ import Text from "./Text";
 import DeletePost from "./DeletePost";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
+import ErrorMessage from "./Native/ErrorMessage";
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
@@ -22,6 +23,8 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [issue, setIssue] = React.useState<Post>(props.issue);
   const [isEditing, setIsEditing] = useState(false);
   const [email, setEmail] = useState(issue.proposalFromEmail);
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   const handleDone = async () => {
     try {
@@ -36,9 +39,12 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   
       let resJson = await res.json();
       if (!res.ok) {
+        setErrorMessage('Please enter a valid email');
+        setEmail(props.issue.proposalFromEmail);
         console.error(resJson.error);
       } else {
         setIsEditing(false);
+        setErrorMessage('');
         console.log("Successfully edited proposalFromEmail");
         // Optionally, you can update the local state or perform other actions upon successful update
       }
@@ -98,31 +104,40 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
           {"Post Created From: " + (issue.postCreatedFrom ?? "")}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-    <Text
-        style={{
-            fontSize: 15,
-            fontWeight: '400',
-            fontFamily: 'Montserrat',
-        }}
-    >
+    <Text style={{
+        fontSize: 15,
+        fontWeight: '400',
+        fontFamily: 'Montserrat',
+    }}>
         {"Email: "}
     </Text>
     {isEditing ? (
-        <TextInput
-            value={email}
-            onChangeText={setEmail}
-            style={{
-                fontSize: 15,
-                fontWeight: '400',
-                fontFamily: 'Montserrat',
-                flex: 1,
-                borderColor: colors.lightestgray,
-                borderWidth: 1,
-                paddingHorizontal: 10,
-                marginHorizontal: 5,
-                borderRadius: 5,
-            }}
-        />
+        <>
+            <TextInput
+                value={email}
+                onChangeText={setEmail}
+                style={{
+                    fontSize: 15,
+                    fontWeight: '400',
+                    fontFamily: 'Montserrat',
+                    flex: 1,
+                    borderColor: colors.lightestgray,
+                    borderWidth: 1,
+                    paddingHorizontal: 10,
+                    marginHorizontal: 5,
+                    borderRadius: 5,
+                }}
+            />
+            {/* {errorMessage !== '' && (
+                <ErrorMessage 
+                style={{
+                    fontSize: 11,
+                    textAlign: "center",
+                    marginTop: 5, // Adjust as needed for proper spacing
+                }}
+                error={errorMessage} />
+            )} */}
+        </>
     ) : (
         <Text
             style={{

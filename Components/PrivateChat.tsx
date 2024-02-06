@@ -52,6 +52,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     fetchPrivateChat();
     console.log("ISSUE IS : ", props.issue._id);
   }, [chatMode]);
+
 // Inside your React component
 // useEffect(() => {
 //   const socket = io("http://localhost:4000", {
@@ -79,12 +80,11 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 // }, [props.issue._id]);
 
 useEffect(() => {
-      if(chatMode == "authorities"){
+      // if(chatMode == "authorities"){
       const socket = io("https://candoradmin.com", {
-        withCredentials: false,
-        // Add any additional options here
-      });
-
+      withCredentials: false,
+      // Add any additional options here
+    });
       // Construct the room name based on chatMode and postID
       const roomName = `${chatMode}_${props.issue._id}`;
 
@@ -101,23 +101,18 @@ useEffect(() => {
       });
 
       socket.on('new-comment', (newComment) => {
-        console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
+        console.log("NEW COMMENT ALERT: ", newComment); // This line will log the new comment
         setPrivateComments((prevComments) => [...prevComments, newComment]);
       });
-      
       return () => {
         // Leave the room when the component unmounts or chatMode/postID changes
         socket.emit('leave-room', roomName);
         socket.disconnect();
+        console.log("DISCONNECTED FROM SOCKET");
+        console.log("PRIV comment Length: ", privateComments.length);
       };
-    }
-}, [props.issue._id, chatMode]); // Add chatMode to the dependency array
-
-  useEffect(() => {
-    setPrivateComments([]);
-    fetchPrivateChat();
-  }, [props.issue._id]);
-
+    // }
+}, [props.issue._id, chatMode, privateComments]); // Add chatMode to the dependency array
   // Define the initial state with appropriate types and default values
   let lastAuthorId = "";
   let lastCommentDate = new Date(0);
@@ -194,6 +189,7 @@ useEffect(() => {
       let resJson = await res.json();
       if (!res.ok) {
         console.error(resJson.error);
+        console.error("No Affiliated Politicans???.");
       } else {
         fetchPrivateChat();
         console.log("Comment Posted to Affiliated Politicians", resJson);
@@ -216,7 +212,7 @@ useEffect(() => {
       if (res.ok) {
         fetchPrivateChat();
       } else {
-        console.error("Response from sendConstituentChat was not OK.");
+        console.error("RES FROM sendConstituentChat was not OK.");
         // Optionally handle the error response here
       }
     } catch (error) {
@@ -241,7 +237,8 @@ useEffect(() => {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
-        console.log("newComments TOTAL: ", newComments.length);
+        console.log("newComments length: ", newComments.length);
+        console.log(props.issue.proposalFromEmail);
         let filteredComments: Comment[] = [];
         if (chatMode === "constituent") {
           filteredComments = resJson.filter(
@@ -258,7 +255,7 @@ useEffect(() => {
             "filteredComments for everyone: ",
             filteredComments.length
           );
-          console.log("WEMBY POLITICIANS: ", props.issue.acceptedPoliticians);
+          console.log("Leaders on this issue: ", props.issue.acceptedPoliticians);
         }
         setPrivateComments(filteredComments);
       }
