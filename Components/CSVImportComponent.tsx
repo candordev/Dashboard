@@ -75,7 +75,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
         console.error("Error checking emails:", data.error);
         return [];
       }
-      console
+      console.log("THE DATA BACK: ", data)
   
       return data;
     } catch (error) {
@@ -84,9 +84,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
     }
   };
   
-
-
-
   const handleImport = async () => {
     //BELOW IS DONE - Akshat 1/31/2024
     // Before calling the route call a sepaerate route that checks to see what emails have a email associated with them otherwise need to work with a addLeader functionality where for the email its firstName, lastName, department. Then call createDashboard route with assignee username as their emails since their emails are anyways username when createLeader happens.  
@@ -201,6 +198,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
                 //proposalFromEmail: email,
                 categoryNames: [postData.tags],
                 deadline: postData.deadline,
+                emailAssignees: "do not",
               }),
             });
             console.log(res.body);
@@ -274,6 +272,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           departmentID: departmentID,
           email: email,
           groupID: state.leaderGroups[0],
+          type: "import"
         }),
       });
 
@@ -306,13 +305,11 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
         console.error("Error with creating an account:", resJson.error);
       } else {
          console.log("emailed akshatpant@ufl.edu the csv")
-       
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
     }
   }
-
 
   const inviteLeader = async (
     firstName: string,
