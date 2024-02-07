@@ -151,7 +151,7 @@ const AllScreen = ({ navigation }: any) => {
       if (res.ok) {
         console.log("resJson DEBUG: ", resJson);
         await setCategoriesWithPosts(resJson);
-        await setRefreshKey((prevKey) => prevKey + 1); 
+        await setRefreshKey((prevKey) => prevKey + 1);
        // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
@@ -293,6 +293,7 @@ const AllScreen = ({ navigation }: any) => {
                     popoverStyle={{
                       borderRadius: 10,
                       width: 200,
+                      padding: 10,
                     }}
                   >
                     <View>
@@ -310,7 +311,7 @@ const AllScreen = ({ navigation }: any) => {
                         style={{
                           backgroundColor: "red",
                           padding: 10,
-                          marginTop: 55,
+                          marginTop: 20,
                           borderRadius: 5,
                           marginHorizontal: 10,
                         }}
@@ -339,7 +340,7 @@ const AllScreen = ({ navigation }: any) => {
                         )}
                       </TouchableOpacity>
                     </View>
-                  </Popover>  
+                  </Popover>
                 )}
               </View>
               <FlatList
