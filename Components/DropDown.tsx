@@ -13,6 +13,7 @@ type PropTypes = {
   backgroundColor?: string;
   onClose?: () => void;
   styles?: any;
+  multipleText?: string;
 };
 
 const DropDown = (props: PropTypes) => {
@@ -69,6 +70,7 @@ const DropDown = (props: PropTypes) => {
       TickIconComponent={() => (
         <FeatherIcon name={"check"} size={17} color={colors.gray} />
       )}
+      multipleText={props.multipleText}
     />
   );
 };

@@ -23,11 +23,11 @@ const IssueContent: React.FC<IssueContent> = (props) => {
   useEffect(() => {
     // console.log("title changed to", props.title)
     setTitle(props.title);
-  } ,[props.title])
+  }, [props.title]);
 
   useEffect(() => {
     setContent(props.content);
-  } ,[props.content])
+  }, [props.content]);
 
   const handleDone = async () => {
     try {
@@ -62,7 +62,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
         borderWidth: 2,
         borderRadius: 10,
         borderColor: colors.lightestgray,
-        maxHeight: '30%',
+        maxHeight: "40%",
       }}
     >
       {editing ? (
@@ -98,10 +98,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
         </View>
       ) : (
         <>
-          <Text
-            style={{ fontSize: 18, fontWeight: "bold", paddingRight: 55 }}
-            onayout={() => {}}
-          >
+          <Text style={{ fontSize: 18, fontWeight: "550", fontFamily: "Montserrat", paddingRight: 55 }}>
             {title}
           </Text>
           <Text
@@ -117,7 +114,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           >
             {formatDate(props.date)}
           </Text>
-          <Text style={{ fontSize: 14, marginTop: 5}}>{content}</Text>
+          <Text style={{ fontSize: 14, marginTop: 5 }}>{content}</Text>
         </>
       )}
       <Button

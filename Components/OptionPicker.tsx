@@ -102,7 +102,6 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginRight: 10,
     flexDirection: "row",
     alignItems: "center",
   },

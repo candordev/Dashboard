@@ -20,6 +20,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [errorMessage, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // console.log("fetch status updates");
@@ -65,6 +66,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   };
 
   const addUpdate = async () => {
+    setLoading(true);
     try {
       let res: Response = await customFetch(Endpoints.createStatusUpdate, {
         method: "POST",
@@ -81,10 +83,14 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
         console.error("Status update error", resJson.error);
         setMessage(resJson.error)
       } else {
+        setTitle('');
+        setContent('');
         await fetchStatusUpdates();
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,6 +127,10 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
       <DoubleTextInput
         onFirstInputChange={setTitle}
         onSecondInputChange={setContent}
+        title={title}
+        content={content}
+        loading={loading}
+        submittable={title.length > 0 && content.length > 0}
         onSubmit={addUpdate} // Pass the addUpdate function
       />
     </View>

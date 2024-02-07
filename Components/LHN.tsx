@@ -12,15 +12,13 @@ import { useSignout } from "../Hooks/useSignout";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
 import ProfilePicture from "./ProfilePicture";
 
-
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
 
-
   useEffect(() => {
-      setUnread(1+unread)
+    setUnread(1 + unread);
   }, [notifications]);
 
   //current route name
@@ -69,18 +67,32 @@ const LHN = (props: any) => {
 
   return (
     <View style={styles.container}>
-      <View style={{justifyContent: 'center', alignItems: 'center', paddingBottom: 10}}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          paddingBottom: 10,
+        }}
+      >
         <ProfilePicture
           imageUrl={state.imageUrl}
-          type="normal"
-          style={{ marginBottom: 10 }}
+          type="profile"
+          style={{ marginVertical: 10 }}
         />
-        <Text style={{ color: colors.white, fontWeight: "bold", textAlign: 'center' }}>
+        <Text
+          style={{
+            color: colors.white,
+            fontWeight: "500",
+            textAlign: "center",
+            fontSize: 13,
+            marginBottom: 20,
+          }}
+        >
           {state.firstName} {state.lastName}
         </Text>
       </View>
       <NavItem
-        name={"All Issues"}
+        name={"Issues"}
         route="/all"
         icon="list"
         selected={navIndex == 0}
@@ -100,12 +112,12 @@ const LHN = (props: any) => {
         unreadCount={unread}
         selected={navIndex == 1}
       />
-      <NavItem
+      {/* <NavItem
         name={"Settings"}
         route="/settings"
         icon="settings"
         selected={navIndex == 2}
-      />
+      /> */}
       <View style={{ flex: 1 }} />
       <NavItem
         name="Sign out"

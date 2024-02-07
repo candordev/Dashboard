@@ -97,53 +97,36 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         <Text
           style={{
             fontSize: 15,
-            fontWeight: "400",
-            fontFamily: "Montserrat",
           }}
         >
           {"Post Created From: " + (issue.postCreatedFrom ?? "")}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-    <Text style={{
-        fontSize: 15,
-        fontWeight: '400',
-        fontFamily: 'Montserrat',
-    }}>
+    <Text
+        style={{
+            fontSize: 15,
+        }}
+    >
         {"Email: "}
     </Text>
     {isEditing ? (
-        <>
-            <TextInput
-                value={email}
-                onChangeText={setEmail}
-                style={{
-                    fontSize: 15,
-                    fontWeight: '400',
-                    fontFamily: 'Montserrat',
-                    flex: 1,
-                    borderColor: colors.lightestgray,
-                    borderWidth: 1,
-                    paddingHorizontal: 10,
-                    marginHorizontal: 5,
-                    borderRadius: 5,
-                }}
-            />
-            {/* {errorMessage !== '' && (
-                <ErrorMessage 
-                style={{
-                    fontSize: 11,
-                    textAlign: "center",
-                    marginTop: 5, // Adjust as needed for proper spacing
-                }}
-                error={errorMessage} />
-            )} */}
-        </>
+        <TextInput
+            value={email}
+            onChangeText={setEmail}
+            style={{
+                fontSize: 15,
+                flex: 1,
+                borderColor: colors.lightestgray,
+                borderWidth: 1,
+                paddingHorizontal: 10,
+                marginHorizontal: 5,
+                borderRadius: 5,
+            }}
+        />
     ) : (
         <Text
             style={{
                 fontSize: 15,
-                fontWeight: '400',
-                fontFamily: 'Montserrat',
             }}
         >
             {email}
@@ -173,20 +156,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
                 }}
               >
-                {"FirstName: " + (issue.userProfile.firstName ?? "")}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
-                }}
-              >
-                {"LastName: " + (issue.userProfile.lastName ?? "")}
+                {"Name: " + issue.userProfile.firstName + " " + issue.userProfile.lastName}
               </Text>
             </>
           )}
@@ -198,20 +170,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
                 }}
               >
-                {"FirstName: " + (issue.emailFirstName ?? "")}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
-                }}
-              >
-                {"LastName: " + (issue.emailLastName ?? "")}
+                {"Name: " + issue.emailFirstName + " " + issue.emailLastName}
               </Text>
             </>
           )}

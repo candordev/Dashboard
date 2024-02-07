@@ -216,7 +216,7 @@ const Category: React.FC<CategoryProps> = ({
   return (
     <OuterComponentView style={style} title="Tag">
       <DropDown
-        placeholder="Select category"
+        placeholder="Select tag"
         value={value}
         setValue={handleValueChange}
         items={items}
@@ -224,14 +224,26 @@ const Category: React.FC<CategoryProps> = ({
         multiple={true}
         backgroundColor={colors.lightestgray}
         onClose={handleDropdownClose}
+        multipleText={`${value?.length ?? 0} ${
+          (value?.length ?? 0) == 1 ? "tag" : "tags"
+        } selected`}
       />
       {/* View to display selected categories */}
       <View style={{ marginTop: 15 }}>
         {value &&
           value.map((category, index) => (
-            <Text key={index} style={styles.categoryText}>
-              {category}
-            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                columnGap: 10,
+              }}
+            >
+              <FeatherIcon name="tag" size={15} color={colors.purple} />
+              <Text key={index} style={styles.categoryText}>
+                {category}
+              </Text>
+            </View>
           ))}
       </View>
       <View>
@@ -249,7 +261,7 @@ const styles = StyleSheet.create({
   categoryText: {
     marginBottom: 5,
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: "500",
   },
   errorText: {
     color: "red",

@@ -378,7 +378,7 @@ const chatStyles = StyleSheet.create({
   },
   chatTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "550" as any,
     fontFamily: "Montserrat",
     flex: 1,
   },
