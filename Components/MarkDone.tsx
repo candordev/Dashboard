@@ -44,14 +44,14 @@ const MarkDone: React.FC<MarkDoneProps> = ({
         setErrorMessage("Failed to update the post: " + resJson.error);
       } else {
         if (uncomplete === true) {
-          console.log("STEP SET TO 2", uncomplete);
+          // console.log("STEP SET TO 2", uncomplete);
           setStepNumber(2);
         } else {
-          console.log("STEP SET TO 3");
+          // console.log("STEP SET TO 3");
           setStepNumber(3);
         }
         setErrorMessage("");
-        console.log("UPDATE POST successfully made");
+        // console.log("UPDATE POST successfully made");
         fetchStatusUpdates(); // Call the fetchStatusUpdates function here
 
         //event.emit(eventNames.ISSUE_CATEGORY_SET);

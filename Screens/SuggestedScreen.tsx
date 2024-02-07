@@ -43,16 +43,16 @@ string[] | undefined
   const isFocused = useIsFocused(); // Assuming you're using something like this
 
   useEffect(() => {
-    console.log("Component mounted, fetching posts initially");
+    // console.log("Component mounted, fetching posts initially");
 
-    console.log("Event triggered, fetching posts");
+    // console.log("Event triggered, fetching posts");
     fetchPosts(currStatus, selectedHeaderOption, selectedAssigneeIds);
   }, [currStatus, selectedHeaderOption, isFocused, selectedAssigneeIds ]);
 
   const handleStatusChange = async (newStatus: Status) => {
-    console.log("Received status:", status);
-    console.log("Current status:", currStatus);
-    console.log("Status changed, updating current status and refetching posts");
+    // console.log("Received status:", status);
+    // console.log("Current status:", currStatus);
+    // console.log("Status changed, updating current status and refetching posts");
     if (JSON.stringify(newStatus) !== JSON.stringify(currStatus)) {
       setCurrStatus(newStatus);
     }

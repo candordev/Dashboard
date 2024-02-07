@@ -23,13 +23,13 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
 
 
   useEffect(() => {
-    console.log("title changed to", props.issue.title)
+    // console.log("title changed to", props.issue.title)
     setIssue(props.issue);
   }, [props.issue]);
 
 
   useEffect(() => {
-    console.log("the issue details: ", props.issue)
+    // console.log("the issue details: ", props.issue)
     fetchComments();
   }, []);
 
@@ -126,7 +126,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
               onClose={handleClose}
             />
           )
-        } 
+        }
       <PrivateChat issue={props.issue}/>
     </View>
   );

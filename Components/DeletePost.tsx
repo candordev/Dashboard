@@ -16,20 +16,20 @@ const DeletePost: React.FC<DeletePostProps> = ({ issueId, onPopoverCloseComplete
 
     const deletePost = async () => {
         try {
-        setIsLoading(true); 
+        setIsLoading(true);
           let res: Response = await customFetch(Endpoints.deletePost, {
             method: "DELETE",
             body: JSON.stringify({
               postID: issueId,
             }),
           });
-    
+
           let resJson = await res.json();
           if (!res.ok) {
             console.error(resJson.error);
             setErrorMessage("Failed to delete the post: " + resJson.error);
           } else {
-            console.log("Successfully deleted");
+            // console.log("Successfully deleted");
           }
           setIsLoading(false);
         } catch (error) {
@@ -45,7 +45,7 @@ const DeletePost: React.FC<DeletePostProps> = ({ issueId, onPopoverCloseComplete
           {errorMessage !== "" && (
             <Text style={styles.errorMessage}>{errorMessage}</Text>
           )}
-          
+
             <TouchableOpacity
               style={styles.toggleButton}
               onPress={() => deletePost()}
@@ -53,7 +53,7 @@ const DeletePost: React.FC<DeletePostProps> = ({ issueId, onPopoverCloseComplete
             >
               <Text style={styles.toggleButtonText}>Delete Post</Text>
             </TouchableOpacity>
-          
+
         </View>
       );
     };

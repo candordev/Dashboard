@@ -20,7 +20,7 @@ function SignupScreenEmailDob({
   navigation,
 }: SignupScreenEmailDobProps): JSX.Element {
 
-  
+
 
 
 
@@ -116,7 +116,7 @@ function SignupScreenEmailDob({
   const handleSignup = async () => {
     setLoading(true);
 
-    console.log("DEBUG");
+    // console.log("DEBUG");
 
     if (passwordError.some((color) => color !== colors.white)) {
       setError("Please fulfill the password requirements below");
@@ -128,7 +128,7 @@ function SignupScreenEmailDob({
       return;
     }
 
-    console.log("we got here no error so should signup");
+    // console.log("we got here no error so should signup");
 
     const token: string | undefined = await signUpWithEmail(email, password);
 
@@ -144,7 +144,7 @@ function SignupScreenEmailDob({
   };
 
   const verifyPassword = async () => {
-    console.log("The colors", passwordError);
+    // console.log("The colors", passwordError);
     if (passwordError.some((color) => color !== colors.white)) {
       setError("Please fulfill the password requirements below");
       setLoading(false);
@@ -171,17 +171,17 @@ function SignupScreenEmailDob({
       const usernameValid = await validateUsername();
       const nameValid = validateName();
       const passwordValid = await verifyPassword();
-      console.log("username error", passwordValid);
+      // console.log("username error", passwordValid);
 
-      console.log(
-        "We here boi",
-        emailValid,
-        usernameValid,
-        nameValid,
-        passwordValid
-      );
+      // console.log(
+      //   "We here boi",
+      //   emailValid,
+      //   usernameValid,
+      //   nameValid,
+      //   passwordValid
+      // );
       if (emailValid && usernameValid && nameValid && passwordValid) {
-        console.log("We here boi Ayy");
+        // console.log("We here boi Ayy");
         handleSignup();
       }
 

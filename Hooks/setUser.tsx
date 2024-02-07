@@ -18,7 +18,7 @@ export const setUser = async ({
   try {
     // await Keychain.setGenericPassword(resJson.user.username, resJson.refreshToken);
     token = (await getAuth().currentUser?.getIdToken()) ?? '';
-    console.log('resJson', resJson);
+    // console.log('resJson', resJson);
     // console.log('token', token);
     // user: profile.user,
     // username: profile.username,
@@ -63,7 +63,7 @@ export const setUser = async ({
       postId: postId
     };
 
-    console.log('This is the user', user);
+    // console.log(' This is the user', user);
 
     dispatch({type: 'SET_USER', payload: user});
   } catch (error) {

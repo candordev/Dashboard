@@ -28,8 +28,8 @@ const LHN = (props: any) => {
   const navIndex = props.state.index;
 
   useEffect(() => {
-    console.log("sparsisparsi");
-    console.log(props);
+    // console.log("sparsisparsi");
+    // console.log(props);
     // console.log(currRoute);
     // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
     getUnreadDB();
@@ -37,7 +37,7 @@ const LHN = (props: any) => {
 
   useEffect(() => {
     const handleRefresh = () => {
-      console.log("Notifications refreshed, updating unread count");
+      // console.log("Notifications refreshed, updating unread count");
       getUnreadDB();
     };
 
@@ -60,7 +60,7 @@ const LHN = (props: any) => {
 
   const getUnreadDB = useCallback(async () => {
     try {
-      console.log("GET UNREAD NOTIF");
+      // console.log("GET UNREAD NOTIF");
       setUnread(await getUnreadNotifs());
     } catch (err) {
       console.error("Error getting notification count", err);

@@ -45,7 +45,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
 
   const [notificationsEnabled, setNotificationsEnabled] =
     useState<boolean>(false);
-    
+
 
   let [notifs, setNotifs] = useState<Notification[]>([]);
   let skip = useRef<number>(0);
@@ -101,16 +101,16 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
       stopped.current = false;
     }
     event.emit(eventNames.FETCH_NOTIFS);
-    console.log(
-      "reset",
-      reset,
-      "skip",
-      skip.current,
-      "stopped",
-      stopped.current,
-      "notifs",
-      notifs.length
-    );
+    // console.log(
+    //   "reset",
+    //   reset,
+    //   "skip",
+    //   skip.current,
+    //   "stopped",
+    //   stopped.current,
+    //   "notifs",
+    //   notifs.length
+    // );
     try {
       const endpoint =
         Endpoints.getNotificationPage +
@@ -154,7 +154,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (AppState.currentState === "active") {
-        console.log("NOTIF HAPPENED");
+        // console.log("NOTIF HAPPENED");
         getNotifsStatus();
         onRefresh();
       }
@@ -247,17 +247,17 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   }
 
   async function onRefresh() {
-    console.log("is focused on refresh");
+    // console.log("is focused on refresh");
     refreshing.current = true;
     stopped.current = false;
-    await fetchNotifs(true); 
+    await fetchNotifs(true);
     refreshing.current = false;
     setLoading(false);
     event.emit(eventNames.NOTIFICATIONS_REFRESHED); // Emit an event here
 
-    console.log("selectedNotif", selectedNotificationFromPopup)
+    // console.log("selectedNotif", selectedNotificationFromPopup)
     if (selectedNotificationFromPopup) {
-      console.log("selectedNotif3", selectedNotificationFromPopup)
+      // console.log("selectedNotif3", selectedNotificationFromPopup)
       setSelectedNotification(selectedNotificationFromPopup);
       const post = await fetchPost(selectedNotificationFromPopup.data.postID)
       setSelectedPost(post)
@@ -265,7 +265,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   }
 
   useEffect(() => {
-    console.log("HAS BEEN CHANGED TO: ", selectedPost);
+    // console.log("HAS BEEN CHANGED TO: ", selectedPost);
   }, [selectedPost]);
 
   return (

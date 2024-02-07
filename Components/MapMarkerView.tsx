@@ -99,7 +99,7 @@ const MapMarkerView = ({ posts }: MapMarkerViewProps) => {
         (post) =>
           post.lat && post.lng && post.lat.length > 0 && post.lng.length > 0
       );
-      console.log("filtered posts", filteredPosts);
+      // console.log("filtered posts", filteredPosts);
       const markerData: MarkerData[] = await Promise.all(
         filteredPosts.map(async (post) => {
           const coordinates = await getCoordinatesFromAddress(post);
@@ -107,9 +107,9 @@ const MapMarkerView = ({ posts }: MapMarkerViewProps) => {
         })
       );
       setMarkers(markerData);
-      console.log("marker data", markerData);
+      // console.log("marker data", markerData);
     };
-    console.log("the posts are ", posts);
+    // console.log("the posts are ", posts);
     if (posts) loadMarkers();
   }, [posts]);
 

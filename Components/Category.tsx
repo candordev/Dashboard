@@ -42,7 +42,7 @@ const Category: React.FC<CategoryProps> = ({
 
   const getCategories = async () => {
     try {
-      console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
 
       // Initialize URLSearchParams
       let params = new URLSearchParams({
@@ -67,7 +67,7 @@ const Category: React.FC<CategoryProps> = ({
       }
 
       const result = resJson; // Assuming resJson is an array of CategoryPost
-      console.log("CATEGORIES ARE...", result);
+      // console.log("CATEGORIES ARE...", result);
       setCategories(result);
     } catch (error) {
       console.error("Error loading categories. Please try again later.", error);
@@ -95,7 +95,7 @@ const Category: React.FC<CategoryProps> = ({
   }, [categories]); // Depend on categories prop
 
   const handleValueChange = (newValues: ValueType[] | null) => {
-    console.log("new valee", newValues as string[]);
+    // console.log("new valee", newValues as string[]);
     if (newValues != null) {
       setValue(newValues as string[]); // Use type assertion here
       setValueChanged(true); // Indicate that the value has changed
@@ -120,7 +120,7 @@ const Category: React.FC<CategoryProps> = ({
 
   const handleDropdownClose = async () => {
     if (valueChanged && !createPost) {
-      console.log("Dropdown closed with new value:", value);
+      // console.log("Dropdown closed with new value:", value);
       //setValue(value)
 
       // Check if value is not null and has selected categories
@@ -137,7 +137,7 @@ const Category: React.FC<CategoryProps> = ({
           const resJson = await res.json();
           console.error("Error adding categories:", resJson.error);
         } else {
-          console.log("Categories added successfully");
+          // console.log("Categories added successfully");
         }
       } catch (error) {
         console.error("Network error, please try again later.", error);
@@ -177,7 +177,7 @@ const Category: React.FC<CategoryProps> = ({
           const resJson = await res.json();
           console.error("Error adding new category:", resJson.error);
         } else {
-          console.log("New Category added successfully");
+          // console.log("New Category added successfully");
           updateDropdownAndSelection(newCategoryName);
         }
       } catch (error) {
@@ -201,7 +201,7 @@ const Category: React.FC<CategoryProps> = ({
           const resJson = await res.json();
           console.error("Error adding new category:", resJson.error);
         } else {
-          console.log("New Category added successfully");
+          // // console.log("New Category added successfully");
           updateDropdownAndSelection(newCategoryName);
           if (onCategoryChange) {
             onCategoryChange(updatedValue);
