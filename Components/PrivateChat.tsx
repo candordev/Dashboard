@@ -80,7 +80,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 // }, [props.issue._id]);
 
 useEffect(() => {
-      if(chatMode == "authorities") {
+      // if(chatMode == "authorities") {
         const socketName = "https://candoradmin.com"
         const socket = io(socketName, {
         withCredentials: false,
@@ -109,7 +109,7 @@ useEffect(() => {
           socket.disconnect();
           console.log("DISCONNECTED FROM SOCKET");
         };
-      }
+      // }
   }, [props.issue._id, chatMode]); // Add chatMode to the dependency array
   // Define the initial state with appropriate types and default values
   
