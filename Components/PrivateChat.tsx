@@ -50,7 +50,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   };
   useEffect(() => {
     fetchPrivateChat();
-    console.log("ISSUE IS : ", props.issue._id);
+    console.log("Issue after first useEffect fetchingPrivateChat is : ", props.issue._id);
   }, [chatMode]);
 
 // Inside your React component
@@ -88,19 +88,14 @@ useEffect(() => {
     });
       // Construct the room name based on chatMode and postID
       const roomName = `${chatMode}_${props.issue._id}`;
-
-      console.log("ROOM NAME", roomName)
-
-      socket.on('connect', () => {
+        socket.on('connect', () => {
         console.log('Connected to Socket.io server');
         // Join the room specific to the chatMode and postID
         socket.emit('join-post', roomName);
       });
-
       socket.on('connect_error', (err) => {
         console.error('Connection error:', err.message);
       });
-
       socket.on('new-comment', (newComment) => {
         console.log("NEW COMMENT ALERT: ", newComment); // This line will log the new comment
         setPrivateComments((prevComments) => [...prevComments, newComment]);
@@ -110,11 +105,11 @@ useEffect(() => {
         socket.emit('leave-room', roomName);
         socket.disconnect();
         console.log("DISCONNECTED FROM SOCKET");
-        console.log("PRIV comment Length: ", privateComments.length);
       };
     // }
-}, [props.issue._id, chatMode, privateComments]); // Add chatMode to the dependency array
+}, [props.issue._id, chatMode]); // Add chatMode to the dependency array
   // Define the initial state with appropriate types and default values
+  
   let lastAuthorId = "";
   let lastCommentDate = new Date(0);
 
@@ -127,7 +122,8 @@ useEffect(() => {
       showDate = true;
     } else {
       const currentCommentDate = new Date(comment.date);
-      if (currentCommentDate.getTime() - lastCommentDate.getTime() > 600000) {
+      const diffMs = currentCommentDate.getTime() - lastCommentDate.getTime();
+      if (diffMs > 600000) {
         showDate = true;
       }
     }
@@ -163,7 +159,12 @@ useEffect(() => {
               )}
             </View>
             <View
-              style={isAuthor ? chatStyles.authorSelf : chatStyles.authorOther}
+              style={
+                !isAuthor && comment.contentType === "constituentChat"
+                  ? { ...chatStyles.authorOther, marginTop: 5 }
+                  : isAuthor ?
+                  chatStyles.authorSelf : chatStyles.authorOther
+              }
             >
               <Text style={isAuthor ? { color: "white" } : { color: "black" }}>
                 {comment.content}
@@ -341,20 +342,29 @@ const chatStyles = StyleSheet.create({
     backgroundColor: colors.purple,
     color: "white",
     alignSelf: "flex-end",
-    margin: 5,
     padding: 10,
     borderRadius: 10,
     flexDirection: "row-reverse",
+    marginBottom: 2,
+    marginLeft: 5,
+    marginRight: 5,
   },
   authorOther: {
     textAlign: "left",
     backgroundColor: "lightgray",
     color: "black",
     alignSelf: "flex-start",
-    margin: 5,
     padding: 10,
     borderRadius: 10,
+    // marginTop: 5,
+    marginBottom: 2,
+    marginLeft: 5,
+    marginRight: 5,
   },
+
+  // constituentChatComment: {
+  //   marginTop: 2, // Adjust the margin as needed
+  // },
 
   chatContainer: {
     borderColor: colors.lightestgray,
@@ -382,6 +392,7 @@ const chatStyles = StyleSheet.create({
   authorSelfDate: {
     color: "gray",
     marginLeft: "auto", // Pushes the date to the far left
+    marginBottom: 5,
   },
 
   whisperCommentContainer: {
