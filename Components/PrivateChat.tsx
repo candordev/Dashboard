@@ -50,7 +50,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   };
   useEffect(() => {
     fetchPrivateChat();
-    console.log("ISSUE IS : ", props.issue._id);
+    // // console.log("ISSUE IS : ", props.issue._id);
   }, [chatMode]);
 // Inside your React component
 // useEffect(() => {
@@ -60,7 +60,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 //   });
 
 //   socket.on('connect', () => {
-//     console.log('Connected to Socket.io server');
+//     // console.log('Connected to Socket.io server');
 //     socket.emit('join-post', props.issue._id);
 //   });
 
@@ -69,7 +69,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 //   });
 
 //   socket.on('new-comment', (newComment) => {
-//     console.log
+//     // console.log
 //     setPrivateComments((prevComments) => [...prevComments, newComment]);
 //   });
 
@@ -88,10 +88,10 @@ useEffect(() => {
       // Construct the room name based on chatMode and postID
       const roomName = `${chatMode}_${props.issue._id}`;
 
-      console.log("ROOM NAME", roomName)
+      // console.log("ROOM NAME", roomName)
 
       socket.on('connect', () => {
-        console.log('Connected to Socket.io server');
+        // console.log('Connected to Socket.io server');
         // Join the room specific to the chatMode and postID
         socket.emit('join-post', roomName);
       });
@@ -101,10 +101,10 @@ useEffect(() => {
       });
 
       socket.on('new-comment', (newComment) => {
-        console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
+        // console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
         setPrivateComments((prevComments) => [...prevComments, newComment]);
       });
-      
+
       return () => {
         // Leave the room when the component unmounts or chatMode/postID changes
         socket.emit('leave-room', roomName);
@@ -196,7 +196,7 @@ useEffect(() => {
         console.error(resJson.error);
       } else {
         fetchPrivateChat();
-        console.log("Comment Posted to Affiliated Politicians", resJson);
+        // console.log("Comment Posted to Affiliated Politicians", resJson);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
@@ -241,24 +241,24 @@ useEffect(() => {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
-        console.log("newComments TOTAL: ", newComments.length);
+        // console.log("newComments TOTAL: ", newComments.length);
         let filteredComments: Comment[] = [];
         if (chatMode === "constituent") {
           filteredComments = resJson.filter(
             (comment: Comment) =>
               comment.contentType === "constituentChat" || comment.isWhisper
           );
-          console.log("filteredComments for const: ", filteredComments.length);
+          // console.log("filteredComments for const: ", filteredComments.length);
         } else {
           filteredComments = resJson.filter(
             (comment: Comment) =>
               comment.contentType !== "constituentChat" && !comment.isWhisper
           );
-          console.log(
-            "filteredComments for everyone: ",
-            filteredComments.length
-          );
-          console.log("WEMBY POLITICIANS: ", props.issue.acceptedPoliticians);
+          // // console.log(
+          //   "filteredComments for everyone: ",
+          //   filteredComments.length
+          // );
+          // console.log("WEMBY POLITICIANS: ", props.issue.acceptedPoliticians);
         }
         setPrivateComments(filteredComments);
       }

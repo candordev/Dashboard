@@ -21,7 +21,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
   const [content, setContent] = useState(props.content);
 
   useEffect(() => {
-    console.log("title changed to", props.title)
+    // console.log("title changed to", props.title)
     setTitle(props.title);
   } ,[props.title])
 
@@ -31,7 +31,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
 
   const handleDone = async () => {
     try {
-      console.log("content", content);
+      // console.log("content", content);
       let res: Response = await customFetch(Endpoints.editPost, {
         method: "POST",
         body: JSON.stringify({
@@ -46,7 +46,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
         console.error(resJson.error);
       } else {
         setEditing(false);
-        console.log("SUCSEFULLY EDDITED");
+        // console.log("SUCSEFULLY EDDITED");
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);

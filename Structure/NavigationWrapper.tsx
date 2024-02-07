@@ -12,7 +12,6 @@ import { useSignout } from "../Hooks/useSignout";
 import SignupStack from "../Screens/SignupStack";
 import { useSignup } from "../Hooks/useSignup";
 import AllScreen from "../Screens/AllScreen";
-import SuggestedScreen from "../Screens/SuggestedScreen";
 import InboxScreen from "../Screens/InboxScreen";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
@@ -36,8 +35,8 @@ function NavigationWrapper() {
 
 
   useEffect(() => {
-    console.log("INFNITE LOOP H");
-    console.log("Component is initially rendered in the DOM");
+    // // console.log("INFNITE LOOP H");
+    // // console.log("Component is initially rendered in the DOM");
     // Your code here
   }, []); // The empty dependency array ensures it runs only once
 
@@ -46,14 +45,14 @@ function NavigationWrapper() {
 
   // Handle user state changes
   async function onAuthStateChangedCallback(authUser: User | null) {
-    console.log("onAuthStateChangedCallback", authUser);
+    // console.log("onAuthStateChangedCallback", authUser);
 
     if (authUser && authUser != null && !isSignupOperation) {
       try {
-        console.log("IS SIGNUP OPERATION RAN");
+        // console.log("IS SIGNUP OPERATION RAN");
         // Retrieve user token
         const token = await authUser.getIdToken();
-        console.log("found token", token);
+        // console.log("found token", token);
 
         // Log in user with the obtained token
         await loginUser({ token: token });
@@ -68,7 +67,7 @@ function NavigationWrapper() {
   // Check for authentication state changes
   useEffect(() => {
     const auth = getAuth();
-    console.log("The auth changed", auth);
+    // console.log("The auth changed", auth);
     const unsubscribe = onAuthStateChanged(auth, onAuthStateChangedCallback);
 
     return () => {
@@ -115,7 +114,7 @@ function NavigationWrapper() {
               <Stack.Screen name="launch" component={LaunchScreen} />
               <Stack.Screen name="root" component={Root} />
               <Stack.Screen name="inbox" component={InboxScreen} />
-              
+
               {/* other authenticated screens */}
             </>
           ) : (
@@ -127,7 +126,7 @@ function NavigationWrapper() {
                 component={SignupStack}
                 options={{ headerShown: false }}
               />
-              
+
             </>
           )}
         </Stack.Navigator>

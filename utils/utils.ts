@@ -46,7 +46,7 @@ export const customFetch = async (
         setTimeout(() => reject(new Error("Timeout")), constants.TIMEOUT)
       ),
     ]);
-    
+
     if (res.status === 403) {
       // authentication error
       //event.emit(eventNames.FORCE_SIGNOUT);
@@ -229,7 +229,7 @@ export const downloadPDF = async (groupID: string) => {
       return;
     }
     // setIsLoading(true);
-    console.log("PDF GROUP", groupID);
+    // console.log("PDF GROUP", groupID);
     const queryParams = new URLSearchParams({
       groupID: groupID,
     });
@@ -264,7 +264,7 @@ export const downloadPDF = async (groupID: string) => {
       document.body.removeChild(link);
       URL.revokeObjectURL(pdfUrl);
 
-      console.log("PDF downloaded successfully");
+      // console.log("PDF downloaded successfully");
     }
     // setIsLoading(false);
   } catch (error) {

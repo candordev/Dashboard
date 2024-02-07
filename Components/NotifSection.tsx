@@ -94,7 +94,7 @@ const NotifSection = (props: Props) => {
   const fetchAndSetPost = async () => {
     try {
       const post = await fetchPost(notif.data?.postID);
-      console.log("NOTIF WAS CLICKED", post);
+      // console.log("NOTIF WAS CLICKED", post);
       props.setSelectedPost(post);
       props.setSelectedNotification(notif)
     } catch (error) {
@@ -104,7 +104,7 @@ const NotifSection = (props: Props) => {
 
 
   useEffect(() => {
-    console.log("THIS IS THE NOTIF: ", props.notif)
+    // console.log("THIS IS THE NOTIF: ", props.notif)
     setNotif(props.notif);
   }, [props.notif]);
 
@@ -122,7 +122,7 @@ const NotifSection = (props: Props) => {
       }
       setNotif((notif: Notification) => ({ ...notif, seen: true }));
       event.emit(eventNames.FETCH_NOTIFS);
-      console.log("POST REQUEST HAPPENED");
+      // console.log("POST REQUEST HAPPENED");
       fetchAndSetPost();
     } catch (error) {
       console.error("Error marking notification as seen: ", error);

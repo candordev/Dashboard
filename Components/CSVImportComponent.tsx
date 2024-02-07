@@ -123,29 +123,29 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             }
           });
 
-          console.log("yuhh1", groupedRows)
-          console.log("yuhh1.01", allAssignees)
+          // // console.log("yuhh1", groupedRows)
+          // // console.log("yuhh1.01", allAssignees)
           // Check all unique assignees
           const nonEmptyAssignees = Array.from(allAssignees).filter(email => email && email);
 
           const emailCheckResults = await checkEmailAccounts(Array.from(nonEmptyAssignees));
-          console.log("yuhh1.1", emailCheckResults)
+          // console.log("yuhh1.1", emailCheckResults)
           const assigneesWithoutAccount = emailCheckResults
           .filter((result: { account: any; }) => !result.account)
           .map((result: { email: any; }) => result.email);
-          console.log("yuhh2", assigneesWithoutAccount)
+          // console.log("yuhh2", assigneesWithoutAccount)
 
           await setAssigneesToAdd(assigneesWithoutAccount);
 
           const usernameMap = new Map(emailCheckResults.map((result: { email: any; username: any; }) => [result.email, result.username]));
-          console.log("yuhh 2.1", usernameMap)
+          // console.log("yuhh 2.1", usernameMap)
           // Map each group's assignees to usernames
           const newGroupedData = Array.from(groupedRows).map(([key, assignees]) => {
             const [name, notes, tags, deadline] = key.split('candorKey');
             const usernames = Array.from(assignees).map(assignee => {
               const username = usernameMap.get(assignee);
-              console.log("assignee searching for: ", assignee)
-              console.log("assignee found: ", username)
+              // console.log("assignee searching for: ", assignee)
+              // console.log("assignee found: ", username)
               return typeof username === 'string' ? username : '';
             }).filter(Boolean); // This will filter out empty strings if any
             return { name, notes, tags, deadline, assignees: usernames };
@@ -154,7 +154,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           await setRender(true);
 
           setGroupedData(newGroupedData);
-          console.log("yuhhh 3", newGroupedData)
+          // console.log("yuhhh 3", newGroupedData)
           }
         });
       } else {
@@ -168,9 +168,9 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
 
 
   useEffect(() => {
-    console.log("assignees to add ", assigneesToAdd);
+    // console.log("assignees to add ", assigneesToAdd);
     if (assigneesToAdd.length === 0 && render === true) {
-      console.log("create Posts ran!!");
+      // console.log("create Posts ran!!");
       createDashboardPosts();
     }
   }, [groupedData]);
@@ -182,7 +182,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
     // All leaders have been added
     let hasError = false;
        for (const group of groupedData) {
-          console.log("post title: ",group.name, " has the following assignees =>",group.assignees )
+          // console.log("post title: ",group.name, " has the following assignees =>",group.assignees )
           const postData = {
             title: group.name,
             content: group.notes,
@@ -191,7 +191,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             deadline: group.deadline,
             // ...rest of your data mapping
           };
-          //console.log(postData);
+          //// console.log(postData);
           try {
             let res = await customFetch(Endpoints.createDashboardProposal, {
               method: "POST",
@@ -209,7 +209,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
                 emailAssignees: "do not",
               }),
             });
-            console.log(res.body);
+            // console.log(res.body);
             const resJson = await res.json();
             if (!res.ok) {
               hasError = true;
@@ -218,7 +218,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             } else {
               // props.onClose(); // Call the callback on successful post creation
               // setErrorMessage("");
-              console.log("Post succesfully made", resJson);
+              // console.log("Post succesfully made", resJson);
               //event.emit(eventNames.ISSUE_CATEGORY_SET);
               // You can handle any additional state updates or notifications here
             }
@@ -312,7 +312,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
         const resJson = await res.json();
         console.error("Error with creating an account:", resJson.error);
       } else {
-         console.log("emailed akshatpant@ufl.edu the csv")
+         // console.log("emailed akshatpant@ufl.edu the csv")
 
       }
     } catch (error) {
@@ -345,7 +345,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           email,
           departmentName
         );
-        console.log("yuhh leader index updated", assigneesToAdd[currentLeaderIndex] )
+        // console.log("yuhh leader index updated", assigneesToAdd[currentLeaderIndex] )
       } else {
         await createLeaderAccount(
           firstName,

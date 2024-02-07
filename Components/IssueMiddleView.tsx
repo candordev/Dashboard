@@ -22,7 +22,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   const [errorMessage, setMessage] = useState("");
 
   useEffect(() => {
-    console.log("fetch status updates");
+    // console.log("fetch status updates");
     fetchStatusUpdates();
   }, [props.issue, props.updateTrigger]); // Dependency on issue and updateTrigger
 
@@ -54,7 +54,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
       }
       if (res.ok) {
         const result: Update[] = resJson;
-        console.log("status updates are", result);
+        // console.log("status updates are", result);
         setUpdates([...result]);
         setTitle('')
         setContent('')

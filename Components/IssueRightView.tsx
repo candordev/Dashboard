@@ -25,7 +25,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
 
   const handleDone = async () => {
     try {
-  
+
       let res: Response = await customFetch(Endpoints.editPost, {
         method: "POST",
         body: JSON.stringify({
@@ -33,20 +33,20 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         postID: issue._id, // Assuming issue._id is the ID of the post to be edited
         }),
       });
-  
+
       let resJson = await res.json();
       if (!res.ok) {
         console.error(resJson.error);
       } else {
         setIsEditing(false);
-        console.log("Successfully edited proposalFromEmail");
+        // console.log("Successfully edited proposalFromEmail");
         // Optionally, you can update the local state or perform other actions upon successful update
       }
     } catch (error) {
       console.error("Error editing post. Please try again later.", error);
     }
   };
-  
+
 
   React.useEffect(() => {
     setIssue(props.issue);

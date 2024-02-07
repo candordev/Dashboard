@@ -35,7 +35,7 @@ function CreatePostView(props: any) {
 
   const [idToken, setIdToken] = useState<string | "">("");
 
-  // console.log("THIS IS THE AUTH", auth)
+  // // console.log("THIS IS THE AUTH", auth)
 
   useEffect(() => {
     // Fetch the ID token
@@ -43,7 +43,7 @@ function CreatePostView(props: any) {
       const user = auth.currentUser;
       if (user) {
         const token = await user.getIdToken();
-        console.log("DAA TOKEN", token);
+        // console.log("DAA TOKEN", token);
         setIdToken(token);
       }
     };
@@ -73,7 +73,7 @@ function CreatePostView(props: any) {
           deadline: selectedDate,
         }),
       });
-      console.log(res.body);
+      // console.log(res.body);
       const resJson = await res.json();
       if (!res.ok) {
         console.error("Error creating Post:", resJson.error);
@@ -81,7 +81,7 @@ function CreatePostView(props: any) {
       } else {
         props.onClose(); // Call the callback on successful post creation
         setErrorMessage("");
-        console.log("Post succesfully made", resJson);
+        // console.log("Post succesfully made", resJson);
         //event.emit(eventNames.ISSUE_CATEGORY_SET);
         // You can handle any additional state updates or notifications here
       }
@@ -109,7 +109,7 @@ function CreatePostView(props: any) {
       if (!res.ok) {
         console.error("Error setting neighborhood:", resJson.error);
       } else {
-        console.log("THE NEIGHBORHOOD: ", resJson.neighborhood);
+        // console.log("THE NEIGHBORHOOD: ", resJson.neighborhood);
         setNeighborhood(resJson.neighborhood);
         return resJson.neighborhood;
         setNeighborhood(resJson.neighborhood); // Update the input box with the neighborhood
@@ -125,16 +125,16 @@ function CreatePostView(props: any) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const handleAssigneesChange = (assignees: string[]) => {
-    console.log("Selected Assignees in CreatePostView:", assignees);
+    // console.log("Selected Assignees in CreatePostView:", assignees);
     setSelectedAssignees(assignees); // Update state with the new value
   };
 
   const handleAssigneesChangeEmail = (assignees: string) => {
-    console.log("Selected Assignees in CreatePostView:", assignees);
+    // console.log("Selected Assignees in CreatePostView:", assignees);
   };
 
   const handleCategoryChange = (categories: string[] | null) => {
-    console.log("Selected Categories in CreatePostView:", categories);
+    // // console.log("Selected Categories in CreatePostView:", categories);
     if (categories) {
       setSelectedCategories(categories); // Update state with the new value
     }
