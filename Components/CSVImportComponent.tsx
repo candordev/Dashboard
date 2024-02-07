@@ -75,7 +75,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
         console.error("Error checking emails:", data.error);
         return [];
       }
-      console
 
       return data;
     } catch (error) {
@@ -83,9 +82,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
       return [];
     }
   };
-
-
-
 
   const handleImport = async () => {
     //BELOW IS DONE - Akshat 1/31/2024
@@ -210,6 +206,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
                 //proposalFromEmail: email,
                 categoryNames: [postData.tags],
                 deadline: postData.deadline,
+                emailAssignees: "do not",
               }),
             });
             // console.log(res.body);
@@ -283,6 +280,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           departmentID: departmentID,
           email: email,
           groupID: state.leaderGroups[0],
+          type: "import"
         }),
       });
 
@@ -321,7 +319,6 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
       console.error("Network error, please try again later.", error);
     }
   }
-
 
   const inviteLeader = async (
     firstName: string,

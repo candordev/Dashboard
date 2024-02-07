@@ -114,7 +114,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           </View>
         );
       })}*/}
-        {
+        {/* {
           props.issue.suggestedSimilarPost && displaySimilarPost&& (
             <SimilarPost
               title={props.issue.suggestedSimilarPost.title}
@@ -126,7 +126,8 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
               onClose={handleClose}
             />
           )
-        }
+        }  */}
+
       <PrivateChat issue={props.issue}/>
     </View>
   );
