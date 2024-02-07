@@ -39,23 +39,23 @@ const YourScreen = ({ navigation }: any) => {
   const isFocused = useIsFocused(); // Assuming you're using something like this
 
   useEffect(() => {
-    console.log("Component mounted, fetching posts initially");
+    // console.log("Component mounted, fetching posts initially");
 
-    console.log("Event triggered, fetching posts");
+    // console.log("Event triggered, fetching posts");
     fetchPosts(currStatus, selectedHeaderOption, selectedAssigneeIds);
    }, [currStatus, selectedHeaderOption, isFocused, selectedAssigneeIds ]);
 
   const handleStatusChange = async (newStatus: Status) => {
-    console.log("Received status:", status);
-    console.log("Current status:", currStatus);
-    console.log("Status changed, updating current status and refetching posts");
+    // console.log("Received status:", status);
+    // console.log("Current status:", currStatus);
+    // console.log("Status changed, updating current status and refetching posts");
     if (JSON.stringify(newStatus) !== JSON.stringify(currStatus)) {
       setCurrStatus(newStatus);
     }
   };
 
   const handleAssigneeSelection = (selectedAssigneeIds: string[]) => {
-    console.log("Selected Assignees:", selectedAssigneeIds);
+    // console.log("Selected Assignees:", selectedAssigneeIds);
     setSelectedAssigneeIds(selectedAssigneeIds)
     // Perform actions with the selected IDs, like updating state or making API calls
   };
@@ -73,7 +73,7 @@ const YourScreen = ({ navigation }: any) => {
     selectedAssigneeIds?: string[]
   ) => {
     try {
-      console.log("THE HEADER OPTION", headerOption);
+      // console.log("THE HEADER OPTION", headerOption);
       if(selectedAssigneeIds == undefined){
         selectedAssigneeIds = []
       }
@@ -91,7 +91,7 @@ const YourScreen = ({ navigation }: any) => {
 
       // Add selectedHeaderOption to the query params if it's defined
       if (headerOption) {
-        console.log("appended");
+        // console.log("appended");
         queryParams.append("header", headerOption);
       }
 

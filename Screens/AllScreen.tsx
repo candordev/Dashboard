@@ -57,9 +57,9 @@ const AllScreen = ({ navigation }: any) => {
   const { postId } = usePostId();
 
   useEffect(() => {
-    console.log("Component mounted, fetching posts initially");
+    // console.log("Component mounted, fetching posts initially");
 
-    console.log("Event triggered, fetching posts");
+    // console.log("Event triggered, fetching posts");
     fetchPosts(
       progressSelected,
       searchTerm,
@@ -69,9 +69,9 @@ const AllScreen = ({ navigation }: any) => {
   }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
-    console.log("Received status:", status);
-    console.log("Current status:", progressSelected);
-    console.log("Status changed, updating current status and refetching posts");
+    // console.log("Received status:", status);
+    // console.log("Current status:", progressSelected);
+    // console.log("Status changed, updating current status and refetching posts");
     if (JSON.stringify(newStatus) !== JSON.stringify(progressSelected)) {
       setProgressSelected(newStatus);
     }
@@ -85,25 +85,25 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   const handleAssigneeSelection = (selectedAssigneeIds: string[]) => {
-    console.log("Selected Assignees:", selectedAssigneeIds);
+    // console.log("Selected Assignees:", selectedAssigneeIds);
     setAssigneesSelectedIds(selectedAssigneeIds);
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
   const handleSearchChange = (searchTerm: string) => {
-    console.log("Selected Assignees:", searchTerm);
+    // console.log("Selected Assignees:", searchTerm);
     setSearchTerm(searchTerm);
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
   useEffect(() => {
-    console.log("Categories with posts updated:", categoriesWithPosts);
+    // console.log("Categories with posts updated:", categoriesWithPosts);
     Object.values(categoriesWithPosts).forEach((posts: Post[]) => {
       posts.forEach((post: Post) => {
         if (post.location) {
-          console.log("printing post that has location: ", post);
+          // console.log("printing post that has location: ", post);
         } else {
-          console.log("printing post that has no location: ", post);
+          // console.log("printing post that has no location: ", post);
         }
       });
     });
@@ -116,7 +116,7 @@ const AllScreen = ({ navigation }: any) => {
     selectedAssigneeIds?: string[]
   ) => {
     try {
-      console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      // console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
       setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
@@ -149,9 +149,9 @@ const AllScreen = ({ navigation }: any) => {
 
       let resJson = await res.json();
       if (res.ok) {
-        console.log("resJson DEBUG: ", resJson);
+        // console.log("resJson DEBUG: ", resJson);
         await setCategoriesWithPosts(resJson);
-        await setRefreshKey((prevKey) => prevKey + 1); 
+        await setRefreshKey((prevKey) => prevKey + 1);
        // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
@@ -183,10 +183,10 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    console.log("THS THE ST: ", postId, !hasInitialOpenOccurred);
+    // console.log("THS THE ST: ", postId, !hasInitialOpenOccurred);
     // Check if postId exists and set it
     if (postId && !hasInitialOpenOccurred) {
-      console.log("here set")
+      // console.log("here set")
       setInitialPostId(postId);
     }
   }, []);
@@ -208,19 +208,19 @@ const AllScreen = ({ navigation }: any) => {
       const resJson = await res.json();
 
       if (!res.ok) {
-        console.log("category deletion request failed");
+        // console.log("category deletion request failed");
       } else {
-        console.log("categroy deleted");
+        // console.log("categroy deleted");
         setIsDeleting(true); // Start loading
         await handlePopoverCloseComplete();
         setIsDeleting(false); // Start loading
       }
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
     }
 
     // Call your route and handle the action here
-    console.log(`Remove category: ${categoryName}`);
+    // console.log(`Remove category: ${categoryName}`);
     // Update state or UI as needed after removing the category
     setPopoverVisible(false); // Close the popover after action
   };
@@ -293,6 +293,7 @@ const AllScreen = ({ navigation }: any) => {
                     popoverStyle={{
                       borderRadius: 10,
                       width: 200,
+                      padding: 10,
                     }}
                   >
                     <View>
@@ -310,7 +311,7 @@ const AllScreen = ({ navigation }: any) => {
                         style={{
                           backgroundColor: "red",
                           padding: 10,
-                          marginTop: 55,
+                          marginTop: 20,
                           borderRadius: 5,
                           marginHorizontal: 10,
                         }}
@@ -339,7 +340,7 @@ const AllScreen = ({ navigation }: any) => {
                         )}
                       </TouchableOpacity>
                     </View>
-                  </Popover>  
+                  </Popover>
                 )}
               </View>
               <FlatList

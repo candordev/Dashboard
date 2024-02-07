@@ -10,7 +10,7 @@ interface NotificationContextType {
     addNotification: (notification: Notification) => void;
     removeNotification: (notificationId: string) => void; // Add this line
   }
-  
+
 
 const NotificationContext = createContext<NotificationContextType>({
   notifications: [],
@@ -30,7 +30,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
     const { state, dispatch } = useUserContext();
     const userId = state._id; // The logged-in user's ID
-    
+
     // Initialize WebSocket connection here
     useEffect(() => {
         const socket = io("https://candoradmin.com", {
@@ -41,23 +41,23 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
         });
 
         socket.on('connect', () => {
-            console.log('Connected to Socket.io server for user:', userId);
+            // console.log('Connected to Socket.io server for user:', userId);
         });
 
         socket.on('new-notification', (notification) => {
-            console.log("NEW NOTIF DETECTED!!!")
+            // console.log("NEW NOTIF DETECTED!!!")
             addNotification(notification);
         });
 
         socket.on('disconnect', () => {
-            console.log('Socket.io connection disconnected');
+            // console.log('Socket.io connection disconnected');
         });
 
         return () => {
             socket.disconnect();
         };
     }, [userId]);
-  
+
     const addNotification = (notification: Notification) => {
       setNotifications((prevNotifications) => [...prevNotifications, notification]);
     };
@@ -67,7 +67,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
           prevNotifications.filter((notif) => notif._id !== notificationId)
         );
       };
-  
+
       return (
         <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
           {children}

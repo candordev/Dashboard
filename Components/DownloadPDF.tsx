@@ -19,8 +19,8 @@ const DownloadPDF: React.FC<DownloadPDFProps> = ({ groupID }) => {
             if (!groupID) {
                 return
             }
-            setIsLoading(true); 
-            console.log("PDF GROUP", groupID)
+            setIsLoading(true);
+            // console.log("PDF GROUP", groupID)
             const queryParams = new URLSearchParams({
                 groupID: groupID
             });
@@ -31,8 +31,8 @@ const DownloadPDF: React.FC<DownloadPDFProps> = ({ groupID }) => {
                 method: "GET",
                 }
             );
-        
-            
+
+
             if (!res.ok) {
                 let resJson = await res.json();
                 console.error("DOWNLOAD PDF ERROR", resJson.error);
@@ -56,12 +56,12 @@ const DownloadPDF: React.FC<DownloadPDFProps> = ({ groupID }) => {
                 document.body.removeChild(link);
                 URL.revokeObjectURL(pdfUrl);
 
-                console.log("PDF downloaded successfully");
+                // console.log("PDF downloaded successfully");
             }
             setIsLoading(false);
         } catch (error) {
           console.error("Error downloading pdf", error);
-        } 
+        }
       }
 
 
@@ -70,7 +70,7 @@ const DownloadPDF: React.FC<DownloadPDFProps> = ({ groupID }) => {
           {errorMessage !== "" && (
             <Text style={styles.errorMessage}>{errorMessage}</Text>
           )}
-          
+
             <TouchableOpacity
               style={styles.toggleButton}
               onPress={() => downloadPDF()}
@@ -78,7 +78,7 @@ const DownloadPDF: React.FC<DownloadPDFProps> = ({ groupID }) => {
             >
               <Text style={styles.toggleButtonText}>Download Info</Text>
             </TouchableOpacity>
-          
+
         </View>
       );
     };

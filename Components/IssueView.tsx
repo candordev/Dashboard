@@ -18,7 +18,7 @@ function IssueView(props: IssueViewProps): JSX.Element {
   const [issue, setIssue] = useState<Post>(props.issue);
 
   useEffect(() => {
-    console.log("IssueView mounted, setting issue", props.issue)
+    // console.log("IssueView mounted, setting issue", props.issue)
     setIssue(props.issue);
   }, [props.issue]);
 

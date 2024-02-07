@@ -12,6 +12,7 @@ import DeletePost from "./DeletePost";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 import ErrorMessage from "./Native/ErrorMessage";
+import { set } from "lodash";
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
@@ -23,12 +24,12 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [issue, setIssue] = React.useState<Post>(props.issue);
   const [isEditing, setIsEditing] = useState(false);
   const [email, setEmail] = useState(issue.proposalFromEmail);
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [errorMessage, setErrorMessage] = useState('');
 
 
   const handleDone = async () => {
     try {
-  
+
       let res: Response = await customFetch(Endpoints.editPost, {
         method: "POST",
         body: JSON.stringify({
@@ -36,23 +37,22 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         postID: issue._id, // Assuming issue._id is the ID of the post to be edited
         }),
       });
-  
+
       let resJson = await res.json();
       if (!res.ok) {
-        setErrorMessage('Please enter a valid email');
+        // setErrorMessage('Please enter a valid email');
         setEmail(props.issue.proposalFromEmail);
         console.error(resJson.error);
       } else {
         setIsEditing(false);
-        setErrorMessage('');
-        console.log("Successfully edited proposalFromEmail");
+        // console.log("Successfully edited proposalFromEmail");
         // Optionally, you can update the local state or perform other actions upon successful update
       }
     } catch (error) {
       console.error("Error editing post. Please try again later.", error);
     }
   };
-  
+
 
   React.useEffect(() => {
     setIssue(props.issue);

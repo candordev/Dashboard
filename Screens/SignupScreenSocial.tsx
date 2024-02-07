@@ -42,7 +42,7 @@ function SignupScreenSocial({
     const handleSignup = async () => {
         setLoading(true);
 
-        console.log("DEBUG");
+        // console.log("DEBUG");
 
         if (!checkBox) {
             setError("Please agree to our terms");
@@ -50,7 +50,7 @@ function SignupScreenSocial({
             return;
         }
 
-        console.log("we got here no error so should signup");
+        // console.log("we got here no error so should signup");
 
         await signupUser(firstName, lastName, email, username.trim(), firebaseToken ?? "", "", userId, postId, groupId);
     };
@@ -68,13 +68,13 @@ function SignupScreenSocial({
             const usernameValid = await validateUsername();
             const nameValid = validateName();
 
-            console.log(
-                "We here boi",
-                usernameValid,
-                nameValid,
-            );
+            // console.log(
+            //     "We here boi",
+            //     usernameValid,
+            //     nameValid,
+            // );
             if (usernameValid && nameValid) {
-                console.log("We here boi Ayy");
+                // console.log("We here boi Ayy");
                 handleSignup();
             }
 

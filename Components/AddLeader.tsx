@@ -69,12 +69,12 @@ const AddLeader = (props: {
         // Process the response
         const data = await response.json();
         if (response.ok) {
-          console.log("DEPARTMENTS FETCHED DATA", data);
+          // // console.log("DEPARTMENTS FETCHED DATA", data);
           const departmentItems = data.map((dept: { name: any; _id: any; }) => ({
             label: dept.name,
             value: dept._id,
           }));
-  
+
           // Prepend the "Add Department" option to the department items
           setItems([{ label: "Add Department", value: "add_department" }, ...departmentItems]);
         } else {
@@ -91,11 +91,11 @@ const AddLeader = (props: {
     //setItems(departments)
   }, []);
 
-  
+
 
 
   // const handleValueChange = (newValues: ValueType[] | null) => {
-  //   console.log("Selected values changed to:", newValues);
+  //   // console.log("Selected values changed to:", newValues);
   //   if (newValues != null) {
   //     setValue(newValues as string[]); // Use type assertion here
   //     setValueChanged(true); // Indicate that the value has changed
@@ -103,9 +103,9 @@ const AddLeader = (props: {
   // };
 
   const handleDeparmentSelection = (selectedValue: ValueType | null) => {
-      console.log("DEPARTMENT SELECTED", selectedValue as string);
+      // console.log("DEPARTMENT SELECTED", selectedValue as string);
       setSelectedDepartmentName(selectedValue as string);
-      console.log("yuhh", selectedDepartmentName)
+      // console.log("yuhh", selectedDepartmentName)
       setValue(selectedValue as string); // This should now be valid
   };
 
@@ -117,7 +117,7 @@ const AddLeader = (props: {
     }
   }, [selectedDepartmentName]);
 
-  
+
 
   async function addDepartment(
   ) {
@@ -142,7 +142,7 @@ const AddLeader = (props: {
         };
         setItems((prevItems) => [...prevItems, newDepartmentItem]);
         setValue(newDepartment.department._id); // Set the new department as selected
-        setSelectedDepartmentName(departmentName); 
+        setSelectedDepartmentName(departmentName);
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
@@ -171,7 +171,7 @@ const AddLeader = (props: {
       )}
       {expanded &&  (
         <>
-           {expandedAddDep && 
+           {expandedAddDep &&
             <TouchableOpacity //NEEDS TO BE FIXED
                 style={{
                   backgroundColor: colors.purple,
@@ -203,10 +203,10 @@ const AddLeader = (props: {
                         setExpandedAddDep(false);
                   } else {
                     setExpandedAddDep(true);
-                  } 
+                  }
                 }}
               >
-           
+
                 <Text
                   style={{
                     fontFamily: "Montserrat",
@@ -214,11 +214,11 @@ const AddLeader = (props: {
                     fontSize: 16,
                     fontWeight: "600",
                   }}
-                > 
+                >
                   Done
                 </Text>
-          
-      </TouchableOpacity> 
+
+      </TouchableOpacity>
     }
       {/* placeholder="Select category"
         value={value}
@@ -259,9 +259,9 @@ const AddLeader = (props: {
             style={styles.input}
           />
         </>
-        
+
       )}
-      
+
       <TouchableOpacity
         style={{
           backgroundColor: colors.purple,

@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+import ProfilePicture from "./ProfilePicture";
 
 
 const LHN = (props: any) => {
@@ -27,8 +28,8 @@ const LHN = (props: any) => {
   const navIndex = props.state.index;
 
   useEffect(() => {
-    console.log("sparsisparsi");
-    console.log(props);
+    // console.log("sparsisparsi");
+    // console.log(props);
     // console.log(currRoute);
     // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
     getUnreadDB();
@@ -36,7 +37,7 @@ const LHN = (props: any) => {
 
   useEffect(() => {
     const handleRefresh = () => {
-      console.log("Notifications refreshed, updating unread count");
+      // console.log("Notifications refreshed, updating unread count");
       getUnreadDB();
     };
 
@@ -59,7 +60,7 @@ const LHN = (props: any) => {
 
   const getUnreadDB = useCallback(async () => {
     try {
-      console.log("GET UNREAD NOTIF");
+      // console.log("GET UNREAD NOTIF");
       setUnread(await getUnreadNotifs());
     } catch (err) {
       console.error("Error getting notification count", err);
@@ -68,6 +69,16 @@ const LHN = (props: any) => {
 
   return (
     <View style={styles.container}>
+      <View style={{justifyContent: 'center', alignItems: 'center', paddingBottom: 10}}>
+        <ProfilePicture
+          imageUrl={state.imageUrl}
+          type="normal"
+          style={{ marginBottom: 10 }}
+        />
+        <Text style={{ color: colors.white, fontWeight: "bold", textAlign: 'center' }}>
+          {state.firstName} {state.lastName}
+        </Text>
+      </View>
       <NavItem
         name={"All Issues"}
         route="/all"
@@ -199,7 +210,7 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: colors.black,
-    paddingVertical: 50,
+    paddingVertical: 20,
     paddingHorizontal: 15,
   },
   navItemText: {

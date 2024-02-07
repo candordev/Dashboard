@@ -33,14 +33,14 @@ export const useLogin = () => {
         setLoading(false);
         setError(resJson.error);
         console.error(resJson.error)
-        console.log("RESPONSE FROM LOGIN FIREBASE", resJson.error)
+        // console.log("RESPONSE FROM LOGIN FIREBASE", resJson.error)
       }
       if (res.ok) {
-        console.log("RESPONSE FROM LOGIN FIREBASE", resJson)
+        // console.log("RESPONSE FROM LOGIN FIREBASE", resJson)
         await setUser({resJson,postId, setError, dispatch});
       }
     } catch (error) {
-      console.log("RESPONSE FROM LOGIN FIREBASE", error)
+      // console.log("RESPONSE FROM LOGIN FIREBASE", error)
       setError(String(error));
       setLoading(false);
       console.error(error)

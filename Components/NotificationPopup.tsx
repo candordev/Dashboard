@@ -36,7 +36,7 @@ function NotificationPopup({ navigation }: LaunchcreenProps): JSX.Element | null
         setShowPopup(false);
     };
 
-  
+
     const popupStyle: React.CSSProperties = {
       position: 'fixed',
       top: '30px',
@@ -52,7 +52,7 @@ function NotificationPopup({ navigation }: LaunchcreenProps): JSX.Element | null
       fontWeight: 500,
 
     };
-  
+
     const closeButtonStyle: React.CSSProperties = {
       position: 'absolute',
       top: '-7px',
@@ -70,11 +70,11 @@ function NotificationPopup({ navigation }: LaunchcreenProps): JSX.Element | null
       justifyContent: 'center',
       display: hovered ? 'flex' : 'none', // Show only when hovered
     };
-  
+
     const handlePopupClick = () => {
       if (currentNotification) {
-        
-        console.log("CLICKED!", currentNotification)
+
+        // console.log("CLICKED!", currentNotification)
         navigation.navigate('inbox', { selectedNotification: currentNotification });
         setShowPopup(false);
       }
@@ -105,17 +105,17 @@ function imageURL(contentType: NotificationType) {
         return "Bell";
     }
   }
-  
+
   return (
-    <div 
-      className="notification-popup" 
-      style={popupStyle} 
+    <div
+      className="notification-popup"
+      style={popupStyle}
       onClick={handlePopupClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <button 
-        style={closeButtonStyle} 
+      <button
+        style={closeButtonStyle}
         onClick={handleCloseClick}
       >
         X
@@ -124,7 +124,7 @@ function imageURL(contentType: NotificationType) {
         <NotifPicture
           smallUrl={imageURL(currentNotification.data?.contentType)}
           mainUrl={currentNotification.picture}
-          type={"big"} 
+          type={"big"}
         />
         <div style={{ padding: 0, flex: 1, marginLeft: 10 }}> {/* Increased margin here */}
           <div style={{ fontWeight: "600", fontSize: 13.5, marginBottom: 3 ,color: colors.black}}>
@@ -137,12 +137,9 @@ function imageURL(contentType: NotificationType) {
       </div>
     </div>
   );
-  
-  
+
+
   };
-  
-  
+
+
   export default NotificationPopup;
-  
-  
-  
