@@ -36,14 +36,14 @@ const Location: React.FC<LocationProps> = (props) => {
       const user = auth.currentUser;
       if (user) {
         const token = await user.getIdToken();
-        // console.log("DAA TOKEN", token);
+        console.log("DAA TOKEN", token);
         setIdToken(token);
       }
     };
-    // console.log("THE LOCATION INPUT VALUE: ", props.issue?.neighborhood ?? "");
+    console.log("THE LOCATION INPUT VALUE: ", props.issue?.neighborhood ?? "");
     setInputValue(props.issue?.neighborhood ?? "");
-    setFullAddress(props.issue?.location ?? "");
-    // console.log("issue fields: ", props.issue);
+    setFullAddress(props.issue?.location ?? "")
+    console.log("issue fields: ", props.issue);
 
     fetchToken();
   }, [props.issue]);
@@ -56,14 +56,14 @@ const Location: React.FC<LocationProps> = (props) => {
       const neighborhood: string = await props.onChange(data, details);
       setInputValue(neighborhood);
       setKey((prevKey) => prevKey + 1);
-      setFullAddress(data.description);
+      setFullAddress(data.description)
       return;
     }
 
     const address = data.description; // Or use details.formatted_address
-    setFullAddress(address);
+    setFullAddress(address)
 
-    // console.log("The data needed", data);
+    console.log("The data needed", data);
 
     try {
       let res = await customFetch(Endpoints.setNeighborhood, {
@@ -79,7 +79,7 @@ const Location: React.FC<LocationProps> = (props) => {
         console.error("Error setting neighborhood:", resJson.error);
       } else {
         const resJson = await res.json();
-        // console.log("THE NEIGHBORHOOD: ", resJson.neighborhood);
+        console.log("THE NEIGHBORHOOD: ", resJson.neighborhood);
         setInputValue(resJson.neighborhood); // Update the input box with the neighborhood
         setKey((prevKey) => prevKey + 1);
       }
@@ -90,14 +90,12 @@ const Location: React.FC<LocationProps> = (props) => {
 
   return (
     <OuterComponentView title={"Location"}>
-      <Text
-        style={{
-          fontSize: 15,
-          fontWeight: "500",
-          fontFamily: "Montserrat",
-        }}
-      >
-        {"Address: "}
+      <Text style={{
+            fontSize: 15,
+            fontWeight: "525",
+            fontFamily: "Montserrat",
+          }}>
+           {"Address: "}
       </Text>
       <GooglePlacesAutocomplete
         key={key} // Use the key here
@@ -130,30 +128,28 @@ const Location: React.FC<LocationProps> = (props) => {
       />
       {inputValue && (
         <>
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: "Montserrat",
-              fontWeight: "500",
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-          >
-            {"Neighborhood: "}
-          </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "500",
-              marginLeft: 11,
-            }}
-          >
-            {inputValue}
-          </Text>
-        </>
+      <Text style={{
+            fontSize: 15,
+            fontWeight: "525",
+            fontFamily: "Montserrat",
+            marginTop: 5,
+            marginBottom: 5
+          }}>
+           {"Neighborhood: "}
+      </Text>
+      <Text style={{
+            fontSize: 15,
+            fontWeight: "400",
+            fontFamily: "Montserrat",
+            marginLeft: 11
+          }}>
+          {inputValue}
+      </Text>
+      </>
       )}
     </OuterComponentView>
   );
 };
+
 
 export default Location;

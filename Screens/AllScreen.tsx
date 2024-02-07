@@ -59,7 +59,7 @@ const AllScreen = ({ navigation }: any) => {
   useEffect(() => {
     // console.log("Component mounted, fetching posts initially");
 
-    // console.log("Event triggered, fetching posts");
+    //console.log("Event triggered, fetching posts");
     fetchPosts(
       progressSelected,
       searchTerm,
@@ -116,7 +116,7 @@ const AllScreen = ({ navigation }: any) => {
     selectedAssigneeIds?: string[]
   ) => {
     try {
-      // console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      console.log("called again")
       setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
@@ -146,12 +146,13 @@ const AllScreen = ({ navigation }: any) => {
           method: "GET",
         }
       );
+      console.log("EVENT TRIG");
 
       let resJson = await res.json();
       if (res.ok) {
         // console.log("resJson DEBUG: ", resJson);
         await setCategoriesWithPosts(resJson);
-        await setRefreshKey((prevKey) => prevKey + 1);
+        setRefreshKey((prevKey) => prevKey + 1);
        // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
@@ -166,6 +167,7 @@ const AllScreen = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePopoverCloseComplete = async () => {
+    //console.log("Event trig")
     setIsLoading(true);
     await fetchPosts(
       progressSelected,
