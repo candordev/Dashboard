@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, ActivityIndicator } from "react-native";
 import colors from "../Styles/colors";
-import { debounce } from 'lodash';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { debounce } from "lodash";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 interface DoubleTextInputProps {
   onFirstInputChange: (text: string) => void;
   onSecondInputChange: (text: string) => void;
+  loading: boolean;
   onSubmit: () => void;
+  submittable: boolean;
+  title: string;
+  content: string;
 }
 
 function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
@@ -24,46 +27,67 @@ function DoubleTextInput(props: DoubleTextInputProps): JSX.Element {
   }, 1);
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={[
-          styles.input,
-          { height: Math.max(40, heightFirstInput), borderBottomWidth: 1 },
-        ]}
-        placeholder="Title"
-        placeholderTextColor={colors.gray}
-        multiline
-        onContentSizeChange={(event) => {
-          updateFirstInputHeight(event.nativeEvent.contentSize.height);
-        }}
-        onChangeText={props.onFirstInputChange}
-      />
-      <View style={styles.rowContainer}>
-      <TextInput
-        style={[
-          styles.input,
-          { height: Math.max(40, heightSecondInput), borderBottomWidth: 1, borderBottomColor: "white" },
-        ]}
-        placeholder="Content"
-        placeholderTextColor={colors.gray}
-        multiline
-        onContentSizeChange={(event) => {
-          updateSecondInputHeight(event.nativeEvent.contentSize.height);
-        }}
-        onChangeText={props.onSecondInputChange}
-        // onSubmitEditing={props.onSubmit}
-      />
-       <Icon
-        name="paper-plane"
-        size={20}
-        color="lightgray"
-        onPress={props.onSubmit}
-        style={{ marginLeft: 'auto', marginRight: 2}} // Aligns the icon to the right
-      />
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: colors.lightgray,
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        backgroundColor: colors.white,
+      }}
+    >
+      <View style={styles.container}>
+        <TextInput
+          style={[
+            styles.input,
+            { height: Math.max(40, heightFirstInput), borderBottomWidth: 1 },
+          ]}
+          placeholder="Title"
+          placeholderTextColor={colors.gray}
+          multiline
+          onContentSizeChange={(event) => {
+            updateFirstInputHeight(event.nativeEvent.contentSize.height);
+          }}
+          onChangeText={props.onFirstInputChange}
+          value={props.title}
+        />
+        <TextInput
+          style={[
+            styles.input,
+            {
+              height: Math.max(40, heightSecondInput),
+              borderBottomWidth: 1,
+              borderBottomColor: "white",
+            },
+          ]}
+          placeholder="Content"
+          placeholderTextColor={colors.gray}
+          multiline
+          onContentSizeChange={(event) => {
+            updateSecondInputHeight(event.nativeEvent.contentSize.height);
+          }}
+          onChangeText={props.onSecondInputChange}
+          value={props.content}
+          // onSubmitEditing={props.onSubmit}
+        />
+      </View>
+      <View style={{ marginLeft: 10 }}>
+        {props.loading ? (
+          <ActivityIndicator size="small" color={colors.purple} />
+        ) : (
+          <Icon
+            name="paper-plane"
+            size={20}
+            color={props.submittable ? colors.purple : colors.lightgray}
+            onPress={props.submittable ? props.onSubmit : () => {}}
+          />
+        )}
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   rowContainer: {
@@ -72,11 +96,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: "column",
-    borderColor: colors.lightgray,
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    backgroundColor: colors.white,
+    flex: 1,
   },
   input: {
     borderColor: colors.lightgray,

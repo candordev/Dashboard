@@ -91,8 +91,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         <Text
           style={{
             fontSize: 15,
-            fontWeight: "400",
-            fontFamily: "Montserrat",
           }}
         >
           {"Post Created From: " + (issue.postCreatedFrom ?? "")}
@@ -101,8 +99,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
     <Text
         style={{
             fontSize: 15,
-            fontWeight: '400',
-            fontFamily: 'Montserrat',
         }}
     >
         {"Email: "}
@@ -113,8 +109,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
             onChangeText={setEmail}
             style={{
                 fontSize: 15,
-                fontWeight: '400',
-                fontFamily: 'Montserrat',
                 flex: 1,
                 borderColor: colors.lightestgray,
                 borderWidth: 1,
@@ -127,8 +121,6 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         <Text
             style={{
                 fontSize: 15,
-                fontWeight: '400',
-                fontFamily: 'Montserrat',
             }}
         >
             {email}
@@ -158,20 +150,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
                 }}
               >
-                {"FirstName: " + (issue.userProfile.firstName ?? "")}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
-                }}
-              >
-                {"LastName: " + (issue.userProfile.lastName ?? "")}
+                {"Name: " + issue.userProfile.firstName + " " + issue.userProfile.lastName}
               </Text>
             </>
           )}
@@ -183,20 +164,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
                 }}
               >
-                {"FirstName: " + (issue.emailFirstName ?? "")}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
-                }}
-              >
-                {"LastName: " + (issue.emailLastName ?? "")}
+                {"Name: " + issue.emailFirstName + " " + issue.emailLastName}
               </Text>
             </>
           )}

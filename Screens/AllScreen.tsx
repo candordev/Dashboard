@@ -239,7 +239,7 @@ const AllScreen = ({ navigation }: any) => {
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
         onAssigneeSelection={handleAssigneeSelection}
-        headerTitle={"All Issues"}
+        headerTitle={"Issues"}
         groupID={state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined}
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
@@ -292,16 +292,17 @@ const AllScreen = ({ navigation }: any) => {
                     placement={PopoverPlacement.FLOATING}
                     popoverStyle={{
                       borderRadius: 10,
-                      width: 200,
-                      padding: 10,
+                      width: 250,
+                      paddingHorizontal: 20,
+                      paddingVertical: 15,
                     }}
                   >
                     <View>
                       <Text
                         style={{
                           textAlign: "center",
-                          fontWeight: "bold",
-                          padding: 10,
+                          fontWeight: "550",
+                          fontFamily: "Montserrat",
                         }}
                       >
                         Are you sure you want to delete this category?
@@ -309,11 +310,10 @@ const AllScreen = ({ navigation }: any) => {
                       <TouchableOpacity
                         onPress={() => handleRemoveCategory(name)}
                         style={{
-                          backgroundColor: "red",
+                          backgroundColor: colors.red,
                           padding: 10,
                           marginTop: 20,
-                          borderRadius: 5,
-                          marginHorizontal: 10,
+                          borderRadius: 10,
                         }}
                       >
                         {isDeleting ? (
@@ -322,6 +322,8 @@ const AllScreen = ({ navigation }: any) => {
                               color: "white",
                               textAlign: "center",
                               fontWeight: "bold",
+                              fontFamily: "Montserrat",
+                              fontSize: 15,
                             }}
                           >
                             Loading...
@@ -332,7 +334,8 @@ const AllScreen = ({ navigation }: any) => {
                               color: "white",
                               textAlign: "center",
                               fontWeight: "bold",
-                              marginTop: -4,
+                              fontFamily: "Montserrat",
+                              fontSize: 15,
                             }}
                           >
                             Delete

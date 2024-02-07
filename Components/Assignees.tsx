@@ -45,10 +45,6 @@ function Assignees(props: AssigneesProps): JSX.Element {
   const [errorMessageLeader, setErrorMessageLeader] = useState<string>();
 
   useEffect(() => {
-    // console.log("selected children", selectedChildren);
-  }, [selectedChildren]);
-
-  useEffect(() => {
     setSelectedChildren([]);
     setPreviousChildValue([]);
     setPreviousValue([])

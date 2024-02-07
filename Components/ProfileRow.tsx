@@ -17,7 +17,7 @@ const ProfileRow = (props : {name : string}) => {
         source={{ uri: imageUrl }}
         style={{ height: 23, width: 23, borderRadius: 20, overflow: "hidden" }}
       />
-      <Text style={{ fontSize: 16, marginLeft: 15, fontWeight: "500"}}>{props.name}</Text>
+      <Text style={{ fontSize: 16, marginLeft: 10, fontWeight: "500"}}>{props.name}</Text>
     </View>
   );
 };
