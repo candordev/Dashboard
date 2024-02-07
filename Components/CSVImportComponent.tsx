@@ -58,36 +58,44 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
     try {
       // Convert array of emails to a comma-separated string
       const emailsString = emails.join(',');
-  
+
       // Initialize URLSearchParams
       let params = new URLSearchParams({
         assigneeEmails: emailsString, // Pass emails as a query parameter
       });
-  
+
       let endpoint = Endpoints.getUsernameByEmails + params.toString();
-  
+
       const response = await customFetch(endpoint, {
         method: "GET",
       });
-  
+
       const data = await response.json();
       if (!response.ok) {
         console.error("Error checking emails:", data.error);
         return [];
       }
-      console.log("THE DATA BACK: ", data)
-  
+
       return data;
     } catch (error) {
       console.error("Error checking emails:", error);
       return [];
     }
   };
-  
+
   const handleImport = async () => {
     //BELOW IS DONE - Akshat 1/31/2024
-    // Before calling the route call a sepaerate route that checks to see what emails have a email associated with them otherwise need to work with a addLeader functionality where for the email its firstName, lastName, department. Then call createDashboard route with assignee username as their emails since their emails are anyways username when createLeader happens.  
+    // Before calling the route call a sepaerate route that checks to see what emails have a email associated with them otherwise need to work with a addLeader functionality where for the email its firstName, lastName, department. Then call createDashboard route with assignee username as their emails since their emails are anyways username when createLeader happens.
     if (file) {
+      const fileName = file.name;
+      const fileExtension = fileName.split('.').pop();
+      if (fileExtension === 'pdf') {
+        setIsLoading(true); // Set loading to true when the import starts
+        await handleFileUpload(file);
+        setIsLoading(false); // Set loading to true when the import starts
+        return;
+      }
+
       await setIsLoading(true); // Set loading to true when the import starts
       await handleFileUpload(file);
       Papa.parse<CSVRow>(file, {
@@ -98,23 +106,23 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           const groupedRows = new Map(); // Map to store grouped rows
           let allAssignees = new Set();
 
-          
+
           rows.forEach(row => {
             // Check if 'Name' and 'Notes' are not empty
             if (row.Name && row.Notes) {
               const key = `${row.Name}candorKey${row.Notes}candorKey${row['Section/Column']}candorKey${row['Due Date']}`;
               const group = groupedRows.get(key) || new Set();
-              
+
               // Add to group and allAssignees only if 'Assignee Email' is present
               if (row['Assignee Email'] && row['Assignee Email'].trim()) {
                 group.add(row['Assignee Email'].trim());
                 allAssignees.add(row['Assignee Email'].trim());
               }
-              
+
               groupedRows.set(key, group);
             }
           });
-  
+
           console.log("yuhh1", groupedRows)
           console.log("yuhh1.01", allAssignees)
           // Check all unique assignees
@@ -144,7 +152,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           });
 
           await setRender(true);
-          
+
           setGroupedData(newGroupedData);
           console.log("yuhhh 3", newGroupedData)
           }
@@ -166,14 +174,14 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
       createDashboardPosts();
     }
   }, [groupedData]);
-  
+
 
 
   const createDashboardPosts = async () => {
     await setAllLeadersAdded(true);
     // All leaders have been added
     let hasError = false;
-       for (const group of groupedData) {   
+       for (const group of groupedData) {
           console.log("post title: ",group.name, " has the following assignees =>",group.assignees )
           const postData = {
             title: group.name,
@@ -182,7 +190,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             tags: group.tags,
             deadline: group.deadline,
             // ...rest of your data mapping
-          };      
+          };
           //console.log(postData);
           try {
             let res = await customFetch(Endpoints.createDashboardProposal, {
@@ -193,7 +201,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
                 groupID: state.leaderGroups[0],
                 visible: true,
                 anonymous: false,
-                postCreatedFrom: "dashboard import",  
+                postCreatedFrom: "dashboard import",
                 assigneeUsernames: postData.assignees,
                 //proposalFromEmail: email,
                 categoryNames: [postData.tags],
@@ -218,7 +226,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             console.error("Network error, please try again later.", error);
           }
         }
-          
+
 
           setIsLoading(false); // Set loading to false when the import is complete
 
@@ -229,7 +237,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
             setIsPopoverVisible(false); // Close the popover on success
           }
   }
-  
+
 
   const handleEmptyFields = (emptyFields: emptyFields) => {
     let errorMessage = "";
@@ -292,7 +300,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
 
   async function handleFileUpload(file: File | Blob) {
     try {
-      const formData = new FormData(); 
+      const formData = new FormData();
       formData.append('file', file);
 
       let res = await customFetch(Endpoints.csvUpload, {
@@ -305,6 +313,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
         console.error("Error with creating an account:", resJson.error);
       } else {
          console.log("emailed akshatpant@ufl.edu the csv")
+
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
@@ -349,15 +358,15 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
       }
   };
 
-  
 
-  return (  
+
+  return (
     <>
     <Popover
       isVisible={isPopoverVisible || (assigneesToAdd.length > 0 && !allLeadersAdded)}
       onRequestClose={() => setIsPopoverVisible(false)}
       from={
-        assigneesToAdd.length > 0 && !allLeadersAdded 
+        assigneesToAdd.length > 0 && !allLeadersAdded
           ? <View />
           : <TouchableOpacity style={styles.card} onPress={togglePopover}>
               <Icon name="file-upload" size={23} color="#000" />
@@ -370,12 +379,14 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
               borderRadius: 10,
               width: width * 0.3,  // Increased width
               height: height * 0.3, // Increased height
+              paddingTop: 10,
             }
           : {
               borderRadius: 10,
               width: width * 0.18,
               height: height * 0.20,
               paddingHorizontal: 20,
+              paddingTop: 10,
             }
       }
     >
@@ -388,10 +399,10 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
           createPost={false}
           emailImport={assigneesToAdd[currentLeaderIndex]}
         />
-        <Text style={{ 
-          textAlign: 'center', 
-          fontWeight: 'bold', 
-          fontSize: 'larger', 
+        <Text style={{
+          textAlign: 'center',
+          fontWeight: 'bold',
+          fontSize: 'larger',
           marginTop: '20px' // Adjust as needed to ensure it's below the AddLeader component
         }}>
           {currentLeaderIndex + 1 + '/' + assigneesToAdd.length}
@@ -401,11 +412,11 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
         <View>
           <input
             type="file"
-            accept=".csv"
+            accept=".csv, .pdf"
             onChange={handleFileChange}
             style={{
               marginTop: 10,
-              marginBottom: 50,
+              marginBottom: 10,
               padding: 5,
               borderColor: 'gray',
               borderWidth: 1,
@@ -429,10 +440,11 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({ onImportSuccess
               borderRadius: 4,
               elevation: 3,
               backgroundColor: file ? colors.purple : '#DDD', // Use colors.purple if file is selected, else a placeholder color
+              paddingBottom: 20
             }}
           >
             <Text style={{ fontSize: 16, color: 'white' }}>
-              {isLoading ? "Importing..." : "Import CSV"}
+              {isLoading ? "Importing..." : "Import CSV/PDF"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -463,4 +475,3 @@ export default CSVImportComponent;
 function setErrorMessageLeader(arg0: string) {
   throw new Error('Function not implemented.');
 }
-
