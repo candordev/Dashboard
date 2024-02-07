@@ -89,7 +89,7 @@ useEffect(() => {
       // Construct the room name based on chatMode and postID
       const roomName = `${chatMode}_${props.issue._id}`;
 
-      console.log("ROOM NAME", roomName)
+      // console.log("ROOM NAME", roomName)
 
       socket.on('connect', () => {
         console.log('Connected to Socket.io server');
@@ -100,7 +100,7 @@ useEffect(() => {
         console.error('Connection error:', err.message);
       });
       socket.on('new-comment', (newComment) => {
-        // console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
+        console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
         setPrivateComments((prevComments) => [...prevComments, newComment]);
       });
 
@@ -243,7 +243,7 @@ useEffect(() => {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
-        console.log("newComments TOTAL: ", newComments.length);
+        // console.log("newComments TOTAL: ", newComments.length);
         let filteredComments: Comment[] = [];
         if (chatMode === "constituent") {
           filteredComments = resJson.filter(
