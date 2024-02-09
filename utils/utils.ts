@@ -20,37 +20,33 @@ export const getAuthToken = async (): Promise<string> => {
 export const customFetch = async (
   endpoint: string,
   options: { method: string; body?: any },
-  attempt: number = 0
+  attempt: number = 0,
+  multiPart: boolean = false,
 ): Promise<Response> => {
   try {
     const token: string = await getAuthToken();
-    if (!token || token === "") {
-      throw new Error("No auth token provided on fetch");
+    if (!token || token == '') {
+      throw new Error('No auth token provided on fetch');
     }
 
-    // Determine headers based on the type of the request body
-    const headers = new Headers({
-      Accept: "application/json",
-      Authorization: "Bearer " + token,
+    let headers : any = {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
+    };
+
+    // When multiPart is true, don't set the 'Content-Type' header manually
+    if (!multiPart) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    let res = await fetch(endpoint, {
+      ...options,
+      headers: headers
     });
-    if (!(options.body instanceof FormData)) {
-      headers.append("Content-Type", "application/json");
-    }
-
-    let res = await Promise.race([
-      fetch(endpoint, {
-        ...options,
-        headers: headers,
-      }),
-      new Promise<Response>((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), constants.TIMEOUT)
-      ),
-    ]);
 
     if (res.status === 403) {
-      // authentication error
-      //event.emit(eventNames.FORCE_SIGNOUT);
-      throw new Error("Authentication error, signing out...");
+      event.emit(eventNames.FORCE_SIGNOUT);
+      throw new Error('Authentication error, signing out...');
     }
     return res;
   } catch (error: any) {
@@ -66,7 +62,7 @@ export const customFetch = async (
         // retry
         await delay(constants.RETRY_WAIT_TIME);
         // console.log('Retrying fetch...');
-        return await customFetch(endpoint, options, attempt + 1);
+        return await customFetch(endpoint, options, attempt + 1, true);
       }
     } else {
       throw error;
