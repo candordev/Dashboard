@@ -61,10 +61,6 @@ const DropDown = (props: PropTypes) => {
           ...props.styles?.dropDownContainerStyle, // Apply custom dropdown container styles here
         },
       ]}
-      listChildContainerStyle={{
-        paddingLeft: 20,
-        height: 100, // Adjust this value as needed to decrease space
-      }}
       ArrowDownIconComponent={() => (
         <FeatherIcon name={"chevron-down"} size={20} color={colors.gray} />
       )}
