@@ -245,15 +245,20 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: colors.red,
     borderRadius: 10,
-    display: 'flex', // Use flex to center the icon/text inside
+    //display: 'flex',
     justifyContent: 'center', // Center content horizontally
-    width: 110
+    alignSelf: 'flex-start', // Align button to the left
+    alignItems: 'center', // Center content vertically
+    //minWidth: 110, // Ensure minimum width for the text
+    //height: 40, // Adjust height as needed
   },
   buttonText: {
     color: colors.white, // Example style, adjust text color as needed
     //padding: 10,
     //backgroundColor: colors.purple,
     //borderRadius: 10,
+    whiteSpace: 'nowrap', // Prevent text wrapping
+    textAlign: 'center', // Center text horizontally
     fontFamily: "Montserrat",
     //width: 115,
     fontWeight: 600,
@@ -267,9 +272,12 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: colors.purple,
     borderRadius: 10,
-    display: 'flex', // Use flex to center the icon/text inside
+    //display: 'flex',
     justifyContent: 'center', // Center content horizontally
-    width: 100
+    alignSelf: 'flex-start', // Align button to the left
+    alignItems: 'center', // Center content vertically
+    //minWidth: 110, // Ensure minimum width for the text
+    //height: 40, // Adjust height as needed
     
     // Additional styling for the icon button if needed
   },
