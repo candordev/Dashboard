@@ -94,7 +94,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-      <IssueContent date={issue.createdAt} issueID={issue._id} title={issue.title} content={issue.content} />
+      <IssueContent date={issue.createdAt} issueID={issue._id} title={issue.title} content={issue.content} previewURl={issue.imgURL}/>
       {/* {comments.map((comment: Comment, index) => {
         return (
           <View
