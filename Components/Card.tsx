@@ -24,7 +24,10 @@ interface CardProps {
 function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
   const { height, width } = useWindowDimensions();
 
-  const issueContent = props.issue.content.substring(0, 100).toString();
+  //const issueContent = props.issue.content.substring(0, 100).toString();
+  const issueContent = props.issue.content.length > 100
+  ? props.issue.content.substring(0, 120).replace(/\s\S*$/, '')
+  : props.issue.content;
   // console.log(issueContent); // Add this to check what `issue` contains
 
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
