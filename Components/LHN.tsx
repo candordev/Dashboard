@@ -232,12 +232,14 @@ const styles = {
   },
   unreadBadge: {
     backgroundColor: "red", // Change as per your design
-    width: 20, // Set a fixed width
-    height: 20, // Set the same value for height to make it a circle
+    minWidth: 20, // Set a fixed width
+    minHeight: 20, // Set the same value for height to make it a circle
     borderRadius: 10, // Half of width/height to make it a perfect circle
     marginLeft: 5,
     justifyContent: "center" as any,
     alignItems: "center" as FlexAlignType,
+    padding: 3,
+
   },
   unreadText: {
     color: "white",
