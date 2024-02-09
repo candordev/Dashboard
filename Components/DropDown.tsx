@@ -45,7 +45,7 @@ const DropDown = (props: PropTypes) => {
       textStyle={{
         fontSize: 15,
         color: colors.black,
-        fontFamily: "OpenSans",
+        fontFamily: "Montserrat",
         fontWeight: "500" as any,
         paddingLeft: 5,
         ...props.styles?.textStyle, // Apply custom text styles here

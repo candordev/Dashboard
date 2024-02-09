@@ -176,6 +176,9 @@ const Header = ({
             items={assigneeItems}
             setItems={setAssigneeItems}
             multiple={true}
+            multipleText={`${assigneeValues?.length ?? 0} ${
+              (assigneeValues?.length ?? 0) == 1 ? "assignee" : "assignees"
+            } selected`}
           />
         </View>
         <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />

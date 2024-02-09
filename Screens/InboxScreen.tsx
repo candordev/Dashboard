@@ -189,6 +189,25 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
     setIsLoading(false);
   };
 
+  const handleReadAll = async () => {
+    // Implement the functionality to mark all notifications as read
+    console.log('Read All pressed');
+    let res = await customFetch(Endpoints.deleteYourNotifications, {
+      method: "DELETE",
+      body: JSON.stringify({
+        type: "seen",
+      }),
+    });
+    let resJson = await res.json();
+    if (!res.ok) {
+      // setLoading(false);
+      // throw new Error(resJson.error);
+      console.log("reading failed");
+    } 
+    event.emit(eventNames.FETCH_NOTIFS);
+  };
+
+
   const renderItem = ({ item }: { item: Notification }) => {
     return (
       <NotifSection
@@ -287,6 +306,22 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
           borderRightWidth: 2.5,
         }}
       >
+        <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+            <TouchableOpacity
+              onPress={handleReadAll}
+              style={{
+                backgroundColor: colors.purple, // Adjust button color as needed
+                padding: 10,
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 8,
+                marginTop: 8
+              }}
+            >
+              <Text style={{ color: colors.white, fontWeight: 'bold' }}>Read All</Text>
+            </TouchableOpacity>
+          </View>
         <FlatList
           data={notifs}
           renderItem={renderItem}
