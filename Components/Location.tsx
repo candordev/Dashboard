@@ -117,11 +117,12 @@ const Location: React.FC<LocationProps> = (props) => {
         }}
         styles={{
           textInput: {
-            fontSize: 15,
+            fontSize: 16,
             borderWidth: 1,
             borderColor: colors.lightgray,
             borderRadius: 10,
             marginTop: 5,
+            maxHeight: 32,
             fontFamily: "Montserrat",
           },
         }}
