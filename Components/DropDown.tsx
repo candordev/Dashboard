@@ -45,7 +45,7 @@ const DropDown = (props: PropTypes) => {
       textStyle={{
         fontSize: 15,
         color: colors.black,
-        fontFamily: "OpenSans",
+        fontFamily: "Montserrat",
         fontWeight: "500" as any,
         paddingLeft: 5,
         ...props.styles?.textStyle, // Apply custom text styles here
@@ -61,6 +61,10 @@ const DropDown = (props: PropTypes) => {
           ...props.styles?.dropDownContainerStyle, // Apply custom dropdown container styles here
         },
       ]}
+      listChildContainerStyle={{
+        paddingLeft: 20,
+        height: 100, // Adjust this value as needed to decrease space
+      }}
       ArrowDownIconComponent={() => (
         <FeatherIcon name={"chevron-down"} size={20} color={colors.gray} />
       )}
