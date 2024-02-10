@@ -2,6 +2,14 @@ import {Platform, StyleSheet} from 'react-native';
 import colors from './colors';
 
 const styles = StyleSheet.create({
+  purpleGeneralContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: colors.purple,
+    paddingBottom: 100,
+  },
   sectionContainer: {
     marginBottom: 4,
     paddingHorizontal: 15,
@@ -452,7 +460,11 @@ const styles = StyleSheet.create({
   markerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
+  errorText: {
+    color: "red",
+  },
+  
 });
 
 export default styles;

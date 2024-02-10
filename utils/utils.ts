@@ -10,7 +10,7 @@ export const getAuthToken = async (): Promise<string> => {
     const auth = getAuth();
     // console.log("THIS IS THE AUTH", auth)
     const token = (await auth.currentUser?.getIdToken()) ?? "";
-    console.log("THIS IS THE TOKEN", token);
+    // console.log("THIS IS THE TOKEN", token);
     return token;
   } catch (error) {
     console.error("Error getting auth token: ", error);

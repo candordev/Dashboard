@@ -41,7 +41,7 @@ function CreatePostView(props: any) {
   const [previewUrl, setPreviewUrl] = useState('');
   const [isLoading, setLoading] = useState(false)
 
-  const onImageChange = (event) => {
+  const onImageChange = (event : any) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setImageFile(file);
@@ -76,7 +76,7 @@ function CreatePostView(props: any) {
   const handleDone = async () => {
     try {
       setLoading(true); // Assuming you have a setLoading function to handle UI loading state
-  
+
       let formData = new FormData();
       formData.append('title', title);
       formData.append('groupID', state.leaderGroups[0]); // Assuming you have state.leaderGroups
@@ -90,7 +90,7 @@ function CreatePostView(props: any) {
       formData.append('assigneeUsernames', JSON.stringify(selectedAssignees));
       formData.append('categoryNames', JSON.stringify(selectedCategories));
       formData.append('deadline', selectedDate ? selectedDate.toISOString() : '');
-  
+
       // Append image or video data if present
       if (imageFile) {
         // The actual file needs to be appended here
@@ -98,7 +98,7 @@ function CreatePostView(props: any) {
         // Adjust according to your actual state structure
         formData.append('image', imageFile);
       }
-  
+
       // Use your customFetch utility function
       const res = await customFetch(Endpoints.createDashboardProposal, {
         method: 'POST',
@@ -107,11 +107,11 @@ function CreatePostView(props: any) {
       },0,
       true,
       );
-  
+
       if (!res.ok) {
         const resJson = await res.json();
         console.log("Error creating Post:", resJson.error);
-      
+
         setErrorMessage(resJson.error); // Assuming you have setErrorMessage to handle error feedback
       } else {
         const resJson = await res.json();
@@ -127,7 +127,7 @@ function CreatePostView(props: any) {
       setLoading(false); // Ensure loading state is reset whether request succeeds or fails
     }
   };
-  
+
 
 
   // const handleDone = async () => {
@@ -274,7 +274,7 @@ function CreatePostView(props: any) {
                     if (inputElement !== null) {
                       inputElement.click();
                     }
-                  }}       
+                  }}
                 >
                   <input
                     type="file"
@@ -346,7 +346,7 @@ const additionalStyles = StyleSheet.create({
     fontWeight: 600,
     fontSize: 12,
     alignItems: 'center'
-  
+
     // Add other text styling as needed
   },
   imageIcon: {
@@ -357,7 +357,7 @@ const additionalStyles = StyleSheet.create({
     display: 'flex', // Use flex to center the icon/text inside
     justifyContent: 'center', // Center content horizontally
     width: 100
-    
+
     // Additional styling for the icon button if needed
   },
   previewImage: {
