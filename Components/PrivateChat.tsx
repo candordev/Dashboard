@@ -4,14 +4,13 @@ import colors from "../Styles/colors";
 import ExpandableTextInput from "./ExpandableTextInput";
 import { Comment, Post } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
-import { customFetch } from "../utils/utils";
+import { customFetch, formatDate } from "../utils/utils";
 import { useUserContext } from "../Hooks/useUserContext";
 import ProfilePicture from "./ProfilePicture";
 import DropDown from "./DropDown";
 import styles from "../Styles/styles";
 import { debounce } from "lodash";
-import io from 'socket.io-client';
-
+import io from "socket.io-client";
 
 interface PrivateChatProps {
   issue: Post;
@@ -19,7 +18,6 @@ interface PrivateChatProps {
 function PrivateChat(props: PrivateChatProps): JSX.Element {
   const { state, dispatch } = useUserContext();
   const [privateComments, setPrivateComments] = useState<Comment[]>([]);
-  const [newCommentContent, setNewCommentContent] = useState("");
 
   const scrollViewRef = useRef<ScrollView>(null);
   const [inputText, setInputText] = useState<string>("");
@@ -29,90 +27,72 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     { label: "Authorities", value: "authorities" },
     { label: "Constituent", value: "constituent" },
   ]);
-  const formatDate = (createdAt: string): string => {
-    const now = new Date();
-    const createdDate = new Date(createdAt); // Parse the string into a Date object
-    const diffMs = now.getTime() - createdDate.getTime(); // difference in milliseconds
-    const diffMins = Math.round(diffMs / 60000); // minutes
-    const diffHrs = Math.round(diffMins / 60); // hours
-    const diffDays = Math.round(diffHrs / 24); // days
 
-    if (diffMins < 60) {
-      return `${diffMins} minutes ago`;
-    } else if (diffHrs < 24) {
-      return `${diffHrs} hours ago`;
-    } else if (diffDays < 7) {
-      return `${diffDays} days ago`;
-    } else {
-      // Format the date to show in "MM/DD/YYYY" format
-      return createdDate.toLocaleDateString();
-    }
-  };
   useEffect(() => {
     fetchPrivateChat();
     // // console.log("ISSUE IS : ", props.issue._id);
   }, [chatMode]);
 
-// Inside your React component
-// useEffect(() => {
-//   const socket = io("http://localhost:4000", {
-//     withCredentials: false,
-//     // Add any additional options here
-//   });
+  // Inside your React component
+  // useEffect(() => {
+  //   const socket = io("http://localhost:4000", {
+  //     withCredentials: false,
+  //     // Add any additional options here
+  //   });
 
-//   socket.on('connect', () => {
-//     // console.log('Connected to Socket.io server');
-//     socket.emit('join-post', props.issue._id);
-//   });
+  //   socket.on('connect', () => {
+  //     // console.log('Connected to Socket.io server');
+  //     socket.emit('join-post', props.issue._id);
+  //   });
 
-//   socket.on('connect_error', (err) => {
-//     console.error('Connection error:', err.message);
-//   });
+  //   socket.on('connect_error', (err) => {
+  //     console.error('Connection error:', err.message);
+  //   });
 
-//   socket.on('new-comment', (newComment) => {
-//     // console.log
-//     setPrivateComments((prevComments) => [...prevComments, newComment]);
-//   });
+  //   socket.on('new-comment', (newComment) => {
+  //     // console.log
+  //     setPrivateComments((prevComments) => [...prevComments, newComment]);
+  //   });
 
-//   return () => {
-//     socket.disconnect();
-//   };
-// }, [props.issue._id]);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [props.issue._id]);
 
-useEffect(() => {
-      // if(chatMode == "authorities") {
-        const socketName = "https://candoradmin.com"
-        const socket = io(socketName, {
-        withCredentials: false,
-        // Add any additional options here
-      });
-        // Construct the room name based on chatMode and postID
-        const roomName = `${chatMode}_${props.issue._id}`;
+  useEffect(() => {
+    // if(chatMode == "authorities") {
+    const socketName = "https://candoradmin.com";
+    const socket = io(socketName, {
+      withCredentials: false,
+      // Add any additional options here
+    });
+    // Construct the room name based on chatMode and postID
+    const roomName = `${chatMode}_${props.issue._id}`;
 
-        // console.log("ROOM NAME", roomName)
+    // console.log("ROOM NAME", roomName)
 
-        socket.on('connect', () => {
-          console.log('Connected to Socket.io server');
-          // Join the room specific to the chatMode and postID
-          socket.emit('join-post', roomName);
-        });
-        socket.on('connect_error', (err) => {
-          console.error('Connection error:', err.message);
-        });
-        socket.on('new-comment', (newComment) => {
-          console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
-          setPrivateComments((prevComments) => [...prevComments, newComment]);
-        });
-        return () => {
-          // Leave the room when the component unmounts or chatMode/postID changes
-          socket.emit('leave-room', roomName);
-          socket.disconnect();
-          console.log("DISCONNECTED FROM SOCKET");
-        };
-      // }
+    socket.on("connect", () => {
+      console.log("Connected to Socket.io server");
+      // Join the room specific to the chatMode and postID
+      socket.emit("join-post", roomName);
+    });
+    socket.on("connect_error", (err) => {
+      console.error("Connection error:", err.message);
+    });
+    socket.on("new-comment", (newComment) => {
+      console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
+      setPrivateComments((prevComments) => [...prevComments, newComment]);
+    });
+    return () => {
+      // Leave the room when the component unmounts or chatMode/postID changes
+      socket.emit("leave-room", roomName);
+      socket.disconnect();
+      console.log("DISCONNECTED FROM SOCKET");
+    };
+    // }
   }, [props.issue._id, chatMode]); // Add chatMode to the dependency array
   // Define the initial state with appropriate types and default values
-  
+
   let lastAuthorId = "";
   let lastCommentDate = new Date(0);
 
@@ -165,8 +145,9 @@ useEffect(() => {
               style={
                 !isAuthor && comment.contentType === "constituentChat"
                   ? { ...chatStyles.authorOther, marginTop: 5 }
-                  : isAuthor ?
-                  chatStyles.authorSelf : chatStyles.authorOther
+                  : isAuthor
+                  ? chatStyles.authorSelf
+                  : chatStyles.authorOther
               }
             >
               <Text style={isAuthor ? { color: "white" } : { color: "black" }}>
@@ -184,11 +165,9 @@ useEffect(() => {
       let res: Response = await customFetch(Endpoints.sendPoliticianChat, {
         method: "POST",
         body: JSON.stringify({
-          content: newCommentContent,
+          content: inputText,
           postID: props.issue._id,
           user: state._id,
-          // parentID: undefined,
-          // privateChat: "true",
         }),
       });
       let resJson = await res.json();
@@ -210,7 +189,7 @@ useEffect(() => {
         method: "POST",
         body: JSON.stringify({
           postID: props.issue._id,
-          content: newCommentContent,
+          content: inputText,
           user: state._id,
         }),
       });
@@ -232,6 +211,7 @@ useEffect(() => {
           new URLSearchParams({
             postID: props.issue._id,
             skip: "0",
+            type: chatMode,
           }),
         {
           method: "GET",
@@ -242,31 +222,25 @@ useEffect(() => {
         console.error(resJson.error);
       } else {
         const newComments: Comment[] = resJson;
-        // console.log("newComments TOTAL: ", newComments.length);
-        let filteredComments: Comment[] = [];
-        if (chatMode === "constituent") {
-          filteredComments = resJson.filter(
-            (comment: Comment) =>
-              comment.contentType === "constituentChat" || comment.isWhisper
-          );
-          // console.log("filteredComments for const: ", filteredComments.length);
-        } else {
-          filteredComments = resJson.filter(
-            (comment: Comment) =>
-              comment.contentType !== "constituentChat" && !comment.isWhisper
-          );
-          // // console.log(
-          //   "filteredComments for everyone: ",
-          //   filteredComments.length
-          // );
-          // console.log("WEMBY POLITICIANS: ", props.issue.acceptedPoliticians);
-        }
-        setPrivateComments(filteredComments);
+        setPrivateComments(newComments);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
     }
   }
+
+  const handleKeyPress = async (e: any) => {
+    if (e.nativeEvent.key === "Enter" && !e.nativeEvent.shiftKey) {
+      if (chatMode == "constituent") {
+        await postConstituentComment();
+      } else {
+        await postPoliticianComment();
+      }
+
+      setInputText("");
+    }
+  };
+
   return (
     <View style={chatStyles.chatContainer}>
       <View style={chatStyles.titleDropdownContainer}>
@@ -296,19 +270,13 @@ useEffect(() => {
         {privateComments.map(renderComment)}
       </ScrollView>
       <TextInput
-        style={[styles.textInput, { height: 40 }]}
+        multiline={true}
+        numberOfLines={1}
+        style={[styles.textInput, { minHeight: 40, maxHeight: 300 }]}
         placeholder="Add a comment..."
         placeholderTextColor={colors.gray}
-        onChangeText={(text) => {
-          setNewCommentContent(text);
-          setInputText(text);
-        }}
-        onSubmitEditing={() => {
-          chatMode == "constituent"
-            ? postConstituentComment()
-            : postPoliticianComment();
-          setInputText("");
-        }}
+        onChangeText={setInputText}
+        onKeyPress={handleKeyPress}
         value={inputText}
       />
     </View>
@@ -323,7 +291,7 @@ const chatStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 5,
-    zIndex: 10,
+    zIndex: 1,
   },
   userName: {
     color: colors.purple,
@@ -371,7 +339,6 @@ const chatStyles = StyleSheet.create({
   chatContainer: {
     borderColor: colors.lightestgray,
     borderWidth: 2,
-    marginBottom: 2,
     borderRadius: 10,
     padding: 10,
     flex: 1,
@@ -384,7 +351,7 @@ const chatStyles = StyleSheet.create({
   },
   messageContainer: {
     flex: 1,
-    marginTop: 15,
+    paddingVertical: 10,
   },
   nameAndDateContainer: {
     flexDirection: "row",
