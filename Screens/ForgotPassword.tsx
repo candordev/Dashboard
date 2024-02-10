@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { TextInput, View, StyleSheet, Pressable } from "react-native";
 import Button from "../Components/Button";
-import Text from "../Components/Native/Text";
+import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import Icon from "react-native-vector-icons/Feather";
 
 type Props = {
     route: any;
@@ -80,14 +79,28 @@ function ForgotPassword({ route, navigation }: Props): JSX.Element {
                     paddingHorizontal: 20,
                 }}
             >
+                <View style={{width: "100%"}}>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            fontWeight: "normal",
+                            marginBottom: 10,
+                            color: colors.white,
+                            fontFamily: "Montserrat",
+                            textAlign: "left",
+                        }}
+                    >
+                        Forgot password?
+                    </Text>
+                </View>
                 <View style={currStyles.inputContainer}>
-                  <TextInput
-                      style={currStyles.input}
-                      placeholder="Email"
-                      placeholderTextColor={colors.gray}
-                      value={email}
-                      onChangeText={setEmail}
-                  />
+                    <TextInput
+                        style={currStyles.input}
+                        placeholder="Email"
+                        placeholderTextColor={colors.gray}
+                        value={email}
+                        onChangeText={setEmail}
+                    />
                 </View>
                 <Button
                     text="Next"
