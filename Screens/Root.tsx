@@ -6,6 +6,7 @@ import LHN from "../Components/LHN";
 import AllScreen from "./AllScreen";
 import InboxScreen from "./InboxScreen";
 import SettingsScreen from "./SettingsScreen";
+import NotificationPopup from "../Components/NotificationPopup";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,7 +23,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-function Root() {
+// function Root() {
+
+type RootScreenProps = {
+  route: any;
+  navigation: any;
+};
+
+function Root({route, navigation}: RootScreenProps): JSX.Element {
   console.log("AABBCCDD");
   // const [unread, setUnread] = useState<number>(0);
 
@@ -51,7 +59,7 @@ function Root() {
         drawerStyle: { width: 200, borderRightWidth: 0 },
         headerShown: false,
       }}
-    >
+    >    
       <Drawer.Screen
         name="all"
         component={AllScreen}

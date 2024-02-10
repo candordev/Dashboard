@@ -20,30 +20,33 @@ export const getAuthToken = async (): Promise<string> => {
 export const customFetch = async (
   endpoint: string,
   options: { method: string; body?: any },
-  attempt: number = 0
+  attempt: number = 0,
+  multiPart: boolean = false,
 ): Promise<Response> => {
   try {
     const token: string = await getAuthToken();
-    if (!token || token == "") {
-      throw new Error("No auth token provided on fetch");
+    if (!token || token == '') {
+      throw new Error('No auth token provided on fetch');
     }
-    let res = await Promise.race([
-      fetch(endpoint, {
-        ...options,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }),
-      new Promise<Response>((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), constants.TIMEOUT)
-      ),
-    ]);
+
+    let headers : any = {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
+    };
+
+    // When multiPart is true, don't set the 'Content-Type' header manually
+    if (!multiPart) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    let res = await fetch(endpoint, {
+      ...options,
+      headers: headers
+    });
+
     if (res.status === 403) {
-      // authentication error
-      //event.emit(eventNames.FORCE_SIGNOUT);
-      throw new Error("Authentication error, signing out...");
+      event.emit(eventNames.FORCE_SIGNOUT);
+      throw new Error('Authentication error, signing out...');
     }
     return res;
   } catch (error: any) {
@@ -59,7 +62,7 @@ export const customFetch = async (
         // retry
         await delay(constants.RETRY_WAIT_TIME);
         // console.log('Retrying fetch...');
-        return await customFetch(endpoint, options, attempt + 1);
+        return await customFetch(endpoint, options, attempt + 1, true);
       }
     } else {
       throw error;
@@ -222,7 +225,7 @@ export const downloadPDF = async (groupID: string) => {
       return;
     }
     // setIsLoading(true);
-    console.log("PDF GROUP", groupID);
+    // console.log("PDF GROUP", groupID);
     const queryParams = new URLSearchParams({
       groupID: groupID,
     });
@@ -257,7 +260,7 @@ export const downloadPDF = async (groupID: string) => {
       document.body.removeChild(link);
       URL.revokeObjectURL(pdfUrl);
 
-      console.log("PDF downloaded successfully");
+      // console.log("PDF downloaded successfully");
     }
     // setIsLoading(false);
   } catch (error) {

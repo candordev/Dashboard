@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
@@ -25,6 +26,11 @@ function SearchBar({
   setSearchPhrase,
   placeholder,
 }: SearchBarProps): JSX.Element {
+
+  const clearInput = () => {
+    setSearchPhrase('');
+  };
+
   return (
     <View style={styles.container}>
       <View style={[styles.searchBar]}>
@@ -36,6 +42,11 @@ function SearchBar({
           value={searchPhrase}
           onChangeText={setSearchPhrase}
         />
+        {searchPhrase.length > 0 && (
+          <TouchableOpacity onPress={clearInput} style={styles.clearButton}>
+            <AntDesignIcon name="close" size={20} color={colors.gray} /> {/* Changed icon name to "close" */}
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -70,5 +81,8 @@ const styles = StyleSheet.create({
     color: colors.black,
     paddingVertical: 0,
     outlineStyle: "none",
+  },
+  clearButton: {
+    marginLeft: 10,
   },
 });

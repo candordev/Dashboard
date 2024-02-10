@@ -56,6 +56,7 @@ const Location: React.FC<LocationProps> = (props) => {
       const neighborhood: string = await props.onChange(data, details);
       setInputValue(neighborhood);
       setKey((prevKey) => prevKey + 1);
+      setFullAddress(data.description)
       return;
     }
 
@@ -116,11 +117,12 @@ const Location: React.FC<LocationProps> = (props) => {
         }}
         styles={{
           textInput: {
-            fontSize: 15,
+            fontSize: 16,
             borderWidth: 1,
             borderColor: colors.lightgray,
             borderRadius: 10,
             marginTop: 5,
+            maxHeight: 32,
             fontFamily: "Montserrat",
           },
         }}
@@ -150,23 +152,5 @@ const Location: React.FC<LocationProps> = (props) => {
   );
 };
 
-//  <Text
-//           style={{
-//             fontSize: 18,
-//             fontWeight: "550",
-//             fontFamily: "Montserrat",
-//           }}
-//         >
-//           Post Details
-//         </Text>
-//         <Text
-//           style={{
-//             fontSize: 16,
-//             fontWeight: "400",
-//             fontFamily: "Montserrat",
-//           }}
-//         >
-//           {"Post Created From: " + (issue.postCreatedFrom ?? "")}
-//         </Text> 
 
 export default Location;

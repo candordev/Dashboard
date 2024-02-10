@@ -42,7 +42,7 @@ const Category: React.FC<CategoryProps> = ({
 
   const getCategories = async () => {
     try {
-      console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
 
       // Initialize URLSearchParams
       let params = new URLSearchParams({
@@ -67,7 +67,7 @@ const Category: React.FC<CategoryProps> = ({
       }
 
       const result = resJson; // Assuming resJson is an array of CategoryPost
-      console.log("CATEGORIES ARE...", result);
+      // console.log("CATEGORIES ARE...", result);
       setCategories(result);
     } catch (error) {
       console.error("Error loading categories. Please try again later.", error);
@@ -95,7 +95,7 @@ const Category: React.FC<CategoryProps> = ({
   }, [categories]); // Depend on categories prop
 
   const handleValueChange = (newValues: ValueType[] | null) => {
-    console.log("new valee", newValues as string[]);
+    // console.log("new valee", newValues as string[]);
     if (newValues != null) {
       setValue(newValues as string[]); // Use type assertion here
       setValueChanged(true); // Indicate that the value has changed
@@ -120,7 +120,7 @@ const Category: React.FC<CategoryProps> = ({
 
   const handleDropdownClose = async () => {
     if (valueChanged && !createPost) {
-      console.log("Dropdown closed with new value:", value);
+      // console.log("Dropdown closed with new value:", value);
       //setValue(value)
 
       // Check if value is not null and has selected categories
@@ -137,7 +137,7 @@ const Category: React.FC<CategoryProps> = ({
           const resJson = await res.json();
           console.error("Error adding categories:", resJson.error);
         } else {
-          console.log("Categories added successfully");
+          // console.log("Categories added successfully");
         }
       } catch (error) {
         console.error("Network error, please try again later.", error);
@@ -177,7 +177,7 @@ const Category: React.FC<CategoryProps> = ({
           const resJson = await res.json();
           console.error("Error adding new category:", resJson.error);
         } else {
-          console.log("New Category added successfully");
+          // console.log("New Category added successfully");
           updateDropdownAndSelection(newCategoryName);
         }
       } catch (error) {
@@ -201,7 +201,7 @@ const Category: React.FC<CategoryProps> = ({
           const resJson = await res.json();
           console.error("Error adding new category:", resJson.error);
         } else {
-          console.log("New Category added successfully");
+          // // console.log("New Category added successfully");
           updateDropdownAndSelection(newCategoryName);
           if (onCategoryChange) {
             onCategoryChange(updatedValue);
@@ -216,7 +216,7 @@ const Category: React.FC<CategoryProps> = ({
   return (
     <OuterComponentView style={style} title="Tag">
       <DropDown
-        placeholder="Select category"
+        placeholder="Select tag"
         value={value}
         setValue={handleValueChange}
         items={items}
@@ -224,14 +224,26 @@ const Category: React.FC<CategoryProps> = ({
         multiple={true}
         backgroundColor={colors.lightestgray}
         onClose={handleDropdownClose}
+        multipleText={`${value?.length ?? 0} ${
+          (value?.length ?? 0) == 1 ? "tag" : "tags"
+        } selected`}
       />
       {/* View to display selected categories */}
       <View style={{ marginTop: 15 }}>
         {value &&
           value.map((category, index) => (
-            <Text key={index} style={styles.categoryText}>
-              {category}
-            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                columnGap: 10,
+              }}
+            >
+              <FeatherIcon name="tag" size={15} color={colors.purple} />
+              <Text key={index} style={styles.categoryText}>
+                {category}
+              </Text>
+            </View>
           ))}
       </View>
       <View>
@@ -249,7 +261,7 @@ const styles = StyleSheet.create({
   categoryText: {
     marginBottom: 5,
     fontSize: 16,
-    fontWeight: '500'
+    fontWeight: "500",
   },
   errorText: {
     color: "red",

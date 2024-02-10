@@ -77,7 +77,7 @@ export const useSignup = () => {
             const user = result.user;
 
             token = await auth.currentUser?.getIdToken();
-            console.log("TOKEN found after google log in is", token)
+            // console.log("TOKEN found after google log in is", token)
 
 
             if (!token) {
@@ -93,7 +93,7 @@ export const useSignup = () => {
                 }
             }
             isLogin = await checkIfLogin(token);
-            console.log("IS LOGIN", isLogin)
+            // console.log("IS LOGIN", isLogin)
             setLoading(false);
         } catch (error: any) {
             // Handle Errors here.
@@ -121,7 +121,7 @@ export const useSignup = () => {
         }
     };
 
-    
+
 
     const signupUser = async (
         firstName: string,
@@ -174,7 +174,7 @@ export const useSignup = () => {
     ) => {
         try {
             setIsSignupOperation(true);
-            console.log("SIGNUP USER DB", firstName, lastName, email, username, firebaseToken)
+            // console.log("SIGNUP USER DB", firstName, lastName, email, username, firebaseToken)
             let res = await fetch(Endpoints.signupFirebase, {
                 body: JSON.stringify({
                     firstName: firstName,
@@ -218,7 +218,7 @@ export const useSignup = () => {
 };
 
 const checkIfLogin = async (firebaseToken: string): Promise<boolean> => {
-    console.log("CHECK IF LOGIN", firebaseToken)
+    // console.log("CHECK IF LOGIN", firebaseToken)
     try {
         let res = await fetch(Endpoints.loginFirebase, {
             method: "POST",
@@ -238,7 +238,7 @@ const checkIfLogin = async (firebaseToken: string): Promise<boolean> => {
             console.info('CHECK IF LOGIN', ' WAS TRUE')
             return true;
         }
-        console.log('CHECK IF LOGIN', ' WAS FALSE')
+        // console.log('CHECK IF LOGIN', ' WAS FALSE')
         return false;
     } catch (e) {
         console.warn(e);

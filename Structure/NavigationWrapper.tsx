@@ -5,29 +5,38 @@ import { User, getAuth, onAuthStateChanged } from "firebase/auth";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useLogin } from "../Hooks/useLogin";
 import Root from "../Screens/Root";
-import YourScreen from "../Screens/YourScreen";
+// import YourScreen from "../Screens/YourScreen";
 import LoginScreen from "../Screens/LoginScreen";
 import LaunchScreen from "../Screens/LaunchScreen";
 import { useSignout } from "../Hooks/useSignout";
 import SignupStack from "../Screens/SignupStack";
 import { useSignup } from "../Hooks/useSignup";
 import AllScreen from "../Screens/AllScreen";
-import SuggestedScreen from "../Screens/SuggestedScreen";
 import InboxScreen from "../Screens/InboxScreen";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { getUnreadNotifs } from "../utils/utils";
+import { NotificationProvider } from "../Structure/NotificationContext"; // Update the import path as necessary
+import NotificationPopup from "../Components/NotificationPopup";
+import { useNavigationContainerRef } from '@react-navigation/native';
+
+
+
+
 
 const Stack = createStackNavigator();
 
 function NavigationWrapper() {
+  const navigationRef = useNavigationContainerRef();
   const { isSignupOperation } = useSignup();
   const { state, dispatch } = useUserContext();
   const { loginUser } = useLogin();
+  // const navigation = useNavigation();
+
 
   useEffect(() => {
-    console.log("INFNITE LOOP H");
-    console.log("Component is initially rendered in the DOM");
+    // // console.log("INFNITE LOOP H");
+    // // console.log("Component is initially rendered in the DOM");
     // Your code here
   }, []); // The empty dependency array ensures it runs only once
 
@@ -36,14 +45,14 @@ function NavigationWrapper() {
 
   // Handle user state changes
   async function onAuthStateChangedCallback(authUser: User | null) {
-    console.log("onAuthStateChangedCallback", authUser);
+    // console.log("onAuthStateChangedCallback", authUser);
 
     if (authUser && authUser != null && !isSignupOperation) {
       try {
-        console.log("IS SIGNUP OPERATION RAN");
+        // console.log("IS SIGNUP OPERATION RAN");
         // Retrieve user token
         const token = await authUser.getIdToken();
-        console.log("found token", token);
+        // console.log("found token", token);
 
         // Log in user with the obtained token
         await loginUser({ token: token });
@@ -58,7 +67,7 @@ function NavigationWrapper() {
   // Check for authentication state changes
   useEffect(() => {
     const auth = getAuth();
-    console.log("The auth changed", auth);
+    // console.log("The auth changed", auth);
     const unsubscribe = onAuthStateChanged(auth, onAuthStateChangedCallback);
 
     return () => {
@@ -86,36 +95,43 @@ function NavigationWrapper() {
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",
-        launch: "launch/:userId/:postId/:groupId",
+        launch: "launch/:userId?/:postId?/:groupId?",
         login: "login",
         NotFound: "404",
       },
     },
   };
 
+
+
   return (
-    <NavigationContainer linking={linking}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
-        {state.token ? (
-          <>
-            <Stack.Screen name="launch" component={LaunchScreen} />
-            <Stack.Screen name="root" component={Root} />
-            {/* other authenticated screens */}
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="launch" component={LaunchScreen} />
-            <Stack.Screen name="login" component={LoginScreen} />
-            <Stack.Screen
-              name="signupStack"
-              component={SignupStack}
-              options={{ headerShown: false }}
-            />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+     <>
+      <NavigationContainer ref={navigationRef} linking={linking}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
+          {state.token ? (
+            <>
+              <Stack.Screen name="launch" component={LaunchScreen} />
+              <Stack.Screen name="root" component={Root} />
+              <Stack.Screen name="inbox" component={InboxScreen} />
+
+              {/* other authenticated screens */}
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="launch" component={LaunchScreen} />
+              <Stack.Screen name="login" component={LoginScreen} />
+              <Stack.Screen
+                name="signupStack"
+                component={SignupStack}
+                options={{ headerShown: false }}
+              />
+
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+      </>
   );
 }
 

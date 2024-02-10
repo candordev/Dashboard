@@ -23,6 +23,7 @@ import Popover, { PopoverPlacement } from "react-native-popover-view";
 import Button from "../Components/Button";
 import MapMarkerView from "../Components/MapMarkerView";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import NotificationPopup from "../Components/NotificationPopup";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -56,9 +57,9 @@ const AllScreen = ({ navigation }: any) => {
   const { postId } = usePostId();
 
   useEffect(() => {
-    console.log("Component mounted, fetching posts initially");
+    // console.log("Component mounted, fetching posts initially");
 
-    console.log("Event triggered, fetching posts");
+    //console.log("Event triggered, fetching posts");
     fetchPosts(
       progressSelected,
       searchTerm,
@@ -68,9 +69,9 @@ const AllScreen = ({ navigation }: any) => {
   }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
-    console.log("Received status:", status);
-    console.log("Current status:", progressSelected);
-    console.log("Status changed, updating current status and refetching posts");
+    // console.log("Received status:", status);
+    // console.log("Current status:", progressSelected);
+    // console.log("Status changed, updating current status and refetching posts");
     if (JSON.stringify(newStatus) !== JSON.stringify(progressSelected)) {
       setProgressSelected(newStatus);
     }
@@ -84,25 +85,25 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   const handleAssigneeSelection = (selectedAssigneeIds: string[]) => {
-    console.log("Selected Assignees:", selectedAssigneeIds);
+    // console.log("Selected Assignees:", selectedAssigneeIds);
     setAssigneesSelectedIds(selectedAssigneeIds);
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
   const handleSearchChange = (searchTerm: string) => {
-    console.log("Selected Assignees:", searchTerm);
+    // console.log("Selected Assignees:", searchTerm);
     setSearchTerm(searchTerm);
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
   useEffect(() => {
-    console.log("Categories with posts updated:", categoriesWithPosts);
+    // console.log("Categories with posts updated:", categoriesWithPosts);
     Object.values(categoriesWithPosts).forEach((posts: Post[]) => {
       posts.forEach((post: Post) => {
         if (post.location) {
-          console.log("printing post that has location: ", post);
+          // console.log("printing post that has location: ", post);
         } else {
-          console.log("printing post that has no location: ", post);
+          // console.log("printing post that has no location: ", post);
         }
       });
     });
@@ -115,7 +116,7 @@ const AllScreen = ({ navigation }: any) => {
     selectedAssigneeIds?: string[]
   ) => {
     try {
-      console.log("THE SELECTED ID's FOR ASSIGNEES", searchTerm);
+      console.log("called again")
       setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
@@ -145,12 +146,14 @@ const AllScreen = ({ navigation }: any) => {
           method: "GET",
         }
       );
+      console.log("EVENT TRIG");
 
       let resJson = await res.json();
       if (res.ok) {
-        console.log("resJson DEBUG: ", resJson);
-        setCategoriesWithPosts(resJson);
-        setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
+        // console.log("resJson DEBUG: ", resJson);
+        await setCategoriesWithPosts(resJson);
+        setRefreshKey((prevKey) => prevKey + 1);
+       // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
       }
@@ -164,6 +167,7 @@ const AllScreen = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePopoverCloseComplete = async () => {
+    //console.log("Event trig")
     setIsLoading(true);
     await fetchPosts(
       progressSelected,
@@ -181,9 +185,10 @@ const AllScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    console.log("THS THE ST: ", state);
+    // console.log("THS THE ST: ", postId, !hasInitialOpenOccurred);
     // Check if postId exists and set it
     if (postId && !hasInitialOpenOccurred) {
+      // console.log("here set")
       setInitialPostId(postId);
     }
   }, []);
@@ -205,19 +210,19 @@ const AllScreen = ({ navigation }: any) => {
       const resJson = await res.json();
 
       if (!res.ok) {
-        console.log("category deletion request failed");
+        // console.log("category deletion request failed");
       } else {
-        console.log("categroy deleted");
+        // console.log("categroy deleted");
         setIsDeleting(true); // Start loading
         await handlePopoverCloseComplete();
         setIsDeleting(false); // Start loading
       }
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
     }
 
     // Call your route and handle the action here
-    console.log(`Remove category: ${categoryName}`);
+    // console.log(`Remove category: ${categoryName}`);
     // Update state or UI as needed after removing the category
     setPopoverVisible(false); // Close the popover after action
   };
@@ -226,13 +231,17 @@ const AllScreen = ({ navigation }: any) => {
     setIsMapView((isMapView) => !isMapView);
   }
 
+
+
   return (
+    <>
+    <NotificationPopup navigation={navigation}/>
     <OuterView style={{ paddingHorizontal: 40 }}>
       <Header
         onHeaderOptionChange={handleHeaderOptionChange}
         onStatusChange={handleStatusChange}
         onAssigneeSelection={handleAssigneeSelection}
-        headerTitle={"All Issues"}
+        headerTitle={"Issues"}
         groupID={state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined}
         onSearchChange={handleSearchChange}
         onPopoverCloseComplete={handlePopoverCloseComplete}
@@ -285,15 +294,17 @@ const AllScreen = ({ navigation }: any) => {
                     placement={PopoverPlacement.FLOATING}
                     popoverStyle={{
                       borderRadius: 10,
-                      width: 200,
+                      width: 250,
+                      paddingHorizontal: 20,
+                      paddingVertical: 15,
                     }}
                   >
                     <View>
                       <Text
                         style={{
                           textAlign: "center",
-                          fontWeight: "bold",
-                          padding: 10,
+                          fontWeight: "550",
+                          fontFamily: "Montserrat",
                         }}
                       >
                         Are you sure you want to delete this category?
@@ -301,11 +312,10 @@ const AllScreen = ({ navigation }: any) => {
                       <TouchableOpacity
                         onPress={() => handleRemoveCategory(name)}
                         style={{
-                          backgroundColor: "red",
+                          backgroundColor: colors.red,
                           padding: 10,
-                          marginTop: 55,
-                          borderRadius: 5,
-                          marginHorizontal: 10,
+                          marginTop: 20,
+                          borderRadius: 10,
                         }}
                       >
                         {isDeleting ? (
@@ -314,6 +324,8 @@ const AllScreen = ({ navigation }: any) => {
                               color: "white",
                               textAlign: "center",
                               fontWeight: "bold",
+                              fontFamily: "Montserrat",
+                              fontSize: 15,
                             }}
                           >
                             Loading...
@@ -324,7 +336,8 @@ const AllScreen = ({ navigation }: any) => {
                               color: "white",
                               textAlign: "center",
                               fontWeight: "bold",
-                              marginTop: -4,
+                              fontFamily: "Montserrat",
+                              fontSize: 15,
                             }}
                           >
                             Delete
@@ -332,7 +345,7 @@ const AllScreen = ({ navigation }: any) => {
                         )}
                       </TouchableOpacity>
                     </View>
-                  </Popover>  
+                  </Popover>
                 )}
               </View>
               <FlatList
@@ -358,6 +371,7 @@ const AllScreen = ({ navigation }: any) => {
         <MapMarkerView posts={categoriesWithPosts} />
       )}
     </OuterView>
+    </>
   );
 };
 

@@ -8,6 +8,7 @@ import { Endpoints } from "../utils/Endpoints";
 import { useDrawerProgress } from "@react-navigation/drawer";
 import { usePostId } from '../Structure/PostContext';
 import { useUserContext } from "../Hooks/useUserContext";
+import NotificationPopup from "../Components/NotificationPopup";
 
 interface UserData {
   firstName?: string;
@@ -22,7 +23,7 @@ type LaunchcreenProps = {
 };
 
 function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
-  
+
   const userId = route.params?.userId || '';
   const routePostId = route.params?.postId || '';
   const groupId = route.params?.groupId || '';
@@ -39,24 +40,26 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   //   }
   // }, [routePostId, postId, setPostId]);
 
+  //http://localhost:19006/launch/undefined/6590f6dff2861756c5e1b941
+
   useEffect(() => {
-    console.log("Checking route for postId");
+    // console.log("Checking route for postId: ", routePostId);
     if (routePostId && routePostId !== postId) {
       setPostId(routePostId);
     }
   }, [routePostId, postId, setPostId]); // Depend on routePostId, postId, and setPostId
-  
+
 
   useEffect(() => {
     if (postId && state.token) {
-      console.log("PostId is set, navigating to root");
+      // console.log("PostId is set, navigating to root");
       navigation.navigate('root');
     }else if(state.token){
-      console.log("no post ID but going to root")
+      // console.log("no post ID but going to root")
       navigation.navigate('root');
     }
   }, [postId, state.token, navigation]); // Depend on postId and state.token
-  
+
 
 
 
@@ -79,7 +82,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
         return;
       }
       if (!isLogin) {
-        console.log("going to signupname")
+        // console.log("going to signupname")
         navigation.navigate('signupStack', {
             screen: 'signupsocial',
             params: {
@@ -110,12 +113,12 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     // logInWithApple,
   } = useSignup();
 
-    
+
 
 
   async function getUserData(userId: string): Promise<UserData | null> {
     try {
-      console.log("THIS THE USER ID", userId)
+      // console.log("THIS THE USER ID", userId)
 
       const queryParams = new URLSearchParams({ userID: userId });
 
@@ -127,29 +130,29 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
         },
       });
       const resJson = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(resJson.error);
       }
-  
+
       return resJson as UserData;
     } catch (error) {
       console.error('Error fetching user data:', error);
       return null;
     }
   }
-  
+
 
   const handleSignup = async () => {
     setError('');
     let userData: UserData | null = null;
-    console.log("THIS THE user Id", userId)
+    // console.log("THIS THE user Id", userId)
     if (userId.length > 0 && userId != '' && userId != 'undefined' && userId != null) {
       userData = await getUserData(userId);
     }
 
-    console.log("This the user data: ", userData)
-  
+    // console.log("This the user data: ", userData)
+
     navigation.navigate('signupStack', {
       screen: 'signupemail',
       params: {
@@ -162,12 +165,14 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
       },
     });
   };
-  
+
 
 
 
 
   return (
+    <>
+    <NotificationPopup navigation={navigation}/>
     <View style={styles.container}>
       <Text
         style={{
@@ -245,6 +250,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
         </TouchableOpacity>
       </View>
     </View>
+    </>
   );
 };
 

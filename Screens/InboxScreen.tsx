@@ -13,6 +13,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text
 } from "react-native";
 import NotifSection from "../Components/NotifSection";
 import { event, eventNames } from "../Events";
@@ -20,12 +21,17 @@ import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
 import { Endpoints } from "../utils/Endpoints";
-import { Notification, Post } from "../utils/interfaces";
-import Text from "../Components/Native/Text";
+import { Notification, NotificationType, Post } from "../utils/interfaces";
+import Hyperlink from 'react-native-hyperlink';
+
 import { FlatList, ScrollView } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import IssueView from "../Components/IssueView";
 import OuterView from "../Components/OuterView";
+import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+import NotificationPopup from "../Components/NotificationPopup";
+import { customFetch } from "../utils/utils";
+
 
 type Props = PropsWithChildren<{
   route: any;
@@ -34,8 +40,12 @@ type Props = PropsWithChildren<{
 
 function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   const isFocused = useIsFocused(); // Assuming you're using something like this
+  const { notifications } = useNotification();
+  const selectedNotificationFromPopup = route.params?.selectedNotification;
+
   const [notificationsEnabled, setNotificationsEnabled] =
     useState<boolean>(false);
+
 
   let [notifs, setNotifs] = useState<Notification[]>([]);
   let skip = useRef<number>(0);
@@ -43,8 +53,35 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   const stopped = useRef<boolean>(false);
   const refreshing = useRef<boolean>(false);
   const { state } = useUserContext();
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>();
+
+
 
   const [selectedPost, setSelectedPost] = useState<Post | null>();
+
+  const fetchPost = async (postId: string | undefined) => {
+    try {
+      if (postId) {
+        let res: Response = await customFetch(
+          Endpoints.getPostById +
+            new URLSearchParams({
+              postID: postId,
+            }),
+          {
+            method: "GET",
+          }
+        );
+        let resJson = await res.json();
+        if (!res.ok) {
+        }
+        if (res.ok) {
+          const result: Post = resJson;
+          // console.info("fetched post is ", result);
+          return result;
+        }
+      }
+    } catch (error) {}
+  };
 
   const getNotifsStatus = async () => {
     try {
@@ -64,16 +101,16 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
       stopped.current = false;
     }
     event.emit(eventNames.FETCH_NOTIFS);
-    console.log(
-      "reset",
-      reset,
-      "skip",
-      skip.current,
-      "stopped",
-      stopped.current,
-      "notifs",
-      notifs.length
-    );
+    // console.log(
+    //   "reset",
+    //   reset,
+    //   "skip",
+    //   skip.current,
+    //   "stopped",
+    //   stopped.current,
+    //   "notifs",
+    //   notifs.length
+    // );
     try {
       const endpoint =
         Endpoints.getNotificationPage +
@@ -117,7 +154,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (AppState.currentState === "active") {
-        console.log("NOTIF HAPPENED");
+        // console.log("NOTIF HAPPENED");
         getNotifsStatus();
         onRefresh();
       }
@@ -142,7 +179,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
 
   useEffect(() => {
     onRefresh();
-  }, [isFocused]);
+  }, [isFocused, notifications]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -152,6 +189,25 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
     setIsLoading(false);
   };
 
+  const handleReadAll = async () => {
+    // Implement the functionality to mark all notifications as read
+    console.log('Read All pressed');
+    let res = await customFetch(Endpoints.deleteYourNotifications, {
+      method: "DELETE",
+      body: JSON.stringify({
+        type: "seen",
+      }),
+    });
+    let resJson = await res.json();
+    if (!res.ok) {
+      // setLoading(false);
+      // throw new Error(resJson.error);
+      console.log("reading failed");
+    } 
+    event.emit(eventNames.FETCH_NOTIFS);
+  };
+
+
   const renderItem = ({ item }: { item: Notification }) => {
     return (
       <NotifSection
@@ -159,6 +215,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         onPopoverCloseComplete={handleCloseComplete}
         notif={item}
         navigation={navigation}
+        setSelectedNotification={setSelectedNotification}
         setSelectedPost={setSelectedPost}
         selectedPost={selectedPost}
       />
@@ -208,21 +265,31 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
     }
   }
 
-  function onRefresh() {
-    console.log("is focused on refresh");
+  async function onRefresh() {
+    // console.log("is focused on refresh");
     refreshing.current = true;
     stopped.current = false;
-    fetchNotifs(true);
+    await fetchNotifs(true);
     refreshing.current = false;
     setLoading(false);
     event.emit(eventNames.NOTIFICATIONS_REFRESHED); // Emit an event here
+
+    // console.log("selectedNotif", selectedNotificationFromPopup)
+    if (selectedNotificationFromPopup) {
+      // console.log("selectedNotif3", selectedNotificationFromPopup)
+      setSelectedNotification(selectedNotificationFromPopup);
+      const post = await fetchPost(selectedNotificationFromPopup.data.postID)
+      setSelectedPost(post)
+    }
   }
 
   useEffect(() => {
-    console.log("HAS BEEN CHANGED TO: ", selectedPost);
+    // console.log("HAS BEEN CHANGED TO: ", selectedPost);
   }, [selectedPost]);
 
   return (
+    <>
+    <NotificationPopup navigation={navigation}/>
     <OuterView
       style={{
         flex: 1,
@@ -239,6 +306,22 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
           borderRightWidth: 2.5,
         }}
       >
+        <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+            <TouchableOpacity
+              onPress={handleReadAll}
+              style={{
+                backgroundColor: colors.purple, // Adjust button color as needed
+                padding: 10,
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 8,
+                marginTop: 8
+              }}
+            >
+              <Text style={{ color: colors.white, fontWeight: 'bold' }}>Read All</Text>
+            </TouchableOpacity>
+          </View>
         <FlatList
           data={notifs}
           renderItem={renderItem}
@@ -260,7 +343,19 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         />
       </View>
       <View style={{ flex: 3 }}>
-        {selectedPost && (
+      {selectedNotification && selectedNotification.data?.contentType === NotificationType.reminder ? (
+          <View style={{ padding: 20 }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 15 }}>
+              {selectedNotification.title}
+            </Text>
+            <Hyperlink linkDefault={true} linkStyle={{ color: colors.purple }}>
+              <Text style={{ fontSize: 16 }}>
+                {selectedNotification.content}
+              </Text>
+            </Hyperlink>
+          </View>
+        ) :
+        selectedPost && (
           <View
             style={{
               backgroundColor: colors.background,
@@ -278,6 +373,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
         )}
       </View>
     </OuterView>
+    </>
   );
 }
 

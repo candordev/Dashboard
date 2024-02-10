@@ -1,5 +1,5 @@
-import React from "react";
-import { ScrollView, View } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import colors from "../Styles/colors";
 import { Post } from "../utils/interfaces";
 import Assignees from "./Assignees";
@@ -9,6 +9,10 @@ import Location from "./Location";
 import MarkDone from "./MarkDone";
 import Text from "./Text";
 import DeletePost from "./DeletePost";
+import { customFetch } from "../utils/utils";
+import { Endpoints } from "../utils/Endpoints";
+import ErrorMessage from "./Native/ErrorMessage";
+import { set } from "lodash";
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
@@ -18,10 +22,42 @@ interface IssueRightViewProps {
 
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [issue, setIssue] = React.useState<Post>(props.issue);
+  const [isEditing, setIsEditing] = useState(false);
+  const [email, setEmail] = useState(issue.proposalFromEmail);
+  // const [errorMessage, setErrorMessage] = useState('');
+
+
+  const handleDone = async () => {
+    try {
+
+      let res: Response = await customFetch(Endpoints.editPost, {
+        method: "POST",
+        body: JSON.stringify({
+          proposalFromEmail: email,
+        postID: issue._id, // Assuming issue._id is the ID of the post to be edited
+        }),
+      });
+
+      let resJson = await res.json();
+      if (!res.ok) {
+        // setErrorMessage('Please enter a valid email');
+        setEmail(props.issue.proposalFromEmail);
+        console.error(resJson.error);
+      } else {
+        setIsEditing(false);
+        // console.log("Successfully edited proposalFromEmail");
+        // Optionally, you can update the local state or perform other actions upon successful update
+      }
+    } catch (error) {
+      console.error("Error editing post. Please try again later.", error);
+    }
+  };
+
 
   React.useEffect(() => {
     setIssue(props.issue);
   }, [props.issue]);
+
 
   return (
     <ScrollView
@@ -61,23 +97,58 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         <Text
           style={{
             fontSize: 15,
-            fontWeight: "400",
-            fontFamily: "Montserrat",
           }}
         >
           {"Post Created From: " + (issue.postCreatedFrom ?? "")}
         </Text>
-        {issue.proposalFromEmail ? (
-          <Text
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <Text
+        style={{
+            fontSize: 15,
+        }}
+    >
+        {"Email: "}
+    </Text>
+    {isEditing ? (
+        <TextInput
+            value={email}
+            onChangeText={setEmail}
             style={{
-              fontSize: 15,
-              fontWeight: "400",
-              fontFamily: "Montserrat",
+                fontSize: 15,
+                flex: 1,
+                borderColor: colors.lightestgray,
+                borderWidth: 1,
+                paddingHorizontal: 10,
+                marginHorizontal: 5,
+                borderRadius: 5,
             }}
-          >
-            {"Email: " + issue.proposalFromEmail}
+        />
+    ) : (
+        <Text
+            style={{
+                fontSize: 15,
+            }}
+        >
+            {email}
+        </Text>
+    )}
+        <TouchableOpacity
+          onPress={() => {
+              if (isEditing) {
+                  handleDone(); // Call handleDone when in editing mode and Done is pressed
+              } else {
+                  setIsEditing(true); // Switch to editing mode when Edit is pressed
+              }
+          }}
+          style={isEditing ? doneButtonStyle : editButtonStyle}
+      >
+          <Text style={{ color: isEditing ? colors.white : colors.black, fontWeight: '500' }}>
+              {isEditing ? 'Done' : 'Edit'}
           </Text>
-        ) : null}
+      </TouchableOpacity>
+
+      </View>
+
         {issue.postCreatedFrom !== "forwardedEmail" &&
           issue.userProfile.firstName !== "Candor Website" &&
           issue.userProfile.lastName !== "Bot" && (
@@ -85,20 +156,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
                 }}
               >
-                {"FirstName: " + (issue.userProfile.firstName ?? "")}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
-                }}
-              >
-                {"LastName: " + (issue.userProfile.lastName ?? "")}
+                {"Name: " + issue.userProfile.firstName + " " + issue.userProfile.lastName}
               </Text>
             </>
           )}
@@ -110,20 +170,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               <Text
                 style={{
                   fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
                 }}
               >
-                {"FirstName: " + (issue.emailFirstName ?? "")}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "400",
-                  fontFamily: "Montserrat",
-                }}
-              >
-                {"LastName: " + (issue.emailLastName ?? "")}
+                {"Name: " + issue.emailFirstName + " " + issue.emailLastName}
               </Text>
             </>
           )}
@@ -141,5 +190,18 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
     </ScrollView>
   );
 }
+const editButtonStyle = {
+  marginLeft: 10,
+  backgroundColor: colors.lightestgray,
+  paddingHorizontal: 10,
+  paddingVertical: 5,
+  borderRadius: 15
+};
+
+const doneButtonStyle = {
+  ...editButtonStyle,
+  backgroundColor: colors.purple,
+  borderRadius: 15
+};
 
 export default IssueRightView;

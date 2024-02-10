@@ -20,11 +20,12 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [errorMessage, setMessage] = useState("");
-  const [issue, setIssue] = useState<Post>(props.issue);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setIssue(props.issue);
-  }, [props.issue]);
+    // console.log("fetch status updates");
+    fetchStatusUpdates();
+  }, [props.issue, props.updateTrigger]); // Dependency on issue and updateTrigger
 
   // useEffect(() => {
   //   console.log("INFNITE LOOP D");
@@ -41,7 +42,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
       endpoint =
         Endpoints.getPostProgress +
         new URLSearchParams({
-          postID: issue._id,
+          postID: props.issue._id,
         });
 
       const res: Response = await customFetch(endpoint, {
@@ -54,7 +55,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
       }
       if (res.ok) {
         const result: Update[] = resJson;
-        console.log("status updates are", result);
+        // console.log("status updates are", result);
         setUpdates([...result]);
         setTitle('')
         setContent('')
@@ -65,13 +66,14 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
   };
 
   const addUpdate = async () => {
+    setLoading(true);
     try {
       let res: Response = await customFetch(Endpoints.createStatusUpdate, {
         method: "POST",
         body: JSON.stringify({
           title: title,
           content: content,
-          postID: issue._id,
+          postID: props.issue._id,
           completed: false,
         }),
       });
@@ -81,10 +83,14 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
         console.error("Status update error", resJson.error);
         setMessage(resJson.error)
       } else {
+        setTitle('');
+        setContent('');
         await fetchStatusUpdates();
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,6 +127,10 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
       <DoubleTextInput
         onFirstInputChange={setTitle}
         onSecondInputChange={setContent}
+        title={title}
+        content={content}
+        loading={loading}
+        submittable={title.length > 0 && content.length > 0}
         onSubmit={addUpdate} // Pass the addUpdate function
       />
     </View>

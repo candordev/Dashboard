@@ -9,18 +9,25 @@ import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import React, { useCallback, useEffect, useState } from "react";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
+import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+import ProfilePicture from "./ProfilePicture";
 
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
+  const { notifications } = useNotification();
+
+  useEffect(() => {
+    setUnread(1 + unread);
+  }, [notifications]);
 
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
   const navIndex = props.state.index;
 
   useEffect(() => {
-    console.log("sparsisparsi");
-    console.log(props);
+    // console.log("sparsisparsi");
+    // console.log(props);
     // console.log(currRoute);
     // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
     getUnreadDB();
@@ -28,7 +35,7 @@ const LHN = (props: any) => {
 
   useEffect(() => {
     const handleRefresh = () => {
-      console.log("Notifications refreshed, updating unread count");
+      // console.log("Notifications refreshed, updating unread count");
       getUnreadDB();
     };
 
@@ -51,7 +58,7 @@ const LHN = (props: any) => {
 
   const getUnreadDB = useCallback(async () => {
     try {
-      console.log("GET UNREAD NOTIF");
+      // console.log("GET UNREAD NOTIF");
       setUnread(await getUnreadNotifs());
     } catch (err) {
       console.error("Error getting notification count", err);
@@ -60,8 +67,32 @@ const LHN = (props: any) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          paddingBottom: 10,
+        }}
+      >
+        <ProfilePicture
+          imageUrl={state.imageUrl}
+          type="profile"
+          style={{ marginVertical: 10 }}
+        />
+        <Text
+          style={{
+            color: colors.white,
+            fontWeight: "500",
+            textAlign: "center",
+            fontSize: 13,
+            marginBottom: 20,
+          }}
+        >
+          {state.firstName} {state.lastName}
+        </Text>
+      </View>
       <NavItem
-        name={"All Issues"}
+        name={"Issues"}
         route="/all"
         icon="list"
         selected={navIndex == 0}
@@ -191,7 +222,7 @@ const styles = {
   container: {
     flex: 1,
     backgroundColor: colors.black,
-    paddingVertical: 50,
+    paddingVertical: 20,
     paddingHorizontal: 15,
   },
   navItemText: {
@@ -201,12 +232,14 @@ const styles = {
   },
   unreadBadge: {
     backgroundColor: "red", // Change as per your design
-    width: 20, // Set a fixed width
-    height: 20, // Set the same value for height to make it a circle
+    minWidth: 20, // Set a fixed width
+    minHeight: 20, // Set the same value for height to make it a circle
     borderRadius: 10, // Half of width/height to make it a perfect circle
     marginLeft: 5,
     justifyContent: "center" as any,
     alignItems: "center" as FlexAlignType,
+    padding: 3,
+
   },
   unreadText: {
     color: "white",

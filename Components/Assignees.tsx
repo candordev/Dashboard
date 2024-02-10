@@ -45,10 +45,6 @@ function Assignees(props: AssigneesProps): JSX.Element {
   const [errorMessageLeader, setErrorMessageLeader] = useState<string>();
 
   useEffect(() => {
-    console.log("selected children", selectedChildren);
-  }, [selectedChildren]);
-
-  useEffect(() => {
     setSelectedChildren([]);
     setPreviousChildValue([]);
     setPreviousValue([])
@@ -79,7 +75,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   const fetchLeaders = async () => {
     try {
-      console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
       // Initialize URLSearchParams
       let params = new URLSearchParams({
         //page: "1",
@@ -104,7 +100,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
       }
 
       const result = resJson; // Assuming resJson is an array of UserProfile
-      console.log("leaders are", result);
+      // console.log("leaders are", result);
       setLeaders(result);
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
@@ -116,12 +112,12 @@ function Assignees(props: AssigneesProps): JSX.Element {
   }, [props.issue]);
 
   useEffect(() => {
-    //console.log("GROUP FOR A POST", props.issue.group)
+    //// console.log("GROUP FOR A POST", props.issue.group)
     const departments: { [key: string]: Department } = {};
     const initialValues: string[] = [];
 
     leaders.forEach((leader) => {
-      console.log("suggested should be running");
+      // console.log("suggested should be running");
       const aiSuggests = isLeaderSuggestedByAI(leader.user);
 
       const departmentName = leader.departmentNames[0];
@@ -184,7 +180,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   const isString = (value: any): value is string => typeof value === "string";
 
   useEffect(() => {
-    console.log("Value state updated:", value);
+    // console.log("Value state updated:", value);
     setPreviousValue(value);
     setPreviousChildValue(selectedChildren);
     previousValueRefChild.current = previousValueChild;
@@ -202,7 +198,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   }, [previousValue, previousValueChild]);
 
   const onCloseDropDown = async () => {
-    console.log("Close dropdown", selectedChildren);
+    // console.log("Close dropdown", selectedChildren);
     if (!props.createPost && props.issue && props.issue._id) {
       const currentSelectedChildren = currentSelectedChildrenRef.current;
       const previousSelectedChildren = previousValueRefChildB.current;
@@ -214,11 +210,11 @@ function Assignees(props: AssigneesProps): JSX.Element {
           (child, index) => child !== currentSelectedChildren[index]
         );
 
-      console.log("current child", currentSelectedChildren);
-      console.log("previous child", previousSelectedChildren);
+      // console.log("current child", currentSelectedChildren);
+      // console.log("previous child", previousSelectedChildren);
 
       if (hasChildrenChanged) {
-        console.log("Selected children have changed. Making route call...");
+        // console.log("Selected children have changed. Making route call...");
         // Make your route call here
 
         try {
@@ -234,7 +230,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
             const resJson = await res.json();
             console.error("Error adding ASSIGNEES:", resJson.error);
           } else {
-            console.log("ASSIGNEES added successfully");
+            // console.log("ASSIGNEES added successfully");
             //event.emit(eventNames.ISSUE_CATEGORY_SET);
             // You can handle any additional state updates or notifications here
           }
@@ -247,7 +243,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
         // // Update the previousValueChild state
         setPreviousChildValue(currentSelectedChildren);
       } else {
-        console.log("No change in selected children.");
+        // console.log("No change in selected children.");
       }
 
       previousValueRefChildB.current = currentSelectedChildrenRef.current;
@@ -262,7 +258,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   const onUserSelect = (
     selectedItems: ItemType<string>[] | ItemType<string>
   ) => {
-    console.log("Value changed", selectedItems);
+    // console.log("Value changed", selectedItems);
 
     // Ensure selectedItems is always treated as an array
     const selectedArray = Array.isArray(selectedItems)
@@ -274,15 +270,15 @@ function Assignees(props: AssigneesProps): JSX.Element {
       .map((obj) => obj.value)
       .filter(isString);
 
-    console.log("Value changed", currentValueAsString);
+    // console.log("Value changed", currentValueAsString);
 
     const previousValueSet = new Set<string>(previousValueRef.current);
     const currentValueSet = new Set<string>(previousValueRef.current);
     const currentValueB = new Set<string>(currentValueAsString);
     //const valAdded =  new Set<string>();
-    console.log("previousValueSet", previousValueRef.current);
+    // console.log("previousValueSet", previousValueRef.current);
     const newSelectedChildren = new Set<string>(previousValueRefChild.current);
-    console.log("initial children", newSelectedChildren);
+    // console.log("initial children", newSelectedChildren);
 
     // Handle selection of new values
     currentValueAsString.forEach((val) => {
@@ -293,20 +289,20 @@ function Assignees(props: AssigneesProps): JSX.Element {
         );
         if (childItem) {
           newSelectedChildren.add(childItem.value);
-          console.log("children after child ite selected", newSelectedChildren);
-          console.log("CHILD SELECT", val);
+          // console.log("children after child ite selected", newSelectedChildren);
+          // console.log("CHILD SELECT", val);
           if (childItem.parent && !currentValueSet.has(childItem.parent)) {
             currentValueSet.add(childItem.parent);
             //isStateChanged = true;
           }
         } else {
-          console.log("PARENT SELECT");
+          // console.log("PARENT SELECT");
           const children = items.filter((item) => item.parent === val);
           children.forEach((child) => currentValueSet.add(child.value));
           children.forEach((child) => newSelectedChildren.add(child.value));
           //isStateChanged = true;
         }
-        console.log("This was THE value selected", val);
+        // console.log("This was THE value selected", val);
         //valAdded.add(val)
       }
     });
@@ -318,7 +314,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           (item) => item.value === val && item.parent
         );
         if (childItem) {
-          console.log("deselecting child");
+          // console.log("deselecting child");
           const siblings = items.filter(
             (item) => item.parent === childItem.parent
           );
@@ -331,7 +327,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
             }
           }
         } else {
-          console.log("deselecting parent");
+          // console.log("deselecting parent");
           const children = items.filter((item) => item.parent === val);
           children.forEach((child) => {
             currentValueSet.delete(child.value);
@@ -343,13 +339,13 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
     // Update state only if there's a change
     //if (isStateChanged) {
-    console.log(
-      "THIS IS THE FINAL VALUES TO BE SELECTED",
-      Array.from(currentValueSet)
-    );
+    // console.log(
+    //   "THIS IS THE FINAL VALUES TO BE SELECTED",
+    //   Array.from(currentValueSet)
+    // );
     setValue(Array.from(currentValueSet));
 
-    console.log("set Selected Children", Array.from(newSelectedChildren));
+    // console.log("set Selected Children", Array.from(newSelectedChildren));
     setSelectedChildren(Array.from(newSelectedChildren));
     currentSelectedChildrenRef.current = Array.from(newSelectedChildren);
     // const updatedPreviousValue = new Set([...valAdded, ...currentValueSet]);
@@ -375,7 +371,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
     //     value: departmentName
     //   });
     // }
-    console.log("department exists", departmentExists);
+    // console.log("department exists", departmentExists);
     if (departmentExists) {
       // Add new leader as a separate item with a parent property
       updatedItems.push({
@@ -395,10 +391,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
     // Update selected values to include new leader and department
     let updatedValue = [...value, departmentName, leaderEmail];
     setValue(updatedValue);
-    console.log(
-      "set Selected Children in UPDATE DROPDOWN",
-      Array.from(newSelectedChildren)
-    );
+    // console.log(
+    //   "set Selected Children in UPDATE DROPDOWN",
+    //   Array.from(newSelectedChildren)
+    // );
     setSelectedChildren(Array.from(newSelectedChildren));
   };
 
@@ -492,10 +488,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
   ) {
     if (!props.createPost && props.issue && props.issue._id) {
       const currentSelectedChildren = currentSelectedChildrenRef.current;
-      console.log("This is the department Name", departmentName);
+      // console.log("This is the department Name", departmentName);
       try {
-        console.log("This is the email: ", email);
-        console.log("This is the issue ID: ", props.issue._id);
+        // console.log("This is the email: ", email);
+        // console.log("This is the issue ID: ", props.issue._id);
         let res = await customFetch(Endpoints.sendEmailToLeader, {
           method: "POST",
           body: JSON.stringify({
@@ -515,7 +511,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           setErrorMessageLeader(resJson.error);
         } else {
           setErrorMessageLeader("");
-          console.log("EMAIL successfully");
+          // console.log("EMAIL successfully");
           updateDropdownAndSelection(departmentName, firstName, email);
         }
       } catch (error) {
@@ -527,18 +523,18 @@ function Assignees(props: AssigneesProps): JSX.Element {
   const isLeaderSuggestedByAI = (leaderId: string) => {
     if (!props.createPost && props.issue && props.issue._id) {
       // Ensure that there is at least one suggested department and it has leaders
-      console.log("suggested departments", props.issue.suggestedDepartments);
+      // console.log("suggested departments", props.issue.suggestedDepartments);
       //console.log("suggested departments", props.issue.suggestedDepartments)
 
       if (
         props.issue.suggestedDepartments.length > 0 &&
         props.issue.suggestedDepartments[0].leaders.length > 0
       ) {
-        console.log(
-          "First suggested department:",
-          props.issue.suggestedDepartments[0]
-        ); // Log the first suggested department
-        console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
+        // console.log(
+        //   "First suggested department:",
+        //   props.issue.suggestedDepartments[0]
+        // ); // Log the first suggested department
+        // console.log("Checking for leader ID:", leaderId); // Log the leader ID being checked
 
         return props.issue.suggestedDepartments[0].leaders.some(
           (leader) => leader._id === leaderId

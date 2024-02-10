@@ -1,20 +1,33 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import OuterView from "../Components/OuterView";
 import Text from "../Components/Text";
 import { View } from "react-native";
 import colors from "../Styles/colors";
+import NotificationPopup from "../Components/NotificationPopup";
 
-type SettingsScreenProps = {};
+// type SettingsScreenProps = {
+//   navigation: any;
+// };
 
-const SettingsScreen: React.FC<SettingsScreenProps> = () => {
+// const SettingsScreen: React.FC<SettingsScreenProps> = () => {
+
+type Props = PropsWithChildren<{
+  route: any;
+  navigation: any;
+}>;
+
+function SettingsScreen({ route, navigation }: Props): JSX.Element {
   return (
-    <OuterView>
-      <GeneralSettings />
-      <TagSettings />
-      <DeadlineSettings />
-    </OuterView>
+    <>
+      <NotificationPopup navigation={navigation} />
+      <OuterView>
+        <GeneralSettings />
+        <TagSettings />
+        <DeadlineSettings />
+      </OuterView>
+    </>
   );
-};
+}
 
 type SettingsSectionProps = {
   title: string;

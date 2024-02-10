@@ -38,7 +38,7 @@ const Header = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log("SEARCH PHRASE CHANGED: ", searchPhrase);
+      // console.log("SEARCH PHRASE CHANGED: ", searchPhrase);
       onSearchChange(searchPhrase);
     }, 300);
 
@@ -49,7 +49,7 @@ const Header = ({
 
   useEffect(() => {
     // Update assigneeItems based on the fetched leaders
-    console.log("THESE ARE THE FETCHED LEADERS", leaders);
+    // console.log("THESE ARE THE FETCHED LEADERS", leaders);
     const newAssigneeItems = leaders.map((leader) => ({
       label: `${leader.firstName} ${leader.lastName}`,
       value: leader.user,
@@ -63,7 +63,7 @@ const Header = ({
 
   const handleAssigneeSelection = (selectedValues: string[]) => {
     setAssigneeValues(selectedValues);
-    console.log("THESE ARE THE SELECTED ID: ", assigneeValues);
+    // console.log("THESE ARE THE SELECTED ID: ", assigneeValues);
     // Call a prop function to send the selected IDs to the parent component
     onAssigneeSelection(selectedValues);
   };
@@ -77,7 +77,7 @@ const Header = ({
         queryParams.append("groupID", groupID);
       }
 
-      console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
       let endpoint = Endpoints.getGroupLeaders + queryParams.toString(); // backend route does it by page, might need to j get all of the leaders
 
       const res = await customFetch(endpoint, { method: "GET" });
@@ -88,7 +88,7 @@ const Header = ({
       }
       if (res.ok) {
         const result: UserProfile[] = resJson;
-        console.log("leaders are", result);
+        // console.log("leaders are", result);
 
         setLeaders(result);
       }
@@ -112,12 +112,12 @@ const Header = ({
   };
 
   const handlePopoverClose = () => {
-    console.log();
+    // console.log();
     //fetchPosts(currStatus, selectedHeaderOption);
   };
 
   const handleImportSuccess = () => {
-    console.log("Import successful");
+    // console.log("Import successful");
     onPopoverCloseComplete(); // Call the callback on successful import
     // You may want to refresh the data or perform other actions here
   };
@@ -176,6 +176,9 @@ const Header = ({
             items={assigneeItems}
             setItems={setAssigneeItems}
             multiple={true}
+            multipleText={`${assigneeValues?.length ?? 0} ${
+              (assigneeValues?.length ?? 0) == 1 ? "assignee" : "assignees"
+            } selected`}
           />
         </View>
         <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />

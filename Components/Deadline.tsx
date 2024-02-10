@@ -45,7 +45,7 @@ const Deadline: React.FC<DeadlineProps> = (props) => {
         const resJson = await res.json();
         console.error("Error adding DEADLINE:", resJson.error);
       } else {
-        console.log("DEADLINE added successfully");
+        // console.log("DEADLINE added successfully");
         setSelectedDate(date);
       }
     } catch (error) {
