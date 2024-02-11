@@ -97,19 +97,6 @@ const AllScreen = ({ navigation }: any) => {
     // Perform actions with the selected IDs, like updating state or making API calls
   };
 
-  useEffect(() => {
-    // console.log("Categories with posts updated:", categoriesWithPosts);
-    Object.values(categoriesWithPosts).forEach((posts: Post[]) => {
-      posts.forEach((post: Post) => {
-        if (post.location) {
-          // console.log("printing post that has location: ", post);
-        } else {
-          // console.log("printing post that has no location: ", post);
-        }
-      });
-    });
-  }, [categoriesWithPosts]);
-
   const fetchPosts = async (
     status: ProgressSelector | undefined,
     searchTerm: string,
@@ -151,7 +138,7 @@ const AllScreen = ({ navigation }: any) => {
 
       let resJson = await res.json();
       if (res.ok) {
-        
+
         setCategoriesWithPosts(resJson);
         setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
