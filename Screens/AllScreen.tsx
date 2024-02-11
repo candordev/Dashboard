@@ -63,7 +63,8 @@ const AllScreen = ({ navigation }: any) => {
     fetchPosts(
       progressSelected,
       searchTerm,
-      categorySelected === "Map" ? "Tag" : categorySelected,
+      //categorySelected === "Map" ? "Tag" : categorySelected,
+      categorySelected,
       assigneesSelectedIds
     );
   }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
@@ -150,10 +151,9 @@ const AllScreen = ({ navigation }: any) => {
 
       let resJson = await res.json();
       if (res.ok) {
-        // console.log("resJson DEBUG: ", resJson);
-        await setCategoriesWithPosts(resJson);
-        setRefreshKey((prevKey) => prevKey + 1);
-       // Increment key to force update
+        
+        setCategoriesWithPosts(resJson);
+        setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
       }
@@ -163,6 +163,7 @@ const AllScreen = ({ navigation }: any) => {
       setLoading(false);
     }
   };
+
 
   const [isLoading, setIsLoading] = useState(false);
 
