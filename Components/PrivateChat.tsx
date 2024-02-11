@@ -18,19 +18,35 @@ interface PrivateChatProps {
 function PrivateChat(props: PrivateChatProps): JSX.Element {
   const { state, dispatch } = useUserContext();
   const [privateComments, setPrivateComments] = useState<Comment[]>([]);
-
+  
   const scrollViewRef = useRef<ScrollView>(null);
   const [inputText, setInputText] = useState<string>("");
 
   const [chatMode, setChatMode] = useState("authorities");
   const [chatModeItems, setChatModeItems] = useState([
-    { label: "Authorities", value: "authorities" },
-    { label: "Constituent", value: "constituent" },
+    { label: "Authorities", value: "authorities"},
+    { label: "Constituent", value: "constituent"},
   ]);
 
+  const [emailError, setEmailError] = useState("")
+
+  // useEffect(() => {
+  //   fetchPrivateChat();
+  //   // // console.log("ISSUE IS : ", props.issue._id);
+  // }, [chatMode]);
+
+
   useEffect(() => {
-    fetchPrivateChat();
-    // // console.log("ISSUE IS : ", props.issue._id);
+    // Check if the current chatMode is "constituent" and the email is invalid
+    if (chatMode === "constituent" && !props.issue.proposalFromEmail.includes("@")) {
+      // setChatMode("authorities");
+      // fetchPrivateChat();
+      console.log("Nothing getting fetched")
+      setEmailError("There's no constituent Email associated with this Issue, Please fill it in.");
+    } else {
+      setEmailError("");
+      fetchPrivateChat();
+    }
   }, [chatMode]);
 
   // Inside your React component
@@ -70,7 +86,6 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     const roomName = `${chatMode}_${props.issue._id}`;
 
     // console.log("ROOM NAME", roomName)
-
     socket.on("connect", () => {
       console.log("Connected to Socket.io server");
       // Join the room specific to the chatMode and postID
@@ -231,23 +246,20 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 
   const handleKeyPress = async (e: any) => {
     if (e.nativeEvent.key === "Enter" && !e.nativeEvent.shiftKey) {
-      if (chatMode == "constituent") {
+      if (chatMode == "constituent" && props.issue.proposalFromEmail.includes("@")) {
         await postConstituentComment();
       } else {
         await postPoliticianComment();
       }
-
       setInputText("");
     }
   };
-
   return (
     <View style={chatStyles.chatContainer}>
       <View style={chatStyles.titleDropdownContainer}>
         <Text style={chatStyles.chatTitle}>Private Chat</Text>
         <View>
-          {props.issue.proposalFromEmail.includes("@") ? (
-            <DropDown
+            {/* <DropDown
               placeholder="Chat Type"
               value={chatMode}
               setValue={setChatMode}
@@ -256,7 +268,23 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
               multiple={false}
               backgroundColor={colors.lightestgray}
             />
-          ) : null}
+            {!props.issue.proposalFromEmail.includes("@") && chatMode == "constituent" ? (
+              <Text 
+                style={chatStyles.errorText}>{emailError}
+              </Text> 
+            ) : (
+              null
+            )
+          } */}
+          <DropDown
+            placeholder="Chat Type"
+            value={chatMode}
+            setValue={setChatMode}
+            items={chatModeItems}
+            setItems={setChatModeItems}
+            multiple={false}
+            backgroundColor={colors.lightestgray}
+          />
         </View>
       </View>
       <ScrollView
@@ -267,6 +295,9 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
         }
         onLayout={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
       >
+        {emailError && (
+      <Text style={chatStyles.errorText}>{emailError}</Text>
+    )}
         {privateComments.map(renderComment)}
       </ScrollView>
       <TextInput
@@ -375,5 +406,13 @@ const chatStyles = StyleSheet.create({
     fontSize: 12, // readable font size
     textDecorationLine: "underline",
     textAlign: "center",
+  },
+  errorText: {
+    color: 'red', // Use an appropriate color for error messages
+    fontSize: 12, // Ensure the font size is readable
+    width: '100%',
+    textAlign: "center",
+    fontWeight: "550" as any,
+    marginTop: 10, // Add some space above the error message
   },
 });
