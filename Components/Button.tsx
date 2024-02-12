@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import Text from './Text';
 import colors from '../Styles/colors';
 
 interface ButtonProps {
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
+    // width: '100%',
   },
   buttonText: {
     color: 'white',
