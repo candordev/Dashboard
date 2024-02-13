@@ -11,6 +11,7 @@ import DropDown from "./DropDown";
 import styles from "../Styles/styles";
 import { debounce } from "lodash";
 import io from "socket.io-client";
+import validator from "validator"
 
 interface PrivateChatProps {
   issue: Post;
@@ -21,6 +22,10 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   
   const scrollViewRef = useRef<ScrollView>(null);
   const [inputText, setInputText] = useState<string>("");
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
+
+  const [emailError, setEmailError] = useState("")
+
 
   const [chatMode, setChatMode] = useState("authorities");
   const [chatModeItems, setChatModeItems] = useState([
@@ -28,57 +33,26 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     { label: "Constituent", value: "constituent"},
   ]);
 
-  const [emailError, setEmailError] = useState("")
-
-  // useEffect(() => {
-  //   fetchPrivateChat();
-  //   // // console.log("ISSUE IS : ", props.issue._id);
-  // }, [chatMode]);
-
 
   useEffect(() => {
-    // Check if the current chatMode is "constituent" and the email is invalid
-    if (chatMode === "constituent" && !props.issue.proposalFromEmail.includes("@")) {
+    console.log(props.issue.proposalFromEmail)
+    if (chatMode === "constituent" && !validator.isEmail(props.issue.proposalFromEmail)) {
       // setChatMode("authorities");
       // fetchPrivateChat();
-      console.log("Nothing getting fetched")
-      setEmailError("There's no constituent Email associated with this Issue, Please fill it in.");
+      setIsInputDisabled(true);
+      setEmailError("There's No Constituent Email associated with this Issue, Please fill it in.");
     } else {
+      setIsInputDisabled(false);
       setEmailError("");
       fetchPrivateChat();
     }
-  }, [chatMode]);
-
-  // Inside your React component
-  // useEffect(() => {
-  //   const socket = io("http://localhost:4000", {
-  //     withCredentials: false,
-  //     // Add any additional options here
-  //   });
-
-  //   socket.on('connect', () => {
-  //     // console.log('Connected to Socket.io server');
-  //     socket.emit('join-post', props.issue._id);
-  //   });
-
-  //   socket.on('connect_error', (err) => {
-  //     console.error('Connection error:', err.message);
-  //   });
-
-  //   socket.on('new-comment', (newComment) => {
-  //     // console.log
-  //     setPrivateComments((prevComments) => [...prevComments, newComment]);
-  //   });
-
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, [props.issue._id]);
+  }, [chatMode, props.issue.proposalFromEmail]);
 
   useEffect(() => {
     // if(chatMode == "authorities") {
-    const socketName = "https://candoradmin.com";
-    const socket = io(socketName, {
+    const localSocket = "http://localhost:4000"
+    const prodSocket = "https://candoradmin.com";
+    const socket = io(prodSocket, {
       withCredentials: false,
       // Add any additional options here
     });
@@ -107,7 +81,6 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     // }
   }, [props.issue._id, chatMode]); // Add chatMode to the dependency array
   // Define the initial state with appropriate types and default values
-
   let lastAuthorId = "";
   let lastCommentDate = new Date(0);
 
@@ -187,6 +160,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
       });
       let resJson = await res.json();
       if (!res.ok) {
+        
         console.error(resJson.error);
         console.error("No Affiliated Politicans???.");
       } else {
@@ -246,7 +220,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
 
   const handleKeyPress = async (e: any) => {
     if (e.nativeEvent.key === "Enter" && !e.nativeEvent.shiftKey) {
-      if (chatMode == "constituent" && props.issue.proposalFromEmail.includes("@")) {
+      if (chatMode == "constituent" && validator.isEmail(props.issue.proposalFromEmail)) {
         await postConstituentComment();
       } else {
         await postPoliticianComment();
@@ -259,23 +233,6 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
       <View style={chatStyles.titleDropdownContainer}>
         <Text style={chatStyles.chatTitle}>Private Chat</Text>
         <View>
-            {/* <DropDown
-              placeholder="Chat Type"
-              value={chatMode}
-              setValue={setChatMode}
-              items={chatModeItems}
-              setItems={setChatModeItems}
-              multiple={false}
-              backgroundColor={colors.lightestgray}
-            />
-            {!props.issue.proposalFromEmail.includes("@") && chatMode == "constituent" ? (
-              <Text 
-                style={chatStyles.errorText}>{emailError}
-              </Text> 
-            ) : (
-              null
-            )
-          } */}
           <DropDown
             placeholder="Chat Type"
             value={chatMode}
@@ -302,6 +259,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
       </ScrollView>
       <TextInput
         multiline={true}
+        editable={!isInputDisabled}
         numberOfLines={1}
         style={[styles.textInput, { minHeight: 40, maxHeight: 300 }]}
         placeholder="Add a comment..."
@@ -408,7 +366,7 @@ const chatStyles = StyleSheet.create({
     textAlign: "center",
   },
   errorText: {
-    color: 'red', // Use an appropriate color for error messages
+    color: colors.purple, // Use an appropriate color for error messages
     fontSize: 12, // Ensure the font size is readable
     width: '100%',
     textAlign: "center",
