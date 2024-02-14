@@ -63,7 +63,8 @@ const AllScreen = ({ navigation }: any) => {
     fetchPosts(
       progressSelected,
       searchTerm,
-      categorySelected === "Map" ? "Tag" : categorySelected,
+      //categorySelected === "Map" ? "Tag" : categorySelected,
+      categorySelected,
       assigneesSelectedIds
     );
   }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
@@ -95,19 +96,6 @@ const AllScreen = ({ navigation }: any) => {
     setSearchTerm(searchTerm);
     // Perform actions with the selected IDs, like updating state or making API calls
   };
-
-  useEffect(() => {
-    // console.log("Categories with posts updated:", categoriesWithPosts);
-    Object.values(categoriesWithPosts).forEach((posts: Post[]) => {
-      posts.forEach((post: Post) => {
-        if (post.location) {
-          // console.log("printing post that has location: ", post);
-        } else {
-          // console.log("printing post that has no location: ", post);
-        }
-      });
-    });
-  }, [categoriesWithPosts]);
 
   const fetchPosts = async (
     status: ProgressSelector | undefined,
@@ -150,10 +138,9 @@ const AllScreen = ({ navigation }: any) => {
 
       let resJson = await res.json();
       if (res.ok) {
-        // console.log("resJson DEBUG: ", resJson);
-        await setCategoriesWithPosts(resJson);
-        setRefreshKey((prevKey) => prevKey + 1);
-       // Increment key to force update
+
+        setCategoriesWithPosts(resJson);
+        setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
         console.error("Error loading posts. Please try again later.");
       }
@@ -163,6 +150,7 @@ const AllScreen = ({ navigation }: any) => {
       setLoading(false);
     }
   };
+
 
   const [isLoading, setIsLoading] = useState(false);
 

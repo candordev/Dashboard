@@ -202,7 +202,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
         style={{
           backgroundColor: colors.purple4,
           alignItems: "center",
-          width: "30%",
+          minWidth: "30%",
+          maxWidth: "80%",
           borderRadius: 20,
           paddingVertical: 15,
           paddingHorizontal: 20,
