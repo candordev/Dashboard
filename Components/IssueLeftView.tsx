@@ -27,7 +27,6 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     setIssue(props.issue);
   }, [props.issue]);
 
-
   useEffect(() => {
     // console.log("the issue details: ", props.issue)
     fetchComments();

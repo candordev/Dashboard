@@ -13,6 +13,8 @@ import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 import ErrorMessage from "./Native/ErrorMessage";
 import { set } from "lodash";
+import { usePostId } from "../Structure/PostContext";
+
 
 interface IssueRightViewProps {
   fetchStatusUpdates: () => void;
@@ -23,31 +25,36 @@ interface IssueRightViewProps {
 function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [issue, setIssue] = React.useState<Post>(props.issue);
   const [isEditing, setIsEditing] = useState(false);
-  const [email, setEmail] = useState(issue.proposalFromEmail);
-  // const [errorMessage, setErrorMessage] = useState('');
+
+  const { post, setPost } = usePostId();
+  
+  const [email, setEmail] = useState(post?.proposalFromEmail);
+
+
+
 
 
 
   const handleDone = async () => {
     try {
-
       let res: Response = await customFetch(Endpoints.editPost, {
         method: "POST",
         body: JSON.stringify({
           proposalFromEmail: email,
-        postID: issue._id, // Assuming issue._id is the ID of the post to be edited
+        postID: post?._id, // Assuming issue._id is the ID of the post to be edited
         }),
       });
 
       let resJson = await res.json();
       if (!res.ok) {
-        // setErrorMessage('Please enter a valid email');
-        setEmail(props.issue.proposalFromEmail);
-        console.error(resJson.error);
+        setEmail(post?.proposalFromEmail); // set to previous email
+        console.error("Error while editing post: ", resJson.error);
       } else {
         setIsEditing(false);
-        // console.log("Successfully edited proposalFromEmail");
-        // Optionally, you can update the local state or perform other actions upon successful update
+        if (!(email === post?.proposalFromEmail)) {
+          setPost({ ...props.issue, proposalFromEmail: email || "" });
+          console.log("Handle Succeeded and new Post Email Set: ", post?.proposalFromEmail)
+        }
       }
     } catch (error) {
       console.error("Error editing post. Please try again later.", error);
