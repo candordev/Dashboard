@@ -38,7 +38,7 @@ const Location: React.FC<LocationProps> = (props) => {
       const user = auth.currentUser;
       if (user) {
         const token = await user.getIdToken();
-        console.log("DAA TOKEN", token);
+        // console.log("DAA TOKEN", token);
         setIdToken(token);
       }
     };
