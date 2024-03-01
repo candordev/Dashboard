@@ -94,7 +94,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       }}
     >
       <IssueContent date={issue.createdAt} issueID={issue._id} title={issue.title} content={issue.content} previewURl={issue.imgURL}/>
-      {/* {comments.map((comment: Comment, index) => {
+      {comments.map((comment: Comment, index) => {
         return (
           <View
             style={{
@@ -112,8 +112,8 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
             </Text>
           </View>
         );
-      })}*/}
-        {/* {
+      })}
+        {
           props.issue.suggestedSimilarPost && displaySimilarPost&& (
             <SimilarPost
               title={props.issue.suggestedSimilarPost.title}
@@ -125,7 +125,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
               onClose={handleClose}
             />
           )
-        }  */}
+        } 
 
       <PrivateChat issue={props.issue}/>
     </View>

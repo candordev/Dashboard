@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import colors from "../Styles/colors";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
+import { useUserContext } from "../Hooks/useUserContext";
 
 // Define a type for the props
 interface OptionPickerProps {
@@ -15,15 +16,26 @@ interface OptionPickerProps {
 }
 
 const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>("Tag");
+  const { state } = useUserContext();
+
+  const [selectedOption, setSelectedOption] = useState<string>("Tag");
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
+
+  // useMemo to compute the options based on the groupType
+  const options = useMemo(() => {
+    // Only show 'Deadline' and 'Tag' if groupType is 'HOA'
+    if (state.groupType === 'HOA') {
+      return ['Deadline', 'Tag'];
+    }
+    // Otherwise, show all options
+    return ['Deadline', 'Location', 'Department', 'Tag', 'Map'];
+  }, [state.groupType]); // Dependency array, it will only recompute if groupType changes
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     onOptionChange(option);
     setIsPopoverVisible(false);
   };
-
   return (
     <View style={styles.container}>
       <Text
@@ -70,7 +82,7 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
         onRequestClose={() => setIsPopoverVisible(false)}
       >
         <View>
-          {["Deadline", "Location", "Department", "Tag", "Map"].map((option) => (
+          {options.map((option) => (
             <Pressable
               key={option}
               style={{
