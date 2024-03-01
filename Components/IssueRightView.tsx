@@ -14,6 +14,10 @@ import { Endpoints } from "../utils/Endpoints";
 import ErrorMessage from "./Native/ErrorMessage";
 import { set } from "lodash";
 import { usePostId } from "../Structure/PostContext";
+import { useUserContext } from "../Hooks/useUserContext";
+import LocationHOA from "./LocationHOA";
+
+
 
 
 interface IssueRightViewProps {
@@ -29,6 +33,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const { post, setPost } = usePostId();
   
   const [email, setEmail] = useState(post?.proposalFromEmail);
+  const { state } = useUserContext();
 
 
 
@@ -83,7 +88,9 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       <Assignees issue={issue} createPost={false} style={{ zIndex: 3 }} />
       <Category issueId={issue._id} createPost={false} style={{ zIndex: 2 }} />
       <Deadline issue={issue} style={{ zIndex: 1 }} />
-      <Location issue={issue} />
+      {state.groupType == "HOA" ? 
+      <LocationHOA issue={issue} />
+      : <Location issue={issue} />}
       <View
         style={{
           borderColor: colors.lightestgray,
@@ -203,7 +210,7 @@ const editButtonStyle = {
   backgroundColor: colors.lightestgray,
   paddingHorizontal: 10,
   paddingVertical: 5,
-  borderRadius: 15
+  borderRadius: 15,
 };
 
 const doneButtonStyle = {
