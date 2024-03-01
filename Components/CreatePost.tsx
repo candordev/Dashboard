@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "650" as any,
     color: "white",
+    fontFamily: "Montserrat",
   },
 });
 

@@ -173,13 +173,7 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-        <View 
-          style = {{flexDirection:"row"}}>
-          <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
-            <Text style={styles.restText}>Reset Filters</Text>
-          </TouchableOpacity>
-          <OptionPicker onOptionChange={onHeaderOptionChange} />
-        </View>
+        <OptionPicker onOptionChange={onHeaderOptionChange} />
       </View>
       <View
         style={{
@@ -214,8 +208,13 @@ const Header = ({
             } selected`}
           />
         </View>
-        <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
-        <CSVImportComponent onImportSuccess={handleImportSuccess} />
+        <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
+            <Text style={styles.restText}>Reset Filters</Text>
+          </TouchableOpacity>
+          <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
+          {state.groupType !== "HOA" && (
+            <CSVImportComponent onImportSuccess={handleImportSuccess} />
+          )}
       </View>
     </View>
   );
@@ -269,30 +268,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purple,
   },
   resetButton: {
-    // flexDirection: "row",
-    // justifyContent: "space-between",
-    // alignItems: "center",
-    // padding: 8,
-    // borderRadius: 15,
-    // backgroundColor: "#eaeaea",
-    // marginRight: 10,
-    backgroundColor: colors.lightergray,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 8,
     borderRadius: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    justifyContent: "center",
-    marginRight: 10,
+    backgroundColor: colors.lightergray,
+    marginLeft: 10,
+    // backgroundColor: colors.lightergray,
+    // borderRadius: 15,
+    // paddingHorizontal: 10,
+    // paddingVertical: 7,
+    // justifyContent: "center",
+    // marginLeft: 10,
   },
   title: {
     fontSize: 15,
     fontWeight: "650" as any,
-    color: "white",
+    color: "white"
   },
   restText: {
-    fontWeight: "550" as any,
+    fontWeight: "650" as any,
     color: colors.black,
     fontFamily: "Montserrat",
     fontSize: 15,
+    // fontSize: 15,
+    // fontWeight: "650" as any,
+    // color: "black",
   }
 });
 
