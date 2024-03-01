@@ -2,54 +2,63 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import colors from "../Styles/colors";
 import { useEffect, useRef, useState } from "react";
 import { Status } from "../utils/interfaces";
+
 interface StatusPickerProps {
   onStatusChange: (status: Status) => void;
+  status: {
+    newSelected: boolean;
+    assignedSelected: boolean;
+    updatedSelected: boolean;
+    completedSelected: boolean;
+  };
+  setStatus: (status: {
+    newSelected?: boolean;
+    assignedSelected?: boolean;
+    updatedSelected?: boolean;
+    completedSelected?: boolean;
+  }) => void;
 }
 
-const StatusPicker = ({ onStatusChange }: StatusPickerProps) => {
-  const [newSelected, setNewSelected] = useState(true);
-  const [assignedSelected, setAssignedSelected] = useState(true);
-  const [updatedSelected, setUpdatedSelected] = useState(true);
-  const [completedSelected, setCompletedSelected] = useState(true);
 
+const StatusPicker = ({ onStatusChange, status, setStatus }: StatusPickerProps) => {
   const prevStatusRef = useRef<Status>();
   useEffect(() => {
     const prevStatus = prevStatusRef.current;
-    const currentStatus = {
-      newSelected,
-      assignedSelected,
-      updatedSelected,
-      completedSelected,
-    };
+    const currentStatus = status;
 
     if (JSON.stringify(prevStatus) !== JSON.stringify(currentStatus)) {
       onStatusChange(currentStatus);
     }
 
     prevStatusRef.current = currentStatus;
-  }, [newSelected, assignedSelected, updatedSelected, completedSelected]);
+  }, [status, onStatusChange]);
+
+  // Function to handle setting individual status
+  const handleSetStatus = (key: keyof Status, value: boolean) => {
+    setStatus({ ...status, [key]: value });
+  };
 
   return (
     <View style={styles.container}>
       <SelectableButton
-        name={"New"}
-        selected={newSelected}
-        setSelected={setNewSelected}
+        name="New"
+        selected={status.newSelected}
+        setSelected={() => handleSetStatus('newSelected', !status.newSelected)}
       />
       <SelectableButton
-        name={"Assigned"}
-        selected={assignedSelected}
-        setSelected={setAssignedSelected}
+        name="Assigned"
+        selected={status.assignedSelected}
+        setSelected={() => handleSetStatus('assignedSelected', !status.assignedSelected)}
       />
       <SelectableButton
-        name={"Updated"}
-        selected={updatedSelected}
-        setSelected={setUpdatedSelected}
+        name="Updated"
+        selected={status.updatedSelected}
+        setSelected={() => handleSetStatus('updatedSelected', !status.updatedSelected)}
       />
       <SelectableButton
-        name={"Completed"}
-        selected={completedSelected}
-        setSelected={setCompletedSelected}
+        name="Completed"
+        selected={status.completedSelected}
+        setSelected={() => handleSetStatus('completedSelected', !status.completedSelected)}
       />
     </View>
   );

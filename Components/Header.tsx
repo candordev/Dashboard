@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
@@ -35,6 +35,12 @@ const Header = ({
 }: HeaderProps) => {
   const { state, dispatch } = useUserContext();
   const [searchPhrase, setSearchPhrase] = useState("");
+  const [status, setStatus] = useState({
+    newSelected: true,
+    assignedSelected: true,
+    updatedSelected: true,
+    completedSelected: true,
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -96,6 +102,24 @@ const Header = ({
       console.error("Error loading posts. Please try again later.", error);
     }
   };
+
+  const resetFilters = async () => {
+    console.log("Resetting filters");
+    onStatusChange({
+      newSelected: true,
+      assignedSelected: true,
+      updatedSelected: true,
+      completedSelected: true,
+    });
+    handleAssigneeSelection([]);
+    setSearchPhrase("");
+    setStatus({
+      newSelected: true,
+      assignedSelected: true,
+      updatedSelected: true,
+      completedSelected: true,
+    });
+  }
 
   const [assigneeValues, setAssigneeValues] = useState<string[]>([]); // Explicitly specify the type as string[]
 
@@ -167,7 +191,10 @@ const Header = ({
             placeholder="Search Issue..."
           />
         </View>
-        <StatusPicker onStatusChange={onStatusChange} />
+        <StatusPicker 
+          onStatusChange={onStatusChange}
+          status={status}
+          setStatus={setStatus} />
         <View style={{ flex: 1 }}>
           <DropDown
             placeholder="Select assignee"
@@ -181,8 +208,13 @@ const Header = ({
             } selected`}
           />
         </View>
-        <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
-        <CSVImportComponent onImportSuccess={handleImportSuccess} />
+        <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
+            <Text style={styles.restText}>Reset Filters</Text>
+          </TouchableOpacity>
+          <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
+          {state.groupType !== "HOA" && (
+            <CSVImportComponent onImportSuccess={handleImportSuccess} />
+          )}
       </View>
     </View>
   );
@@ -235,11 +267,35 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colors.purple,
   },
+  resetButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 8,
+    borderRadius: 15,
+    backgroundColor: colors.lightergray,
+    marginLeft: 10,
+    // backgroundColor: colors.lightergray,
+    // borderRadius: 15,
+    // paddingHorizontal: 10,
+    // paddingVertical: 7,
+    // justifyContent: "center",
+    // marginLeft: 10,
+  },
   title: {
     fontSize: 15,
     fontWeight: "650" as any,
-    color: "white",
+    color: "white"
   },
+  restText: {
+    fontWeight: "650" as any,
+    color: colors.black,
+    fontFamily: "Montserrat",
+    fontSize: 15,
+    // fontSize: 15,
+    // fontWeight: "650" as any,
+    // color: "black",
+  }
 });
 
 export default Header;
