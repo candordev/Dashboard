@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
@@ -35,6 +35,12 @@ const Header = ({
 }: HeaderProps) => {
   const { state, dispatch } = useUserContext();
   const [searchPhrase, setSearchPhrase] = useState("");
+  const [status, setStatus] = useState({
+    newSelected: true,
+    assignedSelected: true,
+    updatedSelected: true,
+    completedSelected: true,
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -97,6 +103,24 @@ const Header = ({
     }
   };
 
+  const resetFilters = async () => {
+    console.log("Resetting filters");
+    onStatusChange({
+      newSelected: true,
+      assignedSelected: true,
+      updatedSelected: true,
+      completedSelected: true,
+    });
+    handleAssigneeSelection([]);
+    setSearchPhrase("");
+    setStatus({
+      newSelected: true,
+      assignedSelected: true,
+      updatedSelected: true,
+      completedSelected: true,
+    });
+  }
+
   const [assigneeValues, setAssigneeValues] = useState<string[]>([]); // Explicitly specify the type as string[]
 
   const [assigneeItems, setAssigneeItems] = useState([
@@ -149,7 +173,13 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-        <OptionPicker onOptionChange={onHeaderOptionChange} />
+        <View 
+          style = {{flexDirection:"row"}}>
+          <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
+            <Text style={styles.restText}>Reset Filters</Text>
+          </TouchableOpacity>
+          <OptionPicker onOptionChange={onHeaderOptionChange} />
+        </View>
       </View>
       <View
         style={{
@@ -167,7 +197,10 @@ const Header = ({
             placeholder="Search Issue..."
           />
         </View>
-        <StatusPicker onStatusChange={onStatusChange} />
+        <StatusPicker 
+          onStatusChange={onStatusChange}
+          status={status}
+          setStatus={setStatus} />
         <View style={{ flex: 1 }}>
           <DropDown
             placeholder="Select assignee"
@@ -235,11 +268,32 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colors.purple,
   },
+  resetButton: {
+    // flexDirection: "row",
+    // justifyContent: "space-between",
+    // alignItems: "center",
+    // padding: 8,
+    // borderRadius: 15,
+    // backgroundColor: "#eaeaea",
+    // marginRight: 10,
+    backgroundColor: colors.lightergray,
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    justifyContent: "center",
+    marginRight: 10,
+  },
   title: {
     fontSize: 15,
     fontWeight: "650" as any,
     color: "white",
   },
+  restText: {
+    fontWeight: "550" as any,
+    color: colors.black,
+    fontFamily: "Montserrat",
+    fontSize: 15,
+  }
 });
 
 export default Header;
