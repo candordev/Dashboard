@@ -6,7 +6,8 @@ import colors from "../Styles/colors";
 import { useSignup } from "../Hooks/useSignup";
 import { Endpoints } from "../utils/Endpoints";
 import { useDrawerProgress } from "@react-navigation/drawer";
-import { usePostId } from '../Structure/PostContext';
+// import { usePostId } from '../Structure/PostContext';
+import { usePostContext } from "../Hooks/usePostContext";
 import { useUserContext } from "../Hooks/useUserContext";
 import NotificationPopup from "../Components/NotificationPopup";
 import Icon from 'react-native-vector-icons/Feather';
@@ -32,7 +33,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   const { state } = useUserContext();
 
 
-  const { postId, setPostId } = usePostId(); // Ensure this hook returns both postId and setPostId
+  const { postId, setPostId } = usePostContext(); // Ensure this hook returns both postId and setPostId
 
   // Update postId in context when routePostId changes
   // useEffect(() => {

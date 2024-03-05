@@ -13,7 +13,8 @@ import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 import ErrorMessage from "./Native/ErrorMessage";
 import { set } from "lodash";
-import { usePostId } from "../Structure/PostContext";
+import { usePostContext } from "../Hooks/usePostContext";
+
 
 
 interface IssueRightViewProps {
@@ -26,7 +27,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [issue, setIssue] = React.useState<Post>(props.issue);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { post, setPost } = usePostId();
+  const { post, setPost } = usePostContext();
   
   const [email, setEmail] = useState(post?.proposalFromEmail);
 

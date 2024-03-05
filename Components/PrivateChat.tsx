@@ -10,10 +10,10 @@
   import DropDown from "./DropDown";
   import styles from "../Styles/styles";
   import { debounce } from "lodash";
-  import io from "socket.io-client";
-  import validator from "validator"
+  const validator = require('validator');
   import { BASE_URL } from "../utils/Endpoints";
-  import { usePostId } from "../Structure/PostContext";
+  import { usePostContext } from "../Hooks/usePostContext";
+  import io from 'socket.io-client';
 
 
   interface PrivateChatProps {
@@ -21,7 +21,7 @@
   }
   function PrivateChat(props: PrivateChatProps): JSX.Element {
     const { state, dispatch } = useUserContext();
-    const { post, setPost} = usePostId();
+    const { post, setPost} = usePostContext();
 
     const [privateComments, setPrivateComments] = useState<Comment[]>([]);
     
@@ -80,10 +80,10 @@
         // Join the room specific to the chatMode and postID
         socket.emit("join-post", roomName);
       });
-      socket.on("connect_error", (err) => {
+      socket.on("connect_error", (err : any) => {
         console.error("Connection error:", err.message);
       });
-      socket.on("new-comment", (newComment) => {
+      socket.on("new-comment", (newComment : Comment) => {
         console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
         setPrivateComments((prevComments) => [...prevComments, newComment]);
       });

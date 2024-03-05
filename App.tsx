@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import "react-native-gesture-handler";
 import NavigationWrapper from "./Structure/NavigationWrapper";
 import { UserProvider } from "./Structure/UserContext";
-import { PostIdProvider } from "./Structure/PostContext";
+import { PostProvider } from "./Structure/PostContext";
 import { NotificationProvider } from "./Structure/NotificationContext";
 import NotificationPopup from "./Components/NotificationPopup";
 
@@ -27,14 +27,14 @@ export default function App() {
   }
 
   return (
-    <PostIdProvider>
+    <PostProvider>
       <UserProvider>
         <NotificationProvider> 
           {/* <NotificationPopup /> Include NotificationPopup only once */}
           <NavigationWrapper />
         </NotificationProvider> 
       </UserProvider>
-    </PostIdProvider>
+    </PostProvider>
   );
   
 }

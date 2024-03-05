@@ -18,7 +18,7 @@ import { customFetch } from "../utils/utils";
 import { ProgressSelector } from "../utils/interfaces";
 import OuterView from "../Components/OuterView";
 import { useUserContext } from "../Hooks/useUserContext";
-import { usePostId } from "../Structure/PostContext";
+import { usePostContext} from "../Hooks/usePostContext";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
 import Button from "../Components/Button";
 import MapMarkerView from "../Components/MapMarkerView";
@@ -54,11 +54,10 @@ const AllScreen = ({ navigation }: any) => {
 
   const isFocused = useIsFocused(); // Assuming you're using something like this
   const { state } = useUserContext();
-  const { postId } = usePostId();
+  const { postId } = usePostContext();
 
   useEffect(() => {
     // console.log("Component mounted, fetching posts initially");
-
     //console.log("Event triggered, fetching posts");
     fetchPosts(
       progressSelected,

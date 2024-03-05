@@ -9,7 +9,7 @@ import { Post } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { ActivityIndicator } from "react-native";
-import { usePostId } from "../Structure/PostContext";
+import { usePostContext } from "../Hooks/usePostContext";
 
 interface IssueViewProps {
   issue: Post;
@@ -22,7 +22,7 @@ function IssueView(props: IssueViewProps): JSX.Element {
   const [issue, setIssue] = useState<Post>(props.issue);
   const [loading, setLoading] = useState(true); // 
 
-  const {post, setPost} = usePostId();
+  const {post, setPost} = usePostContext();
 
   const fetchPost = async (postId: string | undefined) => {
     try {
