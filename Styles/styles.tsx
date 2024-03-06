@@ -2,6 +2,14 @@ import {Platform, StyleSheet} from 'react-native';
 import colors from './colors';
 
 const styles = StyleSheet.create({
+  chatTitle: {
+    fontSize: 18,
+    fontWeight: "550",
+    fontFamily: "Montserrat",
+    //flex: 1,
+    marginBottom: 8
+    //padding: 10, // Add some padding for aesthetic purposes
+  },
   purpleGeneralContainer: {
     flex: 1,
     justifyContent: "center",
@@ -120,9 +128,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   profilePictureEditProfile: {
-    height: 100,
-    width: 100,
-    borderRadius: 50,
+    height: 90,
+    width: 90,
+    borderRadius: 45,
     overflow: 'hidden',
   },
 
@@ -450,12 +458,15 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   textInput: {
-    borderColor: colors.lightgray,
-    borderWidth: 1,
+    borderColor: colors.lightergray,
+    borderWidth: 1.5,
     borderRadius: 10,
-    padding: 10,
+    paddingHorizontal: 7,
+    paddingVertical: 5,
     backgroundColor: colors.white,
     outlineStyle: "none",
+    fontFamily: "OpenSans",
+    fontWeight: "500",
   },
   markerContainer: {
     alignItems: 'center',

@@ -112,12 +112,12 @@ const LHN = (props: any) => {
         unreadCount={unread}
         selected={navIndex == 1}
       />
-      <NavItem
+      {/* <NavItem
         name={"Settings"}
         route="/settings"
         icon="settings"
         selected={navIndex == 2}
-      />
+      /> */}
       <View style={{ flex: 1 }} />
       <NavItem
         name="Sign out"
@@ -239,7 +239,6 @@ const styles = {
     justifyContent: "center" as any,
     alignItems: "center" as FlexAlignType,
     padding: 3,
-
   },
   unreadText: {
     color: "white",

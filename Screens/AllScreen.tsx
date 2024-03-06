@@ -8,22 +8,20 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import Popover, { PopoverPlacement } from "react-native-popover-view";
+import FeatherIcon from "react-native-vector-icons/Feather";
 import Card from "../Components/Card";
 import Header from "../Components/Header";
+import MapMarkerView from "../Components/MapMarkerView";
+import NotificationPopup from "../Components/NotificationPopup";
+import OuterView from "../Components/OuterView";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
-import { Post } from "../utils/interfaces";
+import { Post, ProgressSelector } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
-import { ProgressSelector } from "../utils/interfaces";
-import OuterView from "../Components/OuterView";
+import { usePostContext } from "../Hooks/usePostContext";
 import { useUserContext } from "../Hooks/useUserContext";
-import { usePostContext} from "../Hooks/usePostContext";
-import Popover, { PopoverPlacement } from "react-native-popover-view";
-import Button from "../Components/Button";
-import MapMarkerView from "../Components/MapMarkerView";
-import FeatherIcon from "react-native-vector-icons/Feather";
-import NotificationPopup from "../Components/NotificationPopup";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -103,7 +101,7 @@ const AllScreen = ({ navigation }: any) => {
     selectedAssigneeIds?: string[]
   ) => {
     try {
-      console.log("called again")
+      console.log("called again");
       setLoading(true);
       if (selectedAssigneeIds == undefined) {
         selectedAssigneeIds = [];
@@ -137,7 +135,6 @@ const AllScreen = ({ navigation }: any) => {
 
       let resJson = await res.json();
       if (res.ok) {
-
         setCategoriesWithPosts(resJson);
         setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
@@ -218,146 +215,144 @@ const AllScreen = ({ navigation }: any) => {
     setIsMapView((isMapView) => !isMapView);
   }
 
-
-
   return (
     <>
-    <NotificationPopup navigation={navigation}/>
-    <OuterView style={{ paddingHorizontal: 40 }}>
-      <Header
-        onHeaderOptionChange={handleHeaderOptionChange}
-        onStatusChange={handleStatusChange}
-        onAssigneeSelection={handleAssigneeSelection}
-        headerTitle={"Issues"}
-        groupID={state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined}
-        onSearchChange={handleSearchChange}
-        onPopoverCloseComplete={handlePopoverCloseComplete}
-      />
-      {loading && (
-        <ActivityIndicator
-          size="small"
-          color={colors.purple}
-          style={{ marginBottom: 10 }}
+      <NotificationPopup navigation={navigation} />
+      <OuterView style={{ paddingHorizontal: 40 }}>
+        <Header
+          onHeaderOptionChange={handleHeaderOptionChange}
+          onStatusChange={handleStatusChange}
+          onAssigneeSelection={handleAssigneeSelection}
+          headerTitle={"Issues"}
+          groupID={state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined}
+          onSearchChange={handleSearchChange}
+          onPopoverCloseComplete={handlePopoverCloseComplete}
         />
-      )}
-      {categorySelected !== "Map" ? (
-        <ScrollView
-          horizontal
-          style={{
-            backgroundColor: colors.background,
-          }}
-        >
-          {Object.entries(categoriesWithPosts).map(([name, posts], index) => (
-            <View key={name} style={{ width: 350, marginRight: 20 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text
+        {loading && (
+          <ActivityIndicator
+            size="small"
+            color={colors.purple}
+            style={{ marginBottom: 10 }}
+          />
+        )}
+        {categorySelected !== "Map" ? (
+          <ScrollView
+            horizontal
+            style={{
+              backgroundColor: colors.background,
+            }}
+          >
+            {Object.entries(categoriesWithPosts).map(([name, posts], index) => (
+              <View key={name} style={{ width: 350, marginRight: 20 }}>
+                <View
                   style={{
-                    fontSize: 18,
-                    fontWeight: "550",
-                    color: colors.black,
-                    marginBottom: 10,
-                    marginTop: 10,
-                    fontFamily: "Montserrat",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  {name}
-                </Text>
-                {index !== 0 && categorySelected === "Tag" && (
-                  <Popover
-                    // onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
-                    from={
-                      <TouchableOpacity>
-                        <FeatherIcon name={"more-vertical"} size={20} />
-                      </TouchableOpacity>
-                    }
-                    // isVisible={isPopupVisible}
-                    // onRequestClose={closePopup}
-                    placement={PopoverPlacement.FLOATING}
-                    popoverStyle={{
-                      borderRadius: 10,
-                      width: 250,
-                      paddingHorizontal: 20,
-                      paddingVertical: 15,
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: "550",
+                      color: colors.black,
+                      marginBottom: 10,
+                      marginTop: 10,
+                      fontFamily: "Montserrat",
                     }}
                   >
-                    <View>
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          fontWeight: "550",
-                          fontFamily: "Montserrat",
-                        }}
-                      >
-                        Are you sure you want to delete this category?
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => handleRemoveCategory(name)}
-                        style={{
-                          backgroundColor: colors.red,
-                          padding: 10,
-                          marginTop: 20,
-                          borderRadius: 10,
-                        }}
-                      >
-                        {isDeleting ? (
-                          <Text
-                            style={{
-                              color: "white",
-                              textAlign: "center",
-                              fontWeight: "bold",
-                              fontFamily: "Montserrat",
-                              fontSize: 15,
-                            }}
-                          >
-                            Loading...
-                          </Text>
-                        ) : (
-                          <Text
-                            style={{
-                              color: "white",
-                              textAlign: "center",
-                              fontWeight: "bold",
-                              fontFamily: "Montserrat",
-                              fontSize: 15,
-                            }}
-                          >
-                            Delete
-                          </Text>
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                  </Popover>
-                )}
+                    {name}
+                  </Text>
+                  {index !== 0 && categorySelected === "Tag" && (
+                    <Popover
+                      // onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
+                      from={
+                        <TouchableOpacity>
+                          <FeatherIcon name={"more-vertical"} size={20} />
+                        </TouchableOpacity>
+                      }
+                      // isVisible={isPopupVisible}
+                      // onRequestClose={closePopup}
+                      placement={PopoverPlacement.FLOATING}
+                      popoverStyle={{
+                        borderRadius: 10,
+                        width: 250,
+                        paddingHorizontal: 20,
+                        paddingVertical: 15,
+                      }}
+                    >
+                      <View>
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            fontWeight: "550",
+                            fontFamily: "Montserrat",
+                          }}
+                        >
+                          Are you sure you want to delete this category?
+                        </Text>
+                        <TouchableOpacity
+                          onPress={() => handleRemoveCategory(name)}
+                          style={{
+                            backgroundColor: colors.red,
+                            padding: 10,
+                            marginTop: 20,
+                            borderRadius: 10,
+                          }}
+                        >
+                          {isDeleting ? (
+                            <Text
+                              style={{
+                                color: "white",
+                                textAlign: "center",
+                                fontWeight: "bold",
+                                fontFamily: "Montserrat",
+                                fontSize: 15,
+                              }}
+                            >
+                              Loading...
+                            </Text>
+                          ) : (
+                            <Text
+                              style={{
+                                color: "white",
+                                textAlign: "center",
+                                fontWeight: "bold",
+                                fontFamily: "Montserrat",
+                                fontSize: 15,
+                              }}
+                            >
+                              Delete
+                            </Text>
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                    </Popover>
+                  )}
+                </View>
+                <FlatList
+                  key={`${name}-${refreshKey}`}
+                  data={posts}
+                  renderItem={({ item }) => (
+                    <Card
+                      key={item._id}
+                      issue={item}
+                      onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
+                      isDisabled={isLoading}
+                      hasInitialOpen={hasInitialOpen}
+                      initialOpen={
+                        item._id === initialPostId && !hasInitialOpenOccurred
+                      }
+                    />
+                  )}
+                />
               </View>
-              <FlatList
-                key={`${name}-${refreshKey}`}
-                data={posts}
-                renderItem={({ item }) => (
-                  <Card
-                    key={item._id}
-                    issue={item}
-                    onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
-                    isDisabled={isLoading}
-                    hasInitialOpen={hasInitialOpen}
-                    initialOpen={
-                      item._id === initialPostId && !hasInitialOpenOccurred
-                    }
-                  />
-                )}
-              />
-            </View>
-          ))}
-        </ScrollView>
-      ) : (
-        <MapMarkerView posts={categoriesWithPosts} />
-      )}
-    </OuterView>
+            ))}
+          </ScrollView>
+        ) : (
+          <MapMarkerView posts={categoriesWithPosts} />
+        )}
+      </OuterView>
     </>
   );
 };
