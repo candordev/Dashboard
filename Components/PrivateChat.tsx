@@ -11,7 +11,7 @@
   import styles from "../Styles/styles";
   import { debounce } from "lodash";
   import io from "socket.io-client";
-  import validator from "validator"
+  const validator = require("validator");
   import { BASE_URL } from "../utils/Endpoints";
   import { usePostId } from "../Structure/PostContext";
 
