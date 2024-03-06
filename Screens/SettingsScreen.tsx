@@ -36,7 +36,6 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
     </>
   );
   };
-}
 
 type SettingsSectionProps = {
   title: string;
