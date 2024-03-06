@@ -98,9 +98,10 @@ function Assignees(props: AssigneesProps): JSX.Element {
         console.error(resJson.error);
         return;
       }
+      
 
       const result = resJson; // Assuming resJson is an array of UserProfile
-      // console.log("leaders are", result);
+       console.log("leaders are", result);
       setLeaders(result);
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
@@ -626,9 +627,17 @@ function Assignees(props: AssigneesProps): JSX.Element {
           <FeatherIcon name={"check"} size={17} color={colors.gray} />
         )}
       />
-      {selectedChildren.map((item, index) => {
-        return <ProfileRow name={item} key={index} />;
-      })}
+      {
+        selectedChildren.map((username, index) => {
+          // Find the leader corresponding to the username
+          const leader = leaders.find(leader => leader.username === username);
+          // Assuming leader is always found. You might want to handle the case where a leader is not found
+          const name = leader ? `${leader.firstName} ${leader.lastName}` : 'Unknown';
+          const profilePicture = leader ? leader.profilePicture : 'defaultProfilePictureUrl'; // Provide a default profile picture URL or handle it in ProfileRow
+
+          return <ProfileRow name={name} profilePicture={profilePicture} key={index} />;
+        })
+      }
       <View></View>
       <View>
         <OrFullWidth />
