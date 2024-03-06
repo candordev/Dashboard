@@ -28,7 +28,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
     setPreviewUrl('');
   };
 
-  const onImageChange = (event) => {
+  const onImageChange = (event: any) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setImageFile(file);
@@ -148,44 +148,55 @@ const IssueContent: React.FC<IssueContent> = (props) => {
             multiline={true}
             numberOfLines={content.length / 30 + 1}
           />
-          {
-              previewUrl ? (
-                <>
-                 <div style={{ marginBottom: 2 }}><img src={previewUrl} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px' }} /></div>
-                  <TouchableOpacity
-                    style={styles.removeImageButton}
-                    onPress={() => {
-                      clearImage(); // This function needs to clear the previewUrl and the file selection
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Remove Image</Text>
-                  </TouchableOpacity>
-                </>
-              ) : (
-                <TouchableOpacity
-                  style={styles.imageIcon}
-                  onPress={() => {
-                    const inputElement = document.getElementById('image-input');
-                    if (inputElement !== null) {
-                      inputElement.click();
-                    }
-                  }}       
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={onImageChange}
-                    style={{ display: 'none' }}
-                    id="image-input"
-                  />
-                  <Text style={styles.buttonText}>Select Image</Text>
-                </TouchableOpacity>
-              )
-            }
+          {previewUrl ? (
+            <>
+              <div style={{ marginBottom: 2 }}>
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  style={{ maxWidth: "100%", maxHeight: "200px" }}
+                />
+              </div>
+              <TouchableOpacity
+                style={styles.removeImageButton}
+                onPress={() => {
+                  clearImage(); // This function needs to clear the previewUrl and the file selection
+                }}
+              >
+                <Text style={styles.buttonText}>Remove Image</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <TouchableOpacity
+              style={styles.imageIcon}
+              onPress={() => {
+                const inputElement = document.getElementById("image-input");
+                if (inputElement !== null) {
+                  inputElement.click();
+                }
+              }}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onImageChange}
+                style={{ display: "none" }}
+                id="image-input"
+              />
+              <Text style={styles.buttonText}>Select Image</Text>
+            </TouchableOpacity>
+          )}
         </View>
       ) : (
         <>
-          <Text style={{ fontSize: 18, fontWeight: "550", fontFamily: "Montserrat", paddingRight: 55 }}>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "550",
+              fontFamily: "Montserrat",
+              paddingRight: 55,
+            }}
+          >
             {title}
           </Text>
           <Text
@@ -201,11 +212,18 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           >
             {formatDate(props.date)}
           </Text>
-          <Text style={{ fontSize: 14, marginTop: 5, marginBottom: 10 }}>{content}</Text>
-          {
-              previewUrl && 
-          <div style={{ marginBottom: 2 }}><img src={previewUrl} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px' }} /></div>
-          }       
+          <Text style={{ fontSize: 14, marginTop: 5, marginBottom: 10 }}>
+            {content}
+          </Text>
+          {previewUrl && (
+            <div style={{ marginBottom: 2 }}>
+              <img
+                src={previewUrl}
+                alt="Preview"
+                style={{ maxWidth: "100%", maxHeight: "200px" }}
+              />
+            </div>
+          )}
         </>
       )}
       <Button
