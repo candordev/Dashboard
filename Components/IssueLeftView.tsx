@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import { FlatList, TextInput, View, Image, TouchableOpacity} from "react-native";
 import colors from "../Styles/colors";
-import Text from "./Text";
 import ExpandableTextInput from "./ExpandableTextInput";
 import { Post } from "../utils/interfaces";
 import { Endpoints } from "../utils/Endpoints";
@@ -10,16 +9,32 @@ import { Comment } from "../utils/interfaces";
 import PrivateChat from "./PrivateChat";
 import IssueContent from "./IssueContent";
 import SimilarPost from "./SimilarPost";
+import { formatDate } from '../utils/utils'; // Adjust the path as needed
+import CommentsSection from './CommentSection'; // Adjust the import path as needed
+import { useUserContext } from "../Hooks/useUserContext";
+
 
 interface IssueLeftViewProps {
   issue: Post;
 }
+
+interface CommentThreadProps {
+  comment: Comment;
+  isChild: boolean;
+  depth: number; // New prop to indicate the depth of the comment
+}
+
+
 
 function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState("");
   const [issue, setIssue] = useState<Post>(props.issue);
   const [displaySimilarPost, setDisplaySimilarPost] = useState<Boolean>(true);
+  const [loading, setLoading] = useState(false);
+  const [skip, setSkip] = useState(0); // New state for tracking skip value
+  const { state } = useUserContext();
+
 
 
   useEffect(() => {
@@ -27,35 +42,48 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     setIssue(props.issue);
   }, [props.issue]);
 
-  useEffect(() => {
-    // console.log("the issue details: ", props.issue)
-    fetchComments();
-  }, []);
+    // Modified useEffect for initial and subsequent loads
+    useEffect(() => {
+      fetchComments();
+    }, [props.issue, skip]); // Now depends on skip and props.issue changes
 
-  async function fetchComments() {
+  // useEffect(() => {
+  //   // console.log("the issue details: ", props.issue)
+  //   fetchComments();
+  // }, []);
+  
+  const fetchComments = async () => {
+    if (loading) return; // Prevents multiple simultaneous fetches
+    setLoading(true);
+
     try {
+      // Update URL with dynamic skip value
       const res: Response = await customFetch(
-        Endpoints.getComments +
-          new URLSearchParams({
-            postID: issue._id,
-            skip: "0",
-          }),
-        {
-          method: "GET",
-        }
-      );
+              Endpoints.getComments +
+                new URLSearchParams({
+                  postID: issue._id,
+                  skip: skip.toString(),
+                }),
+              {
+                method: "GET",
+              }
+            );
 
-      let resJson = await res.json();
+      const resJson = await res.json();
       if (!res.ok) {
         console.error(resJson.error);
       } else {
-        const newComments: Comment[] = resJson;
-        setComments(newComments);
+        const newComments = resJson;
+        setComments((prevComments) => [...prevComments, ...newComments]); // Appends new comments
+        console.log("these are the new comments", newComments);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
 
   async function postComment() {
     try {
@@ -84,50 +112,43 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     setDisplaySimilarPost(false);
   };
 
-  return (
-    <View
-      style={{
-        height: "100%",
-        flex: 1,
-        justifyContent: "space-between",
-        rowGap: 10,
-      }}
-    >
-      <IssueContent date={issue.createdAt} issueID={issue._id} title={issue.title} content={issue.content} previewURl={issue.imgURL}/>
-      {comments.map((comment: Comment, index) => {
-        return (
-          <View
-            style={{
-              backgroundColor: colors.white,
-              padding: 10,
-              marginTop: 5,
-            }}
-            key={index}
-          >
-            <Text style={{ fontSize: 14, fontWeight: "550" }}>
-              {comment.profile.firstName + " " + comment.profile.lastName}
-            </Text>
-            <Text style={{ fontSize: 12, marginTop: 3 }}>
-              {comment.content}
-            </Text>
-          </View>
-        );
-      })}
-        {
-          props.issue.suggestedSimilarPost && displaySimilarPost&& (
-            <SimilarPost
-              title={props.issue.suggestedSimilarPost.title}
-              content={props.issue.suggestedSimilarPost.content}
-              date={props.issue.suggestedSimilarPost.date}
-              ogPostID={props.issue._id}
-              mergePostID={props.issue.suggestedSimilarPost._id}
-              merged={props.issue.suggestedSimilarPost.merged}
-              onClose={handleClose}
-            />
-          )
-        } 
 
-      <PrivateChat issue={props.issue}/>
+  return (
+    <View style={{
+      height: "100%",
+      flex: 1,
+      justifyContent: "space-between",
+      rowGap: 10, // Note: rowGap might not work as expected in React Native. Consider using margin or padding for spacing.
+    }}>
+      <IssueContent 
+        date={issue.createdAt} 
+        issueID={issue._id} 
+        title={issue.title} 
+        content={issue.content} 
+        previewURl={issue.imgURL}
+      />
+      {
+        // Only display CommentsSection if groupType is 'HOA'
+        state.groupType === 'HOA' && <CommentsSection postID={props.issue._id} />
+      }
+      {
+        // Display SimilarPost if applicable
+        props.issue.suggestedSimilarPost && displaySimilarPost && (
+          <SimilarPost
+            title={props.issue.suggestedSimilarPost.title}
+            content={props.issue.suggestedSimilarPost.content}
+            date={props.issue.suggestedSimilarPost.date}
+            ogPostID={props.issue._id}
+            mergePostID={props.issue.suggestedSimilarPost._id}
+            merged={props.issue.suggestedSimilarPost.merged}
+            onClose={handleClose}
+          />
+        )
+      }
+      {
+        // Only display PrivateChat if groupType is not 'HOA'
+        state.groupType !== 'HOA' && <PrivateChat issue={props.issue}/>
+      }
     </View>
   );
 }
