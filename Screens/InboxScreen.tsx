@@ -332,7 +332,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
           onEndReachedThreshold={0.8} // increase this to render next posts earlier
           indicatorStyle={colors.theme == "dark" ? "white" : "black"}
           showsVerticalScrollIndicator={true}
-          ListFooterComponentStyle={{ flexGrow: 1, justifyContent: "center" }}
+          ListFooterComponentStyle={{ flexGrow: 1, justifyContent: "center"}}
           refreshControl={
             <RefreshControl
               refreshing={refreshing.current}

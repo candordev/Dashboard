@@ -31,7 +31,7 @@ type RootScreenProps = {
 };
 
 function Root({route, navigation}: RootScreenProps): JSX.Element {
-  console.log("AABBCCDD");
+  // console.log("AABBCCDD");
   // const [unread, setUnread] = useState<number>(0);
 
   // useEffect(() => {

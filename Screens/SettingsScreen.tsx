@@ -3,26 +3,31 @@ import OuterView from "../Components/OuterView";
 import Text from "../Components/Text";
 import NotificationPopup from "../Components/NotificationPopup";
 
-// type SettingsScreenProps = {
-//   navigation: any;
-// };
+type SettingsScreenProps = {
+  navigation: any;
+  route: any;
+};
 
-// const SettingsScreen: React.FC<SettingsScreenProps> = () => {
 
-  type Props = PropsWithChildren<{
-    route: any;
-    navigation: any;
-  }>;
-  
-  function SettingsScreen({ route, navigation }: Props): JSX.Element {
+interface UserData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+}
+
+const SettingsScreen = ({ route, navigation }: SettingsScreenProps) => {
+
+
+
+
   return (
     <>
-    <NotificationPopup navigation={navigation}/>
-    <OuterView>
-      <Text>hello</Text>
-    </OuterView>
+      <NotificationPopup navigation={navigation} />
+      <OuterView>
+        <Text>Settings</Text>
+      </OuterView>
     </>
   );
-};
+  };
 
 export default SettingsScreen;

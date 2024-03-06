@@ -47,8 +47,8 @@
 
     useEffect(() => {
       // console.log(post);
-      console.log("EMAIL from CONTEXT: ", post?.proposalFromEmail)
-      console.log("Email From Props: ", props.issue.proposalFromEmail)
+      // console.log("EMAIL from CONTEXT: ", post?.proposalFromEmail)
+      // console.log("Email From Props: ", props.issue.proposalFromEmail)
       if (chatMode === "constituent") {
         if (post?.proposalFromEmail) {
           setEmailError("");
