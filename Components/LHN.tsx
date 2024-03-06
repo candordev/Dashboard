@@ -239,7 +239,6 @@ const styles = {
     justifyContent: "center" as any,
     alignItems: "center" as FlexAlignType,
     padding: 3,
-
   },
   unreadText: {
     color: "white",

@@ -59,6 +59,7 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         drawerStyle: { width: 200, borderRightWidth: 0 },
         headerShown: false,
       }}
+      initialRouteName="settings"
     >    
       <Drawer.Screen
         name="all"
