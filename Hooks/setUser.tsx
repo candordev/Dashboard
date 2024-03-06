@@ -60,7 +60,8 @@ export const setUser = async ({
       _id: resJson.user,
       leaderPoints: resJson.leaderPoints,
       leaderGroups: resJson.leaderGroups,
-      postId: postId
+      postId: postId,
+      groupType: resJson.groupType,
     };
 
     // console.log(' This is the user', user);

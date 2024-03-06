@@ -9,6 +9,8 @@ import { useDrawerProgress } from "@react-navigation/drawer";
 import { usePostId } from '../Structure/PostContext';
 import { useUserContext } from "../Hooks/useUserContext";
 import NotificationPopup from "../Components/NotificationPopup";
+import Icon from 'react-native-vector-icons/Feather';
+import styles from "../Styles/styles";
 
 interface UserData {
   firstName?: string;
@@ -173,7 +175,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   return (
     <>
     <NotificationPopup navigation={navigation}/>
-    <View style={styles.container}>
+    <View style={styles.purpleGeneralContainer}>
       <Text
         style={{
           fontSize: 75,
@@ -200,7 +202,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
         style={{
           backgroundColor: colors.purple4,
           alignItems: "center",
-          width: "30%",
+          minWidth: "30%",
+          maxWidth: "80%",
           borderRadius: 20,
           paddingVertical: 15,
           paddingHorizontal: 20,
@@ -231,11 +234,14 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           </Text>
         </LinkButton> */}
         <TouchableOpacity
-          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 4,}}
+          style={{ backgroundColor: colors.black, padding: 10, borderRadius: 10, width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: 4, flexDirection: 'row',}}
           onPress={handleSignup} // Add this line
         >
+          <View style={{alignItems: 'flex-end'}}>
+            <Icon name="mail" size={20} color={colors.white} />
+          </View>``
           <Text style={{ color: colors.white, fontWeight: "650", fontSize: 17}}>
-            Sign up with Email
+            Sign up with email
           </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -245,7 +251,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
           <Text
             style={{ color: colors.white, fontWeight: "650", fontSize: 17 }}
           >
-            Login
+            Log in
           </Text>
         </TouchableOpacity>
       </View>
@@ -253,25 +259,5 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    backgroundColor: colors.purple,
-    paddingBottom: 100,
-  },
-  input: {
-    width: "60%",
-    height: 40,
-    backgroundColor: colors.white,
-    borderRadius: 15,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    outlineStyle: "none",
-  },
-});
 
 export default LaunchScreen;

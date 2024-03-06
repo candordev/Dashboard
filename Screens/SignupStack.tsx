@@ -3,6 +3,7 @@ import React from 'react';
 
 import SignupScreenEmailDob from './SignupScreenEmailDob';
 import SignupScreenSocial from './SignupScreenSocial';
+import ForgotPassword from './ForgotPassword';
 // import SignupScreenLocation from './SignupScreenLocation';
 // import SignupScreenName from './SignupScreenName';
 // import SignupScreenPassword from './SignupScreenPassword';
@@ -18,6 +19,7 @@ function SignupStack(): JSX.Element {
       })}>
       <Stack.Screen name="signupemail" component={SignupScreenEmailDob} />
       <Stack.Screen name="signupsocial" component={SignupScreenSocial} />
+      <Stack.Screen name="forgotPassword" component={ForgotPassword} />
       {/* <Stack.Screen name="signupname" component={SignupScreenName} /> */}
       {/* <Stack.Screen name="signupusername" component={SignupScreenUsername} /> */}
       {/* <Stack.Screen name="signuplocation" component={SignupScreenLocation} /> */}

@@ -84,6 +84,7 @@ function NavigationWrapper() {
     prefixes: [
       "http://localhost:19006",
       "https://candorteam.netlify.app",
+      "https://www.dashboard.candornow.com"
       /* your linking prefixes */
     ],
     config: {

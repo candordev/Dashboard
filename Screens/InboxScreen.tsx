@@ -203,7 +203,9 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
       // setLoading(false);
       // throw new Error(resJson.error);
       console.log("reading failed");
-    } 
+    }else{
+      console.log("read all chilling")
+    }
     event.emit(eventNames.FETCH_NOTIFS);
   };
 

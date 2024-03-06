@@ -5,6 +5,7 @@ import {
   GooglePlaceDetail,
   GooglePlacesAutocomplete,
 } from "react-native-google-places-autocomplete";
+import { TextInput, TouchableOpacity, View } from "react-native";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { Post } from "../utils/interfaces";
@@ -27,6 +28,7 @@ const Location: React.FC<LocationProps> = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [idToken, setIdToken] = useState<string | "">("");
   const [fullAddress, setFullAddress] = useState("");
+  const [editing, setEditing] = useState(false);
 
   const auth = getAuth();
 
@@ -36,7 +38,7 @@ const Location: React.FC<LocationProps> = (props) => {
       const user = auth.currentUser;
       if (user) {
         const token = await user.getIdToken();
-        console.log("DAA TOKEN", token);
+        // console.log("DAA TOKEN", token);
         setIdToken(token);
       }
     };
@@ -88,6 +90,33 @@ const Location: React.FC<LocationProps> = (props) => {
     }
   };
 
+  const handleDone = async () => {
+    try {
+
+      let res: Response = await customFetch(Endpoints.editPost, {
+        method: "POST",
+        body: JSON.stringify({
+           neighborhood: inputValue,
+           postID: props.issue?._id ?? "", // Assuming issue._id is the ID of the post to be edited
+        }),
+      });
+
+      let resJson = await res.json();
+      if (!res.ok) {
+        // setErrorMessage('Please enter a valid email');
+        setInputValue(inputValue);
+        console.error(resJson.error);
+      } else {
+        setEditing(false);
+        // console.log("Successfully edited proposalFromEmail");
+        // Optionally, you can update the local state or perform other actions upon successful update
+      }
+    } catch (error) {
+      console.error("Error editing post. Please try again later.", error);
+    }
+  };
+
+
   return (
     <OuterComponentView title={"Location"}>
       <Text style={{
@@ -127,30 +156,83 @@ const Location: React.FC<LocationProps> = (props) => {
           },
         }}
       />
-      {inputValue && (
-        <>
-      <Text style={{
-            fontSize: 15,
-            fontWeight: "525",
-            fontFamily: "Montserrat",
-            marginTop: 5,
-            marginBottom: 5
-          }}>
-           {"Neighborhood: "}
+      {inputValue &&
+      <>
+       <Text style={{
+        fontSize: 15,
+        fontWeight: "525",
+        fontFamily: "Montserrat",
+        marginTop: 5,
+        marginBottom: 5
+      }}>
+      {"Neighborhood: "}
       </Text>
-      <Text style={{
-            fontSize: 15,
-            fontWeight: "400",
-            fontFamily: "Montserrat",
-            marginLeft: 11
-          }}>
-          {inputValue}
-      </Text>
+       <View style={{flexDirection: "row", alignItems: "center" }}>
+        {editing ? (
+          <>
+           <TextInput
+            value={inputValue}
+            onChangeText={setInputValue}
+            style={{
+                fontSize: 15,
+                flex: 1,
+                borderColor: colors.lightestgray,
+                borderWidth: 1,
+                paddingHorizontal: 10,
+                marginHorizontal: 5,
+                borderRadius: 5,
+            }}
+        />
       </>
-      )}
+        ): (
+          <>
+          <Text style={{
+                fontSize: 15,
+                fontWeight: "400",
+                fontFamily: "Montserrat",
+                marginLeft: 11
+              }}>
+              {inputValue}
+          </Text>
+        </>
+
+        )}
+      <TouchableOpacity
+      onPress={() => {
+          if (editing) {
+              handleDone(); // Call handleDone when in editing mode and Done is pressed
+          } else {
+              setEditing(true); // Switch to editing mode when Edit is pressed
+          }
+      }}
+      style={editing ? doneButtonStyle : editButtonStyle}
+  >
+      <Text style={{ color: editing ? colors.white : colors.black, fontWeight: '500' }}>
+          {editing ? 'Done' : 'Edit'}
+      </Text>
+      </TouchableOpacity>
+      </View>
+      </>
+      
+      }
     </OuterComponentView>
   );
 };
+
+const editButtonStyle = {
+  marginLeft: 10,
+  backgroundColor: colors.lightestgray,
+  paddingHorizontal: 10,
+  paddingVertical: 5,
+  borderRadius: 15
+};
+
+const doneButtonStyle = {
+  ...editButtonStyle,
+  backgroundColor: colors.purple,
+  borderRadius: 15
+};
+
 
 
 export default Location;
