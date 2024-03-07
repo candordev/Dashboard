@@ -125,7 +125,7 @@ import { Endpoints } from "../utils/Endpoints";
                     style={{ display: 'none' }}
                     id="profile-picture-input"
                   />
-                  <Text style={{color: colors.black, fontSize: 14, fontWeight: "600",}}>Select Image</Text>
+                  <Text style={{color: colors.black, fontSize: 15, fontWeight: "600",}}>Select Image</Text>
                 </TouchableOpacity>
             </View>
             <View>
