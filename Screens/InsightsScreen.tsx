@@ -24,7 +24,7 @@ type Props = PropsWithChildren<{
 
 function InsightsScreen({ route, navigation }: Props): JSX.Element {
   return (
-    <OuterView>
+    <OuterView style={{backgroundColor: colors.white}}>
       <TopRow />
       <View style={{ flexDirection: "row", justifyContent: "space-between", flex: 1 }}>
         <LeftColumn />
@@ -47,7 +47,7 @@ const TopRow = () => {
       <View
         style={[
           styles.insightsSection,
-          { width: 275, height: 100, marginHorizontal: 0 },
+          { width: 275, height: 75, marginHorizontal: 0 },
         ]}
       >
         <Text> 200 </Text>
@@ -55,7 +55,7 @@ const TopRow = () => {
       <View
         style={[
           styles.insightsSection,
-          { width: 275, height: 100, marginHorizontal: 0 },
+          { width: 275, height: 75, marginHorizontal: 0 },
         ]}
       >
         <Text> 400 </Text>
@@ -63,7 +63,7 @@ const TopRow = () => {
       <View
         style={[
           styles.insightsSection,
-          { width: 275, height: 100, marginHorizontal: 0 },
+          { width: 275, height: 75, marginHorizontal: 0 },
         ]}
       >
         <Text> 600 </Text>
@@ -71,7 +71,7 @@ const TopRow = () => {
       <View
         style={[
           styles.insightsSection,
-          { width: 275, height: 100, marginHorizontal: 0 },
+          { width: 275, height: 75, marginHorizontal: 0 },
         ]}
       >
         <Text> 600 </Text>
