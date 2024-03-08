@@ -24,29 +24,56 @@ type Props = PropsWithChildren<{
 
 function InsightsScreen({ route, navigation }: Props): JSX.Element {
   return (
-    <>
-      <NotificationPopup navigation={navigation} />
-      <OuterView>
-        <TopRow />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <LeftColumn />
-          <RightColumn />
-        </View>
-      </OuterView>
-    </>
+    <OuterView>
+      <TopRow />
+      <View style={{ flexDirection: "row", justifyContent: "space-between", flex: 1 }}>
+        <LeftColumn />
+        <RightColumn />
+      </View>
+    </OuterView>
   );
 }
 
 const TopRow = () => {
   return (
-    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-      <View style={styles.insightsSection}>
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginHorizontal: 20,
+        marginBottom: 50,
+      }}
+    >
+      <View
+        style={[
+          styles.insightsSection,
+          { width: 275, height: 100, marginHorizontal: 0 },
+        ]}
+      >
         <Text> 200 </Text>
       </View>
-      <View style={styles.insightsSection}>
+      <View
+        style={[
+          styles.insightsSection,
+          { width: 275, height: 100, marginHorizontal: 0 },
+        ]}
+      >
         <Text> 400 </Text>
       </View>
-      <View style={styles.insightsSection}>
+      <View
+        style={[
+          styles.insightsSection,
+          { width: 275, height: 100, marginHorizontal: 0 },
+        ]}
+      >
+        <Text> 600 </Text>
+      </View>
+      <View
+        style={[
+          styles.insightsSection,
+          { width: 275, height: 100, marginHorizontal: 0 },
+        ]}
+      >
         <Text> 600 </Text>
       </View>
     </View>
@@ -55,7 +82,7 @@ const TopRow = () => {
 
 const LeftColumn = () => {
   return (
-    <View>
+    <View style={{ width: "50%", flex: 1, justifyContent: "space-between" }}>
       <Activity />
       <Affinity />
     </View>
@@ -64,7 +91,7 @@ const LeftColumn = () => {
 
 const RightColumn = () => {
   return (
-    <View>
+    <View style={{ width: "50%", flex: 1, }}>
       <Breakdown />
     </View>
   );
