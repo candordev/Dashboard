@@ -18,6 +18,7 @@ import {
     AreaChart,
 } from "recharts";
 import CasesChart from "../Components/CasesChart";
+import SatisfactionProgress from "../Components/SatisfactionProgress";
 
 // type SettingsScreenProps = {
 //   navigation: any;
@@ -126,7 +127,7 @@ const RightColumn = () => {
   return (
     <View style={{ width: "50%", flex: 1, justifyContent: "space-between" }}>
       <Breakdown />
-      <Affinity />
+      <Satisfaction />
     </View>
   );
 };
@@ -168,7 +169,7 @@ const Breakdown = () => {
   );
 };
 
-const Affinity = () => {
+const Satisfaction = () => {
     return (
       <View style={styles.insightsSection}>
         <Text
@@ -181,6 +182,7 @@ const Affinity = () => {
         >
           Satisfaction
         </Text>
+        <SatisfactionProgress />
       </View>
     );
   };
