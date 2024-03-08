@@ -14,6 +14,7 @@ import {
     CartesianGrid,
     Tooltip,
     Legend,
+    AreaChart,
 } from "recharts";
 
 // type SettingsScreenProps = {
@@ -141,13 +142,13 @@ const RightColumn = () => {
 
 const Activity = () => {
     const activityData = [
-        { name: "Jul 4", opened: 100, closed: 120 },
-        { name: "Jul 5", opened: 180, closed: 110 },
-        { name: "Jul 6", opened: 120, closed: 150 },
-        { name: "Jul 7", opened: 160, closed: 130 },
-        { name: "Jul 8", opened: 130, closed: 160 },
-        { name: "Jul 9", opened: 170, closed: 140 },
-        { name: "Jul 10", opened: 90, closed: 110 },
+        { name: "Mar 4", opened: 10, closed: 120 },
+        { name: "Mar 5", opened: 80, closed: 11 },
+        { name: "Mar 6", opened: 90, closed: 150 },
+        { name: "Mar 7", opened: 74, closed: 130 },
+        { name: "Mar 8", opened: 130, closed: 59 },
+        { name: "Mar 9", opened: 190, closed: 140 },
+        { name: "Mar 10", opened: 150, closed: 190 },
     ];
 
     return (
@@ -192,23 +193,37 @@ const OfficeActivityChart: React.FC<OfficeActivityChartProps> = ({ data }) => {
             height={300}
             data={data}
             margin={{
-                top: 5,
-                right: 30,
-                left: 20,
+                top: 20,
                 bottom: 5,
             }}
         >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            {/* <CartesianGrid /> */}
+            <XAxis
+                dataKey="name"
+                width={4}
+                tickSize={0}
+                allowDataOverflow={true}
+            />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="closed" stroke="#82ca9d" />
+            <Line
+                type="monotone"
+                dataKey="closed"
+                stroke="#82ca9d"
+                legendType="wye"
+                dot={false}
+                strokeWidth={3}
+                isAnimationActive={false}
+            />
             <Line
                 type="monotone"
                 dataKey="opened"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
+                stroke="#F26E41"
+                legendType="wye"
+                dot={false}
+                strokeWidth={3}
+                isAnimationActive={false}
             />
         </LineChart>
     );
