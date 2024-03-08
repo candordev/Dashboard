@@ -480,8 +480,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginVertical: 10,
     marginHorizontal: 20,
-    borderRadius: 15,
+    borderRadius: 8,
     backgroundColor: colors.white,
+    shadowColor: colors.black,
+    shadowRadius: 4,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
   },
 });
 
