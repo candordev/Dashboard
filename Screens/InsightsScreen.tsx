@@ -19,6 +19,7 @@ import {
 } from "recharts";
 import CasesChart from "../Components/CasesChart";
 import SatisfactionProgress from "../Components/SatisfactionProgress";
+import InsightsBarChart from "../Components/InsightsBarChart";
 
 // type SettingsScreenProps = {
 //   navigation: any;
@@ -119,6 +120,7 @@ const LeftColumn = () => {
   return (
     <View style={{ width: "50%", flex: 1, justifyContent: "space-between" }}>
       <Activity />
+      <Communities />
     </View>
   );
 };
@@ -153,7 +155,7 @@ const Activity = () => {
                     fontWeight: "450",
                 }}
             >
-                Issues Reported
+                Issues
             </Text>
             <CasesChart data={activityData} />
         </View>
@@ -195,5 +197,23 @@ const Satisfaction = () => {
     </View>
   );
 };
+
+const Communities = () => {
+    return (
+      <View style={styles.insightsSection}>
+        <Text
+          style={{
+            color: colors.black,
+            fontFamily: "OpenSans",
+            fontSize: 25,
+            fontWeight: "450",
+          }}
+        >
+          Communities
+        </Text>
+        <InsightsBarChart/>
+      </View>
+    );
+  };
 
 export default InsightsScreen;

@@ -35,7 +35,7 @@ export default function InsightsPieChart() {
         cx={300}
         cy={200}
         outerRadius={80}
-        fill="#8884d8"
+        fill={colors.otherPurple}
       />
       <Pie
         data={data02}
