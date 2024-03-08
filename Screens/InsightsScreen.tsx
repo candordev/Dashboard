@@ -105,15 +105,15 @@ const LeftColumn = () => {
   return (
     <View style={{ width: "50%", flex: 1, justifyContent: "space-between" }}>
       <Activity />
-      <Affinity />
     </View>
   );
 };
 
 const RightColumn = () => {
   return (
-    <View style={{ width: "50%", flex: 1 }}>
+    <View style={{ width: "50%", flex: 1, justifyContent: "space-between" }}>
       <Breakdown />
+      <Affinity />
     </View>
   );
 };
@@ -122,14 +122,6 @@ const Activity = () => {
   return (
     <View style={styles.insightsSection}>
       <Text>Activity</Text>
-    </View>
-  );
-};
-
-const Affinity = () => {
-  return (
-    <View style={styles.insightsSection}>
-      <Text>Affinity</Text>
     </View>
   );
 };
@@ -151,5 +143,22 @@ const Breakdown = () => {
     </View>
   );
 };
+
+const Affinity = () => {
+    return (
+      <View style={styles.insightsSection}>
+        <Text
+          style={{
+            color: colors.black,
+            fontFamily: "OpenSans",
+            fontSize: 25,
+            fontWeight: "450",
+          }}
+        >
+          Satisfaction
+        </Text>
+      </View>
+    );
+  };
 
 export default InsightsScreen;
