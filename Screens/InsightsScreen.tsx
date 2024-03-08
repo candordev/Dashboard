@@ -5,6 +5,19 @@ import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
 import InsightsPieChart from "../Components/InsightsPieChart";
+import Button from "../Components/Button";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    AreaChart,
+} from "recharts";
+import CasesChart from "../Components/CasesChart";
 
 // type SettingsScreenProps = {
 //   navigation: any;
@@ -13,8 +26,8 @@ import InsightsPieChart from "../Components/InsightsPieChart";
 // const SettingsScreen: React.FC<SettingsScreenProps> = () => {
 
 type Props = PropsWithChildren<{
-  route: any;
-  navigation: any;
+    route: any;
+    navigation: any;
 }>;
 
 function InsightsScreen({ route, navigation }: Props): JSX.Element {
@@ -71,9 +84,9 @@ const TopRow = () => {
 };
 
 const TopRowSection = (props: {
-  number: string;
-  subtitle: string;
-  color: string;
+    number: string;
+    subtitle: string;
+    color: string;
 }) => {
   return (
     <View style={[styles.insightsSection, { width: 275, marginHorizontal: 0 }]}>
@@ -119,11 +132,22 @@ const RightColumn = () => {
 };
 
 const Activity = () => {
-  return (
-    <View style={styles.insightsSection}>
-      <Text>Activity</Text>
-    </View>
-  );
+    const activityData = [
+        { name: "Mar 4", opened: 10, closed: 120 },
+        { name: "Mar 5", opened: 80, closed: 11 },
+        { name: "Mar 6", opened: 90, closed: 150 },
+        { name: "Mar 7", opened: 74, closed: 180 },
+        { name: "Mar 8", opened: 130, closed: 59 },
+        { name: "Mar 9", opened: 190, closed: 140 },
+        { name: "Mar 10", opened: 150, closed: 190 },
+    ];
+
+    return (
+        <View style={styles.insightsSection}>
+            <Text style={styles.insightsSectionTitle}>Activity</Text>
+            <CasesChart data={activityData} />
+        </View>
+    );
 };
 
 const Breakdown = () => {
