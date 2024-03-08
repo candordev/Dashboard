@@ -19,6 +19,8 @@ import { getUnreadNotifs } from "../utils/utils";
 import { NotificationProvider } from "../Structure/NotificationContext"; // Update the import path as necessary
 import NotificationPopup from "../Components/NotificationPopup";
 import { useNavigationContainerRef } from '@react-navigation/native';
+import InsightsScreen from "../Screens/InsightsScreen";
+import SettingsScreen from "../Screens/SettingsScreen";
 
 
 
@@ -96,6 +98,7 @@ function NavigationWrapper() {
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",
+        insights: "insights",
         launch: "launch/:userId?/:postId?/:groupId?",
         login: "login",
         NotFound: "404",
@@ -114,8 +117,9 @@ function NavigationWrapper() {
             <>
               <Stack.Screen name="launch" component={LaunchScreen} />
               <Stack.Screen name="root" component={Root} />
-              <Stack.Screen name="inbox" component={InboxScreen} />
-
+              {/* <Stack.Screen name="inbox" component={InboxScreen} />
+              <Stack.Screen name="settings" component={SettingsScreen} />
+              <Stack.Screen name="insights" component={InsightsScreen} /> */}
               {/* other authenticated screens */}
             </>
           ) : (

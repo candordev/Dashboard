@@ -7,6 +7,7 @@ import AllScreen from "./AllScreen";
 import InboxScreen from "./InboxScreen";
 import SettingsScreen from "./SettingsScreen";
 import NotificationPopup from "../Components/NotificationPopup";
+import InsightsScreen from "./InsightsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -30,7 +31,7 @@ type RootScreenProps = {
   navigation: any;
 };
 
-function Root({route, navigation}: RootScreenProps): JSX.Element {
+function Root({ route, navigation }: RootScreenProps): JSX.Element {
   console.log("AABBCCDD");
   // const [unread, setUnread] = useState<number>(0);
 
@@ -59,8 +60,8 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         drawerStyle: { width: 200, borderRightWidth: 0 },
         headerShown: false,
       }}
-      initialRouteName="settings"
-    >    
+      initialRouteName="insights"
+    >
       <Drawer.Screen
         name="all"
         component={AllScreen}
@@ -82,6 +83,11 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         name="settings"
         component={SettingsScreen}
         options={{ title: "Candor - Settings" }}
+      />
+      <Drawer.Screen
+        name="insights"
+        component={InsightsScreen}
+        options={{ title: "Candor - Insights" }}
       />
     </Drawer.Navigator>
   );
