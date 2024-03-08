@@ -45,20 +45,18 @@ import { Endpoints } from "../utils/Endpoints";
     };
 
     const GeneralSettings = () => {
-      const [imageFile, setImageFile] = useState(null);
-      const [previewUrl, setPreviewUrl] = useState('');
-      const [profilePictureData, setProfilePictureData] = useState<Object | null>(
-        null,
-      );
+      // const [imageFile, setImageFile] = useState(null);
+      // const [previewUrl, setPreviewUrl] = useState('');
       const { state, dispatch} = useUserContext();
-
+      const [firstName, setFirstName] = useState(state.firstName);
+      const [lastName, setLastName] = useState(state.lastName);
 
       const onImageChange = async (event : any) => {
         const file = event.target.files[0];
         if (file && file.type.startsWith('image/')) {
-          setImageFile(file);
+          // setImageFile(file);
           const newPreviewUrl = URL.createObjectURL(file);
-          setPreviewUrl(newPreviewUrl);
+          // setPreviewUrl(newPreviewUrl);
           let formData = new FormData();
           formData.append('profilePicture', file); // The key here ('profilePicture') should match the name expected by your backend for the file
           console.log(file);  
@@ -86,10 +84,40 @@ import { Endpoints } from "../utils/Endpoints";
         }
       };
 
-      const clearImage = () => {
-        setImageFile(null);
-        setPreviewUrl('');
-      };
+      const onSaveName = async () => {
+        if (firstName === state.firstName && lastName === state.lastName) {
+          console.log('No changes to save.');
+          return; // Exit the function early if there are no changes
+        }
+        let formData = new FormData();
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        try {
+          let res = await fetch(Endpoints.updateProfile, {
+            method: 'PUT', 
+            body: formData,
+            headers: {
+              "Authorization": `Bearer ${state.token}`,
+            }
+          });
+          const resJson = await res.json();
+          if (!res.ok) {
+            console.error('Names in Profile Error! :', resJson.error);
+          } else {
+            dispatch({type: "UPDATE_USER", payload: {...state.user, firstName, lastName}});
+            console.log('Profile updated successfully');
+          }
+        } catch (error) {
+          console.error('Error updating profile:', error);
+        }
+      }
+
+      // const clearImage = () => {
+      //   setImageFile(null);
+      //   setPreviewUrl('');
+      // };
+
+      
       
       return (
         <SettingsSection title={"General"}>
@@ -103,68 +131,72 @@ import { Endpoints } from "../utils/Endpoints";
           >
             <View>
               <ProfilePicture imageUrl={state.imageUrl} type="editProfile" />
-              <TouchableOpacity
+              <Button
                 onPress={() => {
                   const inputElement = document.getElementById('profile-picture-input');
                   if (inputElement !== null) {
                     inputElement.click();
                   }
-                }}       
+                }}
+                text="Select Image"
+                textStyle={{
+                  color: colors.black,
+                  fontSize: 14,
+                  fontWeight: "600",
+                }}
                 style={{
-                  backgroundColor: colors.lightestgray,
+                  backgroundColor: colors.lightergray,
                   borderRadius: 15,
-                  paddingHorizontal: 7,
                   paddingVertical: 7,
                   marginTop: 10,
-                }}
-                  >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={onImageChange}
-                    style={{ display: 'none' }}
-                    id="profile-picture-input"
-                  />
-                  <Text style={{color: colors.black, fontSize: 15, fontWeight: "600",}}>Select Image</Text>
-                </TouchableOpacity>
+                  alignSelf: "flex-start",
+                  }}
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onImageChange}
+                style={{ display: 'none' }}
+                id="profile-picture-input"
+              />
             </View>
             <View>
               <View style={{ height: 90, justifyContent: "center"}}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  {/* <Text
+                  <Text
                     style={{ fontSize: 15, fontWeight: "500", marginRight: 10 }}
                   >
                     First Name:
-                  </Text> */}
-                  <TextInput style={styles.textInput} placeholder="First Name" placeholderTextColor={colors.lightgray}/>
+                  </Text>
+                  <TextInput style={styles.textInput} placeholder="First Name" placeholderTextColor={colors.lightgray}  value={firstName} onChangeText={text => setFirstName(text)}/>
                 </View>
                 <View
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
                     marginTop: 10, 
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                   }}
                 >
-                  {/* <Text
+                  <Text
                     style={{ fontSize: 15, fontWeight: "500", marginRight: 12 }}
                   >
                     Last Name:
-                  </Text> */}
-                  <TextInput style={styles.textInput} placeholder="Last Name" placeholderTextColor={colors.lightgray} />
+                  </Text>
+                  <TextInput style={styles.textInput} placeholder="Last Name" placeholderTextColor={colors.lightgray} value={lastName} onChangeText={text => setLastName(text)} />
                   {/* <TextInput style= {[styles.textInput, {marginLeft : 100}]} placeholder="Last Name" placeholderTextColor={colors.lightgray} /> */}
                 </View>
               </View>
               <Button
                   text="Save Changes"
-                  onPress={() => {}}
+                  onPress={onSaveName}
                   style={{
                     backgroundColor: colors.purple,
                     borderRadius: 15,
                     paddingVertical: 7,
                     marginTop: 10,
                     alignSelf: "flex-start",
-                  }}
+                    }}
                   textStyle={{
                     color: colors.white,
                     fontSize: 14,
