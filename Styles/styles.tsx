@@ -487,6 +487,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
   },
+  insightsSectionTitle: {
+    fontFamily: "OpenSans",
+    fontSize: 30,
+    fontWeight: "500",
+  },
 });
 
 export default styles;

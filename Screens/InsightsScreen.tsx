@@ -28,74 +28,96 @@ type Props = PropsWithChildren<{
 }>;
 
 function InsightsScreen({ route, navigation }: Props): JSX.Element {
-  return (
-    <OuterView style={{ backgroundColor: colors.white, paddingVertical: 40, rowGap: 20 }}>
-      <TopRow />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          flex: 1,
-        }}
-      >
-        <LeftColumn />
-        <RightColumn />
-      </View>
-    </OuterView>
-  );
+    return (
+        <OuterView
+            style={{
+                backgroundColor: colors.white,
+                paddingVertical: 40,
+                rowGap: 20,
+            }}
+        >
+            <TopRow />
+            <View
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    flex: 1,
+                }}
+            >
+                <LeftColumn />
+                <RightColumn />
+            </View>
+        </OuterView>
+    );
 }
 
 const TopRow = () => {
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginHorizontal: 20,
-      }}
-    >
-      <TopRowSection number="100" subtitle="Completed Issues last week" color={colors.purple} />
-      <TopRowSection number="200" subtitle="New Issues filed last week" color={colors.purple} />
-      <TopRowSection number="400" subtitle="Reminders for this week" color={colors.purple} />
-      <TopRowSection number="600" subtitle="Total Issues Solved" color={colors.purple} />
-    </View>
-  );
+    return (
+        <View
+            style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 20,
+            }}
+        >
+            <TopRowSection
+                number="100"
+                subtitle="Completed Issues last week"
+                color={colors.purple}
+            />
+            <TopRowSection
+                number="200"
+                subtitle="New Issues filed last week"
+                color={colors.purple}
+            />
+            <TopRowSection
+                number="400"
+                subtitle="Reminders for this week"
+                color={colors.purple}
+            />
+            <TopRowSection
+                number="600"
+                subtitle="Total Issues Solved"
+                color={colors.purple}
+            />
+        </View>
+    );
 };
 
 const TopRowSection = (props: {
-  number: string;
-  subtitle: string;
-  color: string;
+    number: string;
+    subtitle: string;
+    color: string;
 }) => {
-  return (
-    <View
-      style={[
-        styles.insightsSection,
-        { width: 275, marginHorizontal: 0 },
-      ]}
-    >
-      <Text
-        style={{
-          color: props.color,
-          fontFamily: "OpenSans",
-          fontSize: 30,
-          fontWeight: "500",
-        }}
-      >
-        {props.number}
-      </Text>
-      <Text
-        style={{
-          color: colors.black,
-          fontFamily: "OpenSans",
-          fontSize: 15,
-          fontWeight: "500",
-        }}
-      >
-        {props.subtitle}
-      </Text>
-    </View>
-  );
+    return (
+        <View
+            style={[
+                styles.insightsSection,
+                { width: 275, marginHorizontal: 0 },
+            ]}
+        >
+            <Text
+                style={{
+                    color: props.color,
+                    fontFamily: "OpenSans",
+                    fontSize: 30,
+                    fontWeight: "500",
+                }}
+            >
+                {props.number}
+            </Text>
+            <Text
+                style={{
+                    color: colors.black,
+                    fontFamily: "OpenSans",
+                    fontSize: 15,
+                    fontWeight: "500",
+                }}
+            >
+                {props.subtitle}
+            </Text>
+        </View>
+    );
 };
 
 const LeftColumn = () => {
@@ -110,23 +132,27 @@ const LeftColumn = () => {
 };
 
 const RightColumn = () => {
-  return (
-    <View style={{ width: "50%", flex: 1 }}>
-      <Breakdown />
-    </View>
-  );
+    return (
+        <View style={{ width: "50%", flex: 1 }}>
+            <Breakdown />
+        </View>
+    );
 };
 
 const Activity = () => {
     const activityData = [
         { name: "Jul 4", opened: 100, closed: 120 },
+        { name: "Jul 5", opened: 180, closed: 110 },
         { name: "Jul 6", opened: 120, closed: 150 },
-        // ... add other data points
+        { name: "Jul 7", opened: 160, closed: 130 },
+        { name: "Jul 8", opened: 130, closed: 160 },
+        { name: "Jul 9", opened: 170, closed: 140 },
+        { name: "Jul 10", opened: 90, closed: 110 },
     ];
 
     return (
         <View style={styles.insightsSection}>
-            <Text>Activity</Text>
+            <Text style={styles.insightsSectionTitle}>Activity</Text>
             <OfficeActivityChart data={activityData} />
         </View>
     );
@@ -135,7 +161,7 @@ const Activity = () => {
 const Affinity = () => {
     return (
         <View style={styles.insightsSection}>
-            <Text>Affinity</Text>
+            <Text style={styles.insightsSectionTitle}>Affinity</Text>
             <CitizenAffinity percentage={50} change={10} />
         </View>
     );
@@ -197,18 +223,35 @@ const CitizenAffinity: React.FC<CitizenAffinityProps> = ({
     percentage,
     change,
 }) => {
-  return (
-    <div>
-      <h2>Citizen Affinity</h2>
-      <p>Constituent affinity is calculated based on post-case surveys, sentiment analysis of constituent responses, and response speed.</p>
-      <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: `conic-gradient(green ${percentage}%, lightgray ${percentage}%)` }}>
-        <div style={{ position: 'absolute', top: '35%', left: '25%', textAlign: 'center' }}>
-          <span>{percentage}%</span>
-          <span>{change > 0 ? `+${change}` : change}%</span>
+    return (
+        <div>
+            <p>
+                Constituent affinity is determined by analyzing post-case
+                surveys, examining the sentiment in constituent feedback, and
+                considering the speed of responses.
+            </p>
+            <div
+                style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "50%",
+                    background: `conic-gradient(green ${percentage}%, lightgray ${percentage}%)`,
+                }}
+            >
+                <div
+                    style={{
+                        position: "absolute",
+                        top: "35%",
+                        left: "25%",
+                        textAlign: "center",
+                    }}
+                >
+                    <span>{percentage}%</span>
+                    <span>{change > 0 ? `+${change}` : change}%</span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default InsightsScreen;
