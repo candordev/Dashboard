@@ -12,7 +12,7 @@ import { useSignout } from "../Hooks/useSignout";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
 import ProfilePicture from "./ProfilePicture";
 
-const LHN = (props: any) => {
+export const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
@@ -150,7 +150,7 @@ type NavItemProps = {
   selected: boolean;
 };
 
-const NavItem = ({
+export const NavItem = ({
   route,
   icon,
   name,
@@ -245,5 +245,3 @@ const styles = {
     fontSize: 12,
   },
 };
-
-export default LHN;

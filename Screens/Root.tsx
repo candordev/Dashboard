@@ -2,7 +2,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import React from "react";
-import LHN from "../Components/LHN";
+import { LHN } from "../Components/LHN";
 import AllScreen from "./AllScreen";
 import InboxScreen from "./InboxScreen";
 import SettingsScreen from "./SettingsScreen";
@@ -59,8 +59,12 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         drawerStyle: { width: 200, borderRightWidth: 0 },
         headerShown: false,
       }}
+<<<<<<< Updated upstream
       initialRouteName="settings"
     >    
+=======
+    >
+>>>>>>> Stashed changes
       <Drawer.Screen
         name="all"
         component={AllScreen}

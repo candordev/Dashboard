@@ -13,6 +13,7 @@ import OptionPicker from "./OptionPicker";
 import SearchBar from "./SearchBar";
 import StatusPicker from "./StatusPicker";
 import Text from "./Text";
+import NotifDropdown from "./NotifDropdown";
 
 interface HeaderProps {
   onStatusChange: (status: Status) => void;
@@ -173,7 +174,10 @@ const Header = ({
         >
           {headerTitle}
         </Text>
+        <View style={{flexDirection: "row", columnGap: 10}}>
+        <NotifDropdown />
         <OptionPicker onOptionChange={onHeaderOptionChange} />
+        </View>
       </View>
       <View
         style={{

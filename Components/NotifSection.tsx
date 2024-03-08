@@ -149,22 +149,26 @@ const NotifSection = (props: Props) => {
         mainUrl={notif.picture}
         type={"big"}
       />
-      <View style={{ flex: 1 }}>
+            <View style={{
+        // flex: 1
+        }}>
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
+            // justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <Text style={{ fontWeight: "600", flex: 1 }} numberOfLines={1}>
+          <Text style={{ fontWeight: "600",
+          // flex: 1
+          }} numberOfLines={1}>
             {notif.title}
           </Text>
           <Text
             style={{
               fontSize: 14,
               color: colors.gray,
-              flexWrap: "nowrap",
+              // flexWrap: "nowrap",
               marginLeft: 5,
             }}
             numberOfLines={1}
@@ -173,10 +177,15 @@ const NotifSection = (props: Props) => {
           </Text>
         </View>
         <Text
-          style={[styles.sectionDescription, { flex: 1 }]}
-          numberOfLines={2}
+          style={[
+            // styles.sectionDescription,
+            {
+            // flex: 1
+          }]}
+          // numberOfLines={2}
         >
-          {notif.content}
+          {/* {notif.content} */}
+          Notification 1
         </Text>
       </View>
     </TouchableOpacity>
