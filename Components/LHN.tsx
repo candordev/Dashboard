@@ -1,16 +1,15 @@
-import { View, TouchableOpacity, FlexAlignType } from "react-native";
-import Text from "./Text";
 import { Link } from "@react-navigation/native";
-import colors from "../Styles/colors";
+import React, { useCallback, useEffect, useState } from "react";
+import { FlexAlignType, Pressable, View } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { event, eventNames } from "../Events";
-import { AppState, Pressable } from "react-native";
-import { downloadPDF, getUnreadNotifs } from "../utils/utils";
-import React, { useCallback, useEffect, useState } from "react";
-import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
+import { useUserContext } from "../Hooks/useUserContext";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+import colors from "../Styles/colors";
+import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import ProfilePicture from "./ProfilePicture";
+import Text from "./Text";
 
 const LHN = (props: any) => {
   const [unread, setUnread] = useState<number>(0);
@@ -82,9 +81,9 @@ const LHN = (props: any) => {
         <Text
           style={{
             color: colors.white,
-            fontWeight: "500",
+            fontWeight: "550",
             textAlign: "center",
-            fontSize: 13,
+            fontSize: 15,
             marginBottom: 20,
           }}
         >
@@ -113,15 +112,15 @@ const LHN = (props: any) => {
         selected={navIndex == 1}
       />
       <NavItem
-        name={"Settings"}
-        route="/settings"
-        icon="settings"
-        selected={navIndex == 2}
-      />
-      <NavItem
         name={"Insights"}
         route="/insights"
         icon="pie-chart"
+        selected={navIndex == 2}
+      />
+      <NavItem
+        name={"Settings"}
+        route="/settings"
+        icon="settings"
         selected={navIndex == 3}
       />
       <View style={{ flex: 1 }} />
@@ -133,7 +132,7 @@ const LHN = (props: any) => {
         icon="log-out"
         selected={false}
       />
-      <NavItem
+      {/* <NavItem
         name="Download"
         onPress={() => {
           downloadPDF(
@@ -142,7 +141,7 @@ const LHN = (props: any) => {
         }}
         icon="download"
         selected={false}
-      />
+      /> */}
     </View>
   );
 };

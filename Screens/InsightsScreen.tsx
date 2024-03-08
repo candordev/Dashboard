@@ -4,6 +4,7 @@ import OuterView from "../Components/OuterView";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
+import InsightsPieChart from "../Components/InsightsPieChart";
 
 // type SettingsScreenProps = {
 //   navigation: any;
@@ -18,7 +19,9 @@ type Props = PropsWithChildren<{
 
 function InsightsScreen({ route, navigation }: Props): JSX.Element {
   return (
-    <OuterView style={{ backgroundColor: colors.white, paddingVertical: 40, rowGap: 20 }}>
+    <OuterView
+      style={{ backgroundColor: colors.white, paddingVertical: 40, rowGap: 20 }}
+    >
       <TopRow />
       <View
         style={{
@@ -43,10 +46,26 @@ const TopRow = () => {
         marginHorizontal: 20,
       }}
     >
-      <TopRowSection number="100" subtitle="Completed Issues last week" color={colors.purple} />
-      <TopRowSection number="200" subtitle="New Issues filed last week" color={colors.purple} />
-      <TopRowSection number="400" subtitle="Reminders for this week" color={colors.purple} />
-      <TopRowSection number="600" subtitle="Total Issues Solved" color={colors.purple} />
+      <TopRowSection
+        number="100"
+        subtitle="Completed Issues last week"
+        color={colors.purple}
+      />
+      <TopRowSection
+        number="200"
+        subtitle="New Issues filed last week"
+        color={colors.purple}
+      />
+      <TopRowSection
+        number="400"
+        subtitle="Reminders for this week"
+        color={colors.purple}
+      />
+      <TopRowSection
+        number="600"
+        subtitle="Total Issues Solved"
+        color={colors.purple}
+      />
     </View>
   );
 };
@@ -57,12 +76,7 @@ const TopRowSection = (props: {
   color: string;
 }) => {
   return (
-    <View
-      style={[
-        styles.insightsSection,
-        { width: 275, marginHorizontal: 0 },
-      ]}
-    >
+    <View style={[styles.insightsSection, { width: 275, marginHorizontal: 0 }]}>
       <Text
         style={{
           color: props.color,
@@ -123,7 +137,17 @@ const Affinity = () => {
 const Breakdown = () => {
   return (
     <View style={styles.insightsSection}>
-      <Text>Breakdown</Text>
+      <Text
+        style={{
+          color: colors.black,
+          fontFamily: "OpenSans",
+          fontSize: 25,
+          fontWeight: "450",
+        }}
+      >
+        Breakdown
+      </Text>
+      <InsightsPieChart />
     </View>
   );
 };

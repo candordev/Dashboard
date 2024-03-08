@@ -80,14 +80,14 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
         options={{ title: "Candor - Inbox" }}
       />
       <Drawer.Screen
-        name="settings"
-        component={SettingsScreen}
-        options={{ title: "Candor - Settings" }}
-      />
-      <Drawer.Screen
         name="insights"
         component={InsightsScreen}
         options={{ title: "Candor - Insights" }}
+      />
+      <Drawer.Screen
+        name="settings"
+        component={SettingsScreen}
+        options={{ title: "Candor - Settings" }}
       />
     </Drawer.Navigator>
   );
