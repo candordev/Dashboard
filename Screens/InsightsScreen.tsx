@@ -8,14 +8,14 @@ import InsightsPieChart from "../Components/InsightsPieChart";
 import Button from "../Components/Button";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    AreaChart,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  AreaChart,
 } from "recharts";
 import CasesChart from "../Components/CasesChart";
 import SatisfactionProgress from "../Components/SatisfactionProgress";
@@ -27,8 +27,8 @@ import SatisfactionProgress from "../Components/SatisfactionProgress";
 // const SettingsScreen: React.FC<SettingsScreenProps> = () => {
 
 type Props = PropsWithChildren<{
-    route: any;
-    navigation: any;
+  route: any;
+  navigation: any;
 }>;
 
 function InsightsScreen({ route, navigation }: Props): JSX.Element {
@@ -61,23 +61,23 @@ const TopRow = () => {
       }}
     >
       <TopRowSection
-        number="100"
-        subtitle="Completed Issues last week"
-        color={colors.purple}
-      />
-      <TopRowSection
         number="200"
-        subtitle="New Issues filed last week"
+        subtitle="New Issues last 7 days"
         color={colors.purple}
       />
       <TopRowSection
-        number="400"
-        subtitle="Reminders for this week"
+        number="100"
+        subtitle="Completed Issues last 7 days"
         color={colors.purple}
       />
       <TopRowSection
-        number="600"
-        subtitle="Total Issues Solved"
+        number="84"
+        subtitle="Actionable Issues this week"
+        color={colors.purple}
+      />
+      <TopRowSection
+        number="742"
+        subtitle="Total Issues solved"
         color={colors.purple}
       />
     </View>
@@ -85,9 +85,9 @@ const TopRow = () => {
 };
 
 const TopRowSection = (props: {
-    number: string;
-    subtitle: string;
-    color: string;
+  number: string;
+  subtitle: string;
+  color: string;
 }) => {
   return (
     <View style={[styles.insightsSection, { width: 275, marginHorizontal: 0 }]}>
@@ -133,22 +133,22 @@ const RightColumn = () => {
 };
 
 const Activity = () => {
-    const activityData = [
-        { name: "Mar 4", opened: 10, closed: 120 },
-        { name: "Mar 5", opened: 80, closed: 11 },
-        { name: "Mar 6", opened: 90, closed: 150 },
-        { name: "Mar 7", opened: 74, closed: 180 },
-        { name: "Mar 8", opened: 130, closed: 59 },
-        { name: "Mar 9", opened: 190, closed: 140 },
-        { name: "Mar 10", opened: 150, closed: 190 },
-    ];
+  const activityData = [
+    { name: "Mar 4", opened: 10, closed: 120 },
+    { name: "Mar 5", opened: 80, closed: 11 },
+    { name: "Mar 6", opened: 90, closed: 150 },
+    { name: "Mar 7", opened: 74, closed: 180 },
+    { name: "Mar 8", opened: 130, closed: 59 },
+    { name: "Mar 9", opened: 190, closed: 140 },
+    { name: "Mar 10", opened: 150, closed: 190 },
+  ];
 
-    return (
-        <View style={styles.insightsSection}>
-            <Text style={styles.insightsSectionTitle}>Activity</Text>
-            <CasesChart data={activityData} />
-        </View>
-    );
+  return (
+    <View style={styles.insightsSection}>
+      <Text style={styles.insightsSectionTitle}>Activity</Text>
+      <CasesChart data={activityData} />
+    </View>
+  );
 };
 
 const Breakdown = () => {
@@ -170,21 +170,21 @@ const Breakdown = () => {
 };
 
 const Satisfaction = () => {
-    return (
-      <View style={styles.insightsSection}>
-        <Text
-          style={{
-            color: colors.black,
-            fontFamily: "OpenSans",
-            fontSize: 25,
-            fontWeight: "450",
-          }}
-        >
-          Satisfaction
-        </Text>
-        <SatisfactionProgress />
-      </View>
-    );
-  };
+  return (
+    <View style={styles.insightsSection}>
+      <Text
+        style={{
+          color: colors.black,
+          fontFamily: "OpenSans",
+          fontSize: 25,
+          fontWeight: "450",
+        }}
+      >
+        Satisfaction
+      </Text>
+      <SatisfactionProgress />
+    </View>
+  );
+};
 
 export default InsightsScreen;
