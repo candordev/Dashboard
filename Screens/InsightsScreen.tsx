@@ -1,15 +1,9 @@
 import React, { PropsWithChildren } from "react";
-import { TouchableOpacity, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import NotificationPopup from "../Components/NotificationPopup";
+import { View } from "react-native";
 import OuterView from "../Components/OuterView";
-import ProfilePicture from "../Components/ProfilePicture";
 import Text from "../Components/Text";
-import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
-import Button from "../Components/Button";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 // type SettingsScreenProps = {
 //   navigation: any;
@@ -24,9 +18,15 @@ type Props = PropsWithChildren<{
 
 function InsightsScreen({ route, navigation }: Props): JSX.Element {
   return (
-    <OuterView style={{backgroundColor: colors.white}}>
+    <OuterView style={{ backgroundColor: colors.white, paddingVertical: 40, rowGap: 20 }}>
       <TopRow />
-      <View style={{ flexDirection: "row", justifyContent: "space-between", flex: 1 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          flex: 1,
+        }}
+      >
         <LeftColumn />
         <RightColumn />
       </View>
@@ -41,41 +41,48 @@ const TopRow = () => {
         flexDirection: "row",
         justifyContent: "space-between",
         marginHorizontal: 20,
-        marginBottom: 50,
       }}
     >
-      <View
-        style={[
-          styles.insightsSection,
-          { width: 275, height: 75, marginHorizontal: 0 },
-        ]}
+      <TopRowSection number="100" subtitle="Completed Issues last week" color={colors.purple} />
+      <TopRowSection number="200" subtitle="New Issues filed last week" color={colors.purple} />
+      <TopRowSection number="400" subtitle="Reminders for this week" color={colors.purple} />
+      <TopRowSection number="600" subtitle="Total Issues Solved" color={colors.purple} />
+    </View>
+  );
+};
+
+const TopRowSection = (props: {
+  number: string;
+  subtitle: string;
+  color: string;
+}) => {
+  return (
+    <View
+      style={[
+        styles.insightsSection,
+        { width: 275, marginHorizontal: 0 },
+      ]}
+    >
+      <Text
+        style={{
+          color: props.color,
+          fontFamily: "OpenSans",
+          fontSize: 30,
+          fontWeight: "500",
+        }}
       >
-        <Text> 200 </Text>
-      </View>
-      <View
-        style={[
-          styles.insightsSection,
-          { width: 275, height: 75, marginHorizontal: 0 },
-        ]}
+        {props.number}
+      </Text>
+      <Text
+        style={{
+          color: colors.black,
+          fontFamily: "OpenSans",
+          fontSize: 15,
+          fontWeight: "500",
+        }}
       >
-        <Text> 400 </Text>
-      </View>
-      <View
-        style={[
-          styles.insightsSection,
-          { width: 275, height: 75, marginHorizontal: 0 },
-        ]}
-      >
-        <Text> 600 </Text>
-      </View>
-      <View
-        style={[
-          styles.insightsSection,
-          { width: 275, height: 75, marginHorizontal: 0 },
-        ]}
-      >
-        <Text> 600 </Text>
-      </View>
+        {props.subtitle}
+      </Text>
     </View>
   );
 };
@@ -91,7 +98,7 @@ const LeftColumn = () => {
 
 const RightColumn = () => {
   return (
-    <View style={{ width: "50%", flex: 1, }}>
+    <View style={{ width: "50%", flex: 1 }}>
       <Breakdown />
     </View>
   );
