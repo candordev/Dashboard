@@ -112,12 +112,14 @@ const LHN = (props: any) => {
         unreadCount={unread}
         selected={navIndex == 1}
       />
-      <NavItem
+      {state.groupType !== "HOA" && (
+        <NavItem
         name={"Settings"}
         route="/settings"
         icon="settings"
         selected={navIndex == 2}
       />
+      )}
       <NavItem
         name={"Group Settings"}
         route="/groupSettings"

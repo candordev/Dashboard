@@ -10,7 +10,7 @@ const GroupSettingsScreen = ({  }) => {
     return (
         <View style={{ flex: 1, flexDirection: 'row' }}> {/* Use flexDirection to layout children horizontally */}
             {/* Wrapper View with width set to 50% */}
-            <View style={{ width: '40%', height: '100%' }}> {/* Adjusts for half width, full height */}
+            <View style={{ width: '50%', height: '100%' }}> {/* Adjusts for half width, full height */}
                 <MemberManagement groupID={groupID} />
             </View>
             {/* Optionally, add another View here to utilize the other half of the screen */}
