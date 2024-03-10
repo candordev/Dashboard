@@ -85,13 +85,48 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-      <Assignees issue={issue} createPost={false} style={{ zIndex: 3 }} />
-      <Category issueId={issue._id} createPost={false} style={{ zIndex: 2 }} />
-      <Deadline issue={issue} style={{ zIndex: 1 }} />
-      {state.groupType == "HOA" ? 
-      <LocationHOA issue={issue} />
-      : <Location issue={issue} />}
-      <View
+    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+        <Assignees issue={issue} createPost={false} style={{ zIndex: 3 }} />
+        <Category issueId={issue._id} createPost={false} style={{ zIndex: 2, marginTop: 5}} />
+        <Deadline issue={issue} style={{ zIndex: 1, marginTop: 5 }} />
+        {state.groupType == "HOA" ? 
+        <LocationHOA issue={issue} style={{ zIndex: 1, marginTop: 5 }} />
+        : <Location issue={issue} style={{ zIndex: 1, marginTop: 5 }}/>}
+      </View>
+       <View style={{ justifyContent: 'flex-end' }}>
+        <MarkDone
+          fetchStatusUpdates={props.fetchStatusUpdates}
+          issueId={issue._id}
+          step={issue.step}
+          //style={{ marginBottom: 10 }} // Adjust the margin as needed to ensure this sits right above DeletePost
+        />
+        <DeletePost
+          issueId={issue._id}
+          onPopoverCloseComplete={props.onPopoverCloseComplete}
+        />
+      </View>
+      {/* <CloseIssue /> */}
+    </ScrollView>
+  );
+}
+const editButtonStyle = {
+  marginLeft: 10,
+  backgroundColor: colors.lightestgray,
+  paddingHorizontal: 10,
+  paddingVertical: 5,
+  borderRadius: 15,
+};
+
+const doneButtonStyle = {
+  ...editButtonStyle,
+  backgroundColor: colors.purple,
+  borderRadius: 15
+};
+
+export default IssueRightView;
+
+
+      {/* <View
         style={{
           borderColor: colors.lightestgray,
           borderWidth: 2,
@@ -191,32 +226,4 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
               </Text>
             </>
           )}
-      </View>
-      <MarkDone
-        fetchStatusUpdates={props.fetchStatusUpdates}
-        issueId={issue._id}
-        step={issue.step}
-      />
-      <DeletePost
-        issueId={issue._id}
-        onPopoverCloseComplete={props.onPopoverCloseComplete}
-      />
-      {/* <CloseIssue /> */}
-    </ScrollView>
-  );
-}
-const editButtonStyle = {
-  marginLeft: 10,
-  backgroundColor: colors.lightestgray,
-  paddingHorizontal: 10,
-  paddingVertical: 5,
-  borderRadius: 15,
-};
-
-const doneButtonStyle = {
-  ...editButtonStyle,
-  backgroundColor: colors.purple,
-  borderRadius: 15
-};
-
-export default IssueRightView;
+      </View> */}

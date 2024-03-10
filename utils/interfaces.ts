@@ -62,6 +62,7 @@ export interface AdminPoint {
 
 // TODO: remove user field (redundant, inside of userProfile)
 export interface Post {
+  visible: boolean;
   aspectRatio: number;
   videoURL: string;
   _id: string;

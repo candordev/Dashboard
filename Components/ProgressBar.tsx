@@ -7,6 +7,7 @@ type ProgressBarProps = {
   step: number;
   navigation?: any;
   profilePost?: boolean;
+  style?: any;
 };
 
 function ProgressBar(props: ProgressBarProps): JSX.Element {
@@ -21,7 +22,7 @@ function ProgressBar(props: ProgressBarProps): JSX.Element {
     underText = "Completed";
   }
   return (
-    <View style={{ alignItems: "center" }}>
+    <View style={[{ alignItems: "center" }, props.style]}> 
       <View
         style={{
           flexDirection: "row",
