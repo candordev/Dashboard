@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
   },
    editButtonStyle : {
     marginTop: 2,
-    marginLeft: 40,
+    marginLeft: 6,
     backgroundColor: colors.lightestgray,
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
    doneButtonStyle : {
     marginTop: 2,
-    marginLeft: 40,
+    marginLeft: 6,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 15,
