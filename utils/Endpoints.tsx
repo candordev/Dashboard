@@ -115,4 +115,8 @@ export const Endpoints = {
   requestPDFInfo: `${BASE_URL}/group/requestPDFInfo?`,
   mergePost: `${BASE_URL}/userActivity/mergePost?`,
   csvUpload:  `${BASE_URL}/userActivity/csvUpload`,
+  kickMember: `${BASE_URL}/group/kickMember`,
+  addleader : `${BASE_URL}/group/addLeader`,
+  addOtherLeader: `${BASE_URL}/group/addOtherLeader`,
+  removeOtherLeader: `${BASE_URL}/group/removeOtherLeader`,
 };
