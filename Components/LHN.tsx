@@ -121,7 +121,7 @@ const LHN = (props: any) => {
       <NavItem
         name={"Group Settings"}
         route="/groupSettings"
-        icon="inbox"
+        icon="user"
         selected={navIndex == 3}
       />
       <View style={{ flex: 1 }} />
