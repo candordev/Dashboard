@@ -117,6 +117,6 @@ export const Endpoints = {
   csvUpload:  `${BASE_URL}/userActivity/csvUpload`,
   kickMember: `${BASE_URL}/group/kickMember`,
   addleader : `${BASE_URL}/group/addLeader`,
-  addOtherLeader: `${BASE_URL}/group/addOtherLeader`,
-  removeOtherLeader: `${BASE_URL}/group/removeOtherLeader`,
+  addLeaderDashboardSettings: `${BASE_URL}/group/addLeaderDashboardSettings`,
+  removeLeaderDashboardSettings: `${BASE_URL}/group/removeLeaderDashboardSettings`,
 };

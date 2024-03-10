@@ -73,7 +73,7 @@ const MemberManagement = ({ groupID }: MemberManagementProps) => {
     
       async function addLeader(user = '') {
         try {
-            let res = await customFetch(Endpoints.addOtherLeader, {
+            let res = await customFetch(Endpoints.addLeaderDashboardSettings, {
               method: "POST",
               body: JSON.stringify({
                 groupID: groupID, 
@@ -94,7 +94,7 @@ const MemberManagement = ({ groupID }: MemberManagementProps) => {
     
       async function removeLeader(user = '') {
         try {
-            let res = await customFetch(Endpoints.removeOtherLeader, {
+            let res = await customFetch(Endpoints.removeLeaderDashboardSettings, {
               method: "POST",
               body: JSON.stringify({
                 groupID: groupID,
