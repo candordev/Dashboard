@@ -41,7 +41,8 @@ const DeletePost: React.FC<DeletePostProps> = ({ issueId, onPopoverCloseComplete
 
 
     return (
-        <View>
+        <View style={{marginTop: 5}}>
+          
           {errorMessage !== "" && (
             <Text style={styles.errorMessage}>{errorMessage}</Text>
           )}

@@ -9,9 +9,10 @@ import { Post } from "../utils/interfaces"; // Assuming this is where you've def
 // Define a type for the component's props
 type LocationProps = {
   issue: Post; // Using the Post interface for the issue
+  style?: any;
 };
 
-const Location: React.FC<LocationProps> = ({ issue }) => {
+const Location: React.FC<LocationProps> = ({ issue, style}) => {
   const [location, setLocation] = useState(issue?.location ?? "");
   const [editing, setEditing] = useState(false);
 
@@ -33,12 +34,12 @@ const Location: React.FC<LocationProps> = ({ issue }) => {
       console.log("Location updated successfully:", jsonResponse);
       setEditing(false); // Exit editing mode
     } catch (error) {
-      console.error("Error updating location:", error.message);
+      console.error("Error updating location:");
     }
   };
 
   return (
-    <OuterComponentView title={"Location"}>
+    <OuterComponentView title={"Location"} style={style}>
       {location || editing ? (
         <>
           {editing ? (

@@ -37,6 +37,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
 
 
 
+
   useEffect(() => {
     // console.log("title changed to", props.issue.title)
     setIssue(props.issue);
@@ -121,11 +122,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       rowGap: 10, // Note: rowGap might not work as expected in React Native. Consider using margin or padding for spacing.
     }}>
       <IssueContent 
-        date={issue.createdAt} 
-        issueID={issue._id} 
-        title={issue.title} 
-        content={issue.content} 
-        previewURl={issue.imgURL}
+        issue={issue}
       />
       {
         // Only display CommentsSection if groupType is 'HOA'
@@ -152,5 +149,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     </View>
   );
 }
+
+
 
 export default IssueLeftView;
