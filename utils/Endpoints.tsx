@@ -7,14 +7,14 @@
 // }
 
 // local
-//export const BASE_URL : string = `http://localhost:4000/api`;
+export const BASE_URL : string = `http://localhost:4000/api`;
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
 //export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
 // PRODUCTION
-export const BASE_URL: string = `https://candoradmin.com/api`;
+//export const BASE_URL: string = `https://candoradmin.com/api`;
 
 export const Endpoints = {
   base: BASE_URL,
@@ -119,4 +119,9 @@ export const Endpoints = {
   addleader : `${BASE_URL}/group/addLeader`,
   addLeaderDashboardSettings: `${BASE_URL}/group/addLeaderDashboardSettings`,
   removeLeaderDashboardSettings: `${BASE_URL}/group/removeLeaderDashboardSettings`,
+  getPinnedDocuments: `${BASE_URL}/group/getPinnedDocuments?`,
+  editPinnedDocument: `${BASE_URL}/group/editPinnedDocument?`,
+  addPinnedDocument: `${BASE_URL}/group/addPinnedDocument?`,
+  deletePinnedDocument: `${BASE_URL}/group/deletePinnedDocument?`
+
 };
