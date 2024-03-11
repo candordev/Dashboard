@@ -114,14 +114,14 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postID }) => {
         <View style={{
         backgroundColor: colors.white,
         padding: 10,
-        borderWidth: 2,
-        borderRadius: 10,
-        borderColor: colors.lightestgray,
+        // borderWidth: 2,
+        // borderRadius: 10,
+        // borderColor: colors.lightestgray,
         flex: 1, // Take up all available space
         height: "70%", // Set a maximum height
         alignContent: 'flex', // Align content to the start
         }}>
-        <Text style={styles.chatTitle}>Comments</Text>
+        {/* <Text style={styles.chatTitle}>Comments</Text> */}
         <ScrollView>
       {comments.map((comment, index) => (
         <React.Fragment key={index}>
