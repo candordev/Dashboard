@@ -200,14 +200,12 @@ const startEditing = (item: any) => {
                         <TextInput
                             style={styles.input}
                             value={nameEdit}
-                            onChangeText={(text) => setNameEdit(text)}
-                            placeholder={item.name}
+                            onChangeText={(text) => setNameEdit(text)}         
                         />
                         <TextInput
                             style={styles.input}
                             value={descriptionEdit}
                             onChangeText={(text) => setDescriptionEdit(text)}
-                            placeholder={item.description}
                         />
                         <Button
                             title="Done"
