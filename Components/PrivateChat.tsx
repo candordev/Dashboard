@@ -241,8 +241,8 @@
     return (
       <View style={chatStyles.chatContainer}>
         <View style={chatStyles.titleDropdownContainer}>
-          <Text style={chatStyles.chatTitle}>Private Chat</Text>
-          <View>
+          {/* <Text style={chatStyles.chatTitle}>Private Chat</Text> */}
+          <View style={{flexDirection: 'flex-end'}}>
             <DropDown
               placeholder="Chat Type"
               value={chatMode}
@@ -339,9 +339,9 @@
     // },
 
     chatContainer: {
-      borderColor: colors.lightestgray,
-      borderWidth: 2,
-      borderRadius: 10,
+      // borderColor: colors.lightestgray,
+      // borderWidth: 2,
+      // borderRadius: 10,
       padding: 10,
       flex: 1,
     },

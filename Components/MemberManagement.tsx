@@ -177,11 +177,17 @@ const GroupMember = ({ member, kickMember, addLeader, removeLeader }: GroupMembe
     onPress: ((event: GestureResponderEvent) => void) | null | undefined
   ) => {
     const [isHovered, setIsHovered] = useState(false); // Local state to track hover state
+    
   
     return (
       <Pressable
         onPress={onPress}
-        style={[styles.button, isHovered && styles.hoveredButton]}
+        style={[
+          styles.button,
+          isHovered && styles.hoveredButton,
+          // Apply conditional style for specific button texts
+          ((text === "Remove From Group" || text === "Remove Leader") && isHovered) && { backgroundColor: colors.red }
+        ]}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
       >

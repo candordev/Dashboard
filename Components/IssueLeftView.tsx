@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, TextInput, View, Image, TouchableOpacity} from "react-native";
+import { FlatList, TextInput, View, Image, TouchableOpacity, StyleSheet} from "react-native";
 import colors from "../Styles/colors";
 import ExpandableTextInput from "./ExpandableTextInput";
 import { Post } from "../utils/interfaces";
@@ -12,6 +12,8 @@ import SimilarPost from "./SimilarPost";
 import { formatDate } from '../utils/utils'; // Adjust the path as needed
 import CommentsSection from './CommentSection'; // Adjust the import path as needed
 import { useUserContext } from "../Hooks/useUserContext";
+import Text from "./Text";
+
 
 
 interface IssueLeftViewProps {
@@ -113,6 +115,14 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     setDisplaySimilarPost(false);
   };
 
+    // State to manage active tab
+    const [activeTab, setActiveTab] = useState('comments'); // default to comments
+
+    // Function to handle tab selection
+    const handleTabSelect = (tab: any) => {
+      setActiveTab(tab);
+    };
+
 
   return (
     <View style={{
@@ -124,31 +134,83 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       <IssueContent 
         issue={issue}
       />
-      {
-        // Only display CommentsSection if groupType is 'HOA'
-        state.groupType === 'HOA' && <CommentsSection postID={props.issue._id} />
-      }
-      {
-        // Display SimilarPost if applicable
-        props.issue.suggestedSimilarPost && displaySimilarPost && (
-          <SimilarPost
-            title={props.issue.suggestedSimilarPost.title}
-            content={props.issue.suggestedSimilarPost.content}
-            date={props.issue.suggestedSimilarPost.date}
-            ogPostID={props.issue._id}
-            mergePostID={props.issue.suggestedSimilarPost._id}
-            merged={props.issue.suggestedSimilarPost.merged}
-            onClose={handleClose}
-          />
-        )
-      }
-      {
-        // Only display PrivateChat if groupType is not 'HOA'
-        state.groupType !== 'HOA' && <PrivateChat issue={props.issue}/>
-      }
+          {/* Tab controls */}
+    <View style={{
+        backgroundColor: colors.white,
+        paddingVertical: 10,
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: colors.lightestgray,
+        flex: 1, // Take up all available space
+        height: "70%", // Set a maximum height
+        alignContent: 'flex', // Align content to the start
+        }}>
+     <View style={styles.tabs}>
+      <TouchableOpacity
+        onPress={() => handleTabSelect('comments')}
+        style={[styles.tab, activeTab === 'comments' && styles.activeTab]}
+      >
+        <Text style={[styles.tabText, activeTab === 'comments' && styles.activeTabText]}>Comments</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => handleTabSelect('chat')}
+        style={[styles.tab, activeTab === 'chat' && styles.activeTab]}
+      >
+        <Text style={[styles.tabText, activeTab === 'chat' && styles.activeTabText]}>Private Chat</Text>
+      </TouchableOpacity>
+    </View>
+      {/* Tab content */}
+      {activeTab === 'comments' ? (
+        <CommentsSection postID={props.issue._id} />
+      ) : (
+        <PrivateChat issue={props.issue} />
+      )}
+       </View>
     </View>
   );
 }
+
+// Styles for the tabs and container
+const styles = StyleSheet.create({
+  container: {
+    height: "100%",
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  tabs: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 0.2,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1, // Add a gray line beneath the tabs
+    borderBottomColor: colors.lightergray, // Use your gray color here
+  },
+  tab: {
+    flex: 1, // Ensure each tab takes up equal space
+    alignItems: 'center', // Center-align the tab contents
+    justifyContent: 'center', // Vertically center the contents
+    paddingVertical: 10,
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    paddingHorizontal: 5,
+    borderBottomColor: colors.purple, // Purple underline for the active tab
+  },
+  tabText: {
+    fontFamily: 'Montserrat',
+    fontWeight: "500",
+    color: colors.gray, // Default tab text color (inactive)
+  },
+  activeTabText: {
+    fontFamily: 'Montserrat',
+    fontWeight: "500",
+    color: colors.purple, // Active tab text color
+  },
+});
+
+
+
+
 
 
 
