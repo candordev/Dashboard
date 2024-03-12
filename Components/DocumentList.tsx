@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Button, TextInput,StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Button, TextInput,StyleSheet, Platform } from 'react-native';
 import { customFetch } from '../utils/utils'; // Update the import path as needed
 import { Endpoints } from '../utils/Endpoints'; // Update the import path as needed
 // import { useErrorModalContext } from '../Hooks/useErrorModalContext'; // Update the import path as needed
@@ -271,44 +271,45 @@ const startEditing = (item: any) => {
                 keyExtractor={(item) => item._id}
                 />
                 <View style={styles.addDocumentContainer}>
-                    <TextInput
-                        style={styles.input}
-                        value={newTitle}
-                        onChangeText={setNewTitle}
-                        placeholder="New Document Title"
-                    />
-                    <TextInput
-                        style={styles.input}
-                        value={newDescription}
-                        onChangeText={setNewDescription}
-                        placeholder="New Document Description"
-                    />
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        hidden
-                        accept="application/pdf"
-                        onChange={handleFileChange}
-                    />
-                    <View style={{ flexDirection: 'row', paddingVertical: 8, alignItems: 'center' }}>
-                        <TouchableOpacity style={{ flexDirection: 'row'}}onPress={handleFileSelection}>
-                            <Text style={{ fontFamily: 'Montserrat', fontSize: 15, marginRight: 2 }}>Upload PDF</Text>
-                            <Icon name="paperclip" size={22} color={colors.purple}></Icon>
-                        </TouchableOpacity>
-                        {selectedFile && (
-                            <Text style={{ fontFamily: 'Montserrat', fontSize: 15, marginLeft: 8 }}>
-                                {selectedFile.name}
-                            </Text>
-                        )}
-                    </View>
+                <TextInput
+                    style={styles.input}
+                    value={newTitle}
+                    onChangeText={setNewTitle}
+                    placeholder="New Document Title"
+                />
+                <TextInput
+                    style={styles.input}
+                    value={newDescription}
+                    onChangeText={setNewDescription}
+                    placeholder="New Document Description"
+                />
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    hidden
+                    //accept="application/pdf"
+                    onChange={handleFileChange}
+                />
+                <View style={styles.uploadButtonContainer}>
+                    <TouchableOpacity style={styles.uploadButton} onPress={handleFileSelection}>
+                        <Text style={styles.uploadButtonText}>Upload File</Text>
+                        <Icon name="paperclip" size={22} color={colors.purple} />
+                    </TouchableOpacity>
+                    {selectedFile && (
+                        <Text style={styles.selectedFileName}>
+                            {selectedFile.name}
+                        </Text>
+                    )}
+                </View>
 
-                    <Button
-                        title={isUploading ? "Uploading..." : "Add Document"}
-                        onPress={handleAddDocument}
-                        color={colors.purple}
-                        disabled={isUploading}
-                    />
-                    </View>
+                <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={handleAddDocument}
+                    disabled={isUploading}
+                >
+                    <Text style={styles.addButtonLabel}>{isUploading ? "Uploading..." : "Add Document"}</Text>
+                </TouchableOpacity>
+            </View>
         </View>
       );
     };
@@ -321,8 +322,35 @@ const styles = StyleSheet.create({
         paddingLeft: 10, // Space after the document icon
     },
     container: {
-      flex: 1,
-      padding: 10,
+        flex: 1,
+        margin: 10,
+        borderRadius: 30,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        ...Platform.select({
+          ios: {
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+          },
+          android: {
+            elevation: 5,
+          },
+          web: {
+            // Example values for boxShadow
+            boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
+          }
+        }),
+      },
+  scrollContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+    selectedFileName: {
+        fontFamily: 'Montserrat',
+        fontSize: 15,
+        marginLeft: 8
     },
     actionContainer: {
         flexDirection: 'row',
@@ -335,9 +363,24 @@ const styles = StyleSheet.create({
         marginRight: 10, // Ensure some space between the icon and the text
     },
     title: {
-      fontFamily: 'Montserrat',
-      fontSize: 20,
-      marginBottom: 16,
+        alignSelf: "flex-start",
+        fontWeight: "600",
+        fontSize: 27,
+        fontFamily: "Montserrat",
+        margin: 5,
+      },
+    addButton: {
+        backgroundColor: colors.purple,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 5,
+        marginTop: 10,
+        paddingVertical: 12
+    },
+    addButtonLabel: {
+        fontFamily: 'Montserrat',
+        fontSize: 15,
+        color: 'white'
     },
     itemContainer: {
       flexDirection: 'row',
@@ -346,6 +389,19 @@ const styles = StyleSheet.create({
       paddingVertical: 10,
       borderBottomWidth: 1,
       borderColor: '#e1e1e1',
+    },
+    uploadButtonContainer: {
+        flexDirection: 'row',
+        paddingVertical: 8,
+        alignItems: 'center'
+    },
+    uploadButton: {
+        flexDirection: 'row'
+    },
+    uploadButtonText: {
+        fontFamily: 'Montserrat',
+        fontSize: 15,
+        marginRight: 2
     },
     documentTitle: {
       fontFamily: 'Montserrat',
@@ -367,15 +423,6 @@ const styles = StyleSheet.create({
         padding: 8,
         marginVertical: 4,
       },
-    addButton: {
-      backgroundColor: colors.purple,
-      padding: 10,
-      borderRadius: 5,
-      width: 200,
-      alignItems: 'center',
-      marginTop: 10,
-      marginBottom: 10
-    },
     buttonText: {
       fontFamily: 'Montserrat',
       color: colors.white,
@@ -399,6 +446,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderTopWidth: 1,
         borderTopColor: '#e1e1e1',
+
       },
       
   });

@@ -7,14 +7,14 @@
 // }
 
 // local
-//export const BASE_URL : string = `http://localhost:4000/api`;
+export const BASE_URL : string = `http://localhost:4000/api`;
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
 //export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
 // PRODUCTION
-export const BASE_URL: string = `https://candoradmin.com/api`;
+//export const BASE_URL: string = `https://candoradmin.com/api`;
 
 export const Endpoints = {
   base: BASE_URL,
@@ -99,6 +99,8 @@ export const Endpoints = {
   setAssignees: `${BASE_URL}/userActivity/setAssignees?`,
   getDepartments: `${BASE_URL}/department/getDepartments?`,
   setDeadline: `${BASE_URL}/post/setDeadline?`,
+  getGroupDeadlines: `${BASE_URL}/group/getDeadlines?`,
+  setGroupDeadlines: `${BASE_URL}/group/setDeadlines`,
   setNeighborhood: `${BASE_URL}/userActivity/setNeighborhood?`,
   addLeaderCreatePost: `${BASE_URL}/userActivity/addLeaderCreatePost?`,
   addCategoryCreatePost: `${BASE_URL}/userActivity/addCategoryCreatePost?`,
@@ -109,8 +111,10 @@ export const Endpoints = {
   markDone:  `${BASE_URL}/post/markDone?`,
   sendConstituentChat: `${BASE_URL}/comment/sendConstituentChat?`,
   sendPoliticianChat: `${BASE_URL}/comment/sendPoliticianChat?`,
-  deleteCategory: `${BASE_URL}/group/deleteCategory?`,
+  deleteCategory: `${BASE_URL}/group/deleteCategory`,
   addDepartment: `${BASE_URL}/department/createDepartment?`,
+  deleteDepartment: `${BASE_URL}/department/deleteDepartment?`,
+  changeDepartment: `${BASE_URL}/department/changeDepartment?`,
   getUsernameByEmails: `${BASE_URL}/userActivity/getUsernameByEmails?`,
   requestPDFInfo: `${BASE_URL}/group/requestPDFInfo?`,
   mergePost: `${BASE_URL}/userActivity/mergePost?`,
@@ -122,6 +126,8 @@ export const Endpoints = {
   getPinnedDocuments: `${BASE_URL}/group/getPinnedDocuments?`,
   editPinnedDocument: `${BASE_URL}/group/editPinnedDocument?`,
   addPinnedDocument: `${BASE_URL}/group/addPinnedDocument?`,
-  deletePinnedDocument: `${BASE_URL}/group/deletePinnedDocument?`
-
+  deletePinnedDocument: `${BASE_URL}/group/deletePinnedDocument?`,
+  addGroupCategory: `${BASE_URL}/group/addCategory?`,
+  getGroupCategories: `${BASE_URL}/group/getGroupCategories?`,
+  
 };

@@ -1,6 +1,6 @@
 // MemberManagement.tsx
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Pressable, TouchableOpacity, FlatList, Image, GestureResponderEvent } from "react-native";
+import { StyleSheet, View, Pressable, TouchableOpacity, FlatList, Image, GestureResponderEvent, Platform } from "react-native";
 import SearchBar from "../Components/SearchBar";
 import Text from "../Components/Text";
 import { customFetch } from "../utils/utils";
@@ -11,6 +11,7 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 
 type MemberManagementProps = {
     groupID: string;
+    userID: string;
 };
 
 type Member = {
@@ -21,7 +22,7 @@ type Member = {
     isLeader?: boolean;
 };
 
-const MemberManagement = ({ groupID }: MemberManagementProps) => {
+const MemberManagement = ({ groupID, userID }: MemberManagementProps) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [groupMembers, setGroupMembers] = useState<Member[]>([]);
 
@@ -43,7 +44,8 @@ const MemberManagement = ({ groupID }: MemberManagementProps) => {
           const data = await response.json();
           console.log("DATA", data);
           if (response.ok) {
-            setGroupMembers(data);
+            const filteredMembers = data.filter((member: Member) => member.user !== userID);
+            setGroupMembers(filteredMembers);
           } else {
             console.error("Error fetching members: ", data.error);
           }
@@ -128,7 +130,7 @@ const MemberManagement = ({ groupID }: MemberManagementProps) => {
                     margin: 10
                 }}
                 >
-                Manage Group Members
+                Manage Members
             </Text>
             <SearchBar
                 searchPhrase={searchQuery}
@@ -202,15 +204,16 @@ const GroupMember = ({ member, kickMember, addLeader, removeLeader }: GroupMembe
     <View style={styles.memberContainer}>
       <Image source={{ uri: member.profilePicture }} style={styles.profilePic} />
       <View style={styles.infoContainer}>
-        <Text style={styles.memberText}>
-          {member.firstName} {member.lastName}
-        </Text>
-        {member.isLeader && <FeatherIcon name="check-circle" size={20} color={colors.purple} />}
+        <View style={{ flexDirection: 'row', alignItems: 'center', flexShrink: 1 }}> 
+          <Text style={styles.memberText}>
+            {member.firstName} {member.lastName}
+          </Text>
+          {member.isLeader && <FeatherIcon name="check-circle" size={20} color={colors.purple} />}
+        </View>
       </View>
       {member.isLeader ? (
         <>
           {renderButton("Remove Leader", removeLeader)}
-          {renderButton("Remove From Group", kickMember)}
         </>
       ) : (
         <>
@@ -230,8 +233,32 @@ const GeneralSettings = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    marginTop: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    borderRadius: 30,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 5,
+      },
+      web: {
+        // Example values for boxShadow
+        boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
+      }
+    }),
   },
+scrollContainer: {
+paddingHorizontal: 10,
+paddingVertical: 10,
+},
   memberContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -240,15 +267,14 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   profilePic: {
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 35,
     borderRadius: 25,
   },
   infoContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
     marginLeft: 10,
+    justifyContent: 'center', // Ensures vertical centering if contents go to multiple lines
   },
   memberText: {
     marginRight: 5,
