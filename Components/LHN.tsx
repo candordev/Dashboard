@@ -12,7 +12,11 @@ import { useSignout } from "../Hooks/useSignout";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
 import ProfilePicture from "./ProfilePicture";
 
-const LHN = (props: any) => {
+interface LHNProps {
+  navigation: any;
+}
+
+const LHN = ({ navigation }: LHNProps, ...props: any) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
@@ -23,9 +27,19 @@ const LHN = (props: any) => {
 
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
-  const navIndex = props.state.index;
+  const navIndex = props.state?.index;
+
+
+  const handleGroupSelect = async (currentGroup: any) => {
+    // Update the current group in the global state
+    await dispatch({ type: 'SET_CURRENT_GROUP', payload: currentGroup});
+    console.log("Event Triggg: ", state.currentGroup);
+    // Navigate to the "All" screen
+    navigation.navigate('all');
+  };
 
   useEffect(() => {
+      
     // console.log("sparsisparsi");
     // console.log(props);
     // console.log(currRoute);
@@ -49,6 +63,7 @@ const LHN = (props: any) => {
   useEffect(() => {
     // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
     event.on(eventNames.FETCH_NOTIFS, getUnreadDB);
+    console.log("Leader groups: ", state.leaderGroups);
 
     return () => {
       // event.off(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
@@ -91,12 +106,25 @@ const LHN = (props: any) => {
           {state.firstName} {state.lastName}
         </Text>
       </View>
-      <NavItem
-        name={"Issues"}
-        route="/all"
-        icon="list"
-        selected={navIndex == 0}
-      />
+      {state.master ? (
+        <>
+          <Pressable onPress={() => navigation.navigate('master')}>
+            <Text style={{color: colors.purple}}>Master</Text>
+          </Pressable>
+          <View style={{ paddingLeft: 10 }}>
+            {state.leaderGroups.map((group: { name: any; _id: any }, index: React.Key | null | undefined) => (
+              <Pressable key={index} onPress={() => handleGroupSelect(group._id)}>
+                <Text style={{color: colors.purple}}>{group.name}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </>
+      ): <NavItem
+      name={"Issues"}
+      route="/all"
+      icon="list"
+      selected={navIndex == 0}
+    />}
       {/* <NavItem
         name={"Map"}
         route="/map"
@@ -139,7 +167,7 @@ const LHN = (props: any) => {
         name="Download"
         onPress={() => {
           downloadPDF(
-            state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined
+            state.leaderGroups?.[0] ?state.currentGroup : undefined
           );
         }}
         icon="download"

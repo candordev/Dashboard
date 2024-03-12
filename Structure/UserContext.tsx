@@ -15,6 +15,12 @@ let userReducer = (state: any, action: any) => {
         ...state,
         ...action.payload,
       }
+      case 'SET_CURRENT_GROUP':
+        // Assuming you want to set currentGroup at the same level as user
+        return {
+          ...state,
+          currentGroup: action.payload,
+        };
     default:
       //console.log("Default case in userReducer");
       return state;

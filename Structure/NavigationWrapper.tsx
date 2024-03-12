@@ -130,6 +130,7 @@ function NavigationWrapper() {
                 component={SignupStack}
                 options={{ headerShown: false }}
               />
+              {/* <Stack.Screen name="all" component={AllScreen} /> */}
 
             </>
           )}

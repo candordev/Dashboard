@@ -206,7 +206,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({
           body: JSON.stringify({
             title: postData.title,
             content: postData.content,
-            groupID: state.leaderGroups[0],
+            groupID:state.currentGroup,
             visible: true,
             anonymous: false,
             postCreatedFrom: "dashboard import",
@@ -281,7 +281,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({
           lastName: lastName,
           departmentID: departmentID,
           email: email,
-          groupID: state.leaderGroups[0],
+          groupID:state.currentGroup,
           type: "import",
         }),
       });

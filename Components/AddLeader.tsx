@@ -55,7 +55,7 @@ const AddLeader = (props: {
       try {
         // Prepare the query parameters
         const queryParams = new URLSearchParams({
-          groupID: state.leaderGroups[0],
+          groupID: state.currentGroup,
         });
 
         // Make the GET request
@@ -127,7 +127,7 @@ const AddLeader = (props: {
         body: JSON.stringify({
           description: departmentDescription,
           name: departmentName,
-          groupID: state.leaderGroups[0],
+          groupID:state.currentGroup,
         }),
       });
 

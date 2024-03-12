@@ -75,11 +75,11 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   const fetchLeaders = async () => {
     try {
-      // console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // console.log("THESE THE LEADER GROUPS",state.currentGroup);
       // Initialize URLSearchParams
       let params = new URLSearchParams({
         //page: "1",
-        groupID: state.leaderGroups[0],
+        groupID:state.currentGroup,
       });
 
       // Add postID only if props.issue is defined
@@ -462,7 +462,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           lastName: lastName,
           departmentID: departmentID,
           email: email,
-          groupID: state.leaderGroups[0],
+          groupID:state.currentGroup,
         }),
       });
 

@@ -6,7 +6,7 @@ import DocumentList from "../Components/DocumentList";
 
 const GroupSettingsScreen = ({  }) => {
     const { state } = useUserContext();
-    const groupID = state.leaderGroups[0]; // Assuming you're obtaining the groupID this way
+    const groupID =state.currentGroup; // Assuming you're obtaining the groupID this way
 
     return (
         <View style={{ flex: 1, flexDirection: 'row' }}>
