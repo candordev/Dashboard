@@ -10,11 +10,10 @@
   import DropDown from "./DropDown";
   import styles from "../Styles/styles";
   import { debounce } from "lodash";
-  const validator = require('validator');
+  import io from "socket.io-client";
+  const validator = require("validator");
   import { BASE_URL } from "../utils/Endpoints";
   import { usePostContext } from "../Hooks/usePostContext";
-  import io from 'socket.io-client';
-
 
   interface PrivateChatProps {
     issue: Post;
@@ -242,7 +241,7 @@
     return (
       <View style={chatStyles.chatContainer}>
         <View style={chatStyles.titleDropdownContainer}>
-          <Text style={chatStyles.chatTitle}>Private Chat</Text>
+          {/* <Text style={chatStyles.chatTitle}>Private Chat</Text> */}
           <View>
             <DropDown
               placeholder="Chat Type"
@@ -342,9 +341,9 @@
     // },
 
     chatContainer: {
-      borderColor: colors.lightestgray,
-      borderWidth: 2,
-      borderRadius: 10,
+      // borderColor: colors.lightestgray,
+      // borderWidth: 2,
+      // borderRadius: 10,
       padding: 10,
       flex: 1,
     },

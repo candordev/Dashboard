@@ -6,6 +6,7 @@ import LHN from "../Components/LHN";
 import AllScreen from "./AllScreen";
 import InboxScreen from "./InboxScreen";
 import SettingsScreen from "./SettingsScreen";
+import GroupSettingsScreen from "./GroupSettingsScreen";
 import NotificationPopup from "../Components/NotificationPopup";
 
 const Drawer = createDrawerNavigator();
@@ -59,7 +60,7 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         drawerStyle: { width: 200, borderRightWidth: 0 },
         headerShown: false,
       }}
-      initialRouteName="settings"
+      initialRouteName="all"
     >    
       <Drawer.Screen
         name="all"
@@ -82,6 +83,11 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         name="settings"
         component={SettingsScreen}
         options={{ title: "Candor - Settings" }}
+      />
+      <Drawer.Screen
+        name="groupSettings"
+        component={GroupSettingsScreen}
+        options={{ title: "Candor - Group Settings" }}
       />
     </Drawer.Navigator>
   );

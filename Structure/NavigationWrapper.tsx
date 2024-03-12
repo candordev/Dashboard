@@ -13,6 +13,7 @@ import SignupStack from "../Screens/SignupStack";
 import { useSignup } from "../Hooks/useSignup";
 import AllScreen from "../Screens/AllScreen";
 import InboxScreen from "../Screens/InboxScreen";
+import GroupSettingsScreen from "../Screens/GroupSettingsScreen";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { getUnreadNotifs } from "../utils/utils";
@@ -98,6 +99,7 @@ function NavigationWrapper() {
         inbox: "inbox",
         launch: "launch/:userId?/:postId?/:groupId?",
         login: "login",
+        groupSettings: "groupSettings",
         NotFound: "404",
       },
     },
@@ -115,6 +117,7 @@ function NavigationWrapper() {
               <Stack.Screen name="launch" component={LaunchScreen} />
               <Stack.Screen name="root" component={Root} />
               <Stack.Screen name="inbox" component={InboxScreen} />
+              <Stack.Screen name="groupSettings" component={GroupSettingsScreen} />
 
               {/* other authenticated screens */}
             </>

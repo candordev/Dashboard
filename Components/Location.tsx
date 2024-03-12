@@ -15,6 +15,7 @@ import { deepStrictEqual } from "assert";
 import Text from "./Text";
 
 type LocationProps = {
+  style?: any;
   issue?: Post;
   createPost?: boolean;
   onChange?: (
@@ -118,7 +119,7 @@ const Location: React.FC<LocationProps> = (props) => {
 
 
   return (
-    <OuterComponentView title={"Location"}>
+    <OuterComponentView title={"Location"} style={props.style}>
       <Text style={{
             fontSize: 15,
             fontWeight: "525",
