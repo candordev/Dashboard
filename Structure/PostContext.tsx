@@ -24,7 +24,7 @@ export const PostIdProvider = ({ children }: any) => {
   const [post, setPost] = useState<Post | null>(null);
 
   return (
-    <PostIdContext.Provider value={{ postId, setPostId, post, setPost}}>
+    <PostIdContext.Provider value={{postId, setPostId, post, setPost}}>
       {children}
     </PostIdContext.Provider>
   );

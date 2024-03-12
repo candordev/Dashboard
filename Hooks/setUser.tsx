@@ -59,12 +59,15 @@ export const setUser = async ({
       bio: resJson.bio,
       _id: resJson.user,
       leaderPoints: resJson.leaderPoints,
+      masterPages: resJson.masterPages,
       leaderGroups: resJson.leaderGroups,
       postId: postId,
       groupType: resJson.groupType,
+      currentGroup: resJson.leaderGroups && resJson.leaderGroups.length > 0 ? resJson.leaderGroups[0]._id : null,
+      master: resJson.master
     };
 
-    // console.log(' This is the user', user);
+   console.log('This is the user master', user.master);
 
     dispatch({type: 'SET_USER', payload: user});
   } catch (error) {

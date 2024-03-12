@@ -42,11 +42,11 @@ const Category: React.FC<CategoryProps> = ({
 
   const getCategories = async () => {
     try {
-      // console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // console.log("THESE THE LEADER GROUPS",state.currentGroup);
 
       // Initialize URLSearchParams
       let params = new URLSearchParams({
-        groupID: state.leaderGroups[0], // This parameter is always included
+        groupID:state.currentGroup, // This parameter is always included
       });
 
       // Add postID only if issueId is defined
@@ -192,7 +192,7 @@ const Category: React.FC<CategoryProps> = ({
         let res = await customFetch(Endpoints.addCategoryCreatePost, {
           method: "POST",
           body: JSON.stringify({
-            groupID: state.leaderGroups[0],
+            groupID:state.currentGroup,
             names: [newCategoryName],
           }),
         });
