@@ -267,8 +267,8 @@ paddingVertical: 10,
     borderBottomColor: '#ccc',
   },
   profilePic: {
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 35,
     borderRadius: 25,
   },
   infoContainer: {

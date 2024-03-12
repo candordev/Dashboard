@@ -5,51 +5,58 @@ import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import { set } from "lodash";
 
-type TagEditorProps = {
+type DepartmentEditorProps = {
   groupID: string;
 };
 
-interface Tag {
+interface Department {
     _id: string;
     name: string;
+    description: string;
   }
 
-function TagEditor({
+
+function DepartmentEditor({
   groupID
-}: TagEditorProps): JSX.Element {
-  const [tags, setTags] = useState([]);
+}: DepartmentEditorProps): JSX.Element {
+  const [departments, setDepartments] = useState([]);
   const [error, setError] = useState('');
   const [isAdding, setIsAdding] = useState(false);
-  const [newTagName, setNewTagName] = useState("");
+  const [newDepartmentName, setNewDepartmentName] = useState("");
+  const [newDepartmentDescription, setNewDepartmentDescription] = useState("");
 
   useEffect(() => {
-    fetchTags();
+    fetchDepartments();
   }, []);
 
-  async function fetchTags() {
+  async function fetchDepartments() {
     try {
       setError('');
-      const queryParams = new URLSearchParams({ groupID });
-      const url = `${Endpoints.getGroupCategories}${queryParams.toString()}`
+      const queryParams = new URLSearchParams({ 
+        groupID,
+        description: "true"
+    });   
+      const url = `${Endpoints.getDepartments}${queryParams.toString()}`
       console.log("URL", url);
       const response = await customFetch(url, { method: "GET" });
       const data = await response.json();
       console.log("DATA", data);
       console.log("get tags response", response);
       if (response.ok) {
-        setTags(data);
+        setDepartments(data);
       } else {
-        console.error("Error fetching tags: ", data.error);
-        setError("Error fetching tags");
+        console.error("Error fetching departments: ", data.error);
+        setError("Error fetching departments");
       }
     } catch (error) {
-      console.error("Network error while fetching tags: ", error);
-      setError("Network error while fetching tags");
+      console.error("Error fetching departments:", error);
+      setError("Error fetching departments");
     }
   }
 
-  async function addTag(name: string) {
+  async function addDepartment(name: string, description: string) {
     try {
       setError('');
       if(name.length === 0) {
@@ -68,7 +75,7 @@ function TagEditor({
         console.error("Error with setting tags:", resJson.error);
         setError("Error with setting tags");
       } else {
-        fetchTags();
+        fetchDepartments();
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
@@ -76,29 +83,22 @@ function TagEditor({
     }
   }
 
-  async function deleteTag(name: string) {
+  async function deleteDepartment(departmentId: string) {
     try {
       setError('');
-      if(name.length === 0) {
-        return
-      }   
-      console.log(Endpoints.deleteCategory)
-      console.log("groupID", groupID)
-        console.log("name", name)
-      let res = await customFetch(Endpoints.deleteCategory, {
+      let res = await customFetch(Endpoints.deleteDepartment, {
         method: "DELETE",
         body: JSON.stringify({
-          groupID: groupID,
-          categoryName: name
+          departmentId
         }),
       });
 
       if (!res.ok) {
         const resJson = await res.json();
-        console.error("Error with removing tag:", resJson.error);
-        setError("Error with removing tag");
+        console.error("Error with removing department:", resJson.error);
+        setError("Error with removing department:");
       } else {
-        fetchTags();
+        fetchDepartments();
       }
     } catch (error) {
       console.error("Network error while removing tag:", error);
@@ -107,9 +107,9 @@ function TagEditor({
   }
 
   const handleAddTagPress = () => {
-    if (isAdding && newTagName.trim()) {
-      addTag(newTagName.trim()).then(() => {
-        setNewTagName(""); // Reset input field after adding
+    if (isAdding) {
+      addDepartment(newDepartmentName.trim(), newDepartmentDescription.trim()).then(() => {
+        setNewDepartmentName(""); // Reset input field after adding
         setIsAdding(false); // Change state to hide input field
       });
     } else {
@@ -120,31 +120,40 @@ function TagEditor({
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Manage Tags</Text>
-        <FlatList<Tag>
-            data={tags}
-            keyExtractor={(item: Tag) => item._id}
-            renderItem={({ item }: { item: Tag }) => (
+        <Text style={styles.title}>Manage Departments</Text>
+        <FlatList<Department>
+            data={departments}
+            keyExtractor={(item: Department) => item._id}
+            renderItem={({ item }: { item: Department }) => (
                 <View style={styles.tagItem}>
-                    <FeatherIcon name="tag" size={15} color={colors.purple} />
+                    <FeatherIcon name="briefcase" size={15} color={colors.purple} />
                     <Text style={styles.tagText}>{item.name}</Text>
-                    <TouchableOpacity onPress={() => deleteTag(item.name)} style={styles.deleteButton}>
+                    <TouchableOpacity onPress={() => deleteDepartment(item.name)} style={styles.deleteButton}>
                         <FeatherIcon name="x" size={15} color={colors.red} />
                     </TouchableOpacity>
                 </View>
             )}
         />
         {isAdding && (
-          <TextInput
-            style={styles.input}
-            onChangeText={setNewTagName}
-            value={newTagName}
-            placeholder="Enter new tag name"
-            autoFocus
-          />
+            <>
+                <TextInput
+                style={styles.input}
+                onChangeText={setNewDepartmentName}
+                value={newDepartmentName}
+                placeholder="Enter new department name"
+                autoFocus
+                />
+                <TextInput
+                style={styles.input}
+                onChangeText={setNewDepartmentDescription}
+                value={newDepartmentDescription}
+                placeholder="Enter new department description. Be as detailed as possible"
+                autoFocus
+                />
+            </>
         )}
         <TouchableOpacity onPress={handleAddTagPress} style={styles.button}>
-          <Text style={styles.buttonText}>{isAdding ? "Done" : "Add Tag"}</Text>
+          <Text style={styles.buttonText}>{isAdding ? "Done" : "Add Department"}</Text>
         </TouchableOpacity>
         {error !== "" && <Text style={styles.error}>{error}</Text>}
       </ScrollView>
@@ -157,7 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 10,
     marginHorizontal: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     borderRadius: 30,
     ...Platform.select({
         ios: {
@@ -228,4 +237,4 @@ const styles = StyleSheet.create({
   // other styles remain unchanged
 });
 
-export default TagEditor;
+export default DepartmentEditor;

@@ -4,6 +4,7 @@ import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
+import { set } from "lodash";
 
 type PrioritySetterProps = {
   groupID: string;
@@ -22,6 +23,7 @@ function PrioritySetter({
 
   async function fetchDeadlines() {
     try {
+      setError('');
       const queryParams = new URLSearchParams({ groupID });
       const url = `${Endpoints.getGroupDeadlines}${queryParams.toString()}`
       console.log("URL", url);
@@ -41,6 +43,7 @@ function PrioritySetter({
   }
 
   async function setDeadlines() {
+    setError('');
     const deadline1 = parseInt(deadlineOne, 10);
     const deadline2 = parseInt(deadlineTwo, 10);
     if (isNaN(deadline1) || isNaN(deadline2) || deadline1 < 0 || deadline2 < 0) {
@@ -83,8 +86,8 @@ function PrioritySetter({
             Set Deadlines
         </Text>
         <Text style={styles.explanation}>
-          Issues with a deadline less than the High Priority Deadline (in days) are marked as high priority. 
-          If the deadline is less than the Medium Priority Deadline, it's marked as medium priority. 
+          Issues with a deadline less than the High Priority Deadline (in days) away are marked as high priority. 
+          If the deadline is less than the Medium Priority Deadline (in days) away, it's marked as medium priority. 
           Deadlines beyond these are considered low priority.
         </Text>
         <View style={styles.inputGroup}>
