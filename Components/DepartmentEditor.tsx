@@ -15,17 +15,26 @@ interface Department {
     _id: string;
     name: string;
     description: string;
-  }
+    isOpen?: boolean; // Optional property to manage dropdown state
+}
+
+interface Leader {
+    _id: string;
+    firstName: string;
+    lastName: string;
+}
 
 
 function DepartmentEditor({
   groupID
 }: DepartmentEditorProps): JSX.Element {
-  const [departments, setDepartments] = useState([]);
+  const [departments, setDepartments] =  useState<Department[]>([]);
   const [error, setError] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [newDepartmentName, setNewDepartmentName] = useState("");
   const [newDepartmentDescription, setNewDepartmentDescription] = useState("");
+  const [leaders, setLeaders] = useState<{ [key: string]: Leader[] }>({});
+  const [leadersNotInDept, setLeadersNotInDept] = useState<{ [key: string]: Leader[] }>({});
 
   useEffect(() => {
     fetchDepartments();
@@ -56,30 +65,91 @@ function DepartmentEditor({
     }
   }
 
+  async function getLeadersNotInDepartment(departmentID: string) {
+    try {
+        setError('');
+        const queryParams = new URLSearchParams({ 
+          departmentID,
+        });   
+        const url = `${Endpoints.getLeadersNotInDepartment}${queryParams.toString()}`
+        const response = await customFetch(url, { method: "GET" });
+        const data = await response.json();
+        if (response.ok) {
+            const formattedLeaders = data.map((item: any) => ({ _id: item.user, firstName: item.firstName, lastName: item.lastName }));
+            setLeadersNotInDept(prevState => ({ ...prevState, [departmentID]: formattedLeaders }));
+      } else {
+          console.error("Error fetching departments: ", data.error);
+          setError("Error fetching departments");
+        }
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+        setError("Error fetching departments");
+      }
+  }
+
+  const toggleDropdown = (departmentID: string) => {
+    const updatedDepartments = departments.map(department => {
+      if (department._id === departmentID) {
+        return { ...department, isOpen: !department.isOpen };
+      }
+      return department;
+    });
+    setDepartments(updatedDepartments);
+
+    // Fetch leaders if the dropdown is being opened
+    const department = updatedDepartments.find(d => d._id === departmentID);
+    if (department && department.isOpen && !leaders[departmentID]) {
+      fetchDepartmentLeaders(departmentID);
+    }
+  };
+
+
+  async function fetchDepartmentLeaders(departmentID: string) {
+    try {
+      setError('');
+      const queryParams = new URLSearchParams({ 
+        departmentID
+    });   
+      const url = `${Endpoints.getDepartment}${queryParams.toString()}`
+      const response = await customFetch(url, { method: "GET" });
+      const data = await response.json();
+      if (response.ok) {
+        setLeaders(prevLeaders => ({ ...prevLeaders, [departmentID]: data.leaders as Leader[] })); // Cast to Leader[] based on the interface
+      } else {
+        console.error("Error fetching department leaders: ", data.error);
+        setError("Error fetching department leaders");
+      }
+    } catch (error) {
+      console.error("Error fetching department leaders:", error);
+      setError("Error fetching department leaders");
+    }
+  }
+
   async function addDepartment(name: string, description: string) {
     try {
       setError('');
       if(name.length === 0) {
         return
     }   
-      let res = await customFetch(Endpoints.addGroupCategory, {
+      let res = await customFetch(Endpoints.addDepartment, {
         method: "POST",
         body: JSON.stringify({
           groupID,
-          categoryName: name
+          name: name,
+          description: description
         }),
       });
 
       if (!res.ok) {
         const resJson = await res.json();
-        console.error("Error with setting tags:", resJson.error);
-        setError("Error with setting tags");
+        console.error("Error with adding department:", resJson.error);
+        setError("Error with adding department");
       } else {
         fetchDepartments();
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
-      setError("Network error while setting tags");
+      setError("Network error while adding department");
     }
   }
 
@@ -122,17 +192,35 @@ function DepartmentEditor({
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Manage Departments</Text>
         <FlatList<Department>
-            data={departments}
-            keyExtractor={(item: Department) => item._id}
-            renderItem={({ item }: { item: Department }) => (
-                <View style={styles.tagItem}>
-                    <FeatherIcon name="briefcase" size={15} color={colors.purple} />
-                    <Text style={styles.tagText}>{item.name}</Text>
-                    <TouchableOpacity onPress={() => deleteDepartment(item.name)} style={styles.deleteButton}>
-                        <FeatherIcon name="x" size={15} color={colors.red} />
-                    </TouchableOpacity>
+          data={departments}
+          keyExtractor={(item: Department) => item._id}
+          renderItem={({ item }: { item: Department }) => (
+            <>
+              <View style={styles.departmentItem}>
+                <Pressable onPress={() => toggleDropdown(item._id)} style={styles.dropdownIcon}>
+                  <FeatherIcon
+                    name={item.isOpen ? "chevron-down" : "chevron-right"}
+                    size={20}
+                    color={colors.purple}
+                  />
+                </Pressable>
+                <Text style={styles.departmentText}>{item.name}</Text>
+                <TouchableOpacity onPress={() => deleteDepartment(item._id)} style={styles.deleteButton}>
+                  <FeatherIcon name="trash" size={15} color={colors.red} />
+                </TouchableOpacity>
+              </View>
+              {item.isOpen && leaders[item._id] && (
+                <View style={styles.leadersList}>
+                  {leaders[item._id].map((leader) => (
+                    <Text key={leader._id} style={styles.leaderText}>
+                      {leader.firstName} {leader.lastName}
+                    </Text>
+                  ))}
+
                 </View>
-            )}
+              )}
+            </>
+          )}
         />
         {isAdding && (
             <>
@@ -162,36 +250,57 @@ function DepartmentEditor({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 10,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    borderRadius: 30,
-    ...Platform.select({
-        ios: {
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-        },
-        android: {
-          elevation: 5,
-        },
-        web: {
-          // Example values for boxShadow
-          boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
-        }
-      }),
-  },
-  scrollContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  deleteButton: {
-    marginLeft: 'auto', // This pushes the delete button to the right
-    padding: 8, // Adjust padding as needed
-  },
+    container: {
+        flex: 1,
+        marginTop: 10,
+        marginHorizontal: 10,
+        marginBottom: 10,
+        borderRadius: 30,
+        ...Platform.select({
+          ios: {
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+          },
+          android: {
+            elevation: 5,
+          },
+          web: {
+            boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
+          },
+        }),
+      },
+      scrollContainer: {
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+      },
+      departmentItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 4,
+      },
+      departmentText: {
+        marginLeft: 10,
+        fontFamily: 'Montserrat',
+        flex: 1, // Allows text to take up available space, pushing icons to the edge
+      },
+      deleteButton: {
+        marginLeft: 'auto', // Ensures the button is aligned to the right
+        padding: 8,
+      },
+      dropdownIcon: {
+        padding: 8,
+      },
+      leadersList: {
+        paddingLeft: 35, // Indent leader names to differentiate from department names
+      },
+      leaderText: {
+        fontFamily: 'Montserrat',
+        marginVertical: 2,
+        // Any additional styling for leader text
+      },
+  
   title: {
     alignSelf: "flex-start",
     fontWeight: "600",
