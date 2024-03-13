@@ -39,7 +39,7 @@ function DepartmentEditor({
 
   useEffect(() => {
     fetchDepartments();
-  }, []);
+  }, [groupID]);
 
   async function fetchDepartments() {
     try {
