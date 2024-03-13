@@ -25,7 +25,7 @@ function SignupScreenEmailDob({
 
 
 
-  const { groupId ,postId ,userId, firstName: initialFirstName, lastName: initialLastName, email: initialEmail } = route.params;
+  const { masterId ,groupId ,postId ,userId, firstName: initialFirstName, lastName: initialLastName, email: initialEmail } = route.params;
 
 
 
@@ -132,7 +132,7 @@ function SignupScreenEmailDob({
 
     const token: string | undefined = await signUpWithEmail(email, password);
 
-    await signupUser(firstName, lastName, email, username, token ?? "", "",userId, postId, groupId);
+    await signupUser(firstName, lastName, email, username, token ?? "", "",userId, postId, groupId, masterId);
   };
 
   const toggleShowPassword = () => {

@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, FlexAlignType } from "react-native";
+import { View, TouchableOpacity, FlexAlignType, ScrollView } from "react-native";
 import Text from "./Text";
 import { Link } from "@react-navigation/native";
 import colors from "../Styles/colors";
@@ -28,6 +28,7 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
   const navIndex = props.state?.index;
+  console.log("nav index: ", props.state?.index)
 
 
   const handleGroupSelect = async (currentGroup: any) => {
@@ -108,23 +109,34 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
       </View>
       {state.master ? (
         <>
-          <Pressable onPress={() => navigation.navigate('master')}>
-            <Text style={{color: colors.purple}}>Master</Text>
-          </Pressable>
-          <View style={{ paddingLeft: 10 }}>
-            {state.leaderGroups.map((group: { name: any; _id: any }, index: React.Key | null | undefined) => (
-              <Pressable key={index} onPress={() => handleGroupSelect(group._id)}>
-                <Text style={{color: colors.purple}}>{group.name}</Text>
-              </Pressable>
-            ))}
+          <NavItem
+            name={"Master"}
+            route="/master"
+            icon="list"
+            selected={navIndex === 4}
+          />
+          <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
+            <ScrollView>
+              {state.leaderGroups.map((group: { name: any; _id: any }, index: React.Key | null | undefined) => (
+                <Pressable key={index} onPress={() => handleGroupSelect(group._id)} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 4 }}>
+                  <FeatherIcon name="trello" size={20} color={colors.white} style={{ marginRight: 10 }} />
+                  <Text style={{ color: colors.white, fontFamily: 'Montserrat', textAlign: 'left', flex: 1 }}>
+                    {group.name.length > 15 ? `${group.name.slice(0, 15)}...` : group.name}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
           </View>
         </>
-      ): <NavItem
-      name={"Issues"}
-      route="/all"
-      icon="list"
-      selected={navIndex == 0}
-    />}
+      ) : (
+        <NavItem
+          name={"Issues"}
+          route="/all"
+          icon="list"
+          selected={navIndex === 0}
+        />
+      )}
+
       {/* <NavItem
         name={"Map"}
         route="/map"
@@ -201,7 +213,7 @@ const NavItem = ({
           style={{
             marginBottom: 10,
             paddingVertical: 10,
-            paddingHorizontal: 20,
+            marginLeft: 10,
             flexDirection: "row",
             alignItems: "center",
             columnGap: 10,
@@ -259,6 +271,7 @@ const styles = {
     flex: 1,
     backgroundColor: colors.black,
     paddingVertical: 20,
+    wdith: 500,
     paddingHorizontal: 15,
   },
   navItemText: {
