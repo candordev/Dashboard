@@ -26,21 +26,22 @@ const GroupSettingsScreen = () => {
             <View style={{ flex: 1, flexDirection: 'row' }}>
             <View style={{ width: '50%', height: '100%' }}>
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 30 }}> {/* This will take up 70% of the height */}
-                        <MemberManagement groupID={selectedGroupID} userID= {state._id} />
+                    <View style={{ flex: 40 }}> {/* This will take up 70% of the height */}
+                    <DocumentList groupID={selectedGroupID} />
                     </View>
-                    <View style={{ flex: 35}}> {/* This will take up 30% of the height */}
+                    <View style={{ flex: 30}}> {/* This will take up 30% of the height */}
                         <DepartmentEditor groupID={selectedGroupID} />
                     </View>
-                    <View style={{ flex: 35 }}> {/* This will take up 30% of the height */}
+                    <View style={{ flex: 30 }}> {/* This will take up 30% of the height */}
                         <PrioritySetter groupID={selectedGroupID} />
+
                     </View>
                 </View>
             </View>
             <View style={{ width: '50%', height: '100%' }}>
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 65 }}> {/* This will take up 70% of the height */}
-                        <DocumentList groupID={selectedGroupID} />
+                        <MemberManagement groupID={selectedGroupID} userID= {state._id} />      
                     </View>
                     <View style={{ flex: 35}}> {/* This will take up 30% of the height */}
                         <TagEditor groupID={selectedGroupID} />
