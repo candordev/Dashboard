@@ -7,8 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sur
 import colors from '../Styles/colors';
 import { Linking } from 'react-native'; // At the top with other imports
 import { error } from 'console';
-
-
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 
 type MemberManagementProps = {
@@ -226,7 +225,10 @@ const startEditing = (item: any) => {
                         <TouchableOpacity onPress={() => startEditing(item)}>
                             <Text style={styles.editText}>Edit</Text>
                         </TouchableOpacity>
-                        <Icon name="delete" size={24} color={colors.red} onPress={() => handleDeleteDocument(item._id)} />
+                        {/* <Icon name="delete" size={24} color={colors.red} onPress={() => handleDeleteDocument(item._id)} /> */}
+                        <TouchableOpacity onPress={() => handleDeleteDocument(item._id)}>
+                            <FeatherIcon name="trash" size={15} color={colors.red} />
+                        </TouchableOpacity>
                     </View>
                 )}
             </View>
