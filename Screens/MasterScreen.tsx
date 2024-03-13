@@ -1,363 +1,165 @@
-import { useIsFocused } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from "react-native";
-import Popover, { PopoverPlacement } from "react-native-popover-view";
-import FeatherIcon from "react-native-vector-icons/Feather";
-import Card from "../Components/Card";
-import Header from "../Components/Header";
-import MapMarkerView from "../Components/MapMarkerView";
-import NotificationPopup from "../Components/NotificationPopup";
-import OuterView from "../Components/OuterView";
-import Text from "../Components/Text";
-import { useUserContext } from "../Hooks/useUserContext";
-import { usePostId } from "../Structure/PostContext";
-import colors from "../Styles/colors";
-import { Endpoints } from "../utils/Endpoints";
-import { Post, ProgressSelector } from "../utils/interfaces";
-import { customFetch } from "../utils/utils";
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, Text, FlatList, StyleSheet } from 'react-native';
+import colors from '../Styles/colors';
+import { customFetch } from '../utils/utils';
+import { Endpoints } from '../utils/Endpoints';
+import { useUserContext } from '../Hooks/useUserContext';
+import { Post } from "../utils/interfaces";
+import DropDown from '../Components/DropDown'; // Assuming DropDown is in your components directory
+import PostWithDropdown from '../Components/PostWithDropDown';
+import GroupInsightsComponent from '../Components/GroupInsightsComponent';
 
-const AllScreen = ({ navigation }: any) => {
-  const [refreshKey, setRefreshKey] = useState(0);
 
-  const { height, width } = useWindowDimensions();
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const [isMapView, setIsMapView] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const [categoriesWithPosts, setCategoriesWithPosts] = useState<{
-    [key: string]: Post[];
-  }>({});
+// Dummy data for demonstration
+const forwardedEmails = [
+  { id: 'email1', subject: 'Email Subject 1', content: 'This is the email content 1.' },
+  { id: 'email2', subject: 'Email Subject 2', content: 'This is the email content 2.' },
+  // Add more emails as needed
+];
 
-  const [progressSelected, setProgressSelected] = useState<ProgressSelector>({
-    newSelected: true,
-    assignedSelected: true,
-    updatedSelected: true,
-    completedSelected: true,
-  });
-  const [categorySelected, setCategorySelected] = useState<string | undefined>(
-    "Tag"
-  );
+const groupsWithCards = [
+  {
+    groupName: 'Group 1',
+    cards: [
+      { id: 'card1', title: 'Card 1 Title', description: 'Card 1 description.' },
+      { id: 'card2', title: 'Card 2 Title', description: 'Card 2 description.' },
+      // Add more cards as needed
+    ],
+  },
+  // Add more groups as needed
+];
 
-  const [assigneesSelectedIds, setAssigneesSelectedIds] = useState<
-    string[] | undefined
-  >();
 
-  const isFocused = useIsFocused(); // Assuming you're using something like this
+
+const MasterScreen = () => {
+  // State to hold fetched data (though we're using dummy data here)
+  const [forwardedPosts, setForwardedPosts] = useState<Post[]>([]);
+  const [groups, setGroups] = useState([]);
   const { state } = useUserContext();
-  const { postId } = usePostId();
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  
 
   useEffect(() => {
-    // console.log("Component mounted, fetching posts initially");
-    setCategoriesWithPosts({});
-    console.log("Event triggered, fetching posts");
-    fetchPosts(
-      progressSelected,
-      searchTerm,
-      //categorySelected === "Map" ? "Tag" : categorySelected,
-      categorySelected,
-      assigneesSelectedIds
-    );
+    // Assuming you already have code to fetch forwardedPosts here
+    // Convert state.leaderGroups to the format expected by DropDownPicker
+    const groupItems = state.leaderGroups.map((group: { name: any; _id: any; }) => ({ label: group.name, value: group._id }));
+    setGroups(groupItems);
+  }, [state.leaderGroups]);
 
-  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm, state.currentGroup]); // Depend on currStatus to refetch when it changes
-
-  const handleStatusChange = async (newStatus: ProgressSelector) => {
-    // console.log("Received status:", status);
-    // console.log("Current status:", progressSelected);
-    // console.log("Status changed, updating current status and refetching posts");
-    if (JSON.stringify(newStatus) !== JSON.stringify(progressSelected)) {
-      setProgressSelected(newStatus);
-    }
-  };
-
-  const handleHeaderOptionChange = (option: string) => {
-    if (JSON.stringify(option) !== JSON.stringify(categorySelected)) {
-      setCategorySelected(option);
-    }
-    // Additional logic if needed
-  };
-
-  const handleAssigneeSelection = (selectedAssigneeIds: string[]) => {
-    // console.log("Selected Assignees:", selectedAssigneeIds);
-    setAssigneesSelectedIds(selectedAssigneeIds);
-    // Perform actions with the selected IDs, like updating state or making API calls
-  };
-
-  const handleSearchChange = (searchTerm: string) => {
-    // console.log("Selected Assignees:", searchTerm);
-    setSearchTerm(searchTerm);
-    // Perform actions with the selected IDs, like updating state or making API calls
-  };
-
-  const fetchPosts = async (
-    status: ProgressSelector | undefined,
-    searchTerm: string,
-    headerOption?: string,
-    selectedAssigneeIds?: string[]
-  ) => {
+  const handleSelectGroup = async (postId: string, groupId: null) => {
     try {
-      console.log("called again");
-      setLoading(true);
-      if (selectedAssigneeIds == undefined) {
-        selectedAssigneeIds = [];
-      }
+      await customFetch(Endpoints.setGroup, {
+        method: "POST",
+        body: JSON.stringify({ postId, groupId }),
+      });
+      console.log("Group set successfully");
+    } catch (error) {
+      console.error("Failed to set group for post:", error);
+    }
+  };
 
+  async function fetchForwardedPosts() {
+    try {
+      // Assuming the masterID is stored in state.master
       const queryParams = new URLSearchParams({
-        filter: "top",
-        tab: "all",
-        assignees: JSON.stringify(selectedAssigneeIds),
-        status: JSON.stringify([
-          status?.newSelected,
-          status?.assignedSelected,
-          status?.updatedSelected,
-          status?.completedSelected,
-        ]),
-        title: searchTerm,
-        groupID: state.currentGroup,
+        masterID: state.master._id,
       });
 
-      // Add selectedHeaderOption to the query params if it's defined
-      if (headerOption) {
-        queryParams.append("header", headerOption);
-      }
-
-      let res: Response = await customFetch(
-        `${Endpoints.dashboardPosts}?${queryParams.toString()}`,
+      const response = await customFetch(
+        `${Endpoints.getForwardedEmails}${queryParams.toString()}`,
         {
           method: "GET",
         }
       );
-      console.log("EVENT TRIG");
 
-      let resJson = await res.json();
-      if (res.ok) {
-        setCategoriesWithPosts(resJson);
-        setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
+      if (response.ok) {
+        const data = await response.json();
+        setForwardedPosts(data.forwardedPosts); // Assuming the API response structure
       } else {
-        console.error("Error loading posts. Please try again later.", resJson.error);
+        console.error("Failed to fetch forwarded posts.");
       }
     } catch (error) {
-      console.error("Error loading posts. Please try again later.", error);
-    } finally {
-      setLoading(false);
+      console.error("Error fetching forwarded posts: ", error);
     }
-  };
-
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handlePopoverCloseComplete = async () => {
-    //console.log("Event trig")
-    setIsLoading(true);
-    await fetchPosts(
-      progressSelected,
-      searchTerm,
-      categorySelected,
-      assigneesSelectedIds
-    );
-    setIsLoading(false);
-  };
-
-  const [initialPostId, setInitialPostId] = useState<string | null>(null);
-  const [hasInitialOpenOccurred, setHasInitialOpenOccurred] = useState(false);
-  const hasInitialOpen = async () => {
-    setHasInitialOpenOccurred(true);
-  };
-
-  useEffect(() => {
-    // console.log("THS THE ST: ", postId, !hasInitialOpenOccurred);
-    // Check if postId exists and set it
-    if (postId && !hasInitialOpenOccurred) {
-      // console.log("here set")
-      setInitialPostId(postId);
-    }
-  }, []);
-
-  const [popoverVisible, setPopoverVisible] = useState(false);
-
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const handleRemoveCategory = async (categoryName: any) => {
-    try {
-      let res: Response = await customFetch(Endpoints.deleteCategory, {
-        method: "DELETE",
-        body: JSON.stringify({
-          groupID:state.currentGroup,
-          categoryName: categoryName,
-        }),
-      });
-
-      const resJson = await res.json();
-
-      if (!res.ok) {
-        // console.log("category deletion request failed");
-      } else {
-        // console.log("categroy deleted");
-        setIsDeleting(true); // Start loading
-        await handlePopoverCloseComplete();
-        setIsDeleting(false); // Start loading
-      }
-    } catch (error: any) {
-      // console.log(error);
-    }
-
-    // Call your route and handle the action here
-    // console.log(`Remove category: ${categoryName}`);
-    // Update state or UI as needed after removing the category
-    setPopoverVisible(false); // Close the popover after action
-  };
-
-  function toggleMapView() {
-    setIsMapView((isMapView) => !isMapView);
   }
 
+  useEffect(() => {
+
+    fetchForwardedPosts();
+  }, [state.master]); // Dependency on state.master to refetch if it changes
+
+  
   return (
-    <>
-      <NotificationPopup navigation={navigation} />
-      <OuterView style={{ paddingHorizontal: 40 }}>
-        <Header
-          onHeaderOptionChange={handleHeaderOptionChange}
-          onStatusChange={handleStatusChange}
-          onAssigneeSelection={handleAssigneeSelection}
-          headerTitle={"Issues"}
-          groupID={state.leaderGroups?.[0] ?state.currentGroup : undefined}
-          onSearchChange={handleSearchChange}
-          onPopoverCloseComplete={handlePopoverCloseComplete}
-        />
-        {loading && (
-          <ActivityIndicator
-            size="small"
-            color={colors.purple}
-            style={{ marginBottom: 10 }}
-          />
-        )}
-        {categorySelected !== "Map" ? (
-          <ScrollView
-            horizontal
-            style={{
-              backgroundColor: colors.background,
-            }}
-          >
-            {Object.entries(categoriesWithPosts).map(([name, posts], index) => (
-              <View key={name} style={{ width: 350, marginRight: 20 }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: "550",
-                      color: colors.black,
-                      marginBottom: 10,
-                      marginTop: 10,
-                      fontFamily: "Montserrat",
-                    }}
-                  >
-                    {name}
-                  </Text>
-                  {index !== 0 && categorySelected === "Tag" && (
-                    <Popover
-                      // onCloseComplete={props.onPopoverCloseComplete} // Use the handler here
-                      from={
-                        <TouchableOpacity>
-                          <FeatherIcon name={"more-vertical"} size={20} />
-                        </TouchableOpacity>
-                      }
-                      // isVisible={isPopupVisible}
-                      // onRequestClose={closePopup}
-                      placement={PopoverPlacement.FLOATING}
-                      popoverStyle={{
-                        borderRadius: 10,
-                        width: 250,
-                        paddingHorizontal: 20,
-                        paddingVertical: 15,
-                      }}
-                    >
-                      <View>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            fontWeight: "550",
-                            fontFamily: "Montserrat",
-                          }}
-                        >
-                          Are you sure you want to delete this category?
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => handleRemoveCategory(name)}
-                          style={{
-                            backgroundColor: colors.red,
-                            padding: 10,
-                            marginTop: 20,
-                            borderRadius: 10,
-                          }}
-                        >
-                          {isDeleting ? (
-                            <Text
-                              style={{
-                                color: "white",
-                                textAlign: "center",
-                                fontWeight: "bold",
-                                fontFamily: "Montserrat",
-                                fontSize: 15,
-                              }}
-                            >
-                              Loading...
-                            </Text>
-                          ) : (
-                            <Text
-                              style={{
-                                color: "white",
-                                textAlign: "center",
-                                fontWeight: "bold",
-                                fontFamily: "Montserrat",
-                                fontSize: 15,
-                              }}
-                            >
-                              Delete
-                            </Text>
-                          )}
-                        </TouchableOpacity>
-                      </View>
-                    </Popover>
-                  )}
-                </View>
-                <FlatList
-                  key={`${name}-${refreshKey}`}
-                  data={posts}
-                  renderItem={({ item }) => (
-                    <Card
-                      key={item._id}
-                      issue={item}
-                      onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
-                      isDisabled={isLoading}
-                      hasInitialOpen={hasInitialOpen}
-                      initialOpen={
-                        item._id === initialPostId && !hasInitialOpenOccurred
-                      }
-                    />
-                  )}
-                />
-              </View>
-            ))}
-          </ScrollView>
-        ) : (
-          <MapMarkerView posts={categoriesWithPosts} />
-        )}
-      </OuterView>
-    </>
+    <View style={styles.screenContainer}>
+    <View style={styles.emailsContainer}>
+      <Text style={styles.title}>Forwarded Emails</Text>
+      <ScrollView>
+        {forwardedPosts.map((post) => (
+           <PostWithDropdown key={post._id} post={post} onClearPosts={fetchForwardedPosts} />
+        ))}
+      </ScrollView>
+    </View>
+      <View style={styles.groupsContainer}>
+         <Text style={styles.title}>Group Insights</Text>
+         <GroupInsightsComponent masterID={state.master._id}/>
+      </View>
+    </View>
   );
 };
 
-export default AllScreen;
+const styles = StyleSheet.create({
+  screenContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    backgroundColor: colors.white, 
+    borderRadius: 20,
+    overflow: 'visible', // This line is crucial for showing shadows
+
+
+  },
+  emailsContainer: {
+    flex: 1.1,
+    padding: 10,
+    margin: 20,
+    backgroundColor: colors.white,
+    boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
+    borderRadius: 20,
+    overflow: 'visible', // Allow overflow to show the shadow
+
+  },
+  groupsContainer: {
+    flex: 3,
+    padding: 10,
+    margin: 20,
+    backgroundColor: colors.white,
+    boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
+    borderRadius: 20
+  },
+  title: {
+    fontSize: 23,
+    fontWeight: 550,
+    marginBottom: 10,
+    fontFamily: 'Montserrat',
+    marginTop: 6,
+    marginLeft: 3
+  },
+  card: {
+    backgroundColor: colors.white,
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 10,
+    maxHeight: 300,
+    flexDirection: 'column',
+  },
+  cardTitle: {
+    fontWeight: 'bold',
+    fontFamily: 'Montserrat'
+  },
+  group: {
+    marginRight: 20,
+  },
+});
+
+export default MasterScreen;

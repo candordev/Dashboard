@@ -132,7 +132,8 @@ export const useSignup = () => {
         inputError: string = "",
         userId: string = "",
         postId: string, // add "" later,
-        groupId: string
+        groupId: string,
+        masterId: string
     ) => {
         setLoading(true);
         setError("");
@@ -152,7 +153,8 @@ export const useSignup = () => {
                 username,
                 firebaseToken,
                 userId,
-                groupId
+                groupId,
+                masterId
             );
             setUser({ resJson,postId, setError, dispatch });
         } catch (error: any) {
@@ -170,7 +172,8 @@ export const useSignup = () => {
         username: string,
         firebaseToken: string,
         userId: string,
-        groupId: string
+        groupId: string,
+        masterId: string
     ) => {
         try {
             setIsSignupOperation(true);
@@ -183,7 +186,8 @@ export const useSignup = () => {
                     email: email,
                     firebaseToken: firebaseToken,
                     userId: userId,
-                    groupId: groupId
+                    groupId: groupId,
+                    masterId: masterId
                 }),
                 method: "POST",
                 headers: {

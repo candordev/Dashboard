@@ -129,5 +129,11 @@ export const Endpoints = {
   deletePinnedDocument: `${BASE_URL}/group/deletePinnedDocument?`,
   addGroupCategory: `${BASE_URL}/group/addCategory?`,
   getGroupCategories: `${BASE_URL}/group/getGroupCategories?`,
+  getForwardedEmails: `${BASE_URL}/master/getForwardedEmails?`,
+  setGroup: `${BASE_URL}/master/setGroup?`,
+  clearForwardedPost: `${BASE_URL}/master/clearForwardedPost?`,
+  getMasterInsights: `${BASE_URL}/master/getMasterInsights?`,
+  createGroupInMaster: `${BASE_URL}/master/createGroupInMaster?`,
+  
   
 };

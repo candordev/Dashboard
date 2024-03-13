@@ -59,12 +59,12 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
       drawerContent={(props) => <LHN {...props} navigation={props.navigation} />}
       screenOptions={{
         drawerType: "permanent",
-        drawerStyle: { width: 200, borderRightWidth: 0 },
+        drawerStyle: { width: 250, borderRightWidth: 0 },
         headerShown: false,
       }}
       initialRouteName="all"
     >    
-      <Drawer.Screen
+        <Drawer.Screen
         name="master"
         component={MasterScreen}
         options={{ title: "Candor - Master" }}
