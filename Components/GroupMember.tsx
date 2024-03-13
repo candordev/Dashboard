@@ -8,7 +8,6 @@ import colors from "../Styles/colors"; // Make sure the path matches your projec
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { set } from "lodash";
 import DropDownPicker, { ItemType } from "react-native-dropdown-picker";
-import DepartmentDropdownPicker from "./DepartmentDropdownPicker";
 
 type GroupMemberProps = {
     member: {
@@ -47,13 +46,13 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
 
 
     useEffect(() => {
-        if (member.isLeader && isExpanded) {
+        if (member.isLeader) {
             fetchLeaderDepartments();
         }
     }, [isExpanded]); // Now dependency on isExpanded as well
 
     const adjustHeight = (isOpen: Boolean) => {
-        setExtraHeight(isOpen ? 60 : 0); // Add 60 units when open, reset to 0 when closed
+        setExtraHeight(isOpen ? 100 : 0); // Add 60 units when open, reset to 0 when closed
       };
     
 
@@ -83,23 +82,65 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
 
       async function removeLeaderFromDepartment(departmentID: string) {
         try {
-          
+            let res = await customFetch(Endpoints.removeLeaderFromDepartment, {
+              method: "POST",
+              body: JSON.stringify({
+                departmentID: departmentID,
+                userToRemove: member.user,
+              }),
+            }); 
+            if (!res.ok) {
+              const resJson = await res.json();
+              console.error("Error with removing member from group:", resJson.error);
+            } else {
+              fetchLeaderDepartments();
+            }
         } catch (error) {
-          console.error("Network error while fetching members: ", error);
+        console.error("Network error, please try again later.", error);
         }
       }
 
-      const toggleExpand = () => setIsExpanded(!isExpanded); // Toggle expansion state
+    const toggleExpand = () => setIsExpanded(!isExpanded); // Toggle expansion state
 
-      const handleSelectNotDepartments = (itemIds: [string]) => {
+    const handleSelectNotDepartments = (itemIds: [string]) => {
         setSelectedNotDepartmentIds(itemIds);
     };
 
-    const handleDropdownClose = () => {
-        // Call a method with the selectedNotDepartmentIds here
-        console.log('Selected department IDs:', selectedNotDepartmentIds);
-        // For example: yourMethod(selectedNotDepartmentIds);
+    async function handleDropdownClose () {
+        console.log(selectedNotDepartmentIds, "selectedNotDepartmentIds");
+        await addLeaderToDepartment(selectedNotDepartmentIds);
+        setSelectedNotDepartmentIds([]);
+        fetchLeaderDepartments();
     };
+
+    async function addLeaderToDepartment(departmentIDs: string[]) {
+        try {
+            if (departmentIDs.length === 0) {
+              return;
+            }
+            let res = await customFetch(Endpoints.addLeadersToDepartment, {
+              method: "POST",
+              body: JSON.stringify({
+                departmentIDs: departmentIDs,
+                userToAdd: member.user,
+              }),
+            }); 
+            if (!res.ok) {
+              const resJson = await res.json();
+              console.error("Error with removing member from group:", resJson.error);
+            } else {
+              console.log("success!")
+            }
+        } catch (error) {
+        console.error("Network error, please try again later.", error);
+        }
+      }
+      
+
+    const handleOpeningDropdown = (isOpen: boolean) => {
+        setOpenDropdown(isOpen);
+        adjustHeight(isOpen);
+    }
 
       return (
           <View>
@@ -126,7 +167,7 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
                   </View>
               </Pressable>
               {isExpanded && member.isLeader && (
-                 <View style={styles.departmentsContainer}>
+                 <View style={[styles.departmentsContainer, { paddingBottom: extraHeight }]}>
                     <Text style={styles.departmentsTitle}>Departments:</Text>
                     {departments.map((dept) => (
                         <View key={dept._id} style={styles.departmentItem}>
@@ -138,39 +179,32 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
                             )}
                         </View>
                     ))}
+                    {notDepartments.length > 0 && (
+                        <DropDownPicker
+                        open={openDropdown}
+                        value={selectedNotDepartmentIds}
+                        items={notDepartmentItems}
+                        setOpen={handleOpeningDropdown}
+                        setValue={setSelectedNotDepartmentIds}
+                        listMode="SCROLLVIEW" // Ensure scrollable dropdown
+                        dropDownContainerStyle={{
+                            position: 'absolute', // Position dropdown absolutely to lift it above other content
+                            width: '100%', // Ensure it spans the width of its container
+                            zIndex: 1000,
+                            maxHeight: 90 // Lift above other content
+                        }}
+                        style={{
+                            zIndex: 1000, // Also ensure the input part of the picker is lifted
+                        }}
+                        setItems={setNotDepartments} // This function is not necessary if items are not dynamically changed
+                        multiple={true}
+                        min={0}
+                        max={notDepartmentItems.length}
+                        onClose={handleDropdownClose}
+                        zIndex={1000} // Ensure dropdown is displayed above other components
+                        zIndexInverse={1000}
+                    />)}
                 
-                        {/* <DropDownPicker
-                            open={openDropdown}
-                            value={selectedNotDepartmentIds}
-                            items={notDepartmentItems}
-                            setOpen={setOpenDropdown}
-                            setValue={setSelectedNotDepartmentIds}
-                            listMode="SCROLLVIEW" // Ensure scrollable dropdown
-                            dropDownContainerStyle={{
-                                position: 'absolute', // Position dropdown absolutely to lift it above other content
-                                width: '100%', // Ensure it spans the width of its container
-                                zIndex: 1000,
-                                maxHeight: 100 // Lift above other content
-                            }}
-                            style={{
-                                zIndex: 1000, // Also ensure the input part of the picker is lifted
-                            }}
-                            setItems={setNotDepartments} // This function is not necessary if items are not dynamically changed
-                            multiple={true}
-                            min={0}
-                            max={notDepartmentItems.length}
-                            onClose={handleDropdownClose}
-                            zIndex={1000} // Ensure dropdown is displayed above other components
-                            zIndexInverse={1000}
-                        /> */}
-
-                    <DepartmentDropdownPicker
-                            items={notDepartmentItems}
-                            selectedItems={selectedNotDepartmentIds}
-                            setSelectedItems={setSelectedNotDepartmentIds}
-                            adjustHeight={adjustHeight}
-                        />
-                 
                 </View>
               )}
           </View>

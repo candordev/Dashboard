@@ -15,7 +15,9 @@ interface Department {
     _id: string;
     name: string;
     description: string;
+    defaultDepartment: boolean;
     isOpen?: boolean; // Optional property to manage dropdown state
+    isEditing?: boolean; // New property to manage edit mode
 }
 
 interface Leader {
@@ -34,7 +36,6 @@ function DepartmentEditor({
   const [newDepartmentName, setNewDepartmentName] = useState("");
   const [newDepartmentDescription, setNewDepartmentDescription] = useState("");
   const [leaders, setLeaders] = useState<{ [key: string]: Leader[] }>({});
-  const [leadersNotInDept, setLeadersNotInDept] = useState<{ [key: string]: Leader[] }>({});
 
   useEffect(() => {
     fetchDepartments();
@@ -63,28 +64,6 @@ function DepartmentEditor({
       console.error("Error fetching departments:", error);
       setError("Error fetching departments");
     }
-  }
-
-  async function getLeadersNotInDepartment(departmentID: string) {
-    try {
-        setError('');
-        const queryParams = new URLSearchParams({ 
-          departmentID,
-        });   
-        const url = `${Endpoints.getLeadersNotInDepartment}${queryParams.toString()}`
-        const response = await customFetch(url, { method: "GET" });
-        const data = await response.json();
-        if (response.ok) {
-            const formattedLeaders = data.map((item: any) => ({ _id: item.user, firstName: item.firstName, lastName: item.lastName }));
-            setLeadersNotInDept(prevState => ({ ...prevState, [departmentID]: formattedLeaders }));
-      } else {
-          console.error("Error fetching departments: ", data.error);
-          setError("Error fetching departments");
-        }
-      } catch (error) {
-        console.error("Error fetching departments:", error);
-        setError("Error fetching departments");
-      }
   }
 
   const toggleDropdown = (departmentID: string) => {
@@ -153,6 +132,32 @@ function DepartmentEditor({
     }
   }
 
+  async function changeDepartment(name: string, description: string, departmentID: string) {
+    try {
+      setError('');
+      let res = await customFetch(Endpoints.changeDepartment, {
+        method: "POST",
+        body: JSON.stringify({
+          departmentID,
+          name,
+          description
+        }),
+      });
+
+      if (!res.ok) {
+        const resJson = await res.json();
+        console.error("Error with editing department:", resJson.error);
+        setError("Error with editing department");
+      } else {
+        fetchDepartments();
+      }
+    } catch (error) {
+      console.error("Network error, please try again later.", error);
+      setError("Network error while editing department");
+    }
+  }
+
+
   async function deleteDepartment(departmentId: string) {
     try {
       setError('');
@@ -187,41 +192,82 @@ function DepartmentEditor({
     }
   };
 
+  const startEditing = (departmentID: string) => {
+    const updatedDepartments = departments.map(department => 
+      department._id === departmentID ? { ...department, isEditing: true } : department
+    );
+    setDepartments(updatedDepartments);
+  };
+  
+  const handleNameChange = (name: string, departmentID: string) => {
+    const updatedDepartments = departments.map(department => 
+      department._id === departmentID ? { ...department, name } : department
+    );
+    setDepartments(updatedDepartments);
+  };
+  
+  const handleDescriptionChange = (description: string, departmentID: string) => {
+    const updatedDepartments = departments.map(department => 
+      department._id === departmentID ? { ...department, description } : department
+    );
+    setDepartments(updatedDepartments);
+  };
+  
+  const finishEditing = (departmentID: string, newName: string, newDescription: string) => {
+    changeDepartment(newName, newDescription, departmentID); // Assuming this function also sets isEditing to false upon success
+  };
+  
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Manage Departments</Text>
         <FlatList<Department>
-          data={departments}
-          keyExtractor={(item: Department) => item._id}
-          renderItem={({ item }: { item: Department }) => (
+        data={departments}
+        keyExtractor={(item: Department) => item._id}
+        renderItem={({ item }: { item: Department }) => (
             <>
-              <View style={styles.departmentItem}>
+            <View style={styles.departmentItem}>
                 <Pressable onPress={() => toggleDropdown(item._id)} style={styles.dropdownIcon}>
-                  <FeatherIcon
-                    name={item.isOpen ? "chevron-down" : "chevron-right"}
-                    size={20}
-                    color={colors.purple}
-                  />
+                <FeatherIcon name={item.isOpen ? "chevron-down" : "chevron-right"} size={20} color={colors.purple} />
                 </Pressable>
-                <Text style={styles.departmentText}>{item.name}</Text>
+                {!item.isEditing ? (
+                <>
+                    <Text style={styles.departmentText}>{item.name}</Text>
+                    <TouchableOpacity onPress={() => startEditing(item._id)}>
+                    <FeatherIcon name="edit-2" size={15} color={colors.purple} />
+                    </TouchableOpacity>
+                </>
+                ) : (
+                <>
+                    <TextInput style={styles.input} value={item.name} onChangeText={(text) => handleNameChange(text, item._id)} />
+                    <TextInput style={styles.input} value={item.description} onChangeText={(text) => handleDescriptionChange(text, item._id)} />
+                    <TouchableOpacity onPress={() => finishEditing(item._id, item.name, item.description)} style={styles.doneButton}>
+                        <FeatherIcon name="check" size={15} color={colors.purple} />
+                    </TouchableOpacity>
+                </>
+                )}
+                {!item.defaultDepartment && (
                 <TouchableOpacity onPress={() => deleteDepartment(item._id)} style={styles.deleteButton}>
-                  <FeatherIcon name="trash" size={15} color={colors.red} />
+                    <FeatherIcon name="trash" size={15} color={colors.red} />
                 </TouchableOpacity>
-              </View>
-              {item.isOpen && leaders[item._id] && (
+                )}
+                {item.defaultDepartment && (
+                //<Text style={styles.defaultDepartmentText}>Default Department</Text>
+                <FeatherIcon name="trash" size={15} color={colors.red} style={styles.deleteButton} />
+                )}
+            </View>
+            {item.isOpen && leaders[item._id] && (
                 <View style={styles.leadersList}>
-                  {leaders[item._id].map((leader) => (
-                    <Text key={leader._id} style={styles.leaderText}>
-                      {leader.firstName} {leader.lastName}
-                    </Text>
-                  ))}
-
+                {leaders[item._id].map((leader) => (
+                    <Text key={leader._id} style={styles.leaderText}>{leader.firstName} {leader.lastName}</Text>
+                ))}
                 </View>
-              )}
+            )}
             </>
-          )}
+        )}
         />
+
         {isAdding && (
             <>
                 <TextInput
@@ -285,6 +331,13 @@ const styles = StyleSheet.create({
         fontFamily: 'Montserrat',
         flex: 1, // Allows text to take up available space, pushing icons to the edge
       },
+      defaultDepartmentText: {
+        color: colors.purple,
+        fontFamily: 'Montserrat',
+        flex: 1,
+        'font-style': 'italic',
+        textAlign: 'right',
+      },
       deleteButton: {
         marginLeft: 'auto', // Ensures the button is aligned to the right
         padding: 8,
@@ -297,7 +350,7 @@ const styles = StyleSheet.create({
       },
       leaderText: {
         fontFamily: 'Montserrat',
-        marginVertical: 2,
+        marginVertical: 4,
         // Any additional styling for leader text
       },
   
@@ -322,6 +375,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
     paddingVertical: 12,
+  },
+  doneButton: {
+    marginLeft: 10
   },
   buttonText: {
     fontFamily: "Montserrat",
