@@ -27,7 +27,7 @@ function TagEditor({
 
   useEffect(() => {
     fetchTags();
-  }, []);
+  }, [groupID]);
 
   async function fetchTags() {
     try {

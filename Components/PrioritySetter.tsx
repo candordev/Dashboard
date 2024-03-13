@@ -19,7 +19,7 @@ function PrioritySetter({
 
   useEffect(() => {
     fetchDeadlines();
-  }, []);
+  }, [groupID]);
 
   async function fetchDeadlines() {
     try {
