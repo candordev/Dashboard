@@ -1,60 +1,3 @@
-// import React, { useState } from "react";
-// import { View, Text, TouchableOpacity } from "react-native";
-// import DropDown from "../Components/DropDown"; // Make sure this path is correct
-// import colors from "../Styles/colors";
-
-// interface Group {
-//     _id: string;
-//     name: string;
-// }
-  
-// interface GroupSettingsHeaderProps {
-//     groups: Group[];
-//     onGroupSelect: (groupId: string) => void;
-// }
-
-// const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGroupSelect }) => {
-//     const [selectedGroup, setSelectedGroup] = useState<string>('');
-
-//     const handleSelectGroup = (groupId: string) => {
-//         setSelectedGroup(groupId); // Update local state
-//         onGroupSelect(groupId); // Call the passed in onGroupSelect prop
-//     };
-
-//     const items = groups.map(group => ({
-//         label: group.name,
-//         value: group._id
-//     }));
-
-//     return (
-//         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 10, backgroundColor: "white", zIndex: 10 }}>
-//             {/* Wrap DropDown in a View with flex or explicit width */}
-//             <View style={{ flex: 4, marginRight: 10 }}> {/* Adjust flex value as needed */}
-//                 <DropDown
-//                     placeholder="Select a group"
-//                     value={selectedGroup}
-//                     setValue={handleSelectGroup}
-//                     items={items}
-//                     setItems={() => {}}
-//                     multiple={false}
-//                     backgroundColor="white"
-//                     onClose={() => console.log("Dropdown closed")}
-//                     // Make sure your DropDown component styles allow it to fill this parent View
-//                 />
-//             </View>
-//             {/* Wrap Create Group button in a View with flex or explicit width */}
-//             <View style={{ flex: 1 }}> {/* Adjust flex value as needed for the button to fit */}
-//                 <TouchableOpacity onPress={() => {/* Implement create group logic here */}} style={{ backgroundColor: colors.purple, padding: 10, borderRadius: 5 }}>
-//                     <Text style={{ color: "white", textAlign: "center" }}>Create Group</Text>
-//                 </TouchableOpacity>
-//             </View>
-//         </View>
-
-//     );
-// };
-
-// export default GroupSettingsHeader;
-
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, Dimensions, ActivityIndicator } from "react-native";
 import DropDown from "../Components/DropDown";
@@ -77,10 +20,10 @@ interface GroupSettingsHeaderProps {
 }
 
 const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGroupSelect }) => {
-    const [selectedGroup, setSelectedGroup] = useState<string>('');
+    const { state, dispatch } = useUserContext();
+    const [selectedGroup, setSelectedGroup] = useState(state.leaderGroups && state.leaderGroups.length > 0 ? state.leaderGroups[0]._id : '');
     const [isPopoverVisible, setIsPopoverVisible] = useState<boolean>(false);
     const [newGroupName, setNewGroupName] = useState<string>('');
-    const { state, dispatch } = useUserContext();
     const [isLoading, setIsLoading] = useState<boolean>(false); // New loading state
 
 

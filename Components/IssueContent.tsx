@@ -170,36 +170,38 @@ const IssueContent: React.FC<IssueContent> = (props) => {
         maxHeight: "40%",
       }}
     >
-    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center'}}>
       <Image
         source={{ uri: props.issue.userProfile.profilePicture }}
         style={{ width: 53, height: 53, borderRadius: 25 }}
       />
-      <View style={{ marginLeft: 10, flex: 1 }}>
+      <View style={{ marginLeft: 10, flex: 1, marginVertical: 3 }}>
         <View style={{ 
           flexDirection: 'row', 
           alignItems: 'center', 
           justifyContent: 'space-between',
           height: 20, // Example fixed height; adjust as necessary
         }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 14, marginBottom: -8 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 14}}>
             {props.issue.userProfile.firstName} {props.issue.userProfile.lastName}
           </Text>
-          <ProgressBar step={props.issue.step} style={{ width: 100, marginTop: 25}} />
+          <ProgressBar step={props.issue.step} style={{ width: 100}} />
         </View>
-        <Text style={{ fontSize: 12, color: 'gray', marginTop: 5 }}>
+        <View style={{marginVertical: 3}}>
+
+        <Text style={{ fontSize: 12, color: 'gray', marginBottom: 2  }}>
           {"Post Created From: " + (props.issue.postCreatedFrom ?? "App")}
         </Text>
         
         {props.issue.postCreatedFrom === "forwardedEmail" && props.issue.emailFirstName && props.issue.emailLastName && (
-          <Text style={{ fontSize: 12, marginTop: 5 }}>
+          <Text style={{ fontSize: 12, color: 'gray', marginBottom: 2 }}>
             {"Name: " + props.issue.emailFirstName + " " + props.issue.emailLastName}
           </Text>
         )}
 
 
         {/* Email display and edit logic */}
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
           <Text style={{ fontSize: 12, color: 'gray' }}>
             {"Email: "}
           </Text>
@@ -238,6 +240,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
               </Text>
             </TouchableOpacity>
           </View>
+        </View>
         </View>
       </View>
     </View>

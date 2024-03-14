@@ -6,6 +6,9 @@ import { customFetch } from '../utils/utils'; // Adjust the import path as neede
 import { Endpoints } from '../utils/Endpoints'; // Adjust the import path as needed
 import { useUserContext } from '../Hooks/useUserContext';
 import Text from './Text'; // Adjust import path as needed
+import { formatDate } from "../utils/utils";
+
+
 
 import IssueView from './IssueView'; // Adjust import path as needed
 import Popover, { PopoverPlacement } from 'react-native-popover-view';
@@ -96,7 +99,21 @@ const PostWithDropdown = ({ post, onClearPosts }: PostWithDropdownProps) => {
         setCardLayout({ width, height });
       }}>
       <ScrollView>
-        <Text style={styles.cardTitle}>{post.title}</Text>
+        <Text style={styles.cardTitle}>{post.title}</Text>   
+        <View style={{marginVertical: 6}}>
+        {post.postCreatedFrom === "forwardedEmail" && post.emailFirstName && post.emailLastName && (
+            
+          <Text style={{ fontSize: 12, color: colors.gray }}>
+            {"Name: " + post.emailFirstName + " " + post.emailLastName}
+          </Text>
+        )}
+          <Text style={{ fontSize: 12, color: colors.gray }}>
+            {"Email: " + post.proposalFromEmail}
+          </Text>
+          <Text style={{ fontSize: 12, color: colors.gray }}>
+            {formatDate(post.createdAt)}
+          </Text>
+          </View>
         <Text style={{ marginBottom: 10 }}>{post.content}</Text>
       </ScrollView>
       <View style={styles.separatorLine} /> {/* Separator line */}
@@ -301,9 +318,8 @@ const styles = StyleSheet.create({
   },
   
   cardTitle: {
-    fontWeight: 600,
+    fontWeight: "600",
     fontFamily: 'Montserrat',
-    marginBottom: 6,
     fontSize: 16.5,
 
   },
