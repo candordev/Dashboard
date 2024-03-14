@@ -31,7 +31,7 @@ const DropDown = (props: PropTypes) => {
       setItems={props.setItems}
       dropDownDirection="BOTTOM"
       style={{
-        zIndex: 0,
+        zIndex: 4,
         borderWidth: open ? 1 : 0,
         borderColor: colors.lightergray,
         borderRadius: 15,
