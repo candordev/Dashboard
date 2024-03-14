@@ -226,7 +226,7 @@ const AllScreen = ({ navigation }: any) => {
           onHeaderOptionChange={handleHeaderOptionChange}
           onStatusChange={handleStatusChange}
           onAssigneeSelection={handleAssigneeSelection}
-          headerTitle={state.leaderGroups.find((group: { _id: any; }) => group._id === state.currentGroup).name}
+          headerTitle={state.currentGroup && state.leaderGroups.find((group: { _id: any; }) => group._id === state.currentGroup).name}
           groupID={state.leaderGroups?.[0] ?state.currentGroup : undefined}
           onSearchChange={handleSearchChange}
           onPopoverCloseComplete={handlePopoverCloseComplete}

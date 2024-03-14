@@ -13,7 +13,7 @@ import colors from "../Styles/colors";
 const GroupSettingsScreen = () => {
     const { state } = useUserContext();
 
-    const [selectedGroupID, setSelectedGroupID] = useState('');
+    const [selectedGroupID, setSelectedGroupID] = useState(state.leaderGroups && state.leaderGroups.length > 0 ? state.leaderGroups[0]._id : '');
 
     const handleGroupSelect = (groupID: any) => {
         setSelectedGroupID(groupID);
@@ -22,7 +22,9 @@ const GroupSettingsScreen = () => {
 
     return (
         <View style={{ flex: 1, backgroundColor: colors.white}}>
+            {state.master != null &&
             <GroupSettingsHeader groups={state.leaderGroups} onGroupSelect={handleGroupSelect}/>
+            } 
             <View style={{ flex: 1, flexDirection: 'row' }}>
             <View style={{ width: '50%', height: '100%' }}>
                 <View style={{ flex: 1 }}>
