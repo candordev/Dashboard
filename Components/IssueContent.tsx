@@ -7,7 +7,7 @@ import { customFetch, formatDate } from "../utils/utils";
 import Button from "./Button";
 import Text from "./Text";
 import { UserProfile, Post } from "../utils/interfaces";
-import { usePostId } from "../Structure/PostContext";
+import { usePostContext } from "../Hooks/usePostContext";
 import ProgressBar from "./ProgressBar";
 
 type IssueContent = {
@@ -23,7 +23,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
   const [previewUrl, setPreviewUrl] = useState('');
 
   const [isEditing, setIsEditing] = useState(false);
-  const { post, setPost } = usePostId();
+  const { post, setPost } = usePostContext();
   const [visibility, setVisibility] = useState(props.issue.visible);
 
   
