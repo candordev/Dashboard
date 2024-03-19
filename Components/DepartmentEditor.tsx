@@ -254,7 +254,7 @@ function DepartmentEditor({
                 )}
                 {item.defaultDepartment && (
                 //<Text style={styles.defaultDepartmentText}>Default Department</Text>
-                <FeatherIcon name="trash" size={15} color={colors.red} style={styles.deleteButton} />
+                <FeatherIcon name="trash" size={15} color={colors.lightgray} style={styles.deleteButton} />
                 )}
             </View>
             {item.isOpen && leaders[item._id] && (

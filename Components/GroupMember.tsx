@@ -8,6 +8,7 @@ import colors from "../Styles/colors"; // Make sure the path matches your projec
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { set } from "lodash";
 import DropDownPicker, { ItemType } from "react-native-dropdown-picker";
+import DropDown from "./DropDown";
 
 type GroupMemberProps = {
     member: {
@@ -16,12 +17,14 @@ type GroupMemberProps = {
         firstName: string;
         lastName: string;
         isLeader: boolean;
+        master?: string;
     };
     kickMember: () => void; // Function type declaration
     addLeader: () => void;
     removeLeader: () => void;
     groupID: string;
 };
+
 
 interface Department {
     _id: string;
@@ -143,7 +146,7 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
     }
 
       return (
-          <View>
+          <View style={{flex: 20}}>
               <Pressable onPress={toggleExpand} style={styles.memberContainer}>
                   <Image source={{ uri: member.profilePicture }} style={styles.profilePic} />
                   <View style={styles.infoAndButtonsContainer}>
@@ -152,12 +155,14 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
                       </Text>
                       {member.isLeader && <FeatherIcon name="check-circle" size={20} color={colors.purple} />}
                       <View style={styles.buttonGroup}>
-                          <TouchableOpacity
-                              onPress={member.isLeader ? removeLeader : addLeader}
-                              style={styles.button}
-                          >
-                              <Text style={styles.buttonText}>{member.isLeader ? "Remove Leader" : "Add Leader"}</Text>
-                          </TouchableOpacity>
+                          {member.master === "" && (
+                            <TouchableOpacity
+                            onPress={member.isLeader ? removeLeader : addLeader}
+                            style={styles.button}
+                            >
+                            <Text style={styles.buttonText}>{member.isLeader ? "Remove Leader" : "Add Leader"}</Text>
+                             </TouchableOpacity>
+                          )}
                           {!member.isLeader && (
                               <TouchableOpacity onPress={kickMember} style={[styles.button, styles.kickButton]}>
                                   <Text style={styles.buttonText}>Remove From Group</Text>
@@ -167,7 +172,7 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
                   </View>
               </Pressable>
               {isExpanded && member.isLeader && (
-                 <View style={[styles.departmentsContainer, { paddingBottom: extraHeight }]}>
+                 <View style={[styles.departmentsContainer, { paddingBottom: extraHeight, zIndex: 100 }]}>
                     <Text style={styles.departmentsTitle}>Departments:</Text>
                     {departments.map((dept) => (
                         <View key={dept._id} style={styles.departmentItem}>
@@ -200,10 +205,30 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
                         multiple={true}
                         min={0}
                         max={notDepartmentItems.length}
+                        placeholder="Select Departments"
+                        backgroundColor={colors.lightestgray}
                         onClose={handleDropdownClose}
                         zIndex={1000} // Ensure dropdown is displayed above other components
                         zIndexInverse={1000}
-                    />)}
+                        multipleText={`${selectedNotDepartmentIds?.length ?? 0} ${
+                            (selectedNotDepartmentIds?.length ?? 0) == 1 ? "Department" : "Departments"
+                        } selected`}/>
+                    //     <DropDown
+                    //     placeholder="Select Departments"
+                    //     value={selectedNotDepartmentIds}
+                    //     setValue={setSelectedNotDepartmentIds}
+                    //     items={notDepartmentItems}
+                    //     setItems={setNotDepartments}
+                    //     multiple={true}
+                    //     backgroundColor={colors.lightestgray}
+                    //     onClose={handleDropdownClose}
+                    //     multipleText={`${selectedNotDepartmentIds?.length ?? 0} ${
+                    //       (selectedNotDepartmentIds?.length ?? 0) == 1 ? "Department" : "Departments"
+                    //     } selected`}
+                    //   />
+                        )}
+
+
                 
                 </View>
               )}

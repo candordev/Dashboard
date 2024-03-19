@@ -21,6 +21,7 @@ type Member = {
     firstName?: string;
     lastName?: string;
     isLeader?: boolean;
+    master?: string;
 };
 
 const MemberManagement = ({ groupID, userID }: MemberManagementProps) => {
@@ -47,6 +48,7 @@ const MemberManagement = ({ groupID, userID }: MemberManagementProps) => {
           if (response.ok) {
             const filteredMembers = data.filter((member: Member) => member.user !== userID);
             setGroupMembers(filteredMembers);
+            console.log("MEMBERS", filteredMembers);
           } else {
             console.error("Error fetching members: ", data.error);
           }
@@ -149,6 +151,7 @@ const MemberManagement = ({ groupID, userID }: MemberManagementProps) => {
                             firstName: item.firstName || "",
                             lastName: item.lastName || "",
                             isLeader: item.isLeader || false,
+                            master: item.master || "",
                         }}
                         kickMember={() => kickMember(item.user)}
                         addLeader={() => addLeader(item.user)}
