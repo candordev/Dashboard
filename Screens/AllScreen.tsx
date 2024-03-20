@@ -56,7 +56,8 @@ const AllScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     // console.log("Component mounted, fetching posts initially");
-    //console.log("Event triggered, fetching posts");
+    setCategoriesWithPosts({});
+    console.log("Event triggered, fetching posts");
     fetchPosts(
       progressSelected,
       searchTerm,
@@ -64,7 +65,8 @@ const AllScreen = ({ navigation }: any) => {
       categorySelected,
       assigneesSelectedIds
     );
-  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm]); // Depend on currStatus to refetch when it changes
+
+  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm, state.currentGroup]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     // console.log("Received status:", status);
@@ -118,6 +120,7 @@ const AllScreen = ({ navigation }: any) => {
           status?.completedSelected,
         ]),
         title: searchTerm,
+        groupID: state.currentGroup,
       });
 
       // Add selectedHeaderOption to the query params if it's defined
@@ -138,7 +141,7 @@ const AllScreen = ({ navigation }: any) => {
         setCategoriesWithPosts(resJson);
         setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
-        console.error("Error loading posts. Please try again later.");
+        console.error("Error loading posts. Please try again later.", resJson.error);
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
@@ -186,7 +189,7 @@ const AllScreen = ({ navigation }: any) => {
       let res: Response = await customFetch(Endpoints.deleteCategory, {
         method: "DELETE",
         body: JSON.stringify({
-          groupID: state.leaderGroups[0],
+          groupID:state.currentGroup,
           categoryName: categoryName,
         }),
       });
@@ -223,8 +226,8 @@ const AllScreen = ({ navigation }: any) => {
           onHeaderOptionChange={handleHeaderOptionChange}
           onStatusChange={handleStatusChange}
           onAssigneeSelection={handleAssigneeSelection}
-          headerTitle={"Issues"}
-          groupID={state.leaderGroups?.[0] ? state.leaderGroups[0] : undefined}
+          headerTitle={state.currentGroup && state.leaderGroups.find((group: { _id: any; }) => group._id === state.currentGroup).name}
+          groupID={state.leaderGroups?.[0] ?state.currentGroup : undefined}
           onSearchChange={handleSearchChange}
           onPopoverCloseComplete={handlePopoverCloseComplete}
         />
