@@ -42,11 +42,11 @@ const MasterScreen = () => {
   
 
   useEffect(() => {
-    // Assuming you already have code to fetch forwardedPosts here
-    // Convert state.leaderGroups to the format expected by DropDownPicker
-    const groupItems = state.leaderGroups.map((group: { name: any; _id: any; }) => ({ label: group.name, value: group._id }));
-    setGroups(groupItems);
-  }, [state.leaderGroups]);
+    if (state?.leaderGroups) {
+      const groupItems = state.leaderGroups.map((group: { name: any; _id: any; }) => ({ label: group.name, value: group._id }));
+      setGroups(groupItems);
+    }
+  }, [state?.leaderGroups]);
 
   const handleSelectGroup = async (postId: string, groupId: null) => {
     try {
@@ -86,9 +86,10 @@ const MasterScreen = () => {
   }
 
   useEffect(() => {
-
-    fetchForwardedPosts();
-  }, [state.master]); // Dependency on state.master to refetch if it changes
+    if (state?.master) {
+      fetchForwardedPosts();
+    }
+  }, [state?.master]);
 
   
   return (
@@ -103,7 +104,7 @@ const MasterScreen = () => {
     </View>
       <View style={styles.groupsContainer}>
          <Text style={styles.title}>Group Insights</Text>
-         <GroupInsightsComponent masterID={state.master._id}/>
+         <GroupInsightsComponent masterID={state.master ? state.master._id : undefined}/>
       </View>
     </View>
   );
