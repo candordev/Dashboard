@@ -21,6 +21,11 @@ let userReducer = (state: any, action: any) => {
           ...state,
           currentGroup: action.payload,
         };
+      case 'UPDATE_LEADER_GROUPS': // Adding a case for updating leader groups
+      return {
+        ...state,
+        leaderGroups: action.payload,
+      };
     default:
       //console.log("Default case in userReducer");
       return state;
