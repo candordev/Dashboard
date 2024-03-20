@@ -155,14 +155,12 @@ const EmailSettings = () => {
 const SettingsSection = (props: SettingsSectionProps) => {
   return (
     <View
-      style={{
+      style={[styles.groupSettingsContainer, {
         paddingVertical: 15,
         paddingHorizontal: 20,
-        marginVertical: 10,
         marginHorizontal: 50,
         borderRadius: 15,
-        backgroundColor: colors.white,
-      }}
+      }]}
     >
       <Text
         style={{

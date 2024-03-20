@@ -1,24 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Keyboard, Pressable, StyleSheet, TextInput, View, Platform, TouchableOpacity, Text, ScrollView, FlatList } from "react-native";
+import {
+  Animated,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+  Platform,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import styles from "../Styles/styles";
 
 type TagEditorProps = {
   groupID: string;
 };
 
 interface Tag {
-    _id: string;
-    name: string;
-  }
+  _id: string;
+  name: string;
+}
 
-function TagEditor({
-  groupID
-}: TagEditorProps): JSX.Element {
-  const [error, setError] = useState('');
+function TagEditor({ groupID }: TagEditorProps): JSX.Element {
+  const [error, setError] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [newTagName, setNewTagName] = useState("");
   const [tags, setTags] = useState<Tag[]>([]);
@@ -31,9 +42,9 @@ function TagEditor({
 
   async function fetchTags() {
     try {
-      setError('');
+      setError("");
       const queryParams = new URLSearchParams({ groupID });
-      const url = `${Endpoints.getGroupCategories}${queryParams.toString()}`
+      const url = `${Endpoints.getGroupCategories}${queryParams.toString()}`;
       console.log("URL", url);
       const response = await customFetch(url, { method: "GET" });
       const data = await response.json();
@@ -53,15 +64,15 @@ function TagEditor({
 
   async function addTag(name: string) {
     try {
-      setError('');
-      if(name.length === 0) {
-        return
-    }   
+      setError("");
+      if (name.length === 0) {
+        return;
+      }
       let res = await customFetch(Endpoints.addGroupCategory, {
         method: "POST",
         body: JSON.stringify({
           groupID,
-          categoryName: name
+          categoryName: name,
         }),
       });
 
@@ -85,7 +96,7 @@ function TagEditor({
 
   const handleDoneEditingPress = async () => {
     if (editingTagId) {
-      const tagToEdit = tags.find(tag => tag._id === editingTagId);
+      const tagToEdit = tags.find((tag) => tag._id === editingTagId);
       if (tagToEdit && editedTagName.trim() !== tagToEdit.name.trim()) {
         await changeTag(tagToEdit.name, editedTagName.trim());
       }
@@ -96,16 +107,16 @@ function TagEditor({
 
   async function changeTag(oldName: string, newName: string) {
     try {
-      setError('');
-      if(oldName.length === 0 || newName.length === 0) {
-        return
-    }   
+      setError("");
+      if (oldName.length === 0 || newName.length === 0) {
+        return;
+      }
       let res = await customFetch(Endpoints.changeCategory, {
         method: "POST",
         body: JSON.stringify({
           groupID,
           categoryName: oldName,
-          newCategoryName: newName
+          newCategoryName: newName,
         }),
       });
 
@@ -124,18 +135,18 @@ function TagEditor({
 
   async function deleteTag(name: string) {
     try {
-      setError('');
-      if(name.length === 0) {
-        return
-      }   
-      console.log(Endpoints.deleteCategory)
-      console.log("groupID", groupID)
-        console.log("name", name)
+      setError("");
+      if (name.length === 0) {
+        return;
+      }
+      console.log(Endpoints.deleteCategory);
+      console.log("groupID", groupID);
+      console.log("name", name);
       let res = await customFetch(Endpoints.deleteCategory, {
         method: "DELETE",
         body: JSON.stringify({
           groupID: groupID,
-          categoryName: name
+          categoryName: name,
         }),
       });
 
@@ -164,58 +175,71 @@ function TagEditor({
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Manage Tags</Text>
-        <FlatList
-          data={tags}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <View style={styles.tagItem}>
-              <FeatherIcon name="tag" size={15} color={colors.purple} />
-              {editingTagId === item._id ? (
-                <TextInput
-                  style={styles.input}
-                  onChangeText={setEditedTagName}
-                  value={editedTagName}
-                  autoFocus
-                  onBlur={handleDoneEditingPress}
-                />
-              ) : (
-                <>
-                  <Text style={styles.tagText}>{item.name}</Text>
-                  <View style={styles.buttonGroup}>
-                    <TouchableOpacity onPress={() => handleEditTagPress(item)} style={styles.editButton}>
-                      <FeatherIcon name="edit-2" size={15} color={colors.purple} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => deleteTag(item.name)} style={styles.deleteButton}>
-                      <FeatherIcon name="trash" size={15} color={colors.red} />
-                    </TouchableOpacity>
-                  </View>
-                </>
-              )}
-            </View>
-          )}
-        />
-        {isAdding && (
-          <TextInput
-            style={styles.input}
-            onChangeText={setNewTagName}
-            value={newTagName}
-            placeholder="Enter new tag name"
-            autoFocus
-          />
+    <View style={styles.groupSettingsContainer}>
+      <Text style={additionalStyles.title}>Manage Tags</Text>
+      <FlatList
+        data={tags}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View style={additionalStyles.tagItem}>
+            <FeatherIcon name="tag" size={15} color={colors.purple} />
+            {editingTagId === item._id ? (
+              <TextInput
+                style={additionalStyles.input}
+                onChangeText={setEditedTagName}
+                value={editedTagName}
+                autoFocus
+                onBlur={handleDoneEditingPress}
+              />
+            ) : (
+              <>
+                <Text style={additionalStyles.tagText}>{item.name}</Text>
+                <View style={additionalStyles.buttonGroup}>
+                  <TouchableOpacity
+                    onPress={() => handleEditTagPress(item)}
+                    style={additionalStyles.editButton}
+                  >
+                    <FeatherIcon
+                      name="edit-2"
+                      size={15}
+                      color={colors.purple}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => deleteTag(item.name)}
+                    style={additionalStyles.deleteButton}
+                  >
+                    <FeatherIcon name="trash" size={15} color={colors.red} />
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
         )}
-        <TouchableOpacity onPress={handleAddTagPress} style={styles.button}>
-          <Text style={styles.buttonText}>{isAdding ? "Done" : "Add Tag"}</Text>
-        </TouchableOpacity>
-        {error !== "" && <Text style={styles.error}>{error}</Text>}
-      </ScrollView>
+      />
+      {isAdding && (
+        <TextInput
+          style={additionalStyles.input}
+          onChangeText={setNewTagName}
+          value={newTagName}
+          placeholder="Enter new tag name"
+          autoFocus
+        />
+      )}
+      <TouchableOpacity
+        onPress={handleAddTagPress}
+        style={additionalStyles.button}
+      >
+        <Text style={additionalStyles.buttonText}>
+          {isAdding ? "Done" : "Add Tag"}
+        </Text>
+      </TouchableOpacity>
+      {error !== "" && <Text style={additionalStyles.error}>{error}</Text>}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const additionalStyles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 10,
@@ -223,25 +247,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 30,
     ...Platform.select({
-        ios: {
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-        },
-        android: {
-          elevation: 5,
-        },
-        web: {
-          // Example values for boxShadow
-          boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
-        }
-      }),
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 5,
+      },
+      web: {
+        // Example values for boxShadow
+        boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)", // offsetX offsetY blurRadius color
+      },
+    }),
   },
   buttonGroup: {
-    marginLeft: 'auto',
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginLeft: "auto",
+    flexDirection: "row",
+    alignItems: "center",
   },
   editButton: {
     padding: 8,
@@ -250,8 +274,8 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   tagItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 4,
   },
   tagText: {
@@ -259,18 +283,18 @@ const styles = StyleSheet.create({
     flex: 1, // Ensures text takes up available space pushing buttons to the end
     fontFamily: "Montserrat",
   },
-//   editButton: {
-//     marginLeft: 10, // Ensure some space between edit and delete buttons
-//     padding: 8,
-//   },
+  //   editButton: {
+  //     marginLeft: 10, // Ensure some space between edit and delete buttons
+  //     padding: 8,
+  //   },
   scrollContainer: {
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
-//   deleteButton: {
-//     marginLeft: 'auto', // This pushes the delete button to the right
-//     padding: 8, // Adjust padding as needed
-//   },
+  //   deleteButton: {
+  //     marginLeft: 'auto', // This pushes the delete button to the right
+  //     padding: 8, // Adjust padding as needed
+  //   },
   title: {
     alignSelf: "flex-start",
     fontWeight: "600",
@@ -304,15 +328,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontFamily: "Montserrat",
   },
-//   tagItem: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     paddingVertical: 4,
-//   },
-//   tagText: {
-//     marginLeft: 10,
-//     fontFamily: "Montserrat",
-//   },
+  //   tagItem: {
+  //     flexDirection: "row",
+  //     alignItems: "center",
+  //     paddingVertical: 4,
+  //   },
+  //   tagText: {
+  //     marginLeft: 10,
+  //     fontFamily: "Montserrat",
+  //   },
   // other styles remain unchanged
 });
 
