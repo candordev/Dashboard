@@ -66,7 +66,7 @@ const AllScreen = ({ navigation }: any) => {
       assigneesSelectedIds
     );
 
-  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm, state.currentGroup]); // Depend on currStatus to refetch when it changes
+  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm, state.currentGroup, isFocused]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     // console.log("Received status:", status);

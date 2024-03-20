@@ -43,26 +43,37 @@ const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGro
 
     const handleCreateGroup = async () => {
         setIsLoading(true); // Start loading
-              try {
-                let res = await customFetch(Endpoints.createGroupInMaster, {
-                  method: "POST",
-                  body: JSON.stringify({
-                    masterID: state.master._id,
-                    name: newGroupName
-                  }),
-                });
-                if (!res.ok) {
-                  const resJson = await res.json();
-                  console.error("Error with creating group:", resJson.error);
-                } else {        
-                    setIsLoading(false); // Start loading
-                    setIsPopoverVisible(false); // Close the popover after submitting
-                    setNewGroupName(''); // Reset the input field
-                }
-              } catch (error) {
-                console.error("Network error, please try again later.", error);
-              }
-    };
+        try {
+          let res = await customFetch(Endpoints.createGroupInMaster, {
+            method: "POST",
+            body: JSON.stringify({
+              masterID: state.master._id,
+              name: newGroupName
+            }),
+          });
+          if (!res.ok) {
+            const resJson = await res.json();
+            console.error("Error with creating group:", resJson.error);
+            setIsLoading(false); // Stop loading if there's an error
+          } else {
+            const updatedGroups = await res.json(); // Assuming this returns the updated list of leader groups
+      
+            // Dispatch the updated leader groups to the context
+            dispatch({
+              type: 'UPDATE_LEADER_GROUPS',
+              payload: updatedGroups.leader, // Make sure this aligns with how your backend formats the response
+            });
+      
+            setIsLoading(false); // Stop loading
+            setIsPopoverVisible(false); // Close the popover after submitting
+            setNewGroupName(''); // Reset the input field
+          }
+        } catch (error) {
+          console.error("Network error, please try again later.", error);
+          setIsLoading(false); // Ensure to stop the loading indicator in case of an error
+        }
+      };
+      
 
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 10, backgroundColor: "white", zIndex: 10 }}>
