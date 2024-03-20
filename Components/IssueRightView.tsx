@@ -35,36 +35,31 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
   const [email, setEmail] = useState(post?.proposalFromEmail);
   const { state } = useUserContext();
 
+  // const handleDone = async () => {
+  //   try {
+  //     let res: Response = await customFetch(Endpoints.editPost, {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         proposalFromEmail: email,
+  //       postID: post?._id, // Assuming issue._id is the ID of the post to be edited
+  //       }),
+  //     });
 
-
-
-
-
-  const handleDone = async () => {
-    try {
-      let res: Response = await customFetch(Endpoints.editPost, {
-        method: "POST",
-        body: JSON.stringify({
-          proposalFromEmail: email,
-        postID: post?._id, // Assuming issue._id is the ID of the post to be edited
-        }),
-      });
-
-      let resJson = await res.json();
-      if (!res.ok) {
-        setEmail(post?.proposalFromEmail); // set to previous email
-        console.error("Error while editing post: ", resJson.error);
-      } else {
-        setIsEditing(false);
-        if (!(email === post?.proposalFromEmail)) {
-          setPost({ ...props.issue, proposalFromEmail: email || "" });
-          console.log("Handle Succeeded and new Post Email Set: ", post?.proposalFromEmail)
-        }
-      }
-    } catch (error) {
-      console.error("Error editing post. Please try again later.", error);
-    }
-  };
+  //     let resJson = await res.json();
+  //     if (!res.ok) {
+  //       setEmail(post?.proposalFromEmail); // set to previous email
+  //       console.error("Error while editing post: ", resJson.error);
+  //     } else {
+  //       setIsEditing(false);
+  //       if (!(email === post?.proposalFromEmail)) {
+  //         setPost({ ...props.issue, proposalFromEmail: email || "" });
+  //         console.log("Handle Succeeded and new Post Email Set: ", post?.proposalFromEmail)
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error editing post. Please try again later.", error);
+  //   }
+  // };
 
 
   React.useEffect(() => {
