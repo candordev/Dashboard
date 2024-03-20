@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: colors.red,
     borderRadius: 10,
+    marginTop: 10,
     //display: 'flex',
     justifyContent: 'center', // Center content horizontally
     alignSelf: 'flex-start', // Align button to the left
@@ -409,6 +410,7 @@ const styles = StyleSheet.create({
   },
   imageIcon: {
     marginBottom: 0,
+    marginTop: 10,
     padding: 8,
     backgroundColor: colors.purple,
     borderRadius: 10,
