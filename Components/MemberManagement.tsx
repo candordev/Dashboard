@@ -46,9 +46,9 @@ const MemberManagement = ({ groupID, userID }: MemberManagementProps) => {
           const data = await response.json();
           console.log("DATA", data);
           if (response.ok) {
-            const filteredMembers = data.filter((member: Member) => member.user !== userID);
-            setGroupMembers(filteredMembers);
-            console.log("MEMBERS", filteredMembers);
+            //const filteredMembers = data.filter((member: Member) => member.user !== userID);
+            setGroupMembers(data);
+            console.log("MEMBERS", data);
           } else {
             console.error("Error fetching members: ", data.error);
           }
@@ -157,6 +157,7 @@ const MemberManagement = ({ groupID, userID }: MemberManagementProps) => {
                         addLeader={() => addLeader(item.user)}
                         removeLeader={() => removeLeader(item.user)}
                         groupID={groupID}
+                        userID = {userID}
                     />
                 )}
             />
