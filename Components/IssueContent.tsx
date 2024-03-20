@@ -38,7 +38,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
         method: "POST",
         body: JSON.stringify({
           proposalFromEmail: email,
-          postID: post?._id, // Assuming issue._id is the ID of the post to be edited
+          postID: post?._id, 
         }),
       });
 
