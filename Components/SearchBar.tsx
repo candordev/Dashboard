@@ -18,6 +18,8 @@ type SearchBarProps = {
   searchPhrase: string;
   setSearchPhrase: (searchPhrase: string) => void;
   placeholder: string;
+  containerStyle?: any;
+  searchBarStyle?: any;
 };
 
 
@@ -25,6 +27,8 @@ function SearchBar({
   searchPhrase,
   setSearchPhrase,
   placeholder,
+  containerStyle,
+  searchBarStyle,
 }: SearchBarProps): JSX.Element {
 
   const clearInput = () => {
@@ -32,8 +36,8 @@ function SearchBar({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.searchBar]}>
+    <View style={[styles.container, containerStyle]}>
+      <View style={[styles.searchBar, searchBarStyle]}>
         <AntDesignIcon name="search1" size={20} color={colors.gray} />
         <TextInput
           style={styles.input}

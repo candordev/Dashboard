@@ -5,6 +5,7 @@ import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { set } from "lodash";
+import styles from "../Styles/styles";
 
 type PrioritySetterProps = {
   groupID: string;
@@ -72,49 +73,46 @@ function PrioritySetter({
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={styles.groupSettingsContainer}>
         <Text
             style={{
                 alignSelf: "flex-start",
                 fontWeight: "600",
                 fontSize: 27,
                 fontFamily: "Montserrat",
-                margin: 10
             }}
             >
             Set Deadlines
         </Text>
-        <Text style={styles.explanation}>
+        <Text style={additionalStyles.explanation}>
           Issues with a deadline less than the High Priority Deadline (in days) away are marked as high priority. 
           If the deadline is less than the Medium Priority Deadline (in days) away, it's marked as medium priority. 
           Deadlines beyond these are considered low priority.
         </Text>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>High Priority Deadline:</Text>
+        <View style={additionalStyles.inputGroup}>
+          <Text style={additionalStyles.inputLabel}>High Priority Deadline:</Text>
           <TextInput
-            style={styles.input}
+            style={additionalStyles.input}
             value={deadlineOne}
             onChangeText={setDeadlineOne}
             placeholder="Enter number of days"
             keyboardType="numeric"
           />
         </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Medium Priority Deadline:</Text>
+        <View style={additionalStyles.inputGroup}>
+          <Text style={additionalStyles.inputLabel}>Medium Priority Deadline:</Text>
           <TextInput
-            style={styles.input}
+            style={additionalStyles.input}
             value={deadlineTwo}
             onChangeText={setDeadlineTwo}
             placeholder="Enter number of days"
             keyboardType="numeric"
           />
         </View>
-        <TouchableOpacity onPress={setDeadlines} style={styles.button}>
-          <Text style={styles.buttonText}>Submit</Text>
+        <TouchableOpacity onPress={setDeadlines} style={additionalStyles.button}>
+          <Text style={additionalStyles.buttonText}>Submit</Text>
         </TouchableOpacity>
-        {error !== '' && <Text style={styles.error}>{error}</Text>}
-      </ScrollView>
+        {error !== '' && <Text style={additionalStyles.error}>{error}</Text>}
     </View>
   );
 }
@@ -122,7 +120,7 @@ function PrioritySetter({
 export default PrioritySetter;
 
 // Updated styles
-const styles = StyleSheet.create({
+const additionalStyles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 10,
