@@ -65,8 +65,14 @@ const AllScreen = ({ navigation }: any) => {
       categorySelected,
       assigneesSelectedIds
     );
-
-  }, [progressSelected, categorySelected, assigneesSelectedIds, searchTerm, state.currentGroup, isFocused]); // Depend on currStatus to refetch when it changes
+  }, [
+    progressSelected,
+    categorySelected,
+    assigneesSelectedIds,
+    searchTerm,
+    state.currentGroup,
+    isFocused,
+  ]); // Depend on currStatus to refetch when it changes
 
   const handleStatusChange = async (newStatus: ProgressSelector) => {
     // console.log("Received status:", status);
@@ -141,7 +147,10 @@ const AllScreen = ({ navigation }: any) => {
         setCategoriesWithPosts(resJson);
         setRefreshKey((prevKey) => prevKey + 1); // Increment key to force update
       } else {
-        console.error("Error loading posts. Please try again later.", resJson.error);
+        console.error(
+          "Error loading posts. Please try again later.",
+          resJson.error
+        );
       }
     } catch (error) {
       console.error("Error loading posts. Please try again later.", error);
@@ -149,7 +158,6 @@ const AllScreen = ({ navigation }: any) => {
       setLoading(false);
     }
   };
-
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -189,7 +197,7 @@ const AllScreen = ({ navigation }: any) => {
       let res: Response = await customFetch(Endpoints.deleteCategory, {
         method: "DELETE",
         body: JSON.stringify({
-          groupID:state.currentGroup,
+          groupID: state.currentGroup,
           categoryName: categoryName,
         }),
       });
@@ -226,8 +234,13 @@ const AllScreen = ({ navigation }: any) => {
           onHeaderOptionChange={handleHeaderOptionChange}
           onStatusChange={handleStatusChange}
           onAssigneeSelection={handleAssigneeSelection}
-          headerTitle={state.currentGroup && state.leaderGroups.find((group: { _id: any; }) => group._id === state.currentGroup).name}
-          groupID={state.leaderGroups?.[0] ?state.currentGroup : undefined}
+          headerTitle={
+            state.currentGroup &&
+            state.leaderGroups.find(
+              (group: { _id: any }) => group._id === state.currentGroup
+            ).name
+          }
+          groupID={state.leaderGroups?.[0] ? state.currentGroup : undefined}
           onSearchChange={handleSearchChange}
           onPopoverCloseComplete={handlePopoverCloseComplete}
         />
@@ -246,7 +259,10 @@ const AllScreen = ({ navigation }: any) => {
             }}
           >
             {Object.entries(categoriesWithPosts).map(([name, posts], index) => (
-              <View key={name} style={{ width: 350, marginRight: 20 }}>
+              <View
+                key={name}
+                style={{ width: 350, marginRight: 20 }}
+              >
                 <View
                   style={{
                     flexDirection: "row",

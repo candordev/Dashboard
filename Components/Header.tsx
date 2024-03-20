@@ -119,7 +119,7 @@ const Header = ({
       updatedSelected: true,
       completedSelected: true,
     });
-  }
+  };
 
   const [assigneeValues, setAssigneeValues] = useState<string[]>([]); // Explicitly specify the type as string[]
 
@@ -173,7 +173,12 @@ const Header = ({
         >
           {headerTitle}
         </Text>
-        <OptionPicker onOptionChange={onHeaderOptionChange} />
+        <View style={{flexDirection: "row", columnGap: 15}}>
+          <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
+            <Text style={styles.restText}>Reset Filters</Text>
+          </TouchableOpacity>
+          <OptionPicker onOptionChange={onHeaderOptionChange} />
+        </View>
       </View>
       <View
         style={{
@@ -191,10 +196,11 @@ const Header = ({
             placeholder="Search Issue..."
           />
         </View>
-        <StatusPicker 
+        <StatusPicker
           onStatusChange={onStatusChange}
           status={status}
-          setStatus={setStatus} />
+          setStatus={setStatus}
+        />
         <View style={{ flex: 1 }}>
           <DropDown
             placeholder="Select assignee"
@@ -206,15 +212,18 @@ const Header = ({
             multipleText={`${assigneeValues?.length ?? 0} ${
               (assigneeValues?.length ?? 0) == 1 ? "assignee" : "assignees"
             } selected`}
+            // styles= {
+            //   {
+            //     dropdownStyle: {boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.2)"},
+            //     dropDownContainerStyle: {boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.2)"},
+            //   }
+            // }
           />
         </View>
-        <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
-            <Text style={styles.restText}>Reset Filters</Text>
-          </TouchableOpacity>
-          <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
-          {state.groupType !== "HOA" && (
-            <CSVImportComponent onImportSuccess={handleImportSuccess} />
-          )}
+        <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
+        {state.groupType !== "HOA" && (
+          <CSVImportComponent onImportSuccess={handleImportSuccess} />
+        )}
       </View>
     </View>
   );
@@ -285,17 +294,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: "650" as any,
-    color: "white"
+    color: "white",
   },
   restText: {
-    fontWeight: "650" as any,
+    fontWeight: "550" as any,
     color: colors.black,
     fontFamily: "Montserrat",
     fontSize: 15,
     // fontSize: 15,
     // fontWeight: "650" as any,
     // color: "black",
-  }
+  },
 });
 
 export default Header;
