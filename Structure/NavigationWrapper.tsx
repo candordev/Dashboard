@@ -20,6 +20,7 @@ import { getUnreadNotifs } from "../utils/utils";
 import { NotificationProvider } from "../Structure/NotificationContext"; // Update the import path as necessary
 import NotificationPopup from "../Components/NotificationPopup";
 import { useNavigationContainerRef } from '@react-navigation/native';
+import MasterScreen from "../Screens/MasterScreen";
 
 
 
@@ -97,9 +98,10 @@ function NavigationWrapper() {
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",
-        launch: "launch/:userId?/:postId?/:groupId?",
+        launch: "launch/:userId?/:postId?/:groupId?/:masterId?",
         login: "login",
         groupSettings: "groupSettings",
+        master: "master",
         NotFound: "404",
       },
     },
@@ -118,6 +120,7 @@ function NavigationWrapper() {
               <Stack.Screen name="root" component={Root} />
               <Stack.Screen name="inbox" component={InboxScreen} />
               <Stack.Screen name="groupSettings" component={GroupSettingsScreen} />
+              <Stack.Screen name="master" component={MasterScreen} />
 
               {/* other authenticated screens */}
             </>
@@ -130,6 +133,7 @@ function NavigationWrapper() {
                 component={SignupStack}
                 options={{ headerShown: false }}
               />
+              {/* <Stack.Screen name="all" component={AllScreen} /> */}
 
             </>
           )}

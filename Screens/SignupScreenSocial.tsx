@@ -20,7 +20,7 @@ function SignupScreenSocial({
     route,
     navigation,
 }: SignupScreenSocialProps): JSX.Element {
-    const { passedFirstName, passedLastName, passedEmail, firebaseToken, userId, postId, groupId } =
+    const { passedFirstName, passedLastName, passedEmail, firebaseToken, userId, postId, groupId, masterId } =
         route.params;
 
     const [username, setUsername] = useState("");
@@ -52,7 +52,7 @@ function SignupScreenSocial({
 
         // console.log("we got here no error so should signup");
 
-        await signupUser(firstName, lastName, email, username.trim(), firebaseToken ?? "", "", userId, postId, groupId);
+        await signupUser(firstName, lastName, email, username.trim(), firebaseToken ?? "", "", userId, postId, groupId,masterId);
     };
 
     const validateFields = async () => {

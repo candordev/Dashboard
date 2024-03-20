@@ -18,14 +18,16 @@ interface Tag {
 function TagEditor({
   groupID
 }: TagEditorProps): JSX.Element {
-  const [tags, setTags] = useState([]);
   const [error, setError] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [newTagName, setNewTagName] = useState("");
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [editingTagId, setEditingTagId] = useState<string | null>(null);
+  const [editedTagName, setEditedTagName] = useState("");
 
   useEffect(() => {
     fetchTags();
-  }, []);
+  }, [groupID]);
 
   async function fetchTags() {
     try {
@@ -76,6 +78,50 @@ function TagEditor({
     }
   }
 
+  const handleEditTagPress = (tag: Tag) => {
+    setEditingTagId(tag._id); // Set the tag being edited
+    setEditedTagName(tag.name); // Pre-fill with current tag name
+  };
+
+  const handleDoneEditingPress = async () => {
+    if (editingTagId) {
+      const tagToEdit = tags.find(tag => tag._id === editingTagId);
+      if (tagToEdit && editedTagName.trim() !== tagToEdit.name.trim()) {
+        await changeTag(tagToEdit.name, editedTagName.trim());
+      }
+      setEditingTagId(null); // Reset editing state
+      setEditedTagName(""); // Clear the input field
+    }
+  };
+
+  async function changeTag(oldName: string, newName: string) {
+    try {
+      setError('');
+      if(oldName.length === 0 || newName.length === 0) {
+        return
+    }   
+      let res = await customFetch(Endpoints.changeCategory, {
+        method: "POST",
+        body: JSON.stringify({
+          groupID,
+          categoryName: oldName,
+          newCategoryName: newName
+        }),
+      });
+
+      if (!res.ok) {
+        const resJson = await res.json();
+        console.error("Error with changing tags:", resJson.error);
+        setError("Error with changing tags");
+      } else {
+        fetchTags();
+      }
+    } catch (error) {
+      console.error("Network error, please try again later.", error);
+      setError("Network error while changing tags");
+    }
+  }
+
   async function deleteTag(name: string) {
     try {
       setError('');
@@ -107,7 +153,7 @@ function TagEditor({
   }
 
   const handleAddTagPress = () => {
-    if (isAdding && newTagName.trim()) {
+    if (isAdding) {
       addTag(newTagName.trim()).then(() => {
         setNewTagName(""); // Reset input field after adding
         setIsAdding(false); // Change state to hide input field
@@ -121,18 +167,35 @@ function TagEditor({
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Manage Tags</Text>
-        <FlatList<Tag>
-            data={tags}
-            keyExtractor={(item: Tag) => item._id}
-            renderItem={({ item }: { item: Tag }) => (
-                <View style={styles.tagItem}>
-                    <FeatherIcon name="tag" size={15} color={colors.purple} />
-                    <Text style={styles.tagText}>{item.name}</Text>
-                    <TouchableOpacity onPress={() => deleteTag(item.name)} style={styles.deleteButton}>
-                        <FeatherIcon name="x" size={15} color={colors.red} />
+        <FlatList
+          data={tags}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <View style={styles.tagItem}>
+              <FeatherIcon name="tag" size={15} color={colors.purple} />
+              {editingTagId === item._id ? (
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setEditedTagName}
+                  value={editedTagName}
+                  autoFocus
+                  onBlur={handleDoneEditingPress}
+                />
+              ) : (
+                <>
+                  <Text style={styles.tagText}>{item.name}</Text>
+                  <View style={styles.buttonGroup}>
+                    <TouchableOpacity onPress={() => handleEditTagPress(item)} style={styles.editButton}>
+                      <FeatherIcon name="edit-2" size={15} color={colors.purple} />
                     </TouchableOpacity>
-                </View>
-            )}
+                    <TouchableOpacity onPress={() => deleteTag(item.name)} style={styles.deleteButton}>
+                      <FeatherIcon name="trash" size={15} color={colors.red} />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
+            </View>
+          )}
         />
         {isAdding && (
           <TextInput
@@ -175,14 +238,39 @@ const styles = StyleSheet.create({
         }
       }),
   },
+  buttonGroup: {
+    marginLeft: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  editButton: {
+    padding: 8,
+  },
+  deleteButton: {
+    padding: 8,
+  },
+  tagItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  tagText: {
+    marginLeft: 10,
+    flex: 1, // Ensures text takes up available space pushing buttons to the end
+    fontFamily: "Montserrat",
+  },
+//   editButton: {
+//     marginLeft: 10, // Ensure some space between edit and delete buttons
+//     padding: 8,
+//   },
   scrollContainer: {
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
-  deleteButton: {
-    marginLeft: 'auto', // This pushes the delete button to the right
-    padding: 8, // Adjust padding as needed
-  },
+//   deleteButton: {
+//     marginLeft: 'auto', // This pushes the delete button to the right
+//     padding: 8, // Adjust padding as needed
+//   },
   title: {
     alignSelf: "flex-start",
     fontWeight: "600",
@@ -216,15 +304,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontFamily: "Montserrat",
   },
-  tagItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 4,
-  },
-  tagText: {
-    marginLeft: 10,
-    fontFamily: "Montserrat",
-  },
+//   tagItem: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     paddingVertical: 4,
+//   },
+//   tagText: {
+//     marginLeft: 10,
+//     fontFamily: "Montserrat",
+//   },
   // other styles remain unchanged
 });
 

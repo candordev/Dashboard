@@ -83,7 +83,7 @@ const Header = ({
         queryParams.append("groupID", groupID);
       }
 
-      // console.log("THESE THE LEADER GROUPS", state.leaderGroups[0]);
+      // console.log("THESE THE LEADER GROUPS",state.currentGroup);
       let endpoint = Endpoints.getGroupLeaders + queryParams.toString(); // backend route does it by page, might need to j get all of the leaders
 
       const res = await customFetch(endpoint, { method: "GET" });

@@ -79,7 +79,7 @@ function CreatePostView(props: any) {
 
       let formData = new FormData();
       formData.append('title', title);
-      formData.append('groupID', state.leaderGroups[0]); // Assuming you have state.leaderGroups
+      formData.append('groupID',state.currentGroup); // Assuming you have state.leaderGroups
       formData.append('content', content);
       formData.append('visible', true.toString());
       formData.append('anonymous', false.toString());
@@ -137,7 +137,7 @@ function CreatePostView(props: any) {
   //       body: JSON.stringify({
   //         title: title,
   //         content: content,
-  //         groupID: state.leaderGroups[0],
+  //         groupID:state.currentGroup,
   //         visible: true,
   //         anonymous: false,
   //         postCreatedFrom: "dashboard",

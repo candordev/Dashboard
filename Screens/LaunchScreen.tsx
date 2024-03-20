@@ -30,6 +30,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
   const userId = route.params?.userId || '';
   const routePostId = route.params?.postId || '';
   const groupId = route.params?.groupId || '';
+  const masterId = route.params?.masterId || '';
   const { state } = useUserContext();
 
 
@@ -96,6 +97,8 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
               ...(userId && { userId }),
               ...(postId && { postId }),
               ...(groupId && { groupId }),
+              ...(masterId && { masterId }),
+
             },
           });
       }
@@ -159,6 +162,7 @@ function LaunchScreen({route, navigation}: LaunchcreenProps): JSX.Element {
     navigation.navigate('signupStack', {
       screen: 'signupemail',
       params: {
+        ...(masterId && { masterId }),
         ...(groupId && { groupId }),
         ...(postId && { postId }),
         ...(userId && { userId }),

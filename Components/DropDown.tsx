@@ -3,6 +3,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import colors from "../Styles/colors";
 
+type DropDownDirectionType = 'AUTO' | 'TOP' | 'BOTTOM'; // Example, adjust based on actual type definition
+
 type PropTypes = {
   placeholder: string;
   value: any;
@@ -14,6 +16,7 @@ type PropTypes = {
   onClose?: () => void;
   styles?: any;
   multipleText?: string;
+  dropDownDirection?: DropDownDirectionType;
 };
 
 const DropDown = (props: PropTypes) => {
@@ -29,9 +32,9 @@ const DropDown = (props: PropTypes) => {
       setOpen={setOpen}
       setValue={props.setValue}
       setItems={props.setItems}
-      dropDownDirection="BOTTOM"
+      dropDownDirection={props.dropDownDirection || "BOTTOM"} // Default to "BOTTOM" if not provided
       style={{
-        zIndex: 0,
+        zIndex: 4,
         borderWidth: open ? 1 : 0,
         borderColor: colors.lightergray,
         borderRadius: 15,

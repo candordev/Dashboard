@@ -8,6 +8,8 @@ import InboxScreen from "./InboxScreen";
 import SettingsScreen from "./SettingsScreen";
 import GroupSettingsScreen from "./GroupSettingsScreen";
 import NotificationPopup from "../Components/NotificationPopup";
+import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
+
 
 const Drawer = createDrawerNavigator();
 
@@ -54,14 +56,19 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
     <Drawer.Navigator
       useLegacyImplementation={false}
       //get the route name and pass it into LHN
-      drawerContent={(props) => <LHN {...props} />}
+      drawerContent={(props) => <LHN {...props} navigation={props.navigation} />}
       screenOptions={{
         drawerType: "permanent",
-        drawerStyle: { width: 200, borderRightWidth: 0 },
+        drawerStyle: { width: 250, borderRightWidth: 0 },
         headerShown: false,
       }}
       initialRouteName="all"
     >    
+        <Drawer.Screen
+        name="master"
+        component={MasterScreen}
+        options={{ title: "Candor - Master" }}
+      />
       <Drawer.Screen
         name="all"
         component={AllScreen}
