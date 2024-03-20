@@ -23,6 +23,7 @@ type GroupMemberProps = {
     addLeader: () => void;
     removeLeader: () => void;
     groupID: string;
+    userID: string;
 };
 
 
@@ -33,7 +34,7 @@ interface Department {
     defaultDepartment: boolean;
 }
 
-const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: GroupMemberProps) => {
+const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader, userID }: GroupMemberProps) => {
 
     const [departments, setDepartments] = useState<Department[]>([]);
     const [notDepartments, setNotDepartments] = useState<Department[]>([]); // New state to store non-department data
@@ -154,21 +155,21 @@ const GroupMember = ({ groupID, member, kickMember, addLeader, removeLeader }: G
                           {member.firstName} {member.lastName}
                       </Text>
                       {member.isLeader && <FeatherIcon name="check-circle" size={20} color={colors.purple} />}
-                      <View style={styles.buttonGroup}>
-                          {member.master === "" && (
+                    <View style={styles.buttonGroup}>
+                        {member.master === "" && member.user !== userID && (
                             <TouchableOpacity
-                            onPress={member.isLeader ? removeLeader : addLeader}
-                            style={styles.button}
+                                onPress={member.isLeader ? removeLeader : addLeader}
+                                style={styles.button}
                             >
-                            <Text style={styles.buttonText}>{member.isLeader ? "Remove Leader" : "Add Leader"}</Text>
-                             </TouchableOpacity>
-                          )}
-                          {!member.isLeader && (
-                              <TouchableOpacity onPress={kickMember} style={[styles.button, styles.kickButton]}>
-                                  <Text style={styles.buttonText}>Remove From Group</Text>
-                              </TouchableOpacity>
-                          )}
-                      </View>
+                                <Text style={styles.buttonText}>{member.isLeader ? "Remove Leader" : "Add Leader"}</Text>
+                            </TouchableOpacity>
+                        )}
+                        {!member.isLeader && (
+                            <TouchableOpacity onPress={kickMember} style={[styles.button, styles.kickButton]}>
+                                <Text style={styles.buttonText}>Remove From Group</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                   </View>
               </Pressable>
               {isExpanded && member.isLeader && (
