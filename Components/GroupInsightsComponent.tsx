@@ -19,16 +19,19 @@ interface InsightValues {
   // Define the props interface
 interface GroupInsightsComponentProps {
     masterID: string;
+    sortType: string | undefined; // Add this prop to accept the sort type
+
   }
   
 
-  const GroupInsightsComponent: React.FC<GroupInsightsComponentProps> = ({ masterID }) => {
+  const GroupInsightsComponent: React.FC<GroupInsightsComponentProps> = ({ sortType,masterID }) => {
     const [insights, setInsights] = useState([]);
 
   const fetchInsights = async () => {
     try {
       const response = await customFetch(
-        `${Endpoints.getMasterInsights}masterID=${masterID}`,
+          `${Endpoints.getMasterInsights}masterID=${masterID}&sortFilter=${sortType}`,
+
         {
           method: "GET",
         }
@@ -48,7 +51,7 @@ interface GroupInsightsComponentProps {
 
   useEffect(() => {
     fetchInsights();
-  }, [masterID]); // Dependency on masterID to refetch if it changes
+  }, [masterID, sortType]); // Dependency on masterID to refetch if it changes
 
   return (
     <ScrollView style={styles.container}>
@@ -91,6 +94,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     margin: 20,
+    zIndex: 1
   },
   groupContainer: {
     marginBottom: 20,
