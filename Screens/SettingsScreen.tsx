@@ -12,7 +12,6 @@ import Button from "../Components/Button";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
-import { last } from "lodash";
 
 // type SettingsScreenProps = {
 //   navigation: any;
