@@ -51,6 +51,7 @@ export const setUser = async ({
       email: resJson.email,
       dob: resJson.dateOfBirth,
       token: token,
+      ccEmail: resJson.ccEmail,
       imageUrl: resJson.profilePicture,
       candorPoints: resJson.candorPoints,
       candorPointsByGroup: resJson.candorPointsByGroup,

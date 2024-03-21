@@ -465,8 +465,20 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: colors.white,
     outlineStyle: "none",
-    fontFamily: "OpenSans",
+    fontFamily: "Montserrat",
     fontWeight: "500",
+  },
+  ccEmailInput: {
+    borderColor: colors.lightergray,
+    borderWidth: 1.5,
+    borderRadius: 10,
+    paddingHorizontal: 7,
+    paddingVertical: 5,
+    backgroundColor: colors.white,
+    outlineStyle: "none",
+    fontFamily: "Montserrat",
+    fontWeight: "500",
+    width: "30%"
   },
   markerContainer: {
     alignItems: 'center',
