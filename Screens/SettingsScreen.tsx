@@ -31,9 +31,9 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
       <NotificationPopup navigation={navigation} />
       <OuterView>
         <GeneralSettings />
-        <DepartmentSettings />
+        {/* <DepartmentSettings />
         <TagSettings />
-        <DeadlineSettings />
+        <DeadlineSettings /> */}
         <EmailSettings />
       </OuterView>
     </>
