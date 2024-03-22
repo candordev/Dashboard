@@ -124,16 +124,17 @@ const GeneralSettings = () => {
             id="fileInput"
           />
           <label htmlFor="fileInput" style={{
-              backgroundColor: colors.lightestgray,
+              backgroundColor: colors.purple,
               borderRadius: 15,
               padding: '7px 20px',
-              marginTop: 10,
+              marginTop: 25,
               fontFamily: 'Montserrat',
               cursor: 'pointer',
               display: 'inline-block',
-              color: colors.black,
+              color: colors.white,
               fontSize: 14,
               fontWeight: "600",
+              
           }}>Edit Picture</label>
         </View>
         <View>
@@ -172,15 +173,16 @@ const GeneralSettings = () => {
             onPress={() => !isLoading && editProfile(firstName, lastName, imageFile)} // Prevent function call if isLoading
             disabled={isLoading} // Disable button when loading
             style={{
-              backgroundColor: colors.lightestgray,
+              backgroundColor: colors.purple,
               borderRadius: 15,
               paddingVertical: 7,
-              marginTop: 10,
+              marginTop: 25,
+              marginLeft: 22,
               alignSelf: "center",
               opacity: isLoading ? 0.5 : 1, // Optional: change opacity when disabled for a visual cue
             }}
             textStyle={{
-              color: colors.black,
+              color: colors.white,
               fontSize: 14,
               fontWeight: "600",
             }}
@@ -260,14 +262,14 @@ const EmailSettings = () => {
             onPress={editCCEmail}
             disabled={isLoading}
             style={{
-              backgroundColor: colors.lightestgray,
+              backgroundColor: colors.purple,
               borderRadius: 15,
               paddingVertical: 7,
               marginLeft: 10, // Adjust as necessary for spacing
               opacity: isLoading ? 0.5 : 1,
             }}
             textStyle={{
-              color: colors.black,
+              color: colors.white,
               fontSize: 14,
               fontWeight: "600",
             }}
