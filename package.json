@@ -28,7 +28,6 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
     "react-native": "0.72.6",
-    "react-native-document-picker": "^9.1.1",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-google-places-autocomplete": "^2.5.6",
@@ -49,7 +48,6 @@
     "@types/papaparse": "^5.3.14",
     "@types/react": "~18.2.14",
     "@types/react-datepicker": "^4.19.4",
-    "@types/react-native-document-picker": "^3.1.1",
     "@types/react-native-vector-icons": "^6.4.17",
     "typescript": "^5.1.3"
   },

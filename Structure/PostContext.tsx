@@ -10,22 +10,20 @@ interface PostIdContextType {
 
 const defaultValue: PostIdContextType = {
   postId: null,
-  setPostId: () => {},
+  setPostId: () => null,
   post: null,
-  setPost: () => {},
+  setPost: () => null,
 };
 
-const PostIdContext = createContext<PostIdContextType>(defaultValue);
+export const PostContext = createContext<PostIdContextType>(defaultValue);
 
-export const usePostId = () => useContext(PostIdContext);
-
-export const PostIdProvider = ({ children }: any) => {
+export const PostProvider = ({ children }: any) => {
   const [postId, setPostId] = useState<string | null>(null);
   const [post, setPost] = useState<Post | null>(null);
 
   return (
-    <PostIdContext.Provider value={{postId, setPostId, post, setPost}}>
+    <PostContext.Provider value={{ postId, setPostId, post, setPost}}>
       {children}
-    </PostIdContext.Provider>
+    </PostContext.Provider>
   );
 };

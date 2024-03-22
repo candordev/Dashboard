@@ -119,7 +119,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postID }) => {
         // borderColor: colors.lightestgray,
         flex: 1, // Take up all available space
         height: "70%", // Set a maximum height
-        alignContent: 'flex', // Align content to the start
+        alignContent: 'flex-start', // Align content to the start
         }}>
         {/* <Text style={styles.chatTitle}>Comments</Text> */}
         <ScrollView>
@@ -165,6 +165,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postID }) => {
           <Icon
             name="paper-plane"
             size={20}
+            style={{ margin: 5 }}
             color={submittable ? colors.purple : colors.lightgray}
           />
         </TouchableOpacity>

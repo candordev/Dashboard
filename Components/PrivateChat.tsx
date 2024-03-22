@@ -11,19 +11,19 @@
   import styles from "../Styles/styles";
   import { debounce } from "lodash";
   import io from "socket.io-client";
-  const validator = require("validator");
   import { BASE_URL } from "../utils/Endpoints";
-  import { usePostId } from "../Structure/PostContext";
+  import { usePostContext } from "../Hooks/usePostContext";
   import Icon from "react-native-vector-icons/FontAwesome";
 
 
+  const validator = require("validator");
 
   interface PrivateChatProps {
     issue: Post;
   }
   function PrivateChat(props: PrivateChatProps): JSX.Element {
-    const { state, dispatch } = useUserContext();
-    const { post, setPost} = usePostId();
+    const { state } = useUserContext();
+    const { post, setPost} = usePostContext();
 
     const [privateComments, setPrivateComments] = useState<Comment[]>([]);
     
@@ -41,13 +41,6 @@
       { label: "Authorities", value: "authorities"},
       { label: "Constituent", value: "constituent"},
     ]);
-
-    // useEffect(() => {
-    //   // console.log("T: ", props.issue.proposalFromEmail)
-    //   // console.log("BEFORE ", post?.proposalFromEmail)
-    //   setPost({ ... props.issue, proposalFromEmail : props.issue.proposalFromEmail})
-    //   // console.log("AFTER ", post?.proposalFromEmail)
-    // }, [props.issue._id])
 
     useEffect(() => {
       // Example logic to enable the submit button when inputText is not empty
@@ -88,10 +81,10 @@
         // Join the room specific to the chatMode and postID
         socket.emit("join-post", roomName);
       });
-      socket.on("connect_error", (err) => {
+      socket.on("connect_error", (err : any) => {
         console.error("Connection error:", err.message);
       });
-      socket.on("new-comment", (newComment) => {
+      socket.on("new-comment", (newComment : Comment) => {
         console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
         setPrivateComments((prevComments) => [...prevComments, newComment]);
       });
@@ -124,51 +117,52 @@
       lastCommentDate = new Date(comment.date);
       return (
         <View key={comment._id} style={chatStyles.commentContainer}>
-          {comment.isWhisper ? (
-            <View style={chatStyles.whisperCommentContainer}>
-              <Text style={chatStyles.whisperCommentText}>{comment.content}</Text>
-            </View>
-          ) : (
-            <>
-              <View style={chatStyles.nameAndDateContainer}>
-                {!isAuthor && (
-                  <>
-                    <Text style={chatStyles.userName}>
-                      {comment.contentType == "constituentChat"
-                        ? "Constituent Chat Response"
-                        : `${comment.profile.firstName} ${comment.profile.lastName}`}
-                    </Text>
-                    {showDate && (
-                      <Text style={chatStyles.dateText}>
-                        {formatDate(comment.date)}
-                      </Text>
-                    )}
-                  </>
-                )}
-                {isAuthor && showDate && (
+      {comment.isWhisper ? (
+        <View style={chatStyles.whisperCommentContainer}>
+          <Text style={chatStyles.whisperCommentText}>{comment.content}</Text>
+        </View>
+      ) : (
+        <>
+          <View style={chatStyles.nameAndDateContainer}>
+            {isAuthor ? (
+              <>
                   <Text style={chatStyles.authorSelfDate}>
+                  </Text>
+                <Text style={chatStyles.userName}>Candor AI</Text>
+              </>
+            ) : (
+              <>
+                <Text style={chatStyles.userName}>
+                  {comment.contentType == "constituentChat"
+                    ? "Constituent Chat Response"
+                    : `${comment.profile.firstName} ${comment.profile.lastName}`}
+                </Text>
+                {showDate && (
+                  <Text style={chatStyles.dateText}>
                     {formatDate(comment.date)}
                   </Text>
                 )}
-              </View>
-              <View
-                style={
-                  !isAuthor && comment.contentType === "constituentChat"
-                    ? { ...chatStyles.authorOther, marginTop: 5 }
-                    : isAuthor
-                    ? chatStyles.authorSelf
-                    : chatStyles.authorOther
-                }
-              >
-                <Text style={isAuthor ? { color: "white" } : { color: "black" }}>
-                  {comment.content}
-                </Text>
-              </View>
-            </>
-          )}
-        </View>
-      );
-    };
+              </>
+            )}
+          </View>
+          <View
+            style={
+              !isAuthor && comment.contentType === "constituentChat"
+                ? { ...chatStyles.authorOther, marginTop: 5 }
+                : isAuthor
+                ? chatStyles.authorSelf
+                : chatStyles.authorOther
+            }
+          >
+            <Text style={isAuthor ? { color: "black" } : { color: "black" }}>
+              {comment.content}
+            </Text>
+          </View>
+        </>
+      )}
+    </View>
+  );
+};
 
     async function postPoliticianComment() {
       try {
@@ -250,7 +244,7 @@
       <View style={chatStyles.chatContainer}>
         <View style={chatStyles.titleDropdownContainer}>
           {/* <Text style={chatStyles.chatTitle}>Private Chat</Text> */}
-          <View style={{flexDirection: 'flex-end'}}>
+          <View>
             <DropDown
               placeholder="Chat Type"
               value={chatMode}
@@ -298,6 +292,7 @@
             <Icon
               name="paper-plane"
               size={20}
+              style={{ margin: 5 }}
               color={submittable ? colors.purple : colors.lightgray}
             />
         </TouchableOpacity>
@@ -321,9 +316,11 @@
     userName: {
       color: colors.purple,
       fontWeight: "500",
-      alignSelf: "flex-start",
-      marginBottom: 0,
-      marginLeft: 5,
+      alignSelf: "flex-end",
+      marginBottom: 3,
+      marginRight: 5,
+      flexDirection: "row-reverse",
+      // marginLeft: 5,
     },
     commentContainer: {
       marginVertical: 1,
@@ -334,8 +331,8 @@
     },
     authorSelf: {
       textAlign: "right",
-      backgroundColor: colors.purple,
-      color: "white",
+      backgroundColor: colors.lightergray,
+      color: colors.black,
       alignSelf: "flex-end",
       padding: 10,
       borderRadius: 10,

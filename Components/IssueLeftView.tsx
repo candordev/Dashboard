@@ -136,15 +136,15 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
       />
           {/* Tab controls */}
     <View style={{
-        backgroundColor: colors.white,
-        paddingVertical: 10,
-        borderWidth: 2,
-        borderRadius: 10,
-        borderColor: colors.lightestgray,
-        flex: 1, // Take up all available space
-        height: "70%", // Set a maximum height
-        alignContent: 'flex', // Align content to the start
-        }}>
+      backgroundColor: colors.white,
+      paddingVertical: 10,
+      borderWidth: 2,
+      borderRadius: 10,
+      borderColor: colors.lightestgray,
+      flex: 1, // Take up all available space
+      height: "70%", // Set a maximum height
+      alignContent: 'flex-start', // Align content to the start
+      }}>
      <View style={styles.tabs}>
       <TouchableOpacity
         onPress={() => handleTabSelect('comments')}

@@ -17,7 +17,7 @@ export const getAuthToken = async (): Promise<string> => {
     throw error;
   }
 };
-export const customFetch = async (
+export const customFetch = async (  
   endpoint: string,
   options: { method: string; body?: any },
   attempt: number = 0,

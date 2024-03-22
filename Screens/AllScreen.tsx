@@ -16,12 +16,12 @@ import MapMarkerView from "../Components/MapMarkerView";
 import NotificationPopup from "../Components/NotificationPopup";
 import OuterView from "../Components/OuterView";
 import Text from "../Components/Text";
-import { useUserContext } from "../Hooks/useUserContext";
-import { usePostId } from "../Structure/PostContext";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { Post, ProgressSelector } from "../utils/interfaces";
 import { customFetch } from "../utils/utils";
+import { usePostContext } from "../Hooks/usePostContext";
+import { useUserContext } from "../Hooks/useUserContext";
 
 const AllScreen = ({ navigation }: any) => {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -52,7 +52,7 @@ const AllScreen = ({ navigation }: any) => {
 
   const isFocused = useIsFocused(); // Assuming you're using something like this
   const { state } = useUserContext();
-  const { postId } = usePostId();
+  const { postId } = usePostContext();
 
   useEffect(() => {
     // console.log("Component mounted, fetching posts initially");

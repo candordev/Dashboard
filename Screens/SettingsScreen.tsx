@@ -12,17 +12,18 @@ import Button from "../Components/Button";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
+import { set } from "lodash";
 
-// type SettingsScreenProps = {
-//   navigation: any;
-// };
+    // type SettingsScreenProps = {
+    //   navigation: any;
+    // };
 
-// const SettingsScreen: React.FC<SettingsScreenProps> = () => {
+    // const SettingsScreen: React.FC<SettingsScreenProps> = () => {
 
-type Props = PropsWithChildren<{
-  route: any;
-  navigation: any;
-}>;
+    type Props = PropsWithChildren<{
+      route: any;
+      navigation: any;
+    }>;
 
 function SettingsScreen({ route, navigation }: Props): JSX.Element {
   return (
@@ -39,10 +40,10 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
   );
 }
 
-type SettingsSectionProps = {
-  title: string;
-  children: React.ReactNode;
-};
+    type SettingsSectionProps = {
+      title: string;
+      children: React.ReactNode;
+    };
 
 const GeneralSettings = () => {
   const { state, dispatch } = useUserContext();
@@ -57,6 +58,10 @@ const GeneralSettings = () => {
   }, [firstName, lastName, previewUrl]);
 
   async function editProfile(first: string, last: string, profilePicture: any) {
+   if (state.firstName === first && state.lastName === last && state.imageUrl === previewUrl) {
+      return
+    }
+    
     try {
       setIsLoading(true);
       let formData = new FormData();
@@ -171,7 +176,7 @@ const GeneralSettings = () => {
           <Button
             text={isLoading ? "Loading..." : "Save Changes"} // Change text based on isLoading
             onPress={() => !isLoading && editProfile(firstName, lastName, imageFile)} // Prevent function call if isLoading
-            disabled={isLoading} // Disable button when loading
+            // disabled={isLoading} // Disable button when loading
             style={{
               backgroundColor: colors.purple,
               borderRadius: 15,
@@ -208,11 +213,14 @@ const EmailSettings = () => {
       return;
     }
 
+    if ((ccEmail === state.ccEmail)) {
+      return
+    }
+
     setIsLoading(true);
     try {
       const res = await customFetch(Endpoints.editCCEmail, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ccEmail }),
       });
 
@@ -260,7 +268,7 @@ const EmailSettings = () => {
           <Button
             text={isLoading ? "Loading..." : "Save Changes"}
             onPress={editCCEmail}
-            disabled={isLoading}
+            // disabled={isLoading}
             style={{
               backgroundColor: colors.purple,
               borderRadius: 15,
@@ -280,21 +288,27 @@ const EmailSettings = () => {
   );
 };
 
-const DepartmentSettings = () => {
-  return (
-    <SettingsSection title={"Departments"}>
-      <Text>World</Text>
-    </SettingsSection>
-  );
-};
+    const DepartmentSettings = () => {
+      return (
+        <SettingsSection title={"Departments"}>
+          {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ fontSize: 15, fontWeight: "500", marginRight: 10 }}>
+              Email:
+            </Text>
+            <TextInput style={styles.textInput} />
+          </View> */}
+          <Text>World</Text>
+        </SettingsSection>
+      );
+    };
 
-const TagSettings = () => {
-  return (
-    <SettingsSection title={"Tags"}>
-      <Text>World</Text>
-    </SettingsSection>
-  );
-};
+    const TagSettings = () => {
+      return (
+        <SettingsSection title={"Tags"}>
+          <Text>World</Text>
+        </SettingsSection>
+      );
+    };
 
 const DeadlineSettings = () => {
   return (
