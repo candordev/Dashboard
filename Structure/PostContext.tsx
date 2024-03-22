@@ -17,8 +17,6 @@ const defaultValue: PostIdContextType = {
 
 export const PostContext = createContext<PostIdContextType>(defaultValue);
 
-// export const usePostId = () => useContext(PostContext);
-
 export const PostProvider = ({ children }: any) => {
   const [postId, setPostId] = useState<string | null>(null);
   const [post, setPost] = useState<Post | null>(null);

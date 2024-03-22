@@ -12,6 +12,7 @@ import Button from "../Components/Button";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
+import { set } from "lodash";
 
     // type SettingsScreenProps = {
     //   navigation: any;
@@ -57,6 +58,10 @@ const GeneralSettings = () => {
   }, [firstName, lastName, previewUrl]);
 
   async function editProfile(first: string, last: string, profilePicture: any) {
+   if (state.firstName === first && state.lastName === last && state.imageUrl === previewUrl) {
+      return
+    }
+    
     try {
       setIsLoading(true);
       let formData = new FormData();
@@ -170,7 +175,7 @@ const GeneralSettings = () => {
           <Button
             text={isLoading ? "Loading..." : "Save Changes"} // Change text based on isLoading
             onPress={() => !isLoading && editProfile(firstName, lastName, imageFile)} // Prevent function call if isLoading
-            disabled={isLoading} // Disable button when loading
+            // disabled={isLoading} // Disable button when loading
             style={{
               backgroundColor: colors.lightestgray,
               borderRadius: 15,
@@ -206,11 +211,14 @@ const EmailSettings = () => {
       return;
     }
 
+    if ((ccEmail === state.ccEmail)) {
+      return
+    }
+
     setIsLoading(true);
     try {
       const res = await customFetch(Endpoints.editCCEmail, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ccEmail }),
       });
 
@@ -258,7 +266,7 @@ const EmailSettings = () => {
           <Button
             text={isLoading ? "Loading..." : "Save Changes"}
             onPress={editCCEmail}
-            disabled={isLoading}
+            // disabled={isLoading}
             style={{
               backgroundColor: colors.lightestgray,
               borderRadius: 15,

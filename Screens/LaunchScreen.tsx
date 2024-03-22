@@ -6,7 +6,6 @@ import colors from "../Styles/colors";
 import { useSignup } from "../Hooks/useSignup";
 import { Endpoints } from "../utils/Endpoints";
 import { useDrawerProgress } from "@react-navigation/drawer";
-// import { usePostId } from '../Structure/PostContext';
 import { usePostContext } from "../Hooks/usePostContext";
 import { useUserContext } from "../Hooks/useUserContext";
 import NotificationPopup from "../Components/NotificationPopup";

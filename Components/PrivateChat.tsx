@@ -11,17 +11,18 @@
   import styles from "../Styles/styles";
   import { debounce } from "lodash";
   import io from "socket.io-client";
-  const validator = require("validator");
   import { BASE_URL } from "../utils/Endpoints";
   import { usePostContext } from "../Hooks/usePostContext";
   import Icon from "react-native-vector-icons/FontAwesome";
 
 
+  const validator = require("validator");
+
   interface PrivateChatProps {
     issue: Post;
   }
   function PrivateChat(props: PrivateChatProps): JSX.Element {
-    const { state, dispatch } = useUserContext();
+    const { state } = useUserContext();
     const { post, setPost} = usePostContext();
 
     const [privateComments, setPrivateComments] = useState<Comment[]>([]);
@@ -40,13 +41,6 @@
       { label: "Authorities", value: "authorities"},
       { label: "Constituent", value: "constituent"},
     ]);
-
-    // useEffect(() => {
-    //   // console.log("T: ", props.issue.proposalFromEmail)
-    //   // console.log("BEFORE ", post?.proposalFromEmail)
-    //   setPost({ ... props.issue, proposalFromEmail : props.issue.proposalFromEmail})
-    //   // console.log("AFTER ", post?.proposalFromEmail)
-    // }, [props.issue._id])
 
     useEffect(() => {
       // Example logic to enable the submit button when inputText is not empty
@@ -298,6 +292,7 @@
             <Icon
               name="paper-plane"
               size={20}
+              style={{ margin: 5 }}
               color={submittable ? colors.purple : colors.lightgray}
             />
         </TouchableOpacity>

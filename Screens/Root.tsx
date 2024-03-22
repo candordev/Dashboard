@@ -9,7 +9,7 @@ import SettingsScreen from "./SettingsScreen";
 import GroupSettingsScreen from "./GroupSettingsScreen";
 import NotificationPopup from "../Components/NotificationPopup";
 import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
-import { UserContext } from "../Structure/UserContext";
+import { useUserContext } from "../Hooks/useUserContext";
 
 
 const Drawer = createDrawerNavigator();
@@ -36,7 +36,7 @@ type RootScreenProps = {
 
 function Root({route, navigation}: RootScreenProps): JSX.Element {
   console.log("AABBCCDD");
-  const { state } = useContext(UserContext);
+  const { state } = useUserContext();
 
   // const [unread, setUnread] = useState<number>(0);
 
