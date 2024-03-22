@@ -75,6 +75,8 @@ function Assignees(props: AssigneesProps): JSX.Element {
 
   const fetchLeaders = async () => {
     try {
+      setLeaders([]);
+      setSelectedChildren([]);
       // console.log("THESE THE LEADER GROUPS",state.currentGroup);
       // Initialize URLSearchParams
       let params = new URLSearchParams({
@@ -406,6 +408,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
     email: string,
     departmentName: string
   ) => {
+   
     if (!props.createPost) {
       await sendEmailToLeader(
         firstName,
@@ -423,6 +426,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
         departmentName
       );
     }
+    await fetchLeaders();
   };
 
 
@@ -632,7 +636,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           // Find the leader corresponding to the username
           const leader = leaders.find(leader => leader.username === username);
           // Assuming leader is always found. You might want to handle the case where a leader is not found
-          const name = leader ? `${leader.firstName} ${leader.lastName}` : 'Unknown';
+          const name = leader ? `${leader.firstName} ${leader.lastName}` : 'Loading...';
           const profilePicture = leader ? leader.profilePicture : 'defaultProfilePictureUrl'; // Provide a default profile picture URL or handle it in ProfileRow
 
           return <ProfileRow name={name} profilePicture={profilePicture} key={index} />;

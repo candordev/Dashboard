@@ -140,4 +140,5 @@ export const Endpoints = {
   getDepartmentsForLeader: `${BASE_URL}/department/getDepartmentsForLeader?`,
   addLeadersToDepartment: `${BASE_URL}/department/addLeader?`,
   removeLeaderFromDepartment: `${BASE_URL}/department/removeLeader?`,
+  editCCEmail: `${BASE_URL}/profile/editCCEmail?`,
 };

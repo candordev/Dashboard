@@ -9,28 +9,12 @@ import DropDown from '../Components/DropDown'; // Assuming DropDown is in your c
 import PostWithDropdown from '../Components/PostWithDropDown';
 import GroupInsightsComponent from '../Components/GroupInsightsComponent';
 
-
-
-
-// Dummy data for demonstration
-const forwardedEmails = [
-  { id: 'email1', subject: 'Email Subject 1', content: 'This is the email content 1.' },
-  { id: 'email2', subject: 'Email Subject 2', content: 'This is the email content 2.' },
-  // Add more emails as needed
+const sortOptions = [
+  { label: 'Unassigned Issues', value: 'step0Count' },
+  { label: 'Issues w/ 0 updates', value: 'step1Count' },
+  { label: 'High Priority', value: 'highPriorityCount' },
+  { label: 'Medium Priority', value: 'mediumPriorityCount' }
 ];
-
-const groupsWithCards = [
-  {
-    groupName: 'Group 1',
-    cards: [
-      { id: 'card1', title: 'Card 1 Title', description: 'Card 1 description.' },
-      { id: 'card2', title: 'Card 2 Title', description: 'Card 2 description.' },
-      // Add more cards as needed
-    ],
-  },
-  // Add more groups as needed
-];
-
 
 
 const MasterScreen = () => {
@@ -39,14 +23,16 @@ const MasterScreen = () => {
   const [groups, setGroups] = useState([]);
   const { state } = useUserContext();
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedSort, setSelectedSort] = useState();
+
   
 
   useEffect(() => {
-    // Assuming you already have code to fetch forwardedPosts here
-    // Convert state.leaderGroups to the format expected by DropDownPicker
-    const groupItems = state.leaderGroups.map((group: { name: any; _id: any; }) => ({ label: group.name, value: group._id }));
-    setGroups(groupItems);
-  }, [state.leaderGroups]);
+    if (state?.leaderGroups) {
+      const groupItems = state.leaderGroups.map((group: { name: any; _id: any; }) => ({ label: group.name, value: group._id }));
+      setGroups(groupItems);
+    }
+  }, [state?.leaderGroups]);
 
   const handleSelectGroup = async (postId: string, groupId: null) => {
     try {
@@ -86,9 +72,11 @@ const MasterScreen = () => {
   }
 
   useEffect(() => {
+    if (state?.master) {
+      fetchForwardedPosts();
+    }
+  }, [state?.master]);
 
-    fetchForwardedPosts();
-  }, [state.master]); // Dependency on state.master to refetch if it changes
 
   
   return (
@@ -101,10 +89,27 @@ const MasterScreen = () => {
         ))}
       </ScrollView>
     </View>
-      <View style={styles.groupsContainer}>
-         <Text style={styles.title}>Group Insights</Text>
-         <GroupInsightsComponent masterID={state.master._id}/>
-      </View>
+    <View style={styles.groupsContainer}>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', zIndex: 3}}>
+        <Text style={styles.title}>Group Insights</Text>
+        <View style={{alignItems: 'flex-end', marginRight: 40}}>
+          <DropDown
+            placeholder="Select Sort Option"
+            items={sortOptions}
+            value={selectedSort}
+            setValue={setSelectedSort}
+            setItems={sortOptions}
+            multiple={false}
+            backgroundColor={colors.lightestgray}
+            onClose={() => console.log('Dropdown closed')}
+            multipleText="Select multiple options"
+            dropDownDirection="AUTO"
+          />
+        </View>
+      </View> 
+      <GroupInsightsComponent masterID={state.master ? state.master._id : undefined} sortType={selectedSort}/>
+    </View>
+
     </View>
   );
 };
@@ -135,15 +140,18 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: colors.white,
     boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
-    borderRadius: 20
+    borderRadius: 20,
+    zIndex: 1
   },
   title: {
     fontSize: 23,
-    fontWeight: 550,
+    fontWeight: '500', // Corrected to be a string. Adjust the value as needed, e.g., '400', 'bold'
     marginBottom: 10,
     fontFamily: 'Montserrat',
     marginTop: 6,
-    marginLeft: 3
+    marginLeft: 3,
+    flex: 1,
+    alignContent: 'flex-start'
   },
   card: {
     backgroundColor: colors.white,

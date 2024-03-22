@@ -1,37 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Keyboard, Pressable, StyleSheet, TextInput, View, Platform, TouchableOpacity, Text, ScrollView, FlatList } from "react-native";
+import {
+  Animated,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+  Platform,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { set } from "lodash";
+import styles from "../Styles/styles";
 
 type DepartmentEditorProps = {
   groupID: string;
 };
 
 interface Department {
-    _id: string;
-    name: string;
-    description: string;
-    defaultDepartment: boolean;
-    isOpen?: boolean; // Optional property to manage dropdown state
-    isEditing?: boolean; // New property to manage edit mode
+  _id: string;
+  name: string;
+  description: string;
+  defaultDepartment: boolean;
+  isOpen?: boolean; // Optional property to manage dropdown state
+  isEditing?: boolean; // New property to manage edit mode
 }
 
 interface Leader {
-    _id: string;
-    firstName: string;
-    lastName: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
 }
 
-
-function DepartmentEditor({
-  groupID
-}: DepartmentEditorProps): JSX.Element {
-  const [departments, setDepartments] =  useState<Department[]>([]);
-  const [error, setError] = useState('');
+function DepartmentEditor({ groupID }: DepartmentEditorProps): JSX.Element {
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [error, setError] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [newDepartmentName, setNewDepartmentName] = useState("");
   const [newDepartmentDescription, setNewDepartmentDescription] = useState("");
@@ -43,12 +53,12 @@ function DepartmentEditor({
 
   async function fetchDepartments() {
     try {
-      setError('');
-      const queryParams = new URLSearchParams({ 
+      setError("");
+      const queryParams = new URLSearchParams({
         groupID,
-        description: "true"
-    });   
-      const url = `${Endpoints.getDepartments}${queryParams.toString()}`
+        description: "true",
+      });
+      const url = `${Endpoints.getDepartments}${queryParams.toString()}`;
       console.log("URL", url);
       const response = await customFetch(url, { method: "GET" });
       const data = await response.json();
@@ -67,7 +77,7 @@ function DepartmentEditor({
   }
 
   const toggleDropdown = (departmentID: string) => {
-    const updatedDepartments = departments.map(department => {
+    const updatedDepartments = departments.map((department) => {
       if (department._id === departmentID) {
         return { ...department, isOpen: !department.isOpen };
       }
@@ -76,24 +86,26 @@ function DepartmentEditor({
     setDepartments(updatedDepartments);
 
     // Fetch leaders if the dropdown is being opened
-    const department = updatedDepartments.find(d => d._id === departmentID);
+    const department = updatedDepartments.find((d) => d._id === departmentID);
     if (department && department.isOpen && !leaders[departmentID]) {
       fetchDepartmentLeaders(departmentID);
     }
   };
 
-
   async function fetchDepartmentLeaders(departmentID: string) {
     try {
-      setError('');
-      const queryParams = new URLSearchParams({ 
-        departmentID
-    });   
-      const url = `${Endpoints.getDepartment}${queryParams.toString()}`
+      setError("");
+      const queryParams = new URLSearchParams({
+        departmentID,
+      });
+      const url = `${Endpoints.getDepartment}${queryParams.toString()}`;
       const response = await customFetch(url, { method: "GET" });
       const data = await response.json();
       if (response.ok) {
-        setLeaders(prevLeaders => ({ ...prevLeaders, [departmentID]: data.leaders as Leader[] })); // Cast to Leader[] based on the interface
+        setLeaders((prevLeaders) => ({
+          ...prevLeaders,
+          [departmentID]: data.leaders as Leader[],
+        })); // Cast to Leader[] based on the interface
       } else {
         console.error("Error fetching department leaders: ", data.error);
         setError("Error fetching department leaders");
@@ -106,16 +118,16 @@ function DepartmentEditor({
 
   async function addDepartment(name: string, description: string) {
     try {
-      setError('');
-      if(name.length === 0) {
-        return
-    }   
+      setError("");
+      if (name.length === 0) {
+        return;
+      }
       let res = await customFetch(Endpoints.addDepartment, {
         method: "POST",
         body: JSON.stringify({
           groupID,
           name: name,
-          description: description
+          description: description,
         }),
       });
 
@@ -132,15 +144,19 @@ function DepartmentEditor({
     }
   }
 
-  async function changeDepartment(name: string, description: string, departmentID: string) {
+  async function changeDepartment(
+    name: string,
+    description: string,
+    departmentID: string
+  ) {
     try {
-      setError('');
+      setError("");
       let res = await customFetch(Endpoints.changeDepartment, {
         method: "POST",
         body: JSON.stringify({
           departmentID,
           name,
-          description
+          description,
         }),
       });
 
@@ -157,14 +173,13 @@ function DepartmentEditor({
     }
   }
 
-
   async function deleteDepartment(departmentId: string) {
     try {
-      setError('');
+      setError("");
       let res = await customFetch(Endpoints.deleteDepartment, {
         method: "DELETE",
         body: JSON.stringify({
-          departmentId
+          departmentId,
         }),
       });
 
@@ -183,7 +198,10 @@ function DepartmentEditor({
 
   const handleAddTagPress = () => {
     if (isAdding) {
-      addDepartment(newDepartmentName.trim(), newDepartmentDescription.trim()).then(() => {
+      addDepartment(
+        newDepartmentName.trim(),
+        newDepartmentDescription.trim()
+      ).then(() => {
         setNewDepartmentName(""); // Reset input field after adding
         setIsAdding(false); // Change state to hide input field
       });
@@ -193,173 +211,202 @@ function DepartmentEditor({
   };
 
   const startEditing = (departmentID: string) => {
-    const updatedDepartments = departments.map(department => 
-      department._id === departmentID ? { ...department, isEditing: true } : department
+    const updatedDepartments = departments.map((department) =>
+      department._id === departmentID
+        ? { ...department, isEditing: true }
+        : department
     );
     setDepartments(updatedDepartments);
   };
-  
+
   const handleNameChange = (name: string, departmentID: string) => {
-    const updatedDepartments = departments.map(department => 
+    const updatedDepartments = departments.map((department) =>
       department._id === departmentID ? { ...department, name } : department
     );
     setDepartments(updatedDepartments);
   };
-  
-  const handleDescriptionChange = (description: string, departmentID: string) => {
-    const updatedDepartments = departments.map(department => 
-      department._id === departmentID ? { ...department, description } : department
+
+  const handleDescriptionChange = (
+    description: string,
+    departmentID: string
+  ) => {
+    const updatedDepartments = departments.map((department) =>
+      department._id === departmentID
+        ? { ...department, description }
+        : department
     );
     setDepartments(updatedDepartments);
   };
-  
-  const finishEditing = (departmentID: string, newName: string, newDescription: string) => {
+
+  const finishEditing = (
+    departmentID: string,
+    newName: string,
+    newDescription: string
+  ) => {
     changeDepartment(newName, newDescription, departmentID); // Assuming this function also sets isEditing to false upon success
   };
-  
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Manage Departments</Text>
-        <FlatList<Department>
+    <View style={styles.groupSettingsContainer}>
+      <Text style={additionalStyles.title}>Manage Departments</Text>
+      <FlatList<Department>
         data={departments}
         keyExtractor={(item: Department) => item._id}
         renderItem={({ item }: { item: Department }) => (
-            <>
-            <View style={styles.departmentItem}>
-                <Pressable onPress={() => toggleDropdown(item._id)} style={styles.dropdownIcon}>
-                <FeatherIcon name={item.isOpen ? "chevron-down" : "chevron-right"} size={20} color={colors.purple} />
-                </Pressable>
-                {!item.isEditing ? (
+          <>
+            <View style={additionalStyles.departmentItem}>
+              <Pressable
+                onPress={() => toggleDropdown(item._id)}
+                style={additionalStyles.dropdownIcon}
+              >
+                <FeatherIcon
+                  name={item.isOpen ? "chevron-down" : "chevron-right"}
+                  size={20}
+                  color={colors.purple}
+                />
+              </Pressable>
+              {!item.isEditing ? (
                 <>
-                    <Text style={styles.departmentText}>{item.name}</Text>
-                    <TouchableOpacity onPress={() => startEditing(item._id)}>
-                    <FeatherIcon name="edit-2" size={15} color={colors.purple} />
-                    </TouchableOpacity>
+                  <Text style={additionalStyles.departmentText}>
+                    {item.name}
+                  </Text>
+                  <TouchableOpacity onPress={() => startEditing(item._id)}>
+                    <FeatherIcon
+                      name="edit-2"
+                      size={15}
+                      color={colors.purple}
+                    />
+                  </TouchableOpacity>
                 </>
-                ) : (
+              ) : (
                 <>
-                    <TextInput style={styles.input} value={item.name} onChangeText={(text) => handleNameChange(text, item._id)} />
-                    <TextInput style={styles.input} value={item.description} onChangeText={(text) => handleDescriptionChange(text, item._id)} />
-                    <TouchableOpacity onPress={() => finishEditing(item._id, item.name, item.description)} style={styles.doneButton}>
-                        <FeatherIcon name="check" size={15} color={colors.purple} />
-                    </TouchableOpacity>
+                  <TextInput
+                    style={additionalStyles.input}
+                    value={item.name}
+                    onChangeText={(text) => handleNameChange(text, item._id)}
+                  />
+                  <TextInput
+                    style={additionalStyles.input}
+                    value={item.description}
+                    onChangeText={(text) =>
+                      handleDescriptionChange(text, item._id)
+                    }
+                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      finishEditing(item._id, item.name, item.description)
+                    }
+                    style={additionalStyles.doneButton}
+                  >
+                    <FeatherIcon name="check" size={15} color={colors.purple} />
+                  </TouchableOpacity>
                 </>
-                )}
-                {!item.defaultDepartment && (
-                <TouchableOpacity onPress={() => deleteDepartment(item._id)} style={styles.deleteButton}>
-                    <FeatherIcon name="trash" size={15} color={colors.red} />
+              )}
+              {!item.defaultDepartment && (
+                <TouchableOpacity
+                  onPress={() => deleteDepartment(item._id)}
+                  style={additionalStyles.deleteButton}
+                >
+                  <FeatherIcon name="trash" size={15} color={colors.red} />
                 </TouchableOpacity>
-                )}
-                {item.defaultDepartment && (
+              )}
+              {item.defaultDepartment && (
                 //<Text style={styles.defaultDepartmentText}>Default Department</Text>
-                <FeatherIcon name="trash" size={15} color={colors.lightgray} style={styles.deleteButton} />
-                )}
+                <FeatherIcon
+                  name="trash"
+                  size={15}
+                  color={colors.lightgray}
+                  style={additionalStyles.deleteButton}
+                />
+              )}
             </View>
             {item.isOpen && leaders[item._id] && (
-                <View style={styles.leadersList}>
+              <View style={additionalStyles.leadersList}>
                 {leaders[item._id].map((leader) => (
-                    <Text key={leader._id} style={styles.leaderText}>{leader.firstName} {leader.lastName}</Text>
+                  <Text key={leader._id} style={additionalStyles.leaderText}>
+                    {leader.firstName} {leader.lastName}
+                  </Text>
                 ))}
-                </View>
+              </View>
             )}
-            </>
+          </>
         )}
-        />
+      />
 
-        {isAdding && (
-            <>
-                <TextInput
-                style={styles.input}
-                onChangeText={setNewDepartmentName}
-                value={newDepartmentName}
-                placeholder="Enter new department name"
-                autoFocus
-                />
-                <TextInput
-                style={styles.input}
-                onChangeText={setNewDepartmentDescription}
-                value={newDepartmentDescription}
-                placeholder="Enter new department description. Be as detailed as possible"
-                autoFocus
-                />
-            </>
-        )}
-        <TouchableOpacity onPress={handleAddTagPress} style={styles.button}>
-          <Text style={styles.buttonText}>{isAdding ? "Done" : "Add Department"}</Text>
-        </TouchableOpacity>
-        {error !== "" && <Text style={styles.error}>{error}</Text>}
-      </ScrollView>
+      {isAdding && (
+        <>
+          <TextInput
+            style={additionalStyles.input}
+            onChangeText={setNewDepartmentName}
+            value={newDepartmentName}
+            placeholder="Enter new department name"
+            autoFocus
+          />
+          <TextInput
+            style={additionalStyles.input}
+            onChangeText={setNewDepartmentDescription}
+            value={newDepartmentDescription}
+            placeholder="Enter new department description. Be as detailed as possible"
+            autoFocus
+          />
+        </>
+      )}
+      <TouchableOpacity
+        onPress={handleAddTagPress}
+        style={additionalStyles.button}
+      >
+        <Text style={additionalStyles.buttonText}>
+          {isAdding ? "Done" : "Add Department"}
+        </Text>
+      </TouchableOpacity>
+      {error !== "" && <Text style={additionalStyles.error}>{error}</Text>}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: 10,
-        marginHorizontal: 10,
-        marginBottom: 10,
-        borderRadius: 30,
-        ...Platform.select({
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-          },
-          android: {
-            elevation: 5,
-          },
-          web: {
-            boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
-          },
-        }),
-      },
-      scrollContainer: {
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-      },
-      departmentItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 4,
-      },
-      departmentText: {
-        marginLeft: 10,
-        fontFamily: 'Montserrat',
-        flex: 1, // Allows text to take up available space, pushing icons to the edge
-      },
-      defaultDepartmentText: {
-        color: colors.purple,
-        fontFamily: 'Montserrat',
-        flex: 1,
-        'font-style': 'italic',
-        textAlign: 'right',
-      },
-      deleteButton: {
-        marginLeft: 'auto', // Ensures the button is aligned to the right
-        padding: 8,
-      },
-      dropdownIcon: {
-        padding: 8,
-      },
-      leadersList: {
-        paddingLeft: 35, // Indent leader names to differentiate from department names
-      },
-      leaderText: {
-        fontFamily: 'Montserrat',
-        marginVertical: 4,
-        // Any additional styling for leader text
-      },
-  
+const additionalStyles = StyleSheet.create({
+  scrollContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+  departmentItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 4,
+  },
+  departmentText: {
+    marginLeft: 10,
+    fontFamily: "Montserrat",
+    flex: 1, // Allows text to take up available space, pushing icons to the edge
+  },
+  defaultDepartmentText: {
+    color: colors.purple,
+    fontFamily: "Montserrat",
+    flex: 1,
+    "font-style": "italic",
+    textAlign: "right",
+  },
+  deleteButton: {
+    marginLeft: "auto", // Ensures the button is aligned to the right
+    padding: 8,
+  },
+  dropdownIcon: {
+    padding: 8,
+  },
+  leadersList: {
+    paddingLeft: 35, // Indent leader names to differentiate from department names
+  },
+  leaderText: {
+    fontFamily: "Montserrat",
+    marginVertical: 4,
+    // Any additional styling for leader text
+  },
+
   title: {
     alignSelf: "flex-start",
     fontWeight: "600",
     fontSize: 27,
     fontFamily: "Montserrat",
-    margin: 10,
   },
   input: {
     fontFamily: "Montserrat",
@@ -377,7 +424,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   doneButton: {
-    marginLeft: 10
+    marginLeft: 10,
   },
   buttonText: {
     fontFamily: "Montserrat",

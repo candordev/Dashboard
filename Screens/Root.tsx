@@ -1,7 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import React from "react";
+import React, { useContext } from "react";
 import LHN from "../Components/LHN";
 import AllScreen from "./AllScreen";
 import InboxScreen from "./InboxScreen";
@@ -9,6 +9,7 @@ import SettingsScreen from "./SettingsScreen";
 import GroupSettingsScreen from "./GroupSettingsScreen";
 import NotificationPopup from "../Components/NotificationPopup";
 import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
+import { UserContext } from "../Structure/UserContext";
 
 
 const Drawer = createDrawerNavigator();
@@ -34,7 +35,9 @@ type RootScreenProps = {
 };
 
 function Root({route, navigation}: RootScreenProps): JSX.Element {
-  // console.log("AABBCCDD");
+  console.log("AABBCCDD");
+  const { state } = useContext(UserContext);
+
   // const [unread, setUnread] = useState<number>(0);
 
   // useEffect(() => {
@@ -51,6 +54,8 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
   //     console.error('Error getting notification count', err);
   //   }
   // }, []);
+  const initialRouteName = state.master ? "master" : "all"; // Replace "someOtherRoute" with your default route if state.master doesn't exist
+
 
   return (
     <Drawer.Navigator
@@ -62,7 +67,7 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         drawerStyle: { width: 250, borderRightWidth: 0 },
         headerShown: false,
       }}
-      initialRouteName="all"
+      initialRouteName={initialRouteName}
     >    
         <Drawer.Screen
         name="master"

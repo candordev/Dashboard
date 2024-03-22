@@ -12,6 +12,7 @@ import IssueView from "./IssueView";
 import ProgressBar from "./ProgressBar";
 import Text from "./Text";
 import { formatDate } from "../utils/utils";
+import styles from "../Styles/styles";
 
 interface CardProps {
   issue: Post;
@@ -25,9 +26,10 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
   const { height, width } = useWindowDimensions();
 
   //const issueContent = props.issue.content.substring(0, 100).toString();
-  const issueContent = props.issue.content.length > 100
-  ? props.issue.content.substring(0, 120).replace(/\s\S*$/, '')
-  : props.issue.content;
+  const issueContent =
+    props.issue.content.length > 100
+      ? props.issue.content.substring(0, 120).replace(/\s\S*$/, "")
+      : props.issue.content;
   // console.log(issueContent); // Add this to check what `issue` contains
 
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
@@ -54,7 +56,15 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
       }}
       from={
         <TouchableOpacity
-          style={styles.card}
+          style={[
+            styles.groupSettingsContainer,
+            {
+              borderRadius: 15,
+              marginVertical: 7,
+              backgroundColor: colors.white,
+              boxShadow: "",
+            },
+          ]}
           disabled={props.isDisabled}
           onPress={togglePopover}
         >
@@ -65,8 +75,10 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
               marginBottom: 5,
             }}
           >
-            <View style={{flex: 1}}>
-              <Text style={[styles.title, {marginBottom: 3,}]}>{props.issue.title}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={[additionalStyles.title, { marginBottom: 3 }]}>
+                {props.issue.title}
+              </Text>
               <Text
                 style={{
                   fontSize: 13,
@@ -80,7 +92,7 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
             </View>
             <ProgressBar step={props.issue.step} />
           </View>
-          <Text style={styles.content}>{issueContent}</Text>
+          <Text style={additionalStyles.content}>{issueContent}</Text>
         </TouchableOpacity>
       }
       placement={PopoverPlacement.FLOATING}
@@ -90,12 +102,15 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
         height: height * 0.9,
       }}
     >
-      <IssueView issue={props.issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
+      <IssueView
+        issue={props.issue}
+        onPopoverCloseComplete={props.onPopoverCloseComplete}
+      />
     </Popover>
   );
 }
 
-const styles = StyleSheet.create({
+const additionalStyles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
     borderRadius: 15,

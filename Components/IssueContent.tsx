@@ -38,7 +38,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
         method: "POST",
         body: JSON.stringify({
           proposalFromEmail: email,
-          postID: post?._id, // Assuming issue._id is the ID of the post to be edited
+          postID: post?._id, 
         }),
       });
 
@@ -403,6 +403,7 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: colors.red,
     borderRadius: 10,
+    marginTop: 10,
     //display: 'flex',
     justifyContent: 'center', // Center content horizontally
     alignSelf: 'flex-start', // Align button to the left
@@ -427,6 +428,7 @@ const styles = StyleSheet.create({
   },
   imageIcon: {
     marginBottom: 0,
+    marginTop: 10,
     padding: 8,
     backgroundColor: colors.purple,
     borderRadius: 10,

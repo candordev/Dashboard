@@ -1,5 +1,5 @@
   import React, { useEffect, useRef, useState } from "react";
-  import { View, StyleSheet, ScrollView, Text, TextInput } from "react-native";
+  import { View, StyleSheet, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
   import colors from "../Styles/colors";
   import ExpandableTextInput from "./ExpandableTextInput";
   import { Comment, Post } from "../utils/interfaces";
@@ -14,6 +14,8 @@
   const validator = require("validator");
   import { BASE_URL } from "../utils/Endpoints";
   import { usePostContext } from "../Hooks/usePostContext";
+  import Icon from "react-native-vector-icons/FontAwesome";
+
 
   interface PrivateChatProps {
     issue: Post;
@@ -26,7 +28,9 @@
     
     const scrollViewRef = useRef<ScrollView>(null);
     const [inputText, setInputText] = useState<string>("");
-    const [isInputDisabled, setIsInputDisabled] = useState(false);
+    const [isInputDisabled, setIsInputDisabled] = useState(false);  
+    const [submittable, setSubmittable] = useState(false);
+
 
     const [emailError, setEmailError] = useState("")
 
@@ -45,9 +49,13 @@
     // }, [props.issue._id])
 
     useEffect(() => {
+      // Example logic to enable the submit button when inputText is not empty
+      setSubmittable(inputText.trim().length > 0);
+    }, [inputText]);
+
+    useEffect(() => {
       // console.log(post);
-      // console.log("EMAIL from CONTEXT: ", post?.proposalFromEmail)
-      // console.log("Email From Props: ", props.issue.proposalFromEmail)
+      console.log("EMAIL from CONTEXT: ", post?.proposalFromEmail)
       if (chatMode === "constituent") {
         if (post?.proposalFromEmail) {
           setEmailError("");
@@ -55,7 +63,7 @@
           setIsInputDisabled(false);
         } else {
           setIsInputDisabled(true);
-          setEmailError("There's No Constituent Email associated with this Issue, Please fill it in on the right.");
+          setEmailError("There's No Constituent Email associated with this Issue. Please Fill it in the Issue Description Above.");
         }
       } else {
         setEmailError("");
@@ -228,15 +236,15 @@
       }
     }
 
-    const handleKeyPress = async (e: any) => {
-      if (e.nativeEvent.key === "Enter" && !e.nativeEvent.shiftKey) {
+
+    const handleSendChat = async (e: any) => {
+      // if (e.nativeEvent.key === "Enter" && !e.nativeEvent.shiftKey) {
         if (chatMode == "constituent" && validator.isEmail(props.issue.proposalFromEmail)) {
           await postConstituentComment();
         } else {
           await postPoliticianComment();
         }
         setInputText("");
-      }
     };
     return (
       <View style={chatStyles.chatContainer}>
@@ -268,17 +276,32 @@
         >
           {privateComments.map(renderComment)}
         </ScrollView>
+        <View style={[styles.textInput, { minHeight: 40, maxHeight: 300, flexDirection: 'row', }]}>
           <TextInput
             multiline={true}
             editable={!isInputDisabled}
-            numberOfLines={1}
-            style={[styles.textInput, { minHeight: 40, maxHeight: 300 }]}
+            // numberOfLines={1}
+            // style={[styles.textInput, { minHeight: 40, maxHeight: 300 }]}
+             style={{
+              flex: 1,
+              // minHeight: 40,
+              // maxHeight: 100,
+              borderColor: 'transparent',
+            }}
             placeholder="Add a comment..."
             placeholderTextColor={colors.gray}
             onChangeText={setInputText}
-            onKeyPress={handleKeyPress}
+            // onKeyPress={handleKeyPress}
             value={inputText}
           />
+          <TouchableOpacity onPress={submittable ? handleSendChat : () => {}}>
+            <Icon
+              name="paper-plane"
+              size={20}
+              color={submittable ? colors.purple : colors.lightgray}
+            />
+        </TouchableOpacity>
+        </View>
         </>
       )}
       </View>

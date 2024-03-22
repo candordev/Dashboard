@@ -1,4 +1,9 @@
-import { View, TouchableOpacity, FlexAlignType, ScrollView } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  FlexAlignType,
+  ScrollView,
+} from "react-native";
 import Text from "./Text";
 import { Link } from "@react-navigation/native";
 import colors from "../Styles/colors";
@@ -28,19 +33,17 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
   //current route name
   // const currRoute = props.state.routeNames[props.state.index];
   const navIndex = props.state?.index;
-  console.log("nav index: ", props.state?.index)
-
+  console.log("nav index: ", props.state?.index);
 
   const handleGroupSelect = async (currentGroup: any) => {
     // Update the current group in the global state
-    await dispatch({ type: 'SET_CURRENT_GROUP', payload: currentGroup});
+    await dispatch({ type: "SET_CURRENT_GROUP", payload: currentGroup });
     console.log("Event Triggg: ", state.currentGroup);
     // Navigate to the "All" screen
-    navigation.navigate('all');
+    navigation.navigate("all");
   };
 
   useEffect(() => {
-      
     // console.log("sparsisparsi");
     // console.log(props);
     // console.log(currRoute);
@@ -117,14 +120,42 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
           />
           <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
             <ScrollView>
-              {state.leaderGroups.map((group: { name: any; _id: any }, index: React.Key | null | undefined) => (
-                <Pressable key={index} onPress={() => handleGroupSelect(group._id)} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginVertical: 4 }}>
-                  <FeatherIcon name="trello" size={20} color={colors.white} style={{ marginRight: 10 }} />
-                  <Text style={{ color: colors.white, fontFamily: 'Montserrat', textAlign: 'left', flex: 1 }}>
-                    {group.name.length > 15 ? `${group.name.slice(0, 15)}...` : group.name}
-                  </Text>
-                </Pressable>
-              ))}
+              {state.leaderGroups.map(
+                (
+                  group: { name: any; _id: any },
+                  index: React.Key | null | undefined
+                ) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => handleGroupSelect(group._id)}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginVertical: 4,
+                    }}
+                  >
+                    <FeatherIcon
+                      name="trello"
+                      size={20}
+                      color={colors.white}
+                      style={{ marginRight: 10 }}
+                    />
+                    <Text
+                      style={{
+                        color: colors.white,
+                        fontFamily: "Montserrat",
+                        textAlign: "left",
+                        flex: 1,
+                      }}
+                    >
+                      {group.name.length > 15
+                        ? `${group.name.slice(0, 15)}...`
+                        : group.name}
+                    </Text>
+                  </Pressable>
+                )
+              )}
             </ScrollView>
           </View>
         </>
@@ -154,11 +185,11 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
       />
       {state.groupType !== "HOA" && (
         <NavItem
-        name={"Settings"}
-        route="/settings"
-        icon="settings"
-        selected={navIndex == 2}
-      />
+          name={"Settings"}
+          route="/settings"
+          icon="settings"
+          selected={navIndex == 2}
+        />
       )}
       <NavItem
         name={"Group Settings"}
@@ -178,9 +209,7 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
       <NavItem
         name="Download"
         onPress={() => {
-          downloadPDF(
-            state.leaderGroups?.[0] ?state.currentGroup : undefined
-          );
+          downloadPDF(state.leaderGroups?.[0] ? state.currentGroup : undefined);
         }}
         icon="download"
         selected={false}

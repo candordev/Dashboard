@@ -21,6 +21,31 @@ let userReducer = (state: any, action: any) => {
           ...state,
           currentGroup: action.payload,
         };
+      case 'UPDATE_PROFILE_PICTURE':
+        return {
+          ...state,
+          imageUrl: action.payload,
+        };
+      case 'UPDATE_FIRST_NAME':
+        return {
+          ...state,
+          firstName: action.payload,
+        };
+      case 'UPDATE_LAST_NAME':
+        return {
+          ...state,
+          lastName: action.payload,
+        };
+      case 'UPDATE_CC_EMAIL':
+        return {
+          ...state,
+          ccEmail: action.payload,
+        };
+      case 'UPDATE_LEADER_GROUPS': // Adding a case for updating leader groups
+      return {
+        ...state,
+        leaderGroups: action.payload,
+      };
     default:
       //console.log("Default case in userReducer");
       return state;
