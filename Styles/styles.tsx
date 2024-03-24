@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.black,
     padding: 12,
+    outlineStyle: "none",
   },
   card: {
     backgroundColor: colors.white,
@@ -128,11 +129,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     columnGap: 10,
   },
-
-
-
-
-
   textInput: {
     borderColor: colors.lightergray,
     borderWidth: 1.5,
@@ -141,26 +137,16 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: colors.white,
     outlineStyle: "none",
-    fontFamily: "Montserrat",
-    fontWeight: "500",
-  },
-  ccEmailInput: {
-    borderColor: colors.lightergray,
-    borderWidth: 1.5,
-    borderRadius: 10,
-    paddingHorizontal: 7,
-    paddingVertical: 5,
-    backgroundColor: colors.white,
-    outlineStyle: "none",
-    fontFamily: "Montserrat",
-    fontWeight: "500",
-    width: "30%",
+    fontFamily: "OpenSans"
   },
   groupSettingsContainer: {
     margin: 10,
     padding: 15,
     borderRadius: 20,
-    boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)",
+    backgroundColor: colors.white,
+    shadowColor: colors.black,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
 });
 

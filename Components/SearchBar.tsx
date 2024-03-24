@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
-import Text from "./Native/Text";
+import Text from "./Text";
 import { Endpoints } from "../utils/Endpoints";
 
 type SearchBarProps = {

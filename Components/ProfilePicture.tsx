@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Pressable, View } from 'react-native';
 import styles from '../Styles/styles';
-import Text from './Native/Text';
+import Text from './Text';
 
 type ProfilePictureProps = {
   imageUrl: string;

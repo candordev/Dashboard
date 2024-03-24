@@ -62,7 +62,6 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
               borderRadius: 15,
               marginVertical: 7,
               backgroundColor: colors.white,
-              boxShadow: "",
             },
           ]}
           disabled={props.isDisabled}
