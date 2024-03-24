@@ -257,7 +257,7 @@
           </View>
         </View>
         {emailError ? (
-        <Text style={chatStyles.errorText}>{emailError}</Text>
+        <Text style={{color: colors.red}}>{emailError}</Text>
       ) : (
         <>
         <ScrollView

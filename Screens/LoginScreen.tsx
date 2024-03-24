@@ -137,7 +137,7 @@ const LoginScreen = () => {
           style={{ marginTop: 10, marginBottom: 5, width: "100%"}}
         />
       </View>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      {error ? <Text style={{color: colors.red}}>{error}</Text> : null}
       {/* Include loading state and other UI components */}
     </View>
   );

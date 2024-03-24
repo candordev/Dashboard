@@ -71,7 +71,12 @@ const Marker = (props: MarkerProps) => {
         props.onPopoverCloseComplete();
       }}
       from={
-        <View style={styles.markerContainer}>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Pressable onPress={togglePopover}>
             <FontAwesome name="map-pin" size={30} color="#FF5A5F" />
           </Pressable>

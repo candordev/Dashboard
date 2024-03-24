@@ -9,6 +9,7 @@ import styles from "../Styles/styles";
 import { Endpoints } from "../utils/Endpoints";
 import { openTermsAndConditions } from "../utils/utils";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import Button from "../Components/Button";
 
 type SignupScreenEmailDobProps = {
   route: any;
@@ -19,15 +20,15 @@ function SignupScreenEmailDob({
   route,
   navigation,
 }: SignupScreenEmailDobProps): JSX.Element {
-
-
-
-
-
-
-  const { masterId ,groupId ,postId ,userId, firstName: initialFirstName, lastName: initialLastName, email: initialEmail } = route.params;
-
-
+  const {
+    masterId,
+    groupId,
+    postId,
+    userId,
+    firstName: initialFirstName,
+    lastName: initialLastName,
+    email: initialEmail,
+  } = route.params;
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState(initialEmail || "");
@@ -53,7 +54,7 @@ function SignupScreenEmailDob({
     colors.white,
   ]);
 
-  const {signupUser, error, signUpWithEmail, setError } = useSignup();
+  const { signupUser, error, signUpWithEmail, setError } = useSignup();
 
   const updatePassword = (inputPassword: string) => {
     let arr = [...passwordError];
@@ -132,7 +133,18 @@ function SignupScreenEmailDob({
 
     const token: string | undefined = await signUpWithEmail(email, password);
 
-    await signupUser(firstName, lastName, email, username, token ?? "", "",userId, postId, groupId, masterId);
+    await signupUser(
+      firstName,
+      lastName,
+      email,
+      username,
+      token ?? "",
+      "",
+      userId,
+      postId,
+      groupId,
+      masterId
+    );
   };
 
   const toggleShowPassword = () => {
@@ -284,195 +296,57 @@ function SignupScreenEmailDob({
   };
 
   return (
-    <View style={styles.containerAkshat}>
-      {/* Candor Simplify Change Text */}
-      <View style={{ alignItems: "center", marginTop: 100, marginBottom: 10 }}>
-        <Text
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        backgroundColor: colors.purple,
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 75,
+          fontWeight: "bold",
+          color: colors.white,
+          fontFamily: "Montserrat",
+        }}
+      >
+        Candor
+      </Text>
+      <Text
+        style={{
+          fontSize: 30,
+          fontWeight: "bold",
+          color: colors.white,
+          fontFamily: "Montserrat",
+          marginBottom: 20,
+        }}
+      >
+        Simplify Change
+      </Text>
+      <View style={{ width: "30%", alignItems: "center" }}>
+        {/* First Name Input */}
+        <View
           style={{
-            fontSize: 75,
-            fontWeight: "bold",
-            color: colors.white,
-            fontFamily: "Montserrat",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
           }}
         >
-          Candor
-        </Text>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            color: colors.white,
-            fontFamily: "Montserrat",
-          }}
-        >
-          Simplify Change
-        </Text>
-      </View>
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <View style={{ width: "80%" }}>
-          {/* First Name Input */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <View style={{ flex: 1, marginRight: 10, marginBottom: 5 }}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  placeholderTextColor={colors.lightgray}
-                  style={styles.input}
-                  placeholder="First Name"
-                  value={firstName}
-                  onChangeText={(text) => {
-                    setFirstName(text);
-                    setFirstNameError("");
-                  }}
-                />
-              </View>
-              <Text
-                style={{
-                  position: "absolute", // Position absolute
-                  bottom: -20, // Adjust this value as needed
-                  left: 0,
-                  right: 0,
-                  color: firstNameError ? colors.red : "transparent",
-                  fontSize: 11,
-                  textAlign: "center",
-                  height: 35, // Increase height as needed
-                }}
-              >
-                {firstNameError || null}
-              </Text>
-            </View>
-
-            {/* Container for Last Name Input and Error */}
-            <View style={{ flex: 1, marginBottom: 5 }}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  placeholderTextColor={colors.lightgray}
-                  style={styles.input}
-                  placeholder="Last Name"
-                  value={lastName}
-                  onChangeText={(text) => {
-                    setLastName(text);
-                    setLastNameError("");
-                  }}
-                />
-              </View>
-              <Text
-                style={{
-                  position: "absolute", // Position absolute
-                  bottom: -20, // Adjust this value as needed
-                  left: 0,
-                  right: 0,
-                  color: lastNameError ? colors.red : "transparent",
-                  fontSize: 11,
-                  textAlign: "center",
-                  height: 35, // Increase height as needed
-                }}
-              >
-                {lastNameError || " "}
-              </Text>
-            </View>
-          </View>
-
-          {/* Email Input */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholderTextColor={colors.lightgray}
-              style={styles.input}
-              placeholder="Email"
-              value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-                setEmailError("");
-              }}
-              autoFocus={true}
-              autoCapitalize="none"
-            />
-          </View>
-          <Text
-            style={{
-              position: "absolute", // Position absolute
-              bottom: -20, // Adjust this value as needed
-              left: 0,
-              right: 0,
-              color: emailError ? colors.red : "transparent",
-              fontSize: 11,
-              textAlign: "center",
-              height: 448, // Increase height as needed
-            }}
-          >
-            {emailError || " "}
-          </Text>
-          {/* Username Input */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholderTextColor={colors.lightgray}
-              style={styles.input}
-              placeholder="Username"
-              value={username}
-              onChangeText={(text) => {
-                setUsername(text);
-                setUsernameError("");
-              }}
-            />
-          </View>
-          <Text
-            style={{
-              position: "absolute", // Position absolute
-              bottom: -20, // Adjust this value as needed
-              left: 0,
-              right: 0,
-              color: usernameError ? colors.red : "transparent",
-              fontSize: 11,
-              textAlign: "center",
-              height: 389, // Increase height as needed
-            }}
-          >
-            {usernameError || " "}
-          </Text>
-
-          <View style={{ alignItems: "center", marginHorizontal: 30 }}>
-            <View style={{ ...styles.inputContainer, width: "125%" }}>
+          <View style={{ flex: 1, marginRight: 10, marginBottom: 5 }}>
+            <View style={styles.inputContainer}>
               <TextInput
                 placeholderTextColor={colors.lightgray}
                 style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={updatePassword}
-                secureTextEntry={!showPassword}
-                autoFocus={true}
+                placeholder="First Name"
+                value={firstName}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                  setFirstNameError("");
+                }}
               />
-              <Pressable onPress={toggleShowPassword} style={{ padding: 12 }}>
-                {showPassword ? (
-                  <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
-                ) : (
-                  <FeatherIcon name={"eye"} size={20} color={colors.gray} />
-                )}
-              </Pressable>
-            </View>
-            <View style={{ ...styles.inputContainer, width: "125%" }}>
-              <TextInput
-                placeholderTextColor={colors.lightgray}
-                style={styles.input}
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChangeText={updateConfirmPassword}
-                secureTextEntry={!showConfirmPassword}
-              />
-              <Pressable
-                onPress={toggleShowConfirmPassword}
-                style={{ padding: 12 }}
-              >
-                {showConfirmPassword ? (
-                  <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
-                ) : (
-                  <FeatherIcon name={"eye"} size={20} color={colors.gray} />
-                )}
-              </Pressable>
             </View>
             <Text
               style={{
@@ -480,104 +354,230 @@ function SignupScreenEmailDob({
                 bottom: -20, // Adjust this value as needed
                 left: 0,
                 right: 0,
-                color: error ? colors.red : "transparent",
+                color: firstNameError ? colors.red : "transparent",
                 fontSize: 11,
                 textAlign: "center",
-                height: 205, // Increase height as needed
+                height: 35, // Increase height as needed
               }}
             >
-              {error || " "}
+              {firstNameError || null}
             </Text>
-
-            <View style={{ marginBottom: 10 }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <input
-                  type="checkbox"
-                  checked={checkBox}
-                  onChange={(e) => setCheckBox(e.target.checked)}
-                  style={
-                    {
-                      /* your styles here */
-                    }
-                  }
-                />
-                <Pressable onPress={openTermsAndConditions}>
-                  <Text
-                    style={{
-                      marginLeft: 10,
-                      color: colors.white,
-                      fontSize: 15,
-                      textAlign: "left",
-                    }}
-                  >
-                    Please agree to our terms{" "}
-                    <Text
-                      style={{
-                        color: colors.white,
-                        textDecorationLine: "underline",
-                      }}
-                    >
-                      here
-                    </Text>
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-            <View style={{}}>
-              <Text
-                style={{
-                  color: colors.white,
-                  fontSize: 15,
-                  //textAlign: 'left',
-                  marginLeft: -20,
-                }}
-              >
-                Passwords must contain:
-              </Text>
-              <View>
-                <Text style={{ color: passwordError[0], fontSize: 15 }}>
-                  8 characters
-                </Text>
-                <Text style={{ color: passwordError[1], fontSize: 15 }}>
-                  1 uppercase
-                </Text>
-                <Text style={{ color: passwordError[2], fontSize: 15 }}>
-                  1 lowercase
-                </Text>
-                <Text style={{ color: passwordError[3], fontSize: 15 }}>
-                  1 number
-                </Text>
-                <Text style={{ color: passwordError[4], fontSize: 15 }}>
-                  1 special character
-                </Text>
-                <Text style={{ color: passwordError[5], fontSize: 15 }}>
-                  Passwords match
-                </Text>
-              </View>
-            </View>
           </View>
 
-          {/* Next Button */}
-          <TouchableOpacity
-            onPress={validateFields}
-            style={{
-              backgroundColor: colors.black,
-              padding: 10,
-              borderRadius: 10,
-              width: 315,
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: 13,
-            }}
-            disabled={loading} // Disable button while loading
-          >
+          {/* Container for Last Name Input and Error */}
+          <View style={{ flex: 1, marginBottom: 5 }}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholderTextColor={colors.lightgray}
+                style={styles.input}
+                placeholder="Last Name"
+                value={lastName}
+                onChangeText={(text) => {
+                  setLastName(text);
+                  setLastNameError("");
+                }}
+              />
+            </View>
             <Text
-              style={{ fontSize: 17, fontWeight: "600", color: colors.white }}
+              style={{
+                position: "absolute", // Position absolute
+                bottom: -20, // Adjust this value as needed
+                left: 0,
+                right: 0,
+                color: lastNameError ? colors.red : "transparent",
+                fontSize: 11,
+                textAlign: "center",
+                height: 35, // Increase height as needed
+              }}
             >
-              Done
+              {lastNameError || " "}
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
+
+        {/* Email Input */}
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholderTextColor={colors.lightgray}
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+              setEmailError("");
+            }}
+            autoFocus={true}
+            autoCapitalize="none"
+          />
+        </View>
+        <Text
+          style={{
+            position: "absolute", // Position absolute
+            bottom: -20, // Adjust this value as needed
+            left: 0,
+            right: 0,
+            color: emailError ? colors.red : "transparent",
+            fontSize: 11,
+            textAlign: "center",
+            height: 448, // Increase height as needed
+          }}
+        >
+          {emailError || " "}
+        </Text>
+        {/* Username Input */}
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholderTextColor={colors.lightgray}
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={(text) => {
+              setUsername(text);
+              setUsernameError("");
+            }}
+          />
+        </View>
+        <Text
+          style={{
+            position: "absolute", // Position absolute
+            bottom: -20, // Adjust this value as needed
+            left: 0,
+            right: 0,
+            color: usernameError ? colors.red : "transparent",
+            fontSize: 11,
+            textAlign: "center",
+            height: 389, // Increase height as needed
+          }}
+        >
+          {usernameError || " "}
+        </Text>
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholderTextColor={colors.lightgray}
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={updatePassword}
+            secureTextEntry={!showPassword}
+            autoFocus={true}
+          />
+          <Pressable onPress={toggleShowPassword} style={{ padding: 12 }}>
+            {showPassword ? (
+              <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
+            ) : (
+              <FeatherIcon name={"eye"} size={20} color={colors.gray} />
+            )}
+          </Pressable>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholderTextColor={colors.lightgray}
+            style={styles.input}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={updateConfirmPassword}
+            secureTextEntry={!showConfirmPassword}
+          />
+          <Pressable
+            onPress={toggleShowConfirmPassword}
+            style={{ padding: 12 }}
+          >
+            {showConfirmPassword ? (
+              <FeatherIcon name={"eye-off"} size={20} color={colors.gray} />
+            ) : (
+              <FeatherIcon name={"eye"} size={20} color={colors.gray} />
+            )}
+          </Pressable>
+        </View>
+        <Text
+          style={{
+            position: "absolute", // Position absolute
+            bottom: -20, // Adjust this value as needed
+            left: 0,
+            right: 0,
+            color: error ? colors.red : "transparent",
+            fontSize: 11,
+            textAlign: "center",
+            height: 205, // Increase height as needed
+          }}
+        >
+          {error || " "}
+        </Text>
+
+        <View style={{ marginBottom: 10 }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <input
+              type="checkbox"
+              checked={checkBox}
+              onChange={(e) => setCheckBox(e.target.checked)}
+              style={
+                {
+                  /* your styles here */
+                }
+              }
+            />
+            <Pressable onPress={openTermsAndConditions}>
+              <Text
+                style={{
+                  marginLeft: 10,
+                  color: colors.white,
+                  fontSize: 15,
+                  textAlign: "left",
+                }}
+              >
+                Please agree to our terms{" "}
+                <Text
+                  style={{
+                    color: colors.white,
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  here
+                </Text>
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+        <View style={{}}>
+          <Text
+            style={{
+              color: colors.white,
+              fontSize: 15,
+              //textAlign: 'left',
+              marginLeft: -20,
+            }}
+          >
+            Passwords must contain:
+          </Text>
+          <View>
+            <Text style={{ color: passwordError[0], fontSize: 15 }}>
+              8 characters
+            </Text>
+            <Text style={{ color: passwordError[1], fontSize: 15 }}>
+              1 uppercase
+            </Text>
+            <Text style={{ color: passwordError[2], fontSize: 15 }}>
+              1 lowercase
+            </Text>
+            <Text style={{ color: passwordError[3], fontSize: 15 }}>
+              1 number
+            </Text>
+            <Text style={{ color: passwordError[4], fontSize: 15 }}>
+              1 special character
+            </Text>
+            <Text style={{ color: passwordError[5], fontSize: 15 }}>
+              Passwords match
+            </Text>
+          </View>
+        </View>
+
+        <Button
+          text="Sign Up"
+          onPress={validateFields}
+          style={{ marginTop: 10, width: "100%" }}
+          loading={loading}
+        />
       </View>
     </View>
   );

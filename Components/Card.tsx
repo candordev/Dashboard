@@ -123,6 +123,7 @@ const additionalStyles = StyleSheet.create({
   },
   content: {
     fontSize: 14,
+    fontWeight: "400",
   },
 });
 
