@@ -255,7 +255,7 @@ const Category: React.FC<CategoryProps> = ({
       <View>
         <OrFullWidth />
         {categoryError !== "" && (
-          <Text style={styles.errorText}>{categoryError}</Text>
+          <Text style={{color: colors.red}}>{categoryError}</Text>
         )}
         <AddCategory onCategoryAdded={handleNewCategory} /> 
       </View>

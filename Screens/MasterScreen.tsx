@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, FlatList, StyleSheet } from 'react-native';
+import { View, ScrollView, FlatList, StyleSheet } from 'react-native';
+import Text from '../Components/Text';
 import colors from '../Styles/colors';
 import { customFetch } from '../utils/utils';
 import { Endpoints } from '../utils/Endpoints';

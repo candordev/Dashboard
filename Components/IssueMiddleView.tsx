@@ -122,7 +122,7 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
         ))}
       </ScrollView>
       {errorMessage ? (
-        <Text style={styles.errorText}>{errorMessage}</Text>
+        <Text style={{color: colors.red}}>{errorMessage}</Text>
       ) : null}
       <DoubleTextInput
         onFirstInputChange={setTitle}

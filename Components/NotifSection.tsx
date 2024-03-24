@@ -96,19 +96,16 @@ const NotifSection = (props: Props) => {
       const post = await fetchPost(notif.data?.postID);
       // console.log("NOTIF WAS CLICKED", post);
       props.setSelectedPost(post);
-      props.setSelectedNotification(notif)
+      props.setSelectedNotification(notif);
     } catch (error) {
       console.error("Error fetching post:", error);
     }
   };
 
-
   useEffect(() => {
     // console.log("THIS IS THE NOTIF: ", props.notif)
     setNotif(props.notif);
   }, [props.notif]);
-
-
 
   const handleNotificationClick = async () => {
     try {
@@ -141,7 +138,7 @@ const NotifSection = (props: Props) => {
         notif.seen
           ? {}
           : { borderLeftColor: colors.purple, borderLeftWidth: 4 },
-          isSelected ? { backgroundColor: colors.lightestgray } : {},
+        isSelected ? { backgroundColor: colors.lightestgray } : {},
       ]}
     >
       <NotifPicture
@@ -173,7 +170,13 @@ const NotifSection = (props: Props) => {
           </Text>
         </View>
         <Text
-          style={[styles.sectionDescription, { flex: 1 }]}
+          style={{
+            marginTop: 3,
+            fontSize: 13,
+            fontWeight: "400",
+            color: colors.black,
+            flex: 1,
+          }}
           numberOfLines={2}
         >
           {notif.content}

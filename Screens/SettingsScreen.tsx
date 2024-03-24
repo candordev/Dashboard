@@ -14,16 +14,16 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { set } from "lodash";
 
-    // type SettingsScreenProps = {
-    //   navigation: any;
-    // };
+// type SettingsScreenProps = {
+//   navigation: any;
+// };
 
-    // const SettingsScreen: React.FC<SettingsScreenProps> = () => {
+// const SettingsScreen: React.FC<SettingsScreenProps> = () => {
 
-    type Props = PropsWithChildren<{
-      route: any;
-      navigation: any;
-    }>;
+type Props = PropsWithChildren<{
+  route: any;
+  navigation: any;
+}>;
 
 function SettingsScreen({ route, navigation }: Props): JSX.Element {
   return (
@@ -40,10 +40,10 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
   );
 }
 
-    type SettingsSectionProps = {
-      title: string;
-      children: React.ReactNode;
-    };
+type SettingsSectionProps = {
+  title: string;
+  children: React.ReactNode;
+};
 
 const GeneralSettings = () => {
   const { state, dispatch } = useUserContext();
@@ -53,42 +53,53 @@ const GeneralSettings = () => {
   const [previewUrl, setPreviewUrl] = useState(state.imageUrl);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-
-  }, [firstName, lastName, previewUrl]);
+  useEffect(() => {}, [firstName, lastName, previewUrl]);
 
   async function editProfile(first: string, last: string, profilePicture: any) {
-   if (state.firstName === first && state.lastName === last && state.imageUrl === previewUrl) {
-      return
+    if (
+      state.firstName === first &&
+      state.lastName === last &&
+      state.imageUrl === previewUrl
+    ) {
+      return;
     }
-    
+
     try {
       setIsLoading(true);
       let formData = new FormData();
-      formData.append('firstName', first);
-      formData.append('lastName', last);
+      formData.append("firstName", first);
+      formData.append("lastName", last);
 
       if (profilePicture) {
-        formData.append('image', profilePicture);
+        formData.append("image", profilePicture);
       }
 
-      const res = await customFetch(Endpoints.updateProfile, {
-        method: 'PUT',
-        body: formData,
-      },0,
-      true,
+      const res = await customFetch(
+        Endpoints.updateProfile,
+        {
+          method: "PUT",
+          body: formData,
+        },
+        0,
+        true
       );
 
       const data = await res.json();
       if (res.ok) {
-        dispatch({ type: 'UPDATE_FIRST_NAME', payload: data.profile.firstName });
+        dispatch({
+          type: "UPDATE_FIRST_NAME",
+          payload: data.profile.firstName,
+        });
         setFirstName(data.profile.firstName);
-        dispatch({ type: 'UPDATE_LAST_NAME', payload: data.profile.lastName });
+        dispatch({ type: "UPDATE_LAST_NAME", payload: data.profile.lastName });
         setLastName(data.profile.lastName);
-        dispatch({ type: 'UPDATE_PROFILE_PICTURE', payload: data.profile.profilePicture });
+        dispatch({
+          type: "UPDATE_PROFILE_PICTURE",
+          payload: data.profile.profilePicture,
+        });
         setPreviewUrl(data.profile.profilePicture);
         setImageFile(null);
-        console.log("Profile edited successfully: ", data)
+        console.log("Profile edited successfully: ", data);
       } else {
         console.error("Error editing profile: ", data.error);
       }
@@ -100,11 +111,11 @@ const GeneralSettings = () => {
 
   const onImageChange = (event: any) => {
     const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       setImageFile(file);
       setPreviewUrl(URL.createObjectURL(file));
     } else {
-      alert('Please select an image file.');
+      alert("Please select an image file.");
     }
   };
 
@@ -120,27 +131,31 @@ const GeneralSettings = () => {
       >
         <View>
           <ProfilePicture imageUrl={previewUrl} type="editProfile" />
-          <input 
-            type="file" 
+          <input
+            type="file"
             onChange={onImageChange}
             style={{
               display: "none",
             }}
             id="fileInput"
           />
-          <label htmlFor="fileInput" style={{
+          <label
+            htmlFor="fileInput"
+            style={{
               backgroundColor: colors.purple,
               borderRadius: 15,
-              padding: '7px 20px',
+              padding: "7px 20px",
               marginTop: 25,
-              fontFamily: 'Montserrat',
-              cursor: 'pointer',
-              display: 'inline-block',
+              fontFamily: "Montserrat",
+              cursor: "pointer",
+              display: "inline-block",
               color: colors.white,
               fontSize: 14,
               fontWeight: "600",
-              
-          }}>Edit Picture</label>
+            }}
+          >
+            Edit Picture
+          </label>
         </View>
         <View>
           <View style={{ height: 90, justifyContent: "center" }}>
@@ -153,7 +168,8 @@ const GeneralSettings = () => {
               <TextInput
                 style={styles.textInput}
                 value={firstName}
-                onChangeText={setFirstName} />
+                onChangeText={setFirstName}
+              />
             </View>
             <View
               style={{
@@ -170,12 +186,15 @@ const GeneralSettings = () => {
               <TextInput
                 style={styles.textInput}
                 value={lastName}
-                onChangeText={setLastName} />
+                onChangeText={setLastName}
+              />
             </View>
           </View>
           <Button
             text={isLoading ? "Loading..." : "Save Changes"} // Change text based on isLoading
-            onPress={() => !isLoading && editProfile(firstName, lastName, imageFile)} // Prevent function call if isLoading
+            onPress={() =>
+              !isLoading && editProfile(firstName, lastName, imageFile)
+            } // Prevent function call if isLoading
             // disabled={isLoading} // Disable button when loading
             style={{
               backgroundColor: colors.purple,
@@ -213,20 +232,20 @@ const EmailSettings = () => {
       return;
     }
 
-    if ((ccEmail === state.ccEmail)) {
-      return
+    if (ccEmail === state.ccEmail) {
+      return;
     }
 
     setIsLoading(true);
     try {
       const res = await customFetch(Endpoints.editCCEmail, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ ccEmail }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        dispatch({ type: 'UPDATE_CC_EMAIL', payload: data.ccEmail });
+        dispatch({ type: "UPDATE_CC_EMAIL", payload: data.ccEmail });
         setCCEmail(data.ccEmail);
         console.log("CC email edited successfully: ", data);
       } else {
@@ -247,22 +266,20 @@ const EmailSettings = () => {
           padding: 20,
         }}
       >
-          {/* <Text
-            style={{ fontSize: 15, fontWeight: "500", marginRight: 12 }}
-          >
-            Email: {state.email}
-          </Text> */}
-          <View style={{
+        <View
+          style={{
             flexDirection: "row",
             alignItems: "center",
-          }}>
+          }}
+        >
           <Text style={{ fontSize: 15, fontWeight: "500", marginRight: 12 }}>
             CC Email:
           </Text>
           <TextInput
-            style={styles.ccEmailInput}
+            style={styles.textInput}
             value={ccEmail}
             onChangeText={setCCEmail}
+            placeholderTextColor={colors.lightgray}
             placeholder="Enter CC Email"
           />
           <Button
@@ -288,27 +305,27 @@ const EmailSettings = () => {
   );
 };
 
-    const DepartmentSettings = () => {
-      return (
-        <SettingsSection title={"Departments"}>
-          {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
+const DepartmentSettings = () => {
+  return (
+    <SettingsSection title={"Departments"}>
+      {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ fontSize: 15, fontWeight: "500", marginRight: 10 }}>
               Email:
             </Text>
             <TextInput style={styles.textInput} />
           </View> */}
-          <Text>World</Text>
-        </SettingsSection>
-      );
-    };
+      <Text>World</Text>
+    </SettingsSection>
+  );
+};
 
-    const TagSettings = () => {
-      return (
-        <SettingsSection title={"Tags"}>
-          <Text>World</Text>
-        </SettingsSection>
-      );
-    };
+const TagSettings = () => {
+  return (
+    <SettingsSection title={"Tags"}>
+      <Text>World</Text>
+    </SettingsSection>
+  );
+};
 
 const DeadlineSettings = () => {
   return (
@@ -321,12 +338,15 @@ const DeadlineSettings = () => {
 const SettingsSection = (props: SettingsSectionProps) => {
   return (
     <View
-      style={[styles.groupSettingsContainer, {
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        marginHorizontal: 50,
-        borderRadius: 15,
-      }]}
+      style={[
+        styles.groupSettingsContainer,
+        {
+          paddingVertical: 15,
+          paddingHorizontal: 20,
+          marginHorizontal: 50,
+          borderRadius: 15,
+        },
+      ]}
     >
       <Text
         style={{
