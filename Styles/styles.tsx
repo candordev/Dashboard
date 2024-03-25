@@ -468,6 +468,15 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat",
     fontWeight: "500",
   },
+  outerBox: {
+    boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
+    margin: 20,
+    padding: 40,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.lightergray
+  },
   ccEmailInput: {
     borderColor: colors.lightergray,
     borderWidth: 1.5,

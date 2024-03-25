@@ -195,7 +195,7 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
         name={"Group Settings"}
         route="/groupSettings"
         icon="user"
-        selected={navIndex == 3}
+        selected={navIndex == 4}
       />
        <NavItem
         name="24/7 Support"

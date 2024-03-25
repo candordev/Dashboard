@@ -120,10 +120,6 @@ function NavigationWrapper() {
             <>
               <Stack.Screen name="launch" component={LaunchScreen} />
               <Stack.Screen name="root" component={Root} />
-              <Stack.Screen name="inbox" component={InboxScreen} />
-              <Stack.Screen name="groupSettings" component={GroupSettingsScreen} />
-              <Stack.Screen name="support" component={SupportScreen} />
-              <Stack.Screen name="master" component={MasterScreen} />
 
               {/* other authenticated screens */}
             </>
