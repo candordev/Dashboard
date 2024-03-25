@@ -13,7 +13,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text
+  Text,
 } from "react-native";
 import NotifSection from "../Components/NotifSection";
 import { event, eventNames } from "../Events";
@@ -22,7 +22,7 @@ import colors from "../Styles/colors";
 import styles from "../Styles/styles";
 import { Endpoints } from "../utils/Endpoints";
 import { Notification, NotificationType, Post } from "../utils/interfaces";
-import Hyperlink from 'react-native-hyperlink';
+import Hyperlink from "react-native-hyperlink";
 
 import { FlatList, ScrollView } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
@@ -31,7 +31,6 @@ import OuterView from "../Components/OuterView";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
 import NotificationPopup from "../Components/NotificationPopup";
 import { customFetch } from "../utils/utils";
-
 
 type Props = PropsWithChildren<{
   route: any;
@@ -46,16 +45,14 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
   const [notificationsEnabled, setNotificationsEnabled] =
     useState<boolean>(false);
 
-
   let [notifs, setNotifs] = useState<Notification[]>([]);
   let skip = useRef<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const stopped = useRef<boolean>(false);
   const refreshing = useRef<boolean>(false);
   const { state } = useUserContext();
-  const [selectedNotification, setSelectedNotification] = useState<Notification | null>();
-
-
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification | null>();
 
   const [selectedPost, setSelectedPost] = useState<Post | null>();
 
@@ -191,7 +188,7 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
 
   const handleReadAll = async () => {
     // Implement the functionality to mark all notifications as read
-    console.log('Read All pressed');
+    console.log("Read All pressed");
     let res = await customFetch(Endpoints.deleteYourNotifications, {
       method: "DELETE",
       body: JSON.stringify({
@@ -203,12 +200,11 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
       // setLoading(false);
       // throw new Error(resJson.error);
       console.log("reading failed");
-    }else{
-      console.log("read all chilling")
+    } else {
+      console.log("read all chilling");
     }
     event.emit(eventNames.FETCH_NOTIFS);
   };
-
 
   const renderItem = ({ item }: { item: Notification }) => {
     return (
@@ -231,7 +227,15 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
 
     return (
       <TouchableOpacity
-        style={styles.settingsButton}
+        style={{
+          alignSelf: "center",
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+          borderRadius: 20,
+          backgroundColor: colors.purple4,
+          marginTop: 16,
+          marginBottom: 8,
+        }}
         onPress={openNotificationSettings}
       >
         <Text style={additionalStyles.buttonText}>Enable Notifications</Text>
@@ -280,8 +284,8 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
     if (selectedNotificationFromPopup) {
       // console.log("selectedNotif3", selectedNotificationFromPopup)
       setSelectedNotification(selectedNotificationFromPopup);
-      const post = await fetchPost(selectedNotificationFromPopup.data.postID)
-      setSelectedPost(post)
+      const post = await fetchPost(selectedNotificationFromPopup.data.postID);
+      setSelectedPost(post);
     }
   }
 
@@ -291,90 +295,100 @@ function NotificationsScreen({ route, navigation }: Props): JSX.Element {
 
   return (
     <>
-    <NotificationPopup navigation={navigation}/>
-    <OuterView
-      style={{
-        flex: 1,
-        backgroundColor: colors.white,
-        flexDirection: "row",
-        padding: 0,
-        overflow: "hidden",
-      }}
-    >
-      <View
+      <NotificationPopup navigation={navigation} />
+      <OuterView
         style={{
           flex: 1,
-          borderColor: colors.lightestgray,
-          borderRightWidth: 2.5,
+          backgroundColor: colors.white,
+          flexDirection: "row",
+          padding: 0,
+          overflow: "hidden",
         }}
       >
-        <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
+        <View
+          style={{
+            flex: 1,
+            borderColor: colors.lightestgray,
+            borderRightWidth: 2.5,
+          }}
+        >
+          <View style={{ paddingHorizontal: 16, paddingVertical: 8 }}>
             <TouchableOpacity
               onPress={handleReadAll}
               style={{
                 backgroundColor: colors.purple, // Adjust button color as needed
                 padding: 10,
                 borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'center',
+                alignItems: "center",
+                justifyContent: "center",
                 marginBottom: 8,
-                marginTop: 8
+                marginTop: 8,
               }}
             >
-              <Text style={{ color: colors.white, fontWeight: 'bold' }}>Read All</Text>
+              <Text style={{ color: colors.white, fontWeight: "bold" }}>
+                Read All
+              </Text>
             </TouchableOpacity>
           </View>
-        <FlatList
-          data={notifs}
-          renderItem={renderItem}
-          ListFooterComponent={renderFooter}
-          onEndReached={handleEndReached}
-          onEndReachedThreshold={0.8} // increase this to render next posts earlier
-          indicatorStyle={colors.theme == "dark" ? "white" : "black"}
-          showsVerticalScrollIndicator={true}
-          ListFooterComponentStyle={{ flexGrow: 1, justifyContent: "center"}}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing.current}
-              onRefresh={onRefresh}
-              title="Pull to refresh"
-              tintColor={colors.purple}
-              titleColor={colors.purple}
-            />
-          }
-        />
-      </View>
-      <View style={{ flex: 3 }}>
-      {selectedNotification && selectedNotification.data?.contentType === NotificationType.reminder ? (
-          <View style={{ padding: 20 }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 15 }}>
-              {selectedNotification.title}
-            </Text>
-            <Hyperlink linkDefault={true} linkStyle={{ color: colors.purple }}>
-              <Text style={{ fontSize: 16 }}>
-                {selectedNotification.content}
+          <FlatList
+            data={notifs}
+            renderItem={renderItem}
+            ListFooterComponent={renderFooter}
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.8} // increase this to render next posts earlier
+            indicatorStyle={colors.theme == "dark" ? "white" : "black"}
+            showsVerticalScrollIndicator={true}
+            ListFooterComponentStyle={{ flexGrow: 1, justifyContent: "center" }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing.current}
+                onRefresh={onRefresh}
+                title="Pull to refresh"
+                tintColor={colors.purple}
+                titleColor={colors.purple}
+              />
+            }
+          />
+        </View>
+        <View style={{ flex: 3 }}>
+          {selectedNotification &&
+          selectedNotification.data?.contentType ===
+            NotificationType.reminder ? (
+            <View style={{ padding: 20 }}>
+              <Text
+                style={{ fontSize: 20, fontWeight: "bold", marginBottom: 15 }}
+              >
+                {selectedNotification.title}
               </Text>
-            </Hyperlink>
-          </View>
-        ) :
-        selectedPost && (
-          <View
-            style={{
-              backgroundColor: colors.background,
-              padding: 7,
-              paddingLeft: 4,
-              flex: 1,
-            }}
-          >
-            <IssueView
-              issue={selectedPost}
-              style={{ borderRadius: 10 }}
-              onPopoverCloseComplete={() => {}}
-            />
-          </View>
-        )}
-      </View>
-    </OuterView>
+              <Hyperlink
+                linkDefault={true}
+                linkStyle={{ color: colors.purple }}
+              >
+                <Text style={{ fontSize: 16 }}>
+                  {selectedNotification.content}
+                </Text>
+              </Hyperlink>
+            </View>
+          ) : (
+            selectedPost && (
+              <View
+                style={{
+                  backgroundColor: colors.background,
+                  padding: 7,
+                  paddingLeft: 4,
+                  flex: 1,
+                }}
+              >
+                <IssueView
+                  issue={selectedPost}
+                  style={{ borderRadius: 10 }}
+                  onPopoverCloseComplete={() => {}}
+                />
+              </View>
+            )
+          )}
+        </View>
+      </OuterView>
     </>
   );
 }

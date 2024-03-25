@@ -8,6 +8,7 @@ import OuterComponentView from "./PopoverComponentView";
 import colors from "../Styles/colors";
 import "react-datepicker/dist/react-datepicker.css";
 import "../Styles/DatePickerStyles.css";
+import { ScrollView } from "react-native-gesture-handler";
 
 type DeadlineProps = {
   issue?: Post;
@@ -18,7 +19,7 @@ type DeadlineProps = {
 
 const Deadline: React.FC<DeadlineProps> = (props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(
-    props.issue ? new Date(props.issue.deadline) : null
+    props.issue ? new Date(props.issue.deadline) : new Date()
   );
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const Deadline: React.FC<DeadlineProps> = (props) => {
   };
 
   return (
-    <OuterComponentView title={"Deadline"} style={props.style}>
+    <OuterComponentView title={"Deadline"} style={[props.style]}>
       <DatePicker
         selected={selectedDate}
         onChange={handleDateChange}

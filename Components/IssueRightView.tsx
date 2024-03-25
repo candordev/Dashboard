@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import { Dimensions, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import colors from "../Styles/colors";
 import { Post } from "../utils/interfaces";
 import Assignees from "./Assignees";
@@ -65,7 +65,8 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
     setIssue(props.issue);
   }, [props.issue]);
 
-
+  let screenHeight = Dimensions.get('window').height;
+  
   return (
     <ScrollView
       style={{
@@ -79,20 +80,20 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         rowGap: 10,
       }}
     >
-    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-        <Assignees issue={issue} createPost={false} style={{ zIndex: 3 }} />
-        <Category issueId={issue._id} createPost={false} style={{ zIndex: 2, marginTop: 5}} />
-        <Deadline issue={issue} style={{ zIndex: 1, marginTop: 5 }} />
+    <View style={{ flex: 1, justifyContent: 'flex-start'}}>
+        <Assignees issue={issue} createPost={false} style={{ zIndex: 4}} />
+        <Category issueId={issue._id} createPost={false} style={{ zIndex: 3, marginTop: 10}} />
+        <Deadline issue={issue} style={{ zIndex: 2, marginTop: 10 }} />
         {state.groupType == "HOA" ? 
-        <LocationHOA issue={issue} style={{ zIndex: 1, marginTop: 5 }} />
-        : <Location issue={issue} style={{ zIndex: 1, marginTop: 5 }}/>}
+        <LocationHOA issue={issue} style={{ zIndex: 1, marginTop: 10, marginBottom: 10}} />
+        : <Location issue={issue} style={{ zIndex: 1, marginTop: 10, marginBottom: 10}}/>
+        } 
       </View>
        <View style={{ justifyContent: 'flex-end' }}>
         <MarkDone
           fetchStatusUpdates={props.fetchStatusUpdates}
           issueId={issue._id}
           step={issue.step}
-          //style={{ marginBottom: 10 }} // Adjust the margin as needed to ensure this sits right above DeletePost
         />
         <DeletePost
           issueId={issue._id}

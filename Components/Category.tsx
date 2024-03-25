@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import DropDownPicker, { ValueType } from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import colors from "../Styles/colors";
@@ -214,7 +214,7 @@ const Category: React.FC<CategoryProps> = ({
   };
 
   return (
-    <OuterComponentView style={style} title="Tag">
+    <OuterComponentView style={[style, {maxHeight: 400, flexGrow: 1}]} title="Tag">
       <DropDown
         placeholder="Select tag"
         value={value}
@@ -229,30 +229,37 @@ const Category: React.FC<CategoryProps> = ({
         } selected`}
       />
       {/* View to display selected categories */}
+      <ScrollView style={{ maxHeight: 150 }} contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: "space-between",
+      }}>
       <View style={{ marginTop: 15 }}>
-        {value &&
-          value.map((category, index) => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                columnGap: 10,
-              }}
-            >
-              <FeatherIcon name="tag" size={15} color={colors.purple} />
-              <Text key={index} style={styles.categoryText}>
-                {category}
-              </Text>
-            </View>
-          ))}
+          {value &&
+            value.map((category, index) => (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  columnGap: 10,
+                }}
+              >
+                <FeatherIcon name="tag" size={15} color={colors.purple} />
+                <Text key={index} style={styles.categoryText}>
+                  {category}
+                </Text>
+              </View>
+            ))}    
       </View>
+      </ScrollView>
+      <ScrollView>
       <View>
         <OrFullWidth />
         {categoryError !== "" && (
-          <Text style={styles.errorText}>{categoryError}</Text>
+          <Text style={{color: colors.red}}>{categoryError}</Text>
         )}
-        <AddCategory onCategoryAdded={handleNewCategory} />
+        <AddCategory onCategoryAdded={handleNewCategory} /> 
       </View>
+      </ScrollView>
     </OuterComponentView>
   );
 };

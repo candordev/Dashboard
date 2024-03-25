@@ -254,10 +254,16 @@ function DepartmentEditor({ groupID }: DepartmentEditorProps): JSX.Element {
         keyExtractor={(item: Department) => item._id}
         renderItem={({ item }: { item: Department }) => (
           <>
-            <View style={additionalStyles.departmentItem}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 4,
+              }}
+            >
               <Pressable
                 onPress={() => toggleDropdown(item._id)}
-                style={additionalStyles.dropdownIcon}
+                style={{padding: 8,}}
               >
                 <FeatherIcon
                   name={item.isOpen ? "chevron-down" : "chevron-right"}
@@ -267,7 +273,13 @@ function DepartmentEditor({ groupID }: DepartmentEditorProps): JSX.Element {
               </Pressable>
               {!item.isEditing ? (
                 <>
-                  <Text style={additionalStyles.departmentText}>
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      fontFamily: "Montserrat",
+                      flex: 1,
+                    }}
+                  >
                     {item.name}
                   </Text>
                   <TouchableOpacity onPress={() => startEditing(item._id)}>
@@ -311,7 +323,6 @@ function DepartmentEditor({ groupID }: DepartmentEditorProps): JSX.Element {
                 </TouchableOpacity>
               )}
               {item.defaultDepartment && (
-                //<Text style={styles.defaultDepartmentText}>Default Department</Text>
                 <FeatherIcon
                   name="trash"
                   size={15}
@@ -321,9 +332,10 @@ function DepartmentEditor({ groupID }: DepartmentEditorProps): JSX.Element {
               )}
             </View>
             {item.isOpen && leaders[item._id] && (
-              <View style={additionalStyles.leadersList}>
+              <View style={{paddingLeft: 35}}>
                 {leaders[item._id].map((leader) => (
-                  <Text key={leader._id} style={additionalStyles.leaderText}>
+                  <Text key={leader._id} style={{fontFamily: "Montserrat",
+                  marginVertical: 4,}}>
                     {leader.firstName} {leader.lastName}
                   </Text>
                 ))}
@@ -365,43 +377,10 @@ function DepartmentEditor({ groupID }: DepartmentEditorProps): JSX.Element {
 }
 
 const additionalStyles = StyleSheet.create({
-  scrollContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  departmentItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 4,
-  },
-  departmentText: {
-    marginLeft: 10,
-    fontFamily: "Montserrat",
-    flex: 1, // Allows text to take up available space, pushing icons to the edge
-  },
-  defaultDepartmentText: {
-    color: colors.purple,
-    fontFamily: "Montserrat",
-    flex: 1,
-    "font-style": "italic",
-    textAlign: "right",
-  },
   deleteButton: {
     marginLeft: "auto", // Ensures the button is aligned to the right
     padding: 8,
   },
-  dropdownIcon: {
-    padding: 8,
-  },
-  leadersList: {
-    paddingLeft: 35, // Indent leader names to differentiate from department names
-  },
-  leaderText: {
-    fontFamily: "Montserrat",
-    marginVertical: 4,
-    // Any additional styling for leader text
-  },
-
   title: {
     alignSelf: "flex-start",
     fontWeight: "600",

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import DropDownPicker, { ItemType } from "react-native-dropdown-picker";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { useUserContext } from "../Hooks/useUserContext";
@@ -81,7 +81,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
       // Initialize URLSearchParams
       let params = new URLSearchParams({
         //page: "1",
-        groupID:state.currentGroup,
+        groupID: state.currentGroup,
       });
 
       // Add postID only if props.issue is defined
@@ -550,7 +550,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
   };
 
   return (
-    <OuterComponentView title="Assignees" style={props.style}>
+    <OuterComponentView title="Assignees" style={[props.style, {maxHeight: 600, flexGrow: 1}]}>
       <DropDownPicker
         maxHeight={180}
         multipleText={`${selectedChildren.length} ${
@@ -631,6 +631,7 @@ function Assignees(props: AssigneesProps): JSX.Element {
           <FeatherIcon name={"check"} size={17} color={colors.gray} />
         )}
       />
+      <ScrollView>
       {
         selectedChildren.map((username, index) => {
           // Find the leader corresponding to the username
@@ -642,22 +643,26 @@ function Assignees(props: AssigneesProps): JSX.Element {
           return <ProfileRow name={name} profilePicture={profilePicture} key={index} />;
         })
       }
-      <View></View>
+      </ScrollView>
+      <View>
+      </View>
       <View>
         <OrFullWidth />
         {errorMessageLeader && (
           <Text style={{ color: "red" }}>{errorMessageLeader}</Text>
         )}
-
+        <ScrollView>
         <AddLeader
           inviteLeaderMissingFields={handleEmptyFields}
           inviteLeader={inviteLeader}
           createPost={props.createPost}
           emailImport=""
         />
+        </ScrollView>
       </View>
     </OuterComponentView>
   );
 }
 
 export default Assignees;
+
