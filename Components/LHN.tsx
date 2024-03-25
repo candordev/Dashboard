@@ -197,6 +197,12 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
         icon="user"
         selected={navIndex == 3}
       />
+       <NavItem
+        name="24/7 Support"
+        route="/support"
+        icon="check-circle"
+        selected={false}
+      />
       <View style={{ flex: 1 }} />
       <NavItem
         name="Sign out"
