@@ -22,12 +22,17 @@ const SubmitFeedback = () => {
         formData.append('title', title);
         formData.append('content', content);
         formData.append('groupID', '647db15ba310f4efc2a667d1');
+        formData.append('visible', true.toString());
+
+        
+
   
         const res = await customFetch(Endpoints.createDashboardProposal, {
           method: 'POST',
           body: formData,
-        });
-  
+        },0,
+        true,
+        );
         if (!res.ok) {
           const resJson = await res.json();
           console.log("Error", resJson.error);
@@ -47,6 +52,9 @@ const SubmitFeedback = () => {
         setLoading(false);
       }
     };
+  
+
+  
   
     return (
         <View style={styles.outerBox}>
@@ -78,9 +86,6 @@ const SubmitFeedback = () => {
                   textStyle={{fontWeight: "600"}}
                   style={additionalStyles.submitButton}
                 />              
-              {/* <TouchableOpacity style={additionalStyles.submitButton} onPress={handleDone}>
-                <Text style={additionalStyles.submitButtonText}>Submit Feedback</Text>
-              </TouchableOpacity> */}
               {errorMessage ? <Text style={{colors: colors.red}}>{errorMessage}</Text> : null}
             </>
           )}
