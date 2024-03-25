@@ -21,6 +21,7 @@ import { NotificationProvider } from "../Structure/NotificationContext"; // Upda
 import NotificationPopup from "../Components/NotificationPopup";
 import { useNavigationContainerRef } from '@react-navigation/native';
 import MasterScreen from "../Screens/MasterScreen";
+import SupportScreen from "../Screens/SupportScreen";
 
 
 
@@ -95,6 +96,7 @@ function NavigationWrapper() {
         root: "root",
         all: "all",
         settings: "settings",
+        support: "support",
         // your: "your",
         // suggested: "suggested",
         inbox: "inbox",
@@ -118,9 +120,6 @@ function NavigationWrapper() {
             <>
               <Stack.Screen name="launch" component={LaunchScreen} />
               <Stack.Screen name="root" component={Root} />
-              <Stack.Screen name="inbox" component={InboxScreen} />
-              <Stack.Screen name="groupSettings" component={GroupSettingsScreen} />
-              <Stack.Screen name="master" component={MasterScreen} />
 
               {/* other authenticated screens */}
             </>

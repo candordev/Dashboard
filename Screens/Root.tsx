@@ -10,6 +10,7 @@ import GroupSettingsScreen from "./GroupSettingsScreen";
 import NotificationPopup from "../Components/NotificationPopup";
 import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
 import { useUserContext } from "../Hooks/useUserContext";
+import SupportScreen from "./SupportScreen";
 
 
 const Drawer = createDrawerNavigator();
@@ -54,6 +55,8 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
   //     console.error('Error getting notification count', err);
   //   }
   // }, []);
+
+
   const initialRouteName = state.master ? "master" : "all"; // Replace "someOtherRoute" with your default route if state.master doesn't exist
 
 
@@ -100,6 +103,11 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         name="groupSettings"
         component={GroupSettingsScreen}
         options={{ title: "Candor - Group Settings" }}
+      />
+        <Drawer.Screen
+        name="support"
+        component={SupportScreen}
+        options={{ title: "Candor - 24/7 Support" }}
       />
     </Drawer.Navigator>
   );

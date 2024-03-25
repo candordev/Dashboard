@@ -9,6 +9,7 @@ import { Post } from "../utils/interfaces";
 import DropDown from '../Components/DropDown'; // Assuming DropDown is in your components directory
 import PostWithDropdown from '../Components/PostWithDropDown';
 import GroupInsightsComponent from '../Components/GroupInsightsComponent';
+import OuterView from '../Components/OuterView';
 
 const sortOptions = [
   { label: 'Unassigned Issues', value: 'step0Count' },
@@ -81,7 +82,7 @@ const MasterScreen = () => {
 
   
   return (
-    <View style={styles.screenContainer}>
+    <OuterView style={{ backgroundColor: colors.white, flexDirection: 'row'}}>
     <View style={styles.emailsContainer}>
       <Text style={styles.title}>Forwarded Emails</Text>
       <ScrollView>
@@ -110,8 +111,7 @@ const MasterScreen = () => {
       </View> 
       <GroupInsightsComponent masterID={state.master ? state.master._id : undefined} sortType={selectedSort}/>
     </View>
-
-    </View>
+    </OuterView>
   );
 };
 
