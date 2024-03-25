@@ -64,7 +64,7 @@ const SupportScreen = () => {
           {availableUntil ? `Available Until: ${formatDate(availableUntil)} - Join Our Zoom Now!` : 'Zoom Unavailable Right Now'}
         </Text>
       </TouchableOpacity>
-      <View style={styles.container}>
+      <View style={styles.container}> 
         <View style={styles.helpSection}>
           <Text style={styles.largeText}>Need Help or Have Feedback?</Text>
           <Text style={styles.smallText}>Text, call, or fill out the form!</Text>
