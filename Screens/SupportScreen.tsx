@@ -6,8 +6,9 @@ import OuterView from "../Components/OuterView";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 import Button from "../Components/Button";
+import NotificationPopup from "../Components/NotificationPopup";
 
-const SupportScreen = () => {
+const SupportScreen = ({ navigation }: any) => {
   // Function to handle button press
   const [availableUntil, setAvailableUntil] = useState(null);
   const [zoomLink, setZoomLink] = useState('');
@@ -55,6 +56,8 @@ const SupportScreen = () => {
   
 
   return (
+    <>
+    <NotificationPopup navigation={navigation} />
     <OuterView style={{ backgroundColor: colors.white, flex: 1}}>
       <TouchableOpacity 
         style={[additionalStyles.fullWidthButton, !availableUntil ? {backgroundColor: colors.lightgray} : {}]}
@@ -91,6 +94,7 @@ const SupportScreen = () => {
         </View>
       </View>
     </OuterView>
+    </>
   );
 };
 

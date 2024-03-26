@@ -10,8 +10,9 @@ import GroupSettingsHeader from "./GroupSettingsHeader";
 import colors from "../Styles/colors";
 import OuterView from "../Components/OuterView";
 import { ScrollView } from "react-native-gesture-handler";
+import NotificationPopup from "../Components/NotificationPopup";
 
-const GroupSettingsScreen = () => {
+const GroupSettingsScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
 
   const [selectedGroupID, setSelectedGroupID] = useState(
@@ -25,6 +26,8 @@ const GroupSettingsScreen = () => {
   };
 
   return (
+    <>
+    <NotificationPopup navigation={navigation} />
     <OuterView style={{ backgroundColor: colors.white }}>
       {state.master != null && (
         <GroupSettingsHeader
@@ -47,6 +50,7 @@ const GroupSettingsScreen = () => {
         </View>
       </ScrollView>
     </OuterView>
+    </>
   );
 };
 

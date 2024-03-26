@@ -10,6 +10,7 @@ type LaunchcreenProps = {
 };
 
 function NotificationPopup({ navigation }: LaunchcreenProps): JSX.Element | null {
+    console.log("POPUP CODE RAN I IG")
     const { notifications, removeNotification } = useNotification();
     const [showPopup, setShowPopup] = useState(false);
     const [hovered, setHovered] = useState(false);
