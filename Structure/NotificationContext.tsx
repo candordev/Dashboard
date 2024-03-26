@@ -41,16 +41,16 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
         });
 
         socket.on('connect', () => {
-            // console.log('Connected to Socket.io server for user:', userId);
+            console.log('Connected to Socket.io server for user:', userId);
         });
 
         socket.on('new-notification', (notification) => {
-            // console.log("NEW NOTIF DETECTED!!!")
+            console.log("NEW NOTIF DETECTED on socket!!!")
             addNotification(notification);
         });
 
         socket.on('disconnect', () => {
-            // console.log('Socket.io connection disconnected');
+            console.log('Socket.io connection disconnected');
         });
 
         return () => {

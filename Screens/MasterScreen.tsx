@@ -10,6 +10,7 @@ import DropDown from '../Components/DropDown'; // Assuming DropDown is in your c
 import PostWithDropdown from '../Components/PostWithDropDown';
 import GroupInsightsComponent from '../Components/GroupInsightsComponent';
 import OuterView from '../Components/OuterView';
+import NotificationPopup from '../Components/NotificationPopup';
 
 const sortOptions = [
   { label: 'Unassigned Issues', value: 'step0Count' },
@@ -19,7 +20,7 @@ const sortOptions = [
 ];
 
 
-const MasterScreen = () => {
+const MasterScreen = ({ navigation }: any) => {
   // State to hold fetched data (though we're using dummy data here)
   const [forwardedPosts, setForwardedPosts] = useState<Post[]>([]);
   const [groups, setGroups] = useState([]);
@@ -82,6 +83,8 @@ const MasterScreen = () => {
 
   
   return (
+    <>
+     <NotificationPopup navigation={navigation} />
     <OuterView style={{ backgroundColor: colors.white, flexDirection: 'row'}}>
     <View style={styles.emailsContainer}>
       <Text style={styles.title}>Forwarded Emails</Text>
@@ -112,6 +115,7 @@ const MasterScreen = () => {
       <GroupInsightsComponent masterID={state.master ? state.master._id : undefined} sortType={selectedSort}/>
     </View>
     </OuterView>
+    </>
   );
 };
 

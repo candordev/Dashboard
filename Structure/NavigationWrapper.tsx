@@ -17,8 +17,6 @@ import GroupSettingsScreen from "../Screens/GroupSettingsScreen";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { getUnreadNotifs } from "../utils/utils";
-import { NotificationProvider } from "../Structure/NotificationContext"; // Update the import path as necessary
-import NotificationPopup from "../Components/NotificationPopup";
 import { useNavigationContainerRef } from '@react-navigation/native';
 import MasterScreen from "../Screens/MasterScreen";
 import SupportScreen from "../Screens/SupportScreen";
