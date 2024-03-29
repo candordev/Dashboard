@@ -48,7 +48,8 @@ const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGro
             method: "POST",
             body: JSON.stringify({
               masterID: state.master._id,
-              name: newGroupName
+              name: newGroupName,
+              groupType: state.groupType,
             }),
           });
           if (!res.ok) {
