@@ -46,7 +46,7 @@ function NavigationWrapper() {
 
   // Handle user state changes
   async function onAuthStateChangedCallback(authUser: User | null) {
-    // console.log("onAuthStateChangedCallback", authUser);
+    console.log("onAuthStateChangedCallback", authUser);
 
     if (authUser && authUser != null && !isSignupOperation) {
       try {
@@ -118,7 +118,7 @@ function NavigationWrapper() {
             <>
               <Stack.Screen name="launch" component={LaunchScreen} />
               <Stack.Screen name="root" component={Root} />
-
+              
               {/* other authenticated screens */}
             </>
           ) : (
