@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Linking, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Linking, Image, ScrollView } from "react-native";
 import colors from "../Styles/colors"; // Update the import path as needed
 import SubmitFeedback from "../Components/SubmitFeedback"; // Ensure this path matches your project
 import OuterView from "../Components/OuterView";
@@ -58,6 +58,7 @@ const SupportScreen = ({ navigation }: any) => {
   return (
     <>
     <NotificationPopup navigation={navigation} />
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
     <OuterView style={{ backgroundColor: colors.white, flex: 1}}>
       <TouchableOpacity 
         style={[additionalStyles.fullWidthButton, !availableUntil ? {backgroundColor: colors.lightgray} : {}]}
@@ -71,7 +72,7 @@ const SupportScreen = ({ navigation }: any) => {
           {availableUntil ? `Available Until: ${formatDate(availableUntil)} - Join Our Zoom Now!` : 'Zoom Unavailable Right Now'}
         </Text>
       </TouchableOpacity>
-      <View style={{flexDirection: "row", flex: 1,}}> 
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} horizontal={true}>
         <View style={{flex: 1, alignItems: "center",justifyContent: "center", padding: 10}}>
           <Text style={additionalStyles.largeText}>Need Help or Have Feedback?</Text>
           <Text style={additionalStyles.smallText}>Text, call, or fill out the form!</Text>
@@ -92,8 +93,9 @@ const SupportScreen = ({ navigation }: any) => {
         <View style={{flex: 1,marginTop: -10, justifyContent: "center",}}>
           <SubmitFeedback />
         </View>
-      </View>
+        </ScrollView>
     </OuterView>
+    </ScrollView>
     </>
   );
 };

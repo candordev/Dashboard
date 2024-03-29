@@ -147,7 +147,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: colors.lightergray
+    borderColor: colors.lightergray,
+    flex: 1,
+    justifyContent: 'center',
   },
   ccEmailInput: {
     borderColor: colors.lightergray,
