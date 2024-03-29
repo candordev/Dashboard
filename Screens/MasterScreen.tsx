@@ -85,14 +85,14 @@ const MasterScreen = ({ navigation }: any) => {
   return (
     <>
      <NotificationPopup navigation={navigation} />
-    <OuterView style={{ backgroundColor: colors.white, flexDirection: 'row'}}>
+    <OuterView style={{ backgroundColor: colors.white, flexDirection: 'row', flex: 1, borderRadius: 20, overflow: 'visible'}}> 
     <View style={styles.emailsContainer}>
       <Text style={styles.title}>Forwarded Emails</Text>
-      <ScrollView>
-        {forwardedPosts.map((post) => (
-           <PostWithDropdown key={post._id} post={post} onClearPosts={fetchForwardedPosts} />
-        ))}
-      </ScrollView>
+        <ScrollView contentContainerStyle={{ justifyContent: 'flex-start', flexGrow: 1 }}>
+          {forwardedPosts.map((post) => (
+            <PostWithDropdown key={post._id} post={post} onClearPosts={fetchForwardedPosts} />
+          ))}
+        </ScrollView>
     </View>
     <View style={styles.groupsContainer}>
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', zIndex: 3}}>
@@ -126,8 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white, 
     borderRadius: 20,
     overflow: 'visible', // This line is crucial for showing shadows
-
-
   },
   emailsContainer: {
     flex: 1.1,
@@ -137,7 +135,6 @@ const styles = StyleSheet.create({
     boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
     borderRadius: 20,
     overflow: 'visible', // Allow overflow to show the shadow
-
   },
   groupsContainer: {
     flex: 3,
@@ -155,8 +152,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat',
     marginTop: 6,
     marginLeft: 3,
-    flex: 1,
-    alignContent: 'flex-start'
+    //flex: 1,
+    //alignContent: 'flex-start'
   },
   card: {
     backgroundColor: colors.white,

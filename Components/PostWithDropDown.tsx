@@ -313,8 +313,6 @@ const styles = StyleSheet.create({
     boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
     overflow: 'visible', // This line is crucial for showing shadows
     zIndex: 1, // Try adjusting this value
-
-
   },
   
   cardTitle: {
