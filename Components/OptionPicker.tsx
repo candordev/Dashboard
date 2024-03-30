@@ -31,7 +31,7 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
     return ['Deadline', 'Location', 'Department', 'Tag', 'Map'];
   }, [state.groupType]); // Dependency array, it will only recompute if groupType changes
 
-  const handleSelect = (option: string) => {
+const handleSelect = (option: string) => {
     setSelectedOption(option);
     onOptionChange(option);
     setIsPopoverVisible(false);

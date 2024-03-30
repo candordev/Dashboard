@@ -63,7 +63,7 @@ const SubmitFeedback = () => {
             <ActivityIndicator size="large" color={colors.purple} />
           ) : (  
             <>
-              <Text style={{marginBottom: 8, fontSize: 25,fontWeight: 500, fontFamily: 'Montserrat'}}>What's the issue?</Text>
+              <Text style={{marginBottom: 8, fontSize: 25,fontWeight: 500, fontFamily: 'Montserrat'}}>What's the feedback/issue?</Text>
               <View style={{ marginBottom: 30,}}> 
                 <TextInput 
                   style={styles.textInput} 
