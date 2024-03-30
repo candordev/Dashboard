@@ -1,5 +1,5 @@
   import React, { useEffect, useRef, useState } from "react";
-  import { View, StyleSheet, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
+  import { View, StyleSheet, ScrollView, Text, TextInput, TouchableOpacity, Alert } from "react-native";
   import colors from "../Styles/colors";
   import ExpandableTextInput from "./ExpandableTextInput";
   import { Comment, Post } from "../utils/interfaces";
@@ -14,6 +14,7 @@
   import { BASE_URL } from "../utils/Endpoints";
   import { usePostContext } from "../Hooks/usePostContext";
   import Icon from "react-native-vector-icons/FontAwesome";
+  import ConfirmationModal from "./ConfirmationModal"; 
 
 
   const validator = require("validator");
@@ -31,16 +32,22 @@
     const [inputText, setInputText] = useState<string>("");
     const [isInputDisabled, setIsInputDisabled] = useState(false);  
     const [submittable, setSubmittable] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
 
 
     const [emailError, setEmailError] = useState("")
 
 
     const [chatMode, setChatMode] = useState("authorities");
-    const [chatModeItems, setChatModeItems] = useState([
-      { label: "Authorities", value: "authorities"},
-      { label: "Constituent", value: "constituent"},
-    ]);
+    const getChatModeItems = () => {
+      return [
+        { label: state.groupType === "HOA" ? "Leaders" : "Authorities", value: "authorities" },
+        { label: state.groupType === "HOA" ? "Resident" : "Constituent", value: "constituent" },
+      ];
+    };
+    
+    const [chatModeItems, setChatModeItems] = useState(getChatModeItems());
 
     useEffect(() => {
       // Example logic to enable the submit button when inputText is not empty
@@ -164,6 +171,7 @@
   );
 };
 
+
     async function postPoliticianComment() {
       try {
         let res: Response = await customFetch(Endpoints.sendPoliticianChat, {
@@ -198,6 +206,8 @@
         if (res.ok) {
           fetchPrivateChat();
         } else {
+          let resJson = await res.json();
+          console.log(resJson.error)
           console.error("Result sent from sendConstituentChat was not OK.");
         }
       } catch (error) {
@@ -234,14 +244,24 @@
     const handleSendChat = async (e: any) => {
       // if (e.nativeEvent.key === "Enter" && !e.nativeEvent.shiftKey) {
         if (chatMode == "constituent" && validator.isEmail(props.issue.proposalFromEmail)) {
-          await postConstituentComment();
+          setShowConfirmationModal(true); // Show the confirmation modal
+          //await postConstituentComment();
         } else {
           await postPoliticianComment();
+          setInputText("");
         }
-        setInputText("");
     };
     return (
       <View style={chatStyles.chatContainer}>
+        <ConfirmationModal
+          isVisible={showConfirmationModal}
+          onConfirm={async () => {
+            await postConstituentComment();
+            setInputText("");
+            setShowConfirmationModal(false); // Close the modal
+          }}
+          onCancel={() => setShowConfirmationModal(false)}
+        />
         <View style={chatStyles.titleDropdownContainer}>
           {/* <Text style={chatStyles.chatTitle}>Private Chat</Text> */}
           <View>
@@ -302,6 +322,8 @@
       </View>
     );
   }
+
+  
 
   export default PrivateChat;
 
