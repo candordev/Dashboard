@@ -40,10 +40,14 @@
 
 
     const [chatMode, setChatMode] = useState("authorities");
-    const [chatModeItems, setChatModeItems] = useState([
-      { label: "Authorities", value: "authorities"},
-      { label: "Constituent", value: "constituent"},
-    ]);
+    const getChatModeItems = () => {
+      return [
+        { label: state.groupType === "HOA" ? "Leaders" : "Authorities", value: "authorities" },
+        { label: state.groupType === "HOA" ? "Resident" : "Constituent", value: "constituent" },
+      ];
+    };
+    
+    const [chatModeItems, setChatModeItems] = useState(getChatModeItems());
 
     useEffect(() => {
       // Example logic to enable the submit button when inputText is not empty
