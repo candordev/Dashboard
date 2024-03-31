@@ -54,6 +54,7 @@ export const Endpoints = {
   getProfileLiked: `${BASE_URL}/profile/getLikedPostsByUser?`,
   getPostProgress: `${BASE_URL}/progress?`,
   getGroupLeaders: `${BASE_URL}/group/getGroupLeaders?`,
+  getGroupLeadersNoPagination: `${BASE_URL}/group/getGroupLeadersNoPagination?`,
   addToGroup: `${BASE_URL}/group/addToGroup?`,
   removeFromGroup: `${BASE_URL}/group/removeFromGroup?`,
   getGroupByID: `${BASE_URL}/group/getGroupByID?`,
