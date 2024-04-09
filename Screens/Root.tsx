@@ -11,6 +11,7 @@ import NotificationPopup from "../Components/NotificationPopup";
 import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
 import { useUserContext } from "../Hooks/useUserContext";
 import SupportScreen from "./SupportScreen";
+import AllChatsScreen from "./AllChatsScreen";
 
 
 const Drawer = createDrawerNavigator();
@@ -57,7 +58,7 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
   // }, []);
 
 
-  const initialRouteName = state.master ? "master" : "all"; // Replace "someOtherRoute" with your default route if state.master doesn't exist
+  const initialRouteName = state.groupType === "AIChat" ? "allChats" : (state.master ? "master" : "all");
 
 
   return (
@@ -82,13 +83,6 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         component={AllScreen}
         options={{ title: "Candor - Issues" }}
       />
-      {/* <Drawer.Screen
-        name="map"
-        component={MapScreen}
-        options={{ title: "Candor - Map" }}
-      /> */}
-      {/* <Drawer.Screen name="your" component={YourScreen} />
-      <Drawer.Screen name="suggested" component={SuggestedScreen} /> */}
       <Drawer.Screen
         name="inbox"
         component={InboxScreen}
@@ -98,6 +92,12 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         name="settings"
         component={SettingsScreen}
         options={{ title: "Candor - Settings" }}
+      />
+      
+      <Drawer.Screen
+        name="allChats"
+        component={AllChatsScreen}
+        options={{ title: "Candor - All Chats" }}
       />
       <Drawer.Screen
         name="groupSettings"

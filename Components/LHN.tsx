@@ -110,21 +110,52 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
           {state.firstName} {state.lastName}
         </Text>
       </View>
-      {state.master ? (
-        <>
-          <NavItem
-            name={"Master"}
-            route="/master"
-            icon="list"
-            selected={navIndex === 4}
-          />
-          <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
-            <ScrollView>
-              {state.leaderGroups.map(
-                (
-                  group: { name: any; _id: any },
-                  index: React.Key | null | undefined
-                ) => (
+      {state.groupType === "AIChat" ? (
+      <>
+        <NavItem
+          name={"All Chats"}
+          route="/allChats"
+          icon="list"
+          selected={navIndex === 0}
+        />
+         <NavItem
+          name={"Inbox"}
+          route="/inbox"
+          icon="inbox"
+          unreadCount={unread}
+          selected={navIndex === 1}
+        />
+         <NavItem
+          name="Sign out"
+          onPress={() => {
+            useSignout({ dispatch });
+          }}
+          icon="log-out"
+          selected={false}
+        />
+      </>
+    ) : (
+      <>
+        {/* Original navigation structure for non-AIChat groupType */}
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: 10,
+          }}
+        >
+        </View>
+        {state.master ? (
+          <>
+            <NavItem
+              name={"Master"}
+              route="/master"
+              icon="list"
+              selected={navIndex === 4}
+            />
+            <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
+              <ScrollView>
+                {state.leaderGroups.map((group: { _id: any; name: string | any[]; }, index: React.Key | null | undefined) => (
                   <Pressable
                     key={index}
                     onPress={() => handleGroupSelect(group._id)}
@@ -154,73 +185,65 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
                         : group.name}
                     </Text>
                   </Pressable>
-                )
-              )}
-            </ScrollView>
-          </View>
-        </>
-      ) : (
+                ))}
+              </ScrollView>
+            </View>
+          </>
+        ) : (
+          <NavItem
+            name={"Issues"}
+            route="/all"
+            icon="list"
+            selected={navIndex === 0}
+          />
+        )}
         <NavItem
-          name={"Issues"}
-          route="/all"
-          icon="list"
-          selected={navIndex === 0}
+          name={"Inbox"}
+          route="/inbox"
+          icon="inbox"
+          unreadCount={unread}
+          selected={navIndex === 1}
         />
-      )}
-
-      {/* <NavItem
-        name={"Map"}
-        route="/map"
-        icon="map"
-        selected={navIndex == 1}
-      /> */}
-      {/* <NavItem name={"Your Issues"} route="/your" icon="list" />
-      <NavItem name={"Suggested Issues"} route="/suggested" icon="list" /> */}
-      <NavItem
-        name={"Inbox"}
-        route="/inbox"
-        icon="inbox"
-        unreadCount={unread}
-        selected={navIndex == 1}
-      />
-      {/* {state.groupType !== "HOA" && ( */}
         <NavItem
           name={"Settings"}
           route="/settings"
           icon="settings"
-          selected={navIndex == 2}
+          selected={navIndex === 2}
         />
-      {/* )} */}
-      <NavItem
-        name={"Group Settings"}
-        route="/groupSettings"
-        icon="user"
-        selected={navIndex == 4}
-      />
-       <NavItem
-        name="24/7 Support"
-        route="/support"
-        icon="check-circle"
-        selected={false}
-      />
-      <View style={{ flex: 1 }} />
-      <NavItem
-        name="Sign out"
-        onPress={() => {
-          useSignout({ dispatch });
-        }}
-        icon="log-out"
-        selected={false}
-      />
-      <NavItem
-        name="Download"
-        onPress={() => {
-          downloadPDF(state.leaderGroups?.[0] ? state.currentGroup : undefined);
-        }}
-        icon="download"
-        selected={false}
-      />
+        <NavItem
+          name={"Group Settings"}
+          route="/groupSettings"
+          icon="user"
+          selected={navIndex === 4}
+        />
+        <NavItem
+          name="24/7 Support"
+          route="/support"
+          icon="check-circle"
+          selected={false}
+        />
+        <View style={{ flex: 1 }} />
+        <NavItem
+          name="Sign out"
+          onPress={() => {
+            useSignout({ dispatch });
+          }}
+          icon="log-out"
+          selected={false}
+        />
+        <NavItem
+          name="Download"
+          onPress={() => {
+            downloadPDF(state.leaderGroups?.[0] ? state.currentGroup : undefined);
+          }}
+          icon="download"
+          selected={false}
+        />
+      </>
+    )}
+
     </View>
+
   );
 };
 

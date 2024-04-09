@@ -101,6 +101,7 @@ function NavigationWrapper() {
         launch: "launch/:userId?/:postId?/:groupId?/:masterId?",
         login: "login",
         groupSettings: "groupSettings",
+        allChats: "allChats",
         master: "master",
         NotFound: "404",
       },
