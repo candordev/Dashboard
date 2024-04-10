@@ -13,7 +13,6 @@ import { useUserContext } from "../Hooks/useUserContext";
 import SupportScreen from "./SupportScreen";
 import AllChatsScreen from "./AllChatsScreen";
 
-
 const Drawer = createDrawerNavigator();
 
 const firebaseConfig = {
@@ -36,7 +35,7 @@ type RootScreenProps = {
   navigation: any;
 };
 
-function Root({route, navigation}: RootScreenProps): JSX.Element {
+function Root({ route, navigation }: RootScreenProps): JSX.Element {
   const { state } = useUserContext();
 
   // const [unread, setUnread] = useState<number>(0);
@@ -56,22 +55,29 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
   //   }
   // }, []);
 
-
-  const initialRouteName = state.groupType === "AIChat" ? "allChats" : (state.master ? "master" : "all");
+  const initialRouteName =
+    state.groupType === "AIChat" ? "allChats" : state.master ? "master" : "all";
 
   return (
     <Drawer.Navigator
       useLegacyImplementation={false}
       //get the route name and pass it into LHN
-      drawerContent={(props) => <LHN {...props} navigation={props.navigation} />}
+      drawerContent={(props) => (
+        <LHN {...props} navigation={props.navigation} />
+      )}
       screenOptions={{
         drawerType: "permanent",
         drawerStyle: { width: 250, borderRightWidth: 0 },
         headerShown: false,
       }}
       initialRouteName={initialRouteName}
-    >    
-        <Drawer.Screen
+    >
+      <Drawer.Screen
+        name="allChats"
+        component={AllChatsScreen}
+        options={{ title: "Candor - All Chats" }}
+      />
+      <Drawer.Screen
         name="master"
         component={MasterScreen}
         options={{ title: "Candor - Master" }}
@@ -91,18 +97,12 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         component={SettingsScreen}
         options={{ title: "Candor - Settings" }}
       />
-      
-      <Drawer.Screen
-        name="allChats"
-        component={AllChatsScreen}
-        options={{ title: "Candor - All Chats" }}
-      />
       <Drawer.Screen
         name="groupSettings"
         component={GroupSettingsScreen}
         options={{ title: "Candor - Group Settings" }}
       />
-        <Drawer.Screen
+      <Drawer.Screen
         name="support"
         component={SupportScreen}
         options={{ title: "Candor - 24/7 Support" }}

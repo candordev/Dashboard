@@ -1,5 +1,5 @@
 import { Link } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlexAlignType, Pressable, ScrollView, View } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { event, eventNames } from "../Events";
@@ -122,7 +122,7 @@ const LHN = (props: LHNProps) => {
           <NavItem
             name={"All Chats"}
             route="/allChats"
-            icon="list"
+            icon="message-circle"
             selected={navIndex === 0}
           />
         )}
@@ -132,7 +132,7 @@ const LHN = (props: LHNProps) => {
               name={"Master"}
               route="/master"
               icon="list"
-              selected={navIndex === 4}
+              selected={navIndex === 1}
             />
             <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
               <ScrollView>
@@ -180,7 +180,7 @@ const LHN = (props: LHNProps) => {
             name={"Issues"}
             route="/all"
             icon="list"
-            selected={navIndex === 0}
+            selected={navIndex === 2}
           />
         )}
         {state.groupType !== "AIChat" && (
@@ -189,21 +189,21 @@ const LHN = (props: LHNProps) => {
             route="/inbox"
             icon="inbox"
             unreadCount={unread}
-            selected={navIndex === 1}
+            selected={navIndex === 3}
           />
         )}
         <NavItem
           name={"Settings"}
           route="/settings"
           icon="settings"
-          selected={navIndex === 2}
+          selected={navIndex === 4}
         />
         {state.groupType !== "AIChat" && (
           <NavItem
             name={"Group Settings"}
             route="/groupSettings"
             icon="user"
-            selected={navIndex === 4}
+            selected={navIndex === 5}
           />
         )}
 
@@ -211,7 +211,7 @@ const LHN = (props: LHNProps) => {
           name="24/7 Support"
           route="/support"
           icon="check-circle"
-          selected={false}
+          selected={navIndex === 6}
         />
         <View style={{ flex: 1 }} />
         <NavItem
