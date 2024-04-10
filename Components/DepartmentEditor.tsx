@@ -393,6 +393,7 @@ const additionalStyles = StyleSheet.create({
     borderColor: "#ddd",
     padding: 8,
     marginVertical: 8,
+    outlineStyle: "none",
   },
   button: {
     backgroundColor: colors.purple,

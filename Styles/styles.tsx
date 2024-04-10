@@ -137,11 +137,10 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: colors.white,
     outlineStyle: "none",
-    fontFamily: "Montserrat",
+    fontFamily: "OpenSans",
     fontWeight: "500",
   },
   outerBox: {
-    boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)', // offsetX offsetY blurRadius color
     margin: 20,
     padding: 40,
     backgroundColor: '#fff',
@@ -150,26 +149,6 @@ const styles = StyleSheet.create({
     borderColor: colors.lightergray,
     flex: 1,
     justifyContent: 'center',
-  },
-  ccEmailInput: {
-    borderColor: colors.lightergray,
-    borderWidth: 1.5,
-    borderRadius: 10,
-    paddingHorizontal: 7,
-    paddingVertical: 5,
-    backgroundColor: colors.white,
-    outlineStyle: "none",
-    fontFamily: "Montserrat",
-    fontWeight: "500",
-    width: "30%"
-  },
-  markerContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  errorText: {
-    color: "red",
-    fontFamily: "OpenSans"
   },
   groupSettingsContainer: {
     margin: 10,

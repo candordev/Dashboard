@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         padding: 10,
         marginBottom: 10,
-        color: 'black'
-
+        color: 'black',
+        outlineStyle: "none",
     },
     toggleButton: {
         backgroundColor: colors.black,

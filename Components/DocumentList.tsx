@@ -429,6 +429,7 @@ const additionalStyles = StyleSheet.create({
     borderColor: "#ddd",
     padding: 8,
     marginVertical: 4,
+    outlineStyle: "none",
   },
   buttonText: {
     fontFamily: "Montserrat",

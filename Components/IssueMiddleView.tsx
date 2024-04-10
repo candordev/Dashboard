@@ -136,17 +136,5 @@ function IssueMiddleView(props: IssueMiddleViewProps): JSX.Element {
     </View>
   );
 }
-const styles = StyleSheet.create({
-
-  errorText: {
-    color: 'red',
-    fontSize: 14,
-    textAlign: 'left',
-    marginTop: 5,
-    marginLeft: 0,
-    fontFamily: "Montserrat",
-  },
-  // ... other styles ...
-});
 
 export default IssueMiddleView;

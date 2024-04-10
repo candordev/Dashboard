@@ -13,14 +13,26 @@ import Text from "./Text";
 
 interface LHNProps {
   navigation: any;
+  state: any;
 }
 
-const LHN = ({ navigation }: LHNProps, ...props: any) => {
+const LHN = (props: LHNProps) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
 
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
+    getUnreadDB();
+  }, []);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      // If it's the first render, update the ref and return early
+      isFirstRender.current = false;
+      return;
+    }
     setUnread(1 + unread);
   }, [notifications]);
 
@@ -28,22 +40,15 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
   // const currRoute = props.state.routeNames[props.state.index];
   const navIndex = props.state?.index;
   console.log("nav index: ", props.state?.index);
+  console.log("nav state: ", props.navigation);
 
   const handleGroupSelect = async (currentGroup: any) => {
     // Update the current group in the global state
     await dispatch({ type: "SET_CURRENT_GROUP", payload: currentGroup });
     console.log("Event Triggg: ", state.currentGroup);
     // Navigate to the "All" screen
-    navigation.navigate("all");
+    props.navigation.navigate("all");
   };
-
-  useEffect(() => {
-    // console.log("sparsisparsi");
-    // console.log(props);
-    // console.log(currRoute);
-    // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
-    getUnreadDB();
-  }, []);
 
   useEffect(() => {
     const handleRefresh = () => {
@@ -256,8 +261,8 @@ const NavItem = ({
           style={{
             marginBottom: 10,
             paddingVertical: 10,
-            marginLeft: 10,
             flexDirection: "row",
+            paddingHorizontal: 15,
             alignItems: "center",
             columnGap: 10,
             backgroundColor: selected ? colors.white : colors.black,
@@ -314,7 +319,6 @@ const styles = {
     flex: 1,
     backgroundColor: colors.black,
     paddingVertical: 20,
-    wdith: 500,
     paddingHorizontal: 15,
   },
   navItemText: {
@@ -324,17 +328,17 @@ const styles = {
   },
   unreadBadge: {
     backgroundColor: "red", // Change as per your design
-    minWidth: 20, // Set a fixed width
-    minHeight: 20, // Set the same value for height to make it a circle
-    borderRadius: 10, // Half of width/height to make it a perfect circle
+    borderRadius: 20, // Half of width/height to make it a perfect circle
     marginLeft: 5,
     justifyContent: "center" as any,
     alignItems: "center" as FlexAlignType,
-    padding: 3,
+    height: 23,
+    width: 23,
   },
   unreadText: {
     color: "white",
     fontSize: 12,
+    fontWeight: "500",
   },
 };
 

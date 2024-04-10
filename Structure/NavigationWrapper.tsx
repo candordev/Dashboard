@@ -1,29 +1,16 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
-import { useUserContext } from "../Hooks/useUserContext";
+import React, { useEffect } from "react";
 import { useLogin } from "../Hooks/useLogin";
+import { useUserContext } from "../Hooks/useUserContext";
 import Root from "../Screens/Root";
 // import YourScreen from "../Screens/YourScreen";
-import LoginScreen from "../Screens/LoginScreen";
-import LaunchScreen from "../Screens/LaunchScreen";
-import { useSignout } from "../Hooks/useSignout";
-import SignupStack from "../Screens/SignupStack";
+import { useNavigationContainerRef } from "@react-navigation/native";
 import { useSignup } from "../Hooks/useSignup";
-import AllScreen from "../Screens/AllScreen";
-import InboxScreen from "../Screens/InboxScreen";
-import GroupSettingsScreen from "../Screens/GroupSettingsScreen";
-import { event, eventNames } from "../Events";
-import { AppState, Pressable } from "react-native";
-import { getUnreadNotifs } from "../utils/utils";
-import { useNavigationContainerRef } from '@react-navigation/native';
-import MasterScreen from "../Screens/MasterScreen";
-import SupportScreen from "../Screens/SupportScreen";
-
-
-
-
+import LaunchScreen from "../Screens/LaunchScreen";
+import LoginScreen from "../Screens/LoginScreen";
+import SignupStack from "../Screens/SignupStack";
 
 const Stack = createStackNavigator();
 
@@ -33,7 +20,6 @@ function NavigationWrapper() {
   const { state, dispatch } = useUserContext();
   const { loginUser } = useLogin();
   // const navigation = useNavigation();
-
 
   useEffect(() => {
     // // console.log("INFNITE LOOP H");
@@ -85,7 +71,7 @@ function NavigationWrapper() {
     prefixes: [
       "http://localhost:19006",
       "https://candorteam.netlify.app",
-      "https://www.dashboard.candornow.com"
+      "https://www.dashboard.candornow.com",
       /* your linking prefixes */
     ],
     config: {
@@ -108,36 +94,31 @@ function NavigationWrapper() {
     },
   };
 
-
-
   return (
-     <>
-      <NavigationContainer ref={navigationRef} linking={linking}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
-          {state.token ? (
-            <>
-              <Stack.Screen name="launch" component={LaunchScreen} />
-              <Stack.Screen name="root" component={Root} />
-              
-              {/* other authenticated screens */}
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="launch" component={LaunchScreen} />
-              <Stack.Screen name="login" component={LoginScreen} />
-              <Stack.Screen
-                name="signupStack"
-                component={SignupStack}
-                options={{ headerShown: false }}
-              />
-              {/* <Stack.Screen name="all" component={AllScreen} /> */}
+    <NavigationContainer ref={navigationRef} linking={linking}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {/* <Stack.Screen name="launch" component={LaunchScreen} /> */}
+        {state.token ? (
+          <>
+            <Stack.Screen name="launch" component={LaunchScreen} />
+            <Stack.Screen name="root" component={Root} />
 
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-      </>
+            {/* other authenticated screens */}
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="launch" component={LaunchScreen} />
+            <Stack.Screen name="login" component={LoginScreen} />
+            <Stack.Screen
+              name="signupStack"
+              component={SignupStack}
+              options={{ headerShown: false }}
+            />
+            {/* <Stack.Screen name="all" component={AllScreen} /> */}
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

@@ -37,7 +37,6 @@ type RootScreenProps = {
 };
 
 function Root({route, navigation}: RootScreenProps): JSX.Element {
-  console.log("AABBCCDD");
   const { state } = useUserContext();
 
   // const [unread, setUnread] = useState<number>(0);
@@ -59,7 +58,6 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
 
 
   const initialRouteName = state.groupType === "AIChat" ? "allChats" : (state.master ? "master" : "all");
-
 
   return (
     <Drawer.Navigator

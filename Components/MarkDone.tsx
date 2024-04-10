@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     padding: 10,
     color: "black",
+    outlineStyle: "none",
   },
   toggleButton: {
     backgroundColor: colors.black,
