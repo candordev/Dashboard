@@ -17,7 +17,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
   const [isPosting, setIsPosting] = useState(false);
   
-
   const handleConfirm = async () => {
     setIsPosting(true); // Start the loader
     try {
