@@ -11,7 +11,7 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 import { event, eventNames } from "../Events";
 import { AppState, Pressable } from "react-native";
 import { downloadPDF, getUnreadNotifs } from "../utils/utils";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
@@ -19,14 +19,26 @@ import ProfilePicture from "./ProfilePicture";
 
 interface LHNProps {
   navigation: any;
+  state: any;
 }
 
-const LHN = ({ navigation }: LHNProps, ...props: any) => {
+const LHN = (props: LHNProps) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
 
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
+    getUnreadDB();
+  }, []);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      // If it's the first render, update the ref and return early
+      isFirstRender.current = false;
+      return;
+    }
     setUnread(1 + unread);
   }, [notifications]);
 
@@ -34,22 +46,15 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
   // const currRoute = props.state.routeNames[props.state.index];
   const navIndex = props.state?.index;
   console.log("nav index: ", props.state?.index);
+  console.log("nav state: ", props.navigation);
 
   const handleGroupSelect = async (currentGroup: any) => {
     // Update the current group in the global state
     await dispatch({ type: "SET_CURRENT_GROUP", payload: currentGroup });
     console.log("Event Triggg: ", state.currentGroup);
     // Navigate to the "All" screen
-    navigation.navigate("all");
+    props.navigation.navigate("all");
   };
-
-  useEffect(() => {
-    // console.log("sparsisparsi");
-    // console.log(props);
-    // console.log(currRoute);
-    // event.on(eventNames.FOREGROUND_NOTIFICATION, incrementLocal);
-    getUnreadDB();
-  }, []);
 
   useEffect(() => {
     const handleRefresh = () => {
@@ -116,7 +121,7 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
             name={"Master"}
             route="/master"
             icon="list"
-            selected={navIndex === 4}
+            selected={navIndex === 0}
           />
           <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
             <ScrollView>
@@ -164,7 +169,7 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
           name={"Issues"}
           route="/all"
           icon="list"
-          selected={navIndex === 0}
+          selected={navIndex === 1}
         />
       )}
 
@@ -181,27 +186,25 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
         route="/inbox"
         icon="inbox"
         unreadCount={unread}
-        selected={navIndex == 1}
+        selected={navIndex == 2}
       />
-      {/* {state.groupType !== "HOA" && ( */}
-        <NavItem
-          name={"Settings"}
-          route="/settings"
-          icon="settings"
-          selected={navIndex == 2}
-        />
-      {/* )} */}
+      <NavItem
+        name={"Settings"}
+        route="/settings"
+        icon="settings"
+        selected={navIndex == 3}
+      />
       <NavItem
         name={"Group Settings"}
         route="/groupSettings"
         icon="user"
         selected={navIndex == 4}
       />
-       <NavItem
+      <NavItem
         name="24/7 Support"
         route="/support"
         icon="check-circle"
-        selected={false}
+        selected={navIndex == 5}
       />
       <View style={{ flex: 1 }} />
       <NavItem
@@ -248,8 +251,8 @@ const NavItem = ({
           style={{
             marginBottom: 10,
             paddingVertical: 10,
-            marginLeft: 10,
             flexDirection: "row",
+            paddingHorizontal: 15,
             alignItems: "center",
             columnGap: 10,
             backgroundColor: selected ? colors.white : colors.black,
@@ -274,9 +277,7 @@ const NavItem = ({
             <View style={styles.unreadBadge}>
               <Text style={styles.unreadText}>{unreadCount}</Text>
             </View>
-          ) : (
-            <View></View>
-          )}
+           ): <View></View> }
         </View>
       </Link>
     );
@@ -306,7 +307,6 @@ const styles = {
     flex: 1,
     backgroundColor: colors.black,
     paddingVertical: 20,
-    wdith: 500,
     paddingHorizontal: 15,
   },
   navItemText: {
@@ -316,17 +316,17 @@ const styles = {
   },
   unreadBadge: {
     backgroundColor: "red", // Change as per your design
-    minWidth: 20, // Set a fixed width
-    minHeight: 20, // Set the same value for height to make it a circle
-    borderRadius: 10, // Half of width/height to make it a perfect circle
+    borderRadius: 20, // Half of width/height to make it a perfect circle
     marginLeft: 5,
     justifyContent: "center" as any,
     alignItems: "center" as FlexAlignType,
-    padding: 3,
+    height: 23,
+    width: 23,
   },
   unreadText: {
     color: "white",
     fontSize: 12,
+    fontWeight: "500",
   },
 };
 

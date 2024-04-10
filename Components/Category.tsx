@@ -270,14 +270,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  errorText: {
-    color: "red",
-    fontSize: 14,
-    textAlign: "left",
-    marginTop: 5,
-    marginLeft: 0,
-    fontFamily: "Montserrat",
-  },
   // ... other styles ...
 });
 

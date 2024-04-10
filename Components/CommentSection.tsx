@@ -155,6 +155,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postID }) => {
             // minHeight: 40,
             // maxHeight: 100,
             borderColor: 'transparent',
+            outlineStyle: "none",
           }}
           placeholder="Add a comment..."
           placeholderTextColor={colors.gray}

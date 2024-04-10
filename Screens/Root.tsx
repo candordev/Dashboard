@@ -36,7 +36,6 @@ type RootScreenProps = {
 };
 
 function Root({route, navigation}: RootScreenProps): JSX.Element {
-  console.log("AABBCCDD");
   const { state } = useUserContext();
 
   // const [unread, setUnread] = useState<number>(0);
@@ -58,7 +57,6 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
 
 
   const initialRouteName = state.master ? "master" : "all"; // Replace "someOtherRoute" with your default route if state.master doesn't exist
-
 
   return (
     <Drawer.Navigator
@@ -82,13 +80,6 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
         component={AllScreen}
         options={{ title: "Candor - Issues" }}
       />
-      {/* <Drawer.Screen
-        name="map"
-        component={MapScreen}
-        options={{ title: "Candor - Map" }}
-      /> */}
-      {/* <Drawer.Screen name="your" component={YourScreen} />
-      <Drawer.Screen name="suggested" component={SuggestedScreen} /> */}
       <Drawer.Screen
         name="inbox"
         component={InboxScreen}
