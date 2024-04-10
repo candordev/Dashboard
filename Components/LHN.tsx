@@ -1,21 +1,15 @@
-import {
-  View,
-  TouchableOpacity,
-  FlexAlignType,
-  ScrollView,
-} from "react-native";
-import Text from "./Text";
 import { Link } from "@react-navigation/native";
-import colors from "../Styles/colors";
+import React, { useCallback, useEffect, useState } from "react";
+import { FlexAlignType, Pressable, ScrollView, View } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { event, eventNames } from "../Events";
-import { AppState, Pressable } from "react-native";
-import { downloadPDF, getUnreadNotifs } from "../utils/utils";
-import React, { useCallback, useEffect, useState } from "react";
-import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
+import { useUserContext } from "../Hooks/useUserContext";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+import colors from "../Styles/colors";
+import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import ProfilePicture from "./ProfilePicture";
+import Text from "./Text";
 
 interface LHNProps {
   navigation: any;
@@ -110,31 +104,6 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
           {state.firstName} {state.lastName}
         </Text>
       </View>
-      {state.groupType === "AIChat" ? (
-      <>
-        <NavItem
-          name={"All Chats"}
-          route="/allChats"
-          icon="list"
-          selected={navIndex === 0}
-        />
-         <NavItem
-          name={"Inbox"}
-          route="/inbox"
-          icon="inbox"
-          unreadCount={unread}
-          selected={navIndex === 1}
-        />
-         <NavItem
-          name="Sign out"
-          onPress={() => {
-            useSignout({ dispatch });
-          }}
-          icon="log-out"
-          selected={false}
-        />
-      </>
-    ) : (
       <>
         {/* Original navigation structure for non-AIChat groupType */}
         <View
@@ -143,8 +112,15 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
             alignItems: "center",
             paddingBottom: 10,
           }}
-        >
-        </View>
+        ></View>
+        {state.groupType === "AIChat" && (
+          <NavItem
+            name={"All Chats"}
+            route="/allChats"
+            icon="list"
+            selected={navIndex === 0}
+          />
+        )}
         {state.master ? (
           <>
             <NavItem
@@ -155,37 +131,42 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
             />
             <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
               <ScrollView>
-                {state.leaderGroups.map((group: { _id: any; name: string | any[]; }, index: React.Key | null | undefined) => (
-                  <Pressable
-                    key={index}
-                    onPress={() => handleGroupSelect(group._id)}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginVertical: 4,
-                    }}
-                  >
-                    <FeatherIcon
-                      name="trello"
-                      size={20}
-                      color={colors.white}
-                      style={{ marginRight: 10 }}
-                    />
-                    <Text
+                {state.leaderGroups.map(
+                  (
+                    group: { _id: any; name: string | any[] },
+                    index: React.Key | null | undefined
+                  ) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => handleGroupSelect(group._id)}
                       style={{
-                        color: colors.white,
-                        fontFamily: "Montserrat",
-                        textAlign: "left",
-                        flex: 1,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginVertical: 4,
                       }}
                     >
-                      {group.name.length > 15
-                        ? `${group.name.slice(0, 15)}...`
-                        : group.name}
-                    </Text>
-                  </Pressable>
-                ))}
+                      <FeatherIcon
+                        name="trello"
+                        size={20}
+                        color={colors.white}
+                        style={{ marginRight: 10 }}
+                      />
+                      <Text
+                        style={{
+                          color: colors.white,
+                          fontFamily: "Montserrat",
+                          textAlign: "left",
+                          flex: 1,
+                        }}
+                      >
+                        {group.name.length > 15
+                          ? `${group.name.slice(0, 15)}...`
+                          : group.name}
+                      </Text>
+                    </Pressable>
+                  )
+                )}
               </ScrollView>
             </View>
           </>
@@ -197,25 +178,30 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
             selected={navIndex === 0}
           />
         )}
-        <NavItem
-          name={"Inbox"}
-          route="/inbox"
-          icon="inbox"
-          unreadCount={unread}
-          selected={navIndex === 1}
-        />
+        {state.groupType !== "AIChat" && (
+          <NavItem
+            name={"Inbox"}
+            route="/inbox"
+            icon="inbox"
+            unreadCount={unread}
+            selected={navIndex === 1}
+          />
+        )}
         <NavItem
           name={"Settings"}
           route="/settings"
           icon="settings"
           selected={navIndex === 2}
         />
-        <NavItem
-          name={"Group Settings"}
-          route="/groupSettings"
-          icon="user"
-          selected={navIndex === 4}
-        />
+        {state.groupType !== "AIChat" && (
+          <NavItem
+            name={"Group Settings"}
+            route="/groupSettings"
+            icon="user"
+            selected={navIndex === 4}
+          />
+        )}
+
         <NavItem
           name="24/7 Support"
           route="/support"
@@ -234,16 +220,15 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
         <NavItem
           name="Download"
           onPress={() => {
-            downloadPDF(state.leaderGroups?.[0] ? state.currentGroup : undefined);
+            downloadPDF(
+              state.leaderGroups?.[0] ? state.currentGroup : undefined
+            );
           }}
           icon="download"
           selected={false}
         />
       </>
-    )}
-
     </View>
-
   );
 };
 
