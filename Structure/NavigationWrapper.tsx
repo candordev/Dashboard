@@ -32,7 +32,7 @@ function NavigationWrapper() {
 
   // Handle user state changes
   async function onAuthStateChangedCallback(authUser: User | null) {
-    // console.log("onAuthStateChangedCallback", authUser);
+    console.log("onAuthStateChangedCallback", authUser);
 
     if (authUser && authUser != null && !isSignupOperation) {
       try {

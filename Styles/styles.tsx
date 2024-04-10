@@ -147,9 +147,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.lightergray,
-    shadowColor: colors.black,
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    flex: 1,
+    justifyContent: 'center',
   },
   groupSettingsContainer: {
     margin: 10,

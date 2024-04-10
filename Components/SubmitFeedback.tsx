@@ -1,6 +1,6 @@
 // MemberManagement.tsx
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Platform, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TextInput, Platform, ActivityIndicator, Dimensions } from 'react-native';
 import colors from "../Styles/colors"; // Ensure this path matches your project structure
 import Text from "../Components/Text";
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,6 +14,7 @@ const SubmitFeedback = () => {
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+
   
     const handleDone = async () => {
       try {
@@ -62,7 +63,7 @@ const SubmitFeedback = () => {
             <ActivityIndicator size="large" color={colors.purple} />
           ) : (  
             <>
-              <Text style={{marginBottom: 8, fontSize: 25,fontWeight: 500, fontFamily: 'Montserrat'}}>What's the issue?</Text>
+              <Text style={{marginBottom: 8, fontSize: 25,fontWeight: 500, fontFamily: 'Montserrat'}}>What's the feedback?</Text>
               <View style={{ marginBottom: 30,}}> 
                 <TextInput 
                   style={styles.textInput} 
@@ -96,7 +97,6 @@ const SubmitFeedback = () => {
 const additionalStyles = StyleSheet.create({
     submitButton: {
         backgroundColor: colors.purple, // Here's the color adjustment for the button
-        padding: 10,
         borderRadius: 20,
         marginRight: 100,
         marginLeft: 100,
@@ -120,7 +120,9 @@ const additionalStyles = StyleSheet.create({
   },
 
   buttonContainer: {
-    marginTop: 10,
+    width: '80%', // Use percentage width for responsiveness
+    marginTop: 20,
+    marginBottom: 20,
     color: colors.purple
   },
 });

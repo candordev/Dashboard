@@ -84,7 +84,7 @@ const Header = ({
       }
 
       // console.log("THESE THE LEADER GROUPS",state.currentGroup);
-      let endpoint = Endpoints.getGroupLeaders + queryParams.toString(); // backend route does it by page, might need to j get all of the leaders
+      let endpoint = Endpoints.getGroupLeadersNoPagination + queryParams.toString(); // backend route does it by page, might need to j get all of the leaders
 
       const res = await customFetch(endpoint, { method: "GET" });
       const resJson = await res.json();

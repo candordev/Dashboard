@@ -16,6 +16,10 @@
 // PRODUCTION
 export const BASE_URL: string = `https://candoradmin.com/api`;
 
+
+//export const BASE_URL: string = `http://184.72.74.25:4000/api`;
+
+
 export const Endpoints = {
   base: BASE_URL,
   signup: `${BASE_URL}/user/signup`,
@@ -50,6 +54,7 @@ export const Endpoints = {
   getProfileLiked: `${BASE_URL}/profile/getLikedPostsByUser?`,
   getPostProgress: `${BASE_URL}/progress?`,
   getGroupLeaders: `${BASE_URL}/group/getGroupLeaders?`,
+  getGroupLeadersNoPagination: `${BASE_URL}/group/getGroupLeadersNoPagination?`,
   addToGroup: `${BASE_URL}/group/addToGroup?`,
   removeFromGroup: `${BASE_URL}/group/removeFromGroup?`,
   getGroupByID: `${BASE_URL}/group/getGroupByID?`,
