@@ -1,21 +1,15 @@
-import {
-  View,
-  TouchableOpacity,
-  FlexAlignType,
-  ScrollView,
-} from "react-native";
-import Text from "./Text";
 import { Link } from "@react-navigation/native";
-import colors from "../Styles/colors";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { FlexAlignType, Pressable, ScrollView, View } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import { event, eventNames } from "../Events";
-import { AppState, Pressable } from "react-native";
-import { downloadPDF, getUnreadNotifs } from "../utils/utils";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useUserContext } from "../Hooks/useUserContext";
 import { useSignout } from "../Hooks/useSignout";
+import { useUserContext } from "../Hooks/useUserContext";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
+import colors from "../Styles/colors";
+import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import ProfilePicture from "./ProfilePicture";
+import Text from "./Text";
 
 interface LHNProps {
   navigation: any;
@@ -115,114 +109,130 @@ const LHN = (props: LHNProps) => {
           {state.firstName} {state.lastName}
         </Text>
       </View>
-      {state.master ? (
-        <>
+      <>
+        {/* Original navigation structure for non-AIChat groupType */}
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: 10,
+          }}
+        ></View>
+        {state.groupType === "AIChat" && (
           <NavItem
-            name={"Master"}
-            route="/master"
-            icon="list"
+            name={"All Chats"}
+            route="/allChats"
+            icon="message-circle"
             selected={navIndex === 0}
           />
-          <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
-            <ScrollView>
-              {state.leaderGroups.map(
-                (
-                  group: { name: any; _id: any },
-                  index: React.Key | null | undefined
-                ) => (
-                  <Pressable
-                    key={index}
-                    onPress={() => handleGroupSelect(group._id)}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginVertical: 4,
-                    }}
-                  >
-                    <FeatherIcon
-                      name="trello"
-                      size={20}
-                      color={colors.white}
-                      style={{ marginRight: 10 }}
-                    />
-                    <Text
+        )}
+        {state.master ? (
+          <>
+            <NavItem
+              name={"Master"}
+              route="/master"
+              icon="list"
+              selected={navIndex === 1}
+            />
+            <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
+              <ScrollView>
+                {state.leaderGroups.map(
+                  (
+                    group: { _id: any; name: string | any[] },
+                    index: React.Key | null | undefined
+                  ) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => handleGroupSelect(group._id)}
                       style={{
-                        color: colors.white,
-                        fontFamily: "Montserrat",
-                        textAlign: "left",
-                        flex: 1,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginVertical: 4,
                       }}
                     >
-                      {group.name.length > 15
-                        ? `${group.name.slice(0, 15)}...`
-                        : group.name}
-                    </Text>
-                  </Pressable>
-                )
-              )}
-            </ScrollView>
-          </View>
-        </>
-      ) : (
+                      <FeatherIcon
+                        name="trello"
+                        size={20}
+                        color={colors.white}
+                        style={{ marginRight: 10 }}
+                      />
+                      <Text
+                        style={{
+                          color: colors.white,
+                          fontFamily: "Montserrat",
+                          textAlign: "left",
+                          flex: 1,
+                        }}
+                      >
+                        {group.name.length > 15
+                          ? `${group.name.slice(0, 15)}...`
+                          : group.name}
+                      </Text>
+                    </Pressable>
+                  )
+                )}
+              </ScrollView>
+            </View>
+          </>
+        ) : (
+          <NavItem
+            name={"Issues"}
+            route="/all"
+            icon="list"
+            selected={navIndex === 2}
+          />
+        )}
+        {state.groupType !== "AIChat" && (
+          <NavItem
+            name={"Inbox"}
+            route="/inbox"
+            icon="inbox"
+            unreadCount={unread}
+            selected={navIndex === 3}
+          />
+        )}
         <NavItem
-          name={"Issues"}
-          route="/all"
-          icon="list"
-          selected={navIndex === 1}
+          name={"Settings"}
+          route="/settings"
+          icon="settings"
+          selected={navIndex === 4}
         />
-      )}
+        {state.groupType !== "AIChat" && (
+          <NavItem
+            name={"Group Settings"}
+            route="/groupSettings"
+            icon="user"
+            selected={navIndex === 5}
+          />
+        )}
 
-      {/* <NavItem
-        name={"Map"}
-        route="/map"
-        icon="map"
-        selected={navIndex == 1}
-      /> */}
-      {/* <NavItem name={"Your Issues"} route="/your" icon="list" />
-      <NavItem name={"Suggested Issues"} route="/suggested" icon="list" /> */}
-      <NavItem
-        name={"Inbox"}
-        route="/inbox"
-        icon="inbox"
-        unreadCount={unread}
-        selected={navIndex == 2}
-      />
-      <NavItem
-        name={"Settings"}
-        route="/settings"
-        icon="settings"
-        selected={navIndex == 3}
-      />
-      <NavItem
-        name={"Group Settings"}
-        route="/groupSettings"
-        icon="user"
-        selected={navIndex == 4}
-      />
-      <NavItem
-        name="24/7 Support"
-        route="/support"
-        icon="check-circle"
-        selected={navIndex == 5}
-      />
-      <View style={{ flex: 1 }} />
-      <NavItem
-        name="Sign out"
-        onPress={() => {
-          useSignout({ dispatch });
-        }}
-        icon="log-out"
-        selected={false}
-      />
-      <NavItem
-        name="Download"
-        onPress={() => {
-          downloadPDF(state.leaderGroups?.[0] ? state.currentGroup : undefined);
-        }}
-        icon="download"
-        selected={false}
-      />
+        <NavItem
+          name="24/7 Support"
+          route="/support"
+          icon="check-circle"
+          selected={navIndex === 6}
+        />
+        <View style={{ flex: 1 }} />
+        <NavItem
+          name="Sign out"
+          onPress={() => {
+            useSignout({ dispatch });
+          }}
+          icon="log-out"
+          selected={false}
+        />
+        <NavItem
+          name="Download"
+          onPress={() => {
+            downloadPDF(
+              state.leaderGroups?.[0] ? state.currentGroup : undefined
+            );
+          }}
+          icon="download"
+          selected={false}
+        />
+      </>
     </View>
   );
 };
@@ -277,7 +287,9 @@ const NavItem = ({
             <View style={styles.unreadBadge}>
               <Text style={styles.unreadText}>{unreadCount}</Text>
             </View>
-           ): <View></View> }
+          ) : (
+            <View></View>
+          )}
         </View>
       </Link>
     );
