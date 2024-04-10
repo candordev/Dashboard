@@ -398,12 +398,4 @@
       textDecorationLine: "underline",
       textAlign: "center",
     },
-    errorText: {
-      color: colors.purple, // Use an appropriate color for error messages
-      fontSize: 12, // Ensure the font size is readable
-      width: '100%',
-      textAlign: "center",
-      fontWeight: "550" as any,
-      marginTop: 10, // Add some space above the error message
-    },
   });

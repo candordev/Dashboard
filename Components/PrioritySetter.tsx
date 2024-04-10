@@ -170,6 +170,7 @@ const additionalStyles = StyleSheet.create({
     borderColor: '#ddd',
     padding: 8,
     width: '100%', // ensures input takes the full width
+    outlineStyle: "none",
   },
   button: {
     backgroundColor: colors.purple,

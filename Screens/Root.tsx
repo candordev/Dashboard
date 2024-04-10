@@ -59,7 +59,6 @@ function Root({route, navigation}: RootScreenProps): JSX.Element {
 
   const initialRouteName = state.master ? "master" : "all"; // Replace "someOtherRoute" with your default route if state.master doesn't exist
 
-
   return (
     <Drawer.Navigator
       useLegacyImplementation={false}

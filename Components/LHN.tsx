@@ -34,6 +34,7 @@ const LHN = ({ navigation }: LHNProps, ...props: any) => {
   // const currRoute = props.state.routeNames[props.state.index];
   const navIndex = props.state?.index;
   console.log("nav index: ", props.state?.index);
+  console.log("nav state: ", props.navigation);
 
   const handleGroupSelect = async (currentGroup: any) => {
     // Update the current group in the global state
@@ -316,13 +317,12 @@ const styles = {
   },
   unreadBadge: {
     backgroundColor: "red", // Change as per your design
-    minWidth: 20, // Set a fixed width
-    minHeight: 20, // Set the same value for height to make it a circle
-    borderRadius: 10, // Half of width/height to make it a perfect circle
+    borderRadius: 20, // Half of width/height to make it a perfect circle
     marginLeft: 5,
     justifyContent: "center" as any,
     alignItems: "center" as FlexAlignType,
-    padding: 3,
+    height: 23,
+    width: 23,
   },
   unreadText: {
     color: "white",

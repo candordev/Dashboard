@@ -154,6 +154,7 @@ const Location: React.FC<LocationProps> = (props) => {
             marginTop: 5,
             maxHeight: 32,
             fontFamily: "Montserrat",
+            outlineStyle: "none",
           },
         }}
       />
