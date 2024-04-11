@@ -302,7 +302,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
         keyExtractor={(item) => item._id}
         ListFooterComponent={
           loading ? (
-            <ActivityIndicator size="large" color={colors.purple} />
+            <View style={{ paddingVertical: 10 }}>
+              <ActivityIndicator size="small" color={colors.purple} />
+            </View>
           ) : null
         }
       />

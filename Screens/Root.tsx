@@ -11,7 +11,7 @@ import NotificationPopup from "../Components/NotificationPopup";
 import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
 import { useUserContext } from "../Hooks/useUserContext";
 import SupportScreen from "./SupportScreen";
-import AllChatsScreen from "./AllChatsScreen";
+import ChatsScreen from "./ChatsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -56,7 +56,7 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
   // }, []);
 
   const initialRouteName =
-    state.groupType === "AIChat" ? "allChats" : state.master ? "master" : "all";
+    state.groupType === "AIChat" ? "chats" : state.master ? "master" : "all";
 
   return (
     <Drawer.Navigator
@@ -73,9 +73,9 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
       initialRouteName={initialRouteName}
     >
       <Drawer.Screen
-        name="allChats"
-        component={AllChatsScreen}
-        options={{ title: "Candor - All Chats" }}
+        name="chats"
+        component={ChatsScreen}
+        options={{ title: "Candor - Chats" }}
       />
       <Drawer.Screen
         name="master"
