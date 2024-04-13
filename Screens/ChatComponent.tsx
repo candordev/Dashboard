@@ -127,6 +127,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
 
   const handleSendChat = async () => {
     if (inputText.trim()) {
+      const currentText = inputText;
+      setInputText(""); // Clear the input text immediately
       try {
         const response = await customFetch(Endpoints.sendMessage, {
           method: "POST",
@@ -152,6 +154,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
           console.error("Failed to send the message");
         }
       } catch (error) {
+        setInputText(currentText); // Restore the input text in case of an error
         console.error("Network error while sending message:", error);
       }
     }
@@ -333,15 +336,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
           style={{ flex: 1, borderWidth: 0, }}
           onInputChange={setInputText}
           onSubmit={handleSendChat}
-        />
-        {/* <TextInput
-          multiline
-          style={{ flex: 1, outlineStyle: "none" as any, padding: 10 }}
-          placeholder="Send a text..."
-          placeholderTextColor={colors.gray}
-          onChangeText={setInputText}
           value={inputText}
-        /> */}
+        />
         <TouchableOpacity
           onPress={handleSendChat}
           disabled={!inputText.trim()} // Disable the button when the input is empty
