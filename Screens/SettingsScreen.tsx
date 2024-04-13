@@ -29,7 +29,7 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
   return (
     <>
       <NotificationPopup navigation={navigation} />
-      <OuterView>
+      <OuterView style={{backgroundColor: colors.white}}>
         <GeneralSettings />
         {/* <DepartmentSettings />
         <TagSettings />

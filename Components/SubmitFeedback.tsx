@@ -92,7 +92,7 @@ const SubmitFeedback = () => {
                 fontFamily: "Montserrat",
               }}
             >
-              Description
+              Additional Information
             </Text>
             <TextInput
               style={[styles.textInput]}

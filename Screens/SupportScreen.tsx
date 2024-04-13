@@ -99,7 +99,7 @@ const SupportScreen = ({ navigation }: any) => {
             Need Help or Have Feedback?
           </Text>
           <Text style={additionalStyles.smallText}>
-            Text, call, or fill out the form!
+            Text, call, or fill out the form on the right!
           </Text>
           <View
             style={{
