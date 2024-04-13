@@ -5,7 +5,11 @@ import Popover, { PopoverPlacement } from "react-native-popover-view";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import styles from "../Styles/styles";
 import { Post } from "../utils/interfaces";
+import { useUserContext } from "../Hooks/useUserContext";
 import IssueView from "./IssueView";
+import { Endpoints } from "../utils/Endpoints";
+import { customFetch } from "../utils/utils";
+import { get } from "lodash";
 
 type MapMarkerViewProps = {
   posts: {
@@ -25,13 +29,13 @@ type MarkerData = {
   post: Post;
 };
 
-const defaultProps = {
-  center: {
-    lat: 33.7,
-    lng: -84.4,
-  },
-  zoom: 11,
-};
+// let defaultProps = {
+//   center: {
+//     lat: 33.7,
+//     lng: -84.4,
+//   },
+//   zoom: 11,
+// };
 
 interface MarkerProps {
   issue: Post;
@@ -96,7 +100,14 @@ const Marker = (props: MarkerProps) => {
 
 const MapMarkerView = ({ posts }: MapMarkerViewProps) => {
   const [markers, setMarkers] = useState<MarkerData[]>([]);
-
+  const { state, dispatch } = useUserContext();
+  const [mapSettings, setMapSettings] = useState({
+    center: {
+      lat: 33.7,
+      lng: -84.4,
+    },
+    zoom: 11,
+  });
   useEffect(() => {
     const loadMarkers = async () => {
       const postsArray: Post[] = flattenPosts(posts);
@@ -114,9 +125,44 @@ const MapMarkerView = ({ posts }: MapMarkerViewProps) => {
       setMarkers(markerData);
       // console.log("marker data", markerData);
     };
+    const getMapSettings = async () => {
+      try {
+        const res: Response = await customFetch(
+            Endpoints.getGroupByID +
+              new URLSearchParams({
+                groupID: state.currentGroup
+              }),
+            {
+              method: "GET",
+            }
+          );
+
+        const resJson = await res.json();
+        if (!res.ok) {
+          console.error(resJson.error);
+        } else {
+          console.log("map settings", resJson)
+          if(resJson.mapLocation && resJson.mapLocation.length == 3) {
+            setMapSettings({
+              center: {
+                lat: resJson.mapLocation[0],
+                lng: resJson.mapLocation[1]
+              },
+              zoom: resJson.mapLocation[2]
+            });
+            console.log("map settins set, mapSettings" , mapSettings)
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching map settings:", error);
+      } 
+    }
     // console.log("the posts are ", posts);
     if (posts) loadMarkers();
+    getMapSettings()
   }, [posts]);
+
+  
 
   const getCoordinatesFromAddress = async (post: Post) => {
     const lat: number = +post.lat;
@@ -141,8 +187,8 @@ const MapMarkerView = ({ posts }: MapMarkerViewProps) => {
         bootstrapURLKeys={{
           key: "AIzaSyD-DMOdct5BYGr0zv9UHIZ3Sk9ZWWdJEUY",
         }}
-        defaultCenter={defaultProps.center}
-        defaultZoom={defaultProps.zoom}
+        center={mapSettings.center}
+        zoom={mapSettings.zoom}
         style={{ borderRadius: 10, border: "none" }}
       >
         {markers.map((marker, index) => (
