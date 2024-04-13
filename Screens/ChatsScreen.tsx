@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  TouchableHighlight,
-} from "react-native";
-import colors from "../Styles/colors";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
-import { useUserContext } from "../Hooks/useUserContext";
 import OuterView from "../Components/OuterView";
-import NotificationPopup from "../Components/NotificationPopup";
+import SearchBar from "../Components/SearchBar";
+import { useUserContext } from "../Hooks/useUserContext";
+import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import ChatComponent from "./ChatComponent";
-import Button from "../Components/Button";
-import SearchBar from "../Components/SearchBar";
 
 // Step 1: Define the interface
 interface NumberItem {
@@ -23,7 +15,7 @@ interface NumberItem {
   priority: string;
 }
 
-const AllChatsScreen = ({ navigation }: any) => {
+const ChatsScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
 
   // Step 2: Use the interface to type your state
@@ -48,26 +40,9 @@ const AllChatsScreen = ({ navigation }: any) => {
         }
       );
       setSortedNumbers(sorted);
+      setSelectedPhoneNumber(sorted.length ? sorted[0].number : null);
     }
   }, [state.leaderGroups]);
-
-  async function fetchAIChat(phoneNumber: any) {
-    try {
-      const queryParams = new URLSearchParams({
-        phoneNumber: phoneNumber,
-      });
-      const url = `${Endpoints.getChatForNumber}${queryParams.toString()}`;
-      const response = await customFetch(url, { method: "GET" });
-      const data = await response.json();
-      console.log("DATA: ", data);
-      if (response.ok) {
-      } else {
-        console.error("Error fetching members: ", data.error);
-      }
-    } catch (error) {
-      console.error("Network error while fetching members: ", error);
-    }
-  }
 
   return (
     <>
@@ -76,21 +51,15 @@ const AllChatsScreen = ({ navigation }: any) => {
         style={{
           backgroundColor: colors.white,
           flexDirection: "row",
-          flex: 1,
-          borderRadius: 20,
-          overflow: "visible",
           padding: 0,
         }}
       >
-        {/* Numbers Section */}
-        <View style={{ flex: 1 / 4 }}>
-          {/* Search bar and AntDesign icon in a row */}
+        <View style={{ flex: 1, borderRightWidth: 1, borderColor: colors.lightergray}}>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              marginBottom: 7,
-              marginTop: 7,
+              marginVertical: 7,
             }}
           >
             <SearchBar
@@ -107,7 +76,6 @@ const AllChatsScreen = ({ navigation }: any) => {
                 borderColor: colors.lightestgray,
               }}
             />
-            {/* Icon button, assuming you want it to perform an action */}
             <AntDesignIcon
               name="form" // The name of the icon from AntDesign
               size={24} // Adjust size as needed
@@ -154,11 +122,7 @@ const AllChatsScreen = ({ navigation }: any) => {
           />
         </View>
 
-        <View
-          style={{ width: 1, backgroundColor: colors.lightgray, opacity: 0.5 }}
-        />
-
-        <View style={{ flex: 3 / 4, padding: 20 }}>
+        <View style={{ flex: 3, padding: 20 }}>
           {selectedPhoneNumber ? (
             <ChatComponent phoneNumber={selectedPhoneNumber} />
           ) : null}
@@ -168,4 +132,4 @@ const AllChatsScreen = ({ navigation }: any) => {
   );
 };
 
-export default AllChatsScreen;
+export default ChatsScreen;

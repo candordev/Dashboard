@@ -1,37 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput } from "react-native";
 import colors from "../Styles/colors";
 import { debounce } from "lodash";
 import styles from "../Styles/styles";
 
-
 interface ExpandableTextInputProps {
   onInputChange: (text: string) => void;
   onSubmit: () => void;
+  style: any;
+  value: string;
 }
 
 function ExpandableTextInput(props: ExpandableTextInputProps): JSX.Element {
-  const [height, setHeight] = useState(40);
+  const inputRef = React.createRef<TextInput>();
 
+  useEffect(() => {
+    if (!props.value) {
+      resetHeight(inputRef.current);
+    }
+  }, [props.value]);
 
-  const updateFirstInputHeight = debounce((height) => {
-    setHeight(height);
-  }, 1); // Adjust the debounce time as needed
+  const _handleChange = (e: any) => {
+    if (e) {
+      e.target.style.height = 0;
+      e.target.style.height = `${e.target.scrollHeight}px`;
+    }
+  };
 
-
-
+  const resetHeight = (e: any) => {
+    if (e) {
+      e.style.height = 0;
+      e.style.height = `${e.scrollHeight}px`;
+    }
+  };
 
   return (
     <TextInput
-      style={[styles.textInput, { height: Math.max(40, height) }]}
+      ref={inputRef}
+      style={[styles.textInput, props.style]}
       placeholder="Add a comment..."
       placeholderTextColor={colors.gray}
       multiline={true}
-      onContentSizeChange={(event) => {
-        updateFirstInputHeight(event.nativeEvent.contentSize.height);
-      }}
       onChangeText={props.onInputChange}
+      blurOnSubmit={true}
       onSubmitEditing={props.onSubmit}
+      onChange={_handleChange}
+      value={props.value}
     />
   );
 }

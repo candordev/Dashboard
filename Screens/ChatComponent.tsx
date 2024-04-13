@@ -15,6 +15,7 @@ import { customFetch } from "../utils/utils";
 import Icon from "react-native-vector-icons/FontAwesome";
 import styles from "../Styles/styles";
 import Button from "../Components/Button";
+import ExpandableTextInput from "../Components/ExpandableTextInput";
 
 interface ChatComponentProps {
   phoneNumber: string; // Assuming phoneNumber is a string
@@ -126,6 +127,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
 
   const handleSendChat = async () => {
     if (inputText.trim()) {
+      const currentText = inputText;
+      setInputText(""); // Clear the input text immediately
       try {
         const response = await customFetch(Endpoints.sendMessage, {
           method: "POST",
@@ -151,6 +154,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
           console.error("Failed to send the message");
         }
       } catch (error) {
+        setInputText(currentText); // Restore the input text in case of an error
         console.error("Network error while sending message:", error);
       }
     }
@@ -195,45 +199,52 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
     }
   }, [page, phoneNumber]); // Runs after `page` is updated, and also accounts for phoneNumber changes
 
-  const renderMessage = ({ item }: { item: MessageItem }) => (
-    <View
-      style={{
-        alignSelf: item.author === "Leader" ? "flex-end" : "flex-start",
-        marginBottom: 10,
-      }}
-    >
-      <Text
-        style={{
-          color: colors.purple,
-          fontSize: 14, // Slightly larger font size
-          fontFamily: "Montserrat", // Set the fontFamily to Montserrat
-          alignSelf: item.author === "Leader" ? "flex-end" : "flex-start",
-          fontWeight: "500",
-        }}
-      >
-        {item.author}
-      </Text>
+  const renderMessage = ({ item }: { item: MessageItem }) => {
+    const rightMessage = item.author === "Leader" || item.author === "AI";
+
+    return (
       <View
         style={{
-          backgroundColor:
-            item.author === "Leader" ? colors.purple : colors.lightergray,
-          borderRadius: 20,
-          padding: 10,
-          marginTop: 2,
+          alignSelf: rightMessage ? "flex-end" : "flex-start",
+          marginBottom: 10,
+          marginRight: rightMessage ? 0 : 100,
+          marginLeft: rightMessage ? 100 : 0,
         }}
       >
         <Text
           style={{
-            color: item.author == "Leader" ? colors.white : colors.black,
+            color: colors.purple,
+            fontSize: 14, // Slightly larger font size
+            fontFamily: "Montserrat", // Set the fontFamily to Montserrat
+            alignSelf: rightMessage ? "flex-end" : "flex-start",
             fontWeight: "500",
-            fontFamily: "Montserrat",
+            marginHorizontal: 5,
           }}
         >
-          {item.content}
+          {item.author}
         </Text>
+        <View
+          style={{
+            backgroundColor: rightMessage ? colors.purple : colors.lightergray,
+            borderRadius: 20,
+            padding: 10,
+            paddingHorizontal: 12.5,
+            marginTop: 3,
+          }}
+        >
+          <Text
+            style={{
+              color: rightMessage ? colors.white : colors.black,
+              fontWeight: "500",
+              fontFamily: "Montserrat",
+            }}
+          >
+            {item.content}
+          </Text>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   const handleOnEndReached = () => {
     console.log("End reached - should load more");
@@ -302,38 +313,29 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
         keyExtractor={(item) => item._id}
         ListFooterComponent={
           loading ? (
-            <ActivityIndicator size="large" color={colors.purple} />
+            <View style={{ paddingVertical: 10 }}>
+              <ActivityIndicator size="small" color={colors.purple} />
+            </View>
           ) : null
         }
       />
 
       <View
-        style={{
-          flexDirection: "row",
-          padding: 3,
-          alignItems: "center",
-          borderRadius: 20,
-          borderColor: colors.lightgray,
-          borderWidth: 1,
-        }}
+        style={[
+          styles.textInput,
+          {
+            flexDirection: "row",
+            alignItems: "center",
+            borderRadius: 20,
+            borderColor: colors.lightergray,
+            borderWidth: 1,
+          },
+        ]}
       >
-        <TextInput
-          multiline
-          style={[
-            styles.textInput,
-            {
-              borderColor: "transparent",
-              flex: 1,
-              paddingHorizontal: 4,
-              paddingVertical: 4,
-              marginTop: 10,
-              marginLeft: 5,
-            },
-          ]}
-          placeholder="Send a text..."
-          placeholderTextColor={colors.gray}
-          onChangeText={setInputText}
-          selectionColor={colors.lightgray} // Set to a color that fits your design
+        <ExpandableTextInput
+          style={{ flex: 1, borderWidth: 0, }}
+          onInputChange={setInputText}
+          onSubmit={handleSendChat}
           value={inputText}
         />
         <TouchableOpacity
@@ -343,7 +345,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
           <Icon
             name="paper-plane"
             size={20}
-            style={{ margin: 5 }}
+            style={{ marginRight: 5 }}
             color={inputText.trim() ? colors.purple : colors.lightgray}
           />
         </TouchableOpacity>

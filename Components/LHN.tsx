@@ -120,8 +120,8 @@ const LHN = (props: LHNProps) => {
         ></View>
         {state.groupType === "AIChat" && (
           <NavItem
-            name={"All Chats"}
-            route="/allChats"
+            name={"Chats"}
+            route="/chats"
             icon="message-circle"
             selected={navIndex === 0}
           />
