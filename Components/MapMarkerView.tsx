@@ -29,14 +29,6 @@ type MarkerData = {
   post: Post;
 };
 
-// let defaultProps = {
-//   center: {
-//     lat: 33.7,
-//     lng: -84.4,
-//   },
-//   zoom: 11,
-// };
-
 interface MarkerProps {
   issue: Post;
   onPopoverCloseComplete: () => void; // Add this line
