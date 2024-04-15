@@ -119,12 +119,20 @@ const LHN = (props: LHNProps) => {
           }}
         ></View>
         {state.groupType === "AIChat" && (
+          <>
           <NavItem
             name={"Chats"}
             route="/chats"
             icon="message-circle"
             selected={navIndex === 0}
           />
+          <NavItem
+          name={"Train Chat"}
+          route="/trainChat"
+          icon="message-circle"
+          selected={navIndex === 1}
+          />
+        </>
         )}
         {state.master ? (
           <>
@@ -132,7 +140,7 @@ const LHN = (props: LHNProps) => {
               name={"Master"}
               route="/master"
               icon="list"
-              selected={navIndex === 1}
+              selected={navIndex === 2}
             />
             <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
               <ScrollView>
@@ -180,7 +188,7 @@ const LHN = (props: LHNProps) => {
             name={"Issues"}
             route="/all"
             icon="list"
-            selected={navIndex === 2}
+            selected={navIndex === 3}
           />
         )}
         {state.groupType !== "AIChat" && (
@@ -189,21 +197,21 @@ const LHN = (props: LHNProps) => {
             route="/inbox"
             icon="inbox"
             unreadCount={unread}
-            selected={navIndex === 3}
+            selected={navIndex === 4}
           />
         )}
         <NavItem
           name={"Settings"}
           route="/settings"
           icon="settings"
-          selected={navIndex === 4}
+          selected={navIndex === 5}
         />
         {state.groupType !== "AIChat" && (
           <NavItem
             name={"Group Settings"}
             route="/groupSettings"
             icon="user"
-            selected={navIndex === 5}
+            selected={navIndex === 6}
           />
         )}
 
@@ -211,7 +219,7 @@ const LHN = (props: LHNProps) => {
           name="24/7 Support"
           route="/support"
           icon="check-circle"
-          selected={navIndex === 6}
+          selected={navIndex === 7}
         />
         <View style={{ flex: 1 }} />
         <NavItem

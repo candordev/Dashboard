@@ -46,7 +46,6 @@ const ChatsScreen = ({ navigation }: any) => {
 
   return (
     <>
-      {/* NotificationPopup and the rest of your component... */}
       <OuterView
         style={{
           backgroundColor: colors.white,
@@ -95,8 +94,6 @@ const ChatsScreen = ({ navigation }: any) => {
               <TouchableOpacity
                 onPress={() => setSelectedPhoneNumber(item.number)}
                 style={{
-                  //marginBottom: 10,
-                  // Change the background color if the item is selected
                   backgroundColor:
                     item.number === selectedPhoneNumber
                       ? colors.lightergray
@@ -105,7 +102,6 @@ const ChatsScreen = ({ navigation }: any) => {
                   paddingLeft: 15,
                   borderBottomColor: colors.lightergray,
                   borderBottomWidth: 1,
-                  //alignSelf: 'stretch',
                 }}
               >
                 <Text

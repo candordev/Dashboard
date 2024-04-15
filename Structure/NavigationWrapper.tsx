@@ -88,6 +88,7 @@ function NavigationWrapper() {
         login: "login",
         groupSettings: "groupSettings",
         chats: "chats",
+        trainChat: "trainChat",
         master: "master",
         NotFound: "404",
       },
