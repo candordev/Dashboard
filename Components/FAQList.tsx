@@ -189,17 +189,26 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
             />
           </>
         ) : (
-          <View style={additionalStyles.infoContainer}>
+          <View style={{ flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            paddingLeft: 10, }}>
             <TouchableOpacity onPress={() => {}}>
-              <Text style={additionalStyles.documentTitle}>{item.question}</Text>
-              <Text style={additionalStyles.documentDescription}>{item.answer}</Text>
+              <Text style={{    fontFamily: "Montserrat", fontSize: 16}}>{item.question}</Text>
+              <Text style={{    fontFamily: "Montserrat", fontSize: 14,color: "#666"}}>{item.answer}</Text>
             </TouchableOpacity>
           </View>
         )}
         {!isEditing && (
-          <View style={additionalStyles.actionContainer}>
+          <View style={{    
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            paddingHorizontal: 5,
+            paddingLeft: 10, 
+          }}>
             <TouchableOpacity onPress={() => startEditing(item)}>
-              <Text style={additionalStyles.editText}>Edit</Text>
+              <Text style={{color: colors.purple, fontFamily: "Montserrat", marginRight: 10}}>Edit</Text>
             </TouchableOpacity>
             {/* <Icon name="delete" size={24} color={colors.red} onPress={() => handleDeleteDocument(item._id)} /> */}
             <TouchableOpacity onPress={() => handleDeleteFAQ(item._id)}>
@@ -228,7 +237,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
       />
-      <View style={additionalStyles.addDocumentContainer}>
+      <View style={{padding: 10,borderTopWidth: 1, borderTopColor: "#e1e1e1",}}>
         <TextInput
           style={additionalStyles.input}
           value={newQuestion}
@@ -246,7 +255,11 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
           onPress={handleAddDocument}
           disabled={isUploading}
         >
-          <Text style={additionalStyles.addButtonLabel}>
+          <Text style={{
+                fontFamily: "Montserrat",
+                fontSize: 15,
+                color: "white",
+          }}>
             {isUploading ? "Adding FAQ..." : "Add FAQ"}
           </Text>
         </TouchableOpacity>
@@ -256,60 +269,6 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
 };
 
 const additionalStyles = StyleSheet.create({
-  infoContainer: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingLeft: 10, // Space after the document icon
-  },
-  container: {
-    flex: 1,
-    margin: 10,
-    borderRadius: 30,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-      },
-      web: {
-        // Example values for boxShadow
-        boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)", // offsetX offsetY blurRadius color
-      },
-    }),
-  },
-  scrollContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  selectedFileName: {
-    fontFamily: "Montserrat",
-    fontSize: 15,
-    marginLeft: 8,
-  },
-  actionContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    paddingHorizontal: 5,
-    paddingLeft: 10, // Consistent spacing from the info
-  },
-  documentIcon: {
-    marginRight: 10, // Ensure some space between the icon and the text
-  },
-  title: {
-    alignSelf: "flex-start",
-    fontWeight: "600",
-    fontSize: 27,
-    fontFamily: "Montserrat",
-    margin: 5,
-  },
   addButton: {
     backgroundColor: colors.purple,
     alignItems: "center",
@@ -317,11 +276,6 @@ const additionalStyles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
     paddingVertical: 12,
-  },
-  addButtonLabel: {
-    fontFamily: "Montserrat",
-    fontSize: 15,
-    color: "white",
   },
   itemContainer: {
     flexDirection: "row",
@@ -331,32 +285,6 @@ const additionalStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#e1e1e1",
   },
-  uploadButtonContainer: {
-    flexDirection: "row",
-    paddingVertical: 8,
-    alignItems: "center",
-  },
-  uploadButton: {
-    flexDirection: "row",
-  },
-  uploadButtonText: {
-    fontFamily: "Montserrat",
-    fontSize: 15,
-    marginRight: 2,
-  },
-  documentTitle: {
-    fontFamily: "Montserrat",
-    fontSize: 16,
-  },
-  documentDescription: {
-    fontFamily: "Montserrat",
-    fontSize: 14,
-    color: "#666",
-  },
-  iconsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   input: {
     fontFamily: "Montserrat",
     borderWidth: 1,
@@ -364,30 +292,6 @@ const additionalStyles = StyleSheet.create({
     padding: 8,
     marginVertical: 4,
     outlineStyle: "none",
-  },
-  buttonText: {
-    fontFamily: "Montserrat",
-    color: colors.white,
-  },
-  editModal: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    right: "50%",
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 5,
-    elevation: 5,
-  },
-  editText: {
-    color: colors.purple,
-    fontFamily: "Montserrat",
-    marginRight: 10, // Adjust this value as needed to space items
-  },
-  addDocumentContainer: {
-    padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#e1e1e1",
   },
 });
 

@@ -9,26 +9,30 @@ import { useUserContext } from '../Hooks/useUserContext';
 
 const TrainChatScreen = ({ navigation }: any) => {
 
-  const { state } = useUserContext();
-
-  const groupID = state.leaderGroups[0]._id;
-
-  return (
-    <>
-      <NotificationPopup navigation={navigation} />
-      <OuterView style={{
-        backgroundColor: colors.white,
-        flexDirection: 'row',
-        flex: 1,
-        borderRadius: 20,
-        overflow: 'visible',
-      }}>
-
-          <DocumentList groupID={groupID} />
-          <FAQList groupID={groupID} />
-      </OuterView>
-    </>
-  );
+    const { state } = useUserContext();
+    const groupID = state.leaderGroups[0]._id;
+  
+    return (
+      <>
+        <NotificationPopup navigation={navigation} />
+        <OuterView style={{
+          backgroundColor: colors.white,
+          flexDirection: 'row',  // Ensures horizontal layout
+          flex: 1,
+          borderRadius: 20,
+          overflow: 'visible',
+        }}>
+            <View style={{ flex: 1 }}>  
+              <DocumentList groupID={groupID} />
+            </View>
+            <View style={{ flex: 1 }}> 
+              <FAQList groupID={groupID} />
+            </View>
+        </OuterView>
+      </>
+    );
 };
 
+  
+  
 export default TrainChatScreen;

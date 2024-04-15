@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
+    flex: 1
   },
 });
 
