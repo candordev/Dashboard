@@ -28,17 +28,15 @@ type FAQ = {
 
 const FAQList = ({ groupID }: MemberManagementProps) => {
   const [FAQs, setFAQs] = useState<FAQ[]>([]);
-  const [editingFAQId, setEditingFAQId] = useState<string | null>(
-    null
-  );
+  const [editingFAQId, setEditingFAQId] = useState<string | null>(null);
   const [questionEdit, setQuestionEdit] = useState<string>("");
   const [answerEdit, setAnswerEdit] = useState<string>("");
   const [newAnswer, setNewAnswer] = useState("");
   const [newQuestion, setNewQuestion] = useState("");
-  const [isUploading, setIsUploading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    const fetchFAQs= async () => {
+    const fetchFAQs = async () => {
       try {
         const endpoint = `${Endpoints.getFAQs}groupID=${groupID}`; // FIX THIS
         const res = await customFetch(endpoint, { method: "GET" });
@@ -48,8 +46,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         console.log(resJson);
 
         setFAQs(resJson);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     fetchFAQs();
@@ -79,12 +76,12 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         const resJson = await response.json();
         console.error("Error with adding Pinned Document:", resJson.error);
       } else {
-         console.log("emailed akshatpant@ufl.edu the csv")
+        console.log("emailed akshatpant@ufl.edu the csv");
       }
 
       // Assuming the response includes the newly added document
       const addedFAQ = await response.json();
-      console.log("added FAQ", addedFAQ)
+      console.log("added FAQ", addedFAQ);
       setFAQs((currentFAQs) => [...currentFAQs, addedFAQ]);
 
       // Reset for the next upload
@@ -165,20 +162,29 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
     setAnswerEdit(item.answer); // Set initial value to item's current description
   };
 
-  const renderItem = ({ item }: { item: FAQ}) => {
+  const renderItem = ({ item }: { item: FAQ }) => {
     const isEditing = editingFAQId === item._id;
 
     return (
-      <View style={additionalStyles.itemContainer}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingVertical: 10,
+          borderBottomWidth: 1,
+          borderColor: "#e1e1e1",
+        }}
+      >
         {isEditing ? (
           <>
             <TextInput
-              style={additionalStyles.input}
+              style={[styles.textInput, { fontFamily: "Montserrat" }]}
               value={questionEdit}
               onChangeText={(text) => setQuestionEdit(text)}
             />
             <TextInput
-              style={additionalStyles.input}
+              style={[styles.textInput, { fontFamily: "Montserrat" }]}
               value={answerEdit}
               onChangeText={(text) => setAnswerEdit(text)}
             />
@@ -189,26 +195,50 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
             />
           </>
         ) : (
-          <View style={{ flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            paddingLeft: 10, }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "center",
+              paddingLeft: 10,
+            }}
+          >
             <TouchableOpacity onPress={() => {}}>
-              <Text style={{    fontFamily: "Montserrat", fontSize: 16}}>{item.question}</Text>
-              <Text style={{    fontFamily: "Montserrat", fontSize: 14,color: "#666"}}>{item.answer}</Text>
+              <Text style={{ fontFamily: "Montserrat", fontSize: 16 }}>
+                {item.question}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "Montserrat",
+                  fontSize: 14,
+                  color: "#666",
+                }}
+              >
+                {item.answer}
+              </Text>
             </TouchableOpacity>
           </View>
         )}
         {!isEditing && (
-          <View style={{    
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            paddingHorizontal: 5,
-            paddingLeft: 10, 
-          }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              paddingHorizontal: 5,
+              paddingLeft: 10,
+            }}
+          >
             <TouchableOpacity onPress={() => startEditing(item)}>
-              <Text style={{color: colors.purple, fontFamily: "Montserrat", marginRight: 10}}>Edit</Text>
+              <Text
+                style={{
+                  color: colors.purple,
+                  fontFamily: "Montserrat",
+                  marginRight: 10,
+                }}
+              >
+                Edit
+              </Text>
             </TouchableOpacity>
             {/* <Icon name="delete" size={24} color={colors.red} onPress={() => handleDeleteDocument(item._id)} /> */}
             <TouchableOpacity onPress={() => handleDeleteFAQ(item._id)}>
@@ -230,36 +260,49 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
           fontFamily: "Montserrat",
         }}
       >
-        Manage Residential FAQ
+        Manage FAQs
       </Text>
       <FlatList
         data={FAQs}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
       />
-      <View style={{padding: 10,borderTopWidth: 1, borderTopColor: "#e1e1e1",}}>
+      <View
+        style={{ padding: 10, borderTopWidth: 1, borderTopColor: "#e1e1e1" }}
+      >
         <TextInput
-          style={additionalStyles.input}
+          style={[styles.textInput, { fontFamily: "Montserrat", marginBottom: 10, }]}
           value={newQuestion}
           onChangeText={setNewQuestion}
           placeholder="New FAQ Question"
+          placeholderTextColor={colors.gray}
         />
         <TextInput
-          style={additionalStyles.input}
+          style={[styles.textInput, { fontFamily: "Montserrat" }]}
           value={newAnswer}
           onChangeText={setNewAnswer}
           placeholder="New FAQ Answer"
+          placeholderTextColor={colors.gray}
         />
         <TouchableOpacity
-          style={additionalStyles.addButton}
+          style={{
+            backgroundColor: colors.purple,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 5,
+            marginTop: 10,
+            paddingVertical: 12,
+          }}
           onPress={handleAddDocument}
           disabled={isUploading}
         >
-          <Text style={{
-                fontFamily: "Montserrat",
-                fontSize: 15,
-                color: "white",
-          }}>
+          <Text
+            style={{
+              fontFamily: "Montserrat",
+              fontSize: 15,
+              color: "white",
+            }}
+          >
             {isUploading ? "Adding FAQ..." : "Add FAQ"}
           </Text>
         </TouchableOpacity>
@@ -267,32 +310,5 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
     </View>
   );
 };
-
-const additionalStyles = StyleSheet.create({
-  addButton: {
-    backgroundColor: colors.purple,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 5,
-    marginTop: 10,
-    paddingVertical: 12,
-  },
-  itemContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: "#e1e1e1",
-  },
-  input: {
-    fontFamily: "Montserrat",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 8,
-    marginVertical: 4,
-    outlineStyle: "none",
-  },
-});
 
 export default FAQList;

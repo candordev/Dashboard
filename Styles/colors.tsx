@@ -3,7 +3,7 @@ export default {
     darkGray: '#444',
     mediumgray: '#aaa',
     lightgray: '#bbb',
-    lightergray: '#eaeaea', //for borders
+    lightergray: '#ddd', //for borders
     lightestgray: '#f2f2f2',
     black: '#333',
     // white: 'snow',

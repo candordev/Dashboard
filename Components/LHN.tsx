@@ -127,9 +127,9 @@ const LHN = (props: LHNProps) => {
             selected={navIndex === 0}
           />
           <NavItem
-          name={"Train Chat"}
+          name={"Train"}
           route="/trainChat"
-          icon="message-circle"
+          icon="activity"
           selected={navIndex === 1}
           />
         </>
