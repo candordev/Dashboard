@@ -44,7 +44,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
 
         if (!res.ok) throw new Error(resJson.error);
         console.log(resJson);
-
+        console.log("FAQs", resJson);
         setFAQs(resJson);
       } catch (error) {}
     };
@@ -98,7 +98,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
     try {
       // Prepare the data for the request
       const bodyData = {
-        FAQid: faqId,
+        faqID: faqId,
         groupID: groupID,
         // Include other necessary fieldsx
       };
@@ -124,10 +124,10 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
     try {
       // Prepare the data for the request
       const bodyData = {
-        FAQid: FAQ._id,
+        faqID: FAQ._id,
         groupID: groupID,
-        question: questionEdit,
-        answer: answerEdit,
+        newQuestion: questionEdit,
+        newAnswer: answerEdit,
         // Include other necessary fieldsx
       };
 
