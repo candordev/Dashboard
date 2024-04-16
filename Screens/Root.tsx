@@ -12,6 +12,7 @@ import MasterScreen from "./MasterScreen"; // Adjust the import path as necessar
 import { useUserContext } from "../Hooks/useUserContext";
 import SupportScreen from "./SupportScreen";
 import ChatsScreen from "./ChatsScreen";
+import TrainChatScreen from "./TrainChat";
 
 const Drawer = createDrawerNavigator();
 
@@ -55,8 +56,10 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
   //   }
   // }, []);
 
-  const initialRouteName =
-    state.groupType === "AIChat" ? "chats" : state.master ? "master" : "all";
+  // const initialRouteName =
+  //   state.groupType === "AIChat" ? "chats" : state.master ? "master" : "all";
+
+    const initialRouteName = "trainChat";
 
   return (
     <Drawer.Navigator
@@ -76,6 +79,11 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
         name="chats"
         component={ChatsScreen}
         options={{ title: "Candor - Chats" }}
+      />
+      <Drawer.Screen
+        name="trainChat"
+        component={TrainChatScreen}
+        options={{ title: "Candor - Train Chat" }}
       />
       <Drawer.Screen
         name="master"

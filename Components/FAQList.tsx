@@ -11,11 +11,7 @@ import {
 } from "react-native";
 import { customFetch } from "../utils/utils"; // Update the import path as needed
 import { Endpoints } from "../utils/Endpoints"; // Update the import path as needed
-// import { useErrorModalContext } from '../Hooks/useErrorModalContext'; // Update the import path as needed
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Make sure to install this package
 import colors from "../Styles/colors";
-import { Linking } from "react-native"; // At the top with other imports
-import { error } from "console";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import styles from "../Styles/styles";
 
@@ -23,72 +19,51 @@ type MemberManagementProps = {
   groupID: string;
 };
 
-type Document = {
-  description: string;
-  _id: string;
-  name: string;
-  link: string; // Ensure this exists and points to your document's location
+type FAQ = {
+  question: string;
+  _id: string; // this ID will be the id of the document in the database igg??
+  answer: string;
   // Include other properties that your documents have
 };
 
-const DocumentList = ({ groupID }: MemberManagementProps) => {
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [editingDocumentId, setEditingDocumentId] = useState<string | null>(
-    null
-  );
-  const [nameEdit, setNameEdit] = useState<string>("");
-  const [descriptionEdit, setDescriptionEdit] = useState<string>("");
-  const fileInputRef = useRef(null);
-  const [newTitle, setNewTitle] = useState("");
-  const [newDescription, setNewDescription] = useState("");
+const FAQList = ({ groupID }: MemberManagementProps) => {
+  const [FAQs, setFAQs] = useState<FAQ[]>([]);
+  const [editingFAQId, setEditingFAQId] = useState<string | null>(null);
+  const [questionEdit, setQuestionEdit] = useState<string>("");
+  const [answerEdit, setAnswerEdit] = useState<string>("");
+  const [newAnswer, setNewAnswer] = useState("");
+  const [newQuestion, setNewQuestion] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
-  // const { errorModalDispatch } = useErrorModalContext();
-
   useEffect(() => {
-    const fetchDocuments = async () => {
+    const fetchFAQs = async () => {
       try {
-        const endpoint = `${Endpoints.getPinnedDocuments}groupID=${groupID}`; // FIX THIS
+        const endpoint = `${Endpoints.getFAQs}groupID=${groupID}`; // FIX THIS
         const res = await customFetch(endpoint, { method: "GET" });
         const resJson = await res.json();
 
         if (!res.ok) throw new Error(resJson.error);
         console.log(resJson);
 
-        setDocuments(resJson);
-      } catch (error) {
-        // errorModalDispatch({
-        //     type: 'OPEN_MODAL',
-        //     payload: {
-        //         title: 'Unable to get documents',
-        //         content: error.message,
-        //     },
-        // });
-      }
+        setFAQs(resJson);
+      } catch (error) {}
     };
 
-    fetchDocuments();
+    fetchFAQs();
   }, [groupID]);
 
   const handleAddDocument = async () => {
     setIsUploading(true);
 
-    if (!selectedFile) {
-      console.error("No file selected");
-      setIsUploading(false);
-      return;
-    }
-
     const formData = new FormData();
-    formData.append("file", selectedFile); // Use the stored file
-    formData.append("name", newTitle);
-    formData.append("description", newDescription);
+    formData.append("question", newQuestion);
+    formData.append("answer", newAnswer);
     formData.append("groupID", groupID);
     // Add other fields your endpoint might require
 
     try {
       const response = await customFetch(
-        Endpoints.addPinnedDocument,
+        Endpoints.addFAQ,
         {
           method: "POST",
           body: formData,
@@ -101,17 +76,17 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
         const resJson = await response.json();
         console.error("Error with adding Pinned Document:", resJson.error);
       } else {
-        // console.log("emailed akshatpant@ufl.edu the csv")
+        console.log("emailed akshatpant@ufl.edu the csv");
       }
 
       // Assuming the response includes the newly added document
-      const addedDocument = await response.json();
-      setDocuments((currentDocuments) => [...currentDocuments, addedDocument]);
+      const addedFAQ = await response.json();
+      console.log("added FAQ", addedFAQ);
+      setFAQs((currentFAQs) => [...currentFAQs, addedFAQ]);
 
       // Reset for the next upload
-      setNewTitle("");
-      setNewDescription("");
-      setSelectedFile(null); // Reset selected file
+      setNewQuestion("");
+      setNewAnswer("");
     } catch (error) {
       console.error(error);
     } finally {
@@ -119,17 +94,17 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
     }
   };
 
-  const handleDeleteDocument = async (docId: string) => {
+  const handleDeleteFAQ = async (faqId: string) => {
     try {
       // Prepare the data for the request
       const bodyData = {
-        documentID: docId,
+        FAQid: faqId,
         groupID: groupID,
         // Include other necessary fieldsx
       };
 
       // Make the API call
-      const response = await customFetch(`${Endpoints.deletePinnedDocument}`, {
+      const response = await customFetch(`${Endpoints.deleteFAQ}`, {
         method: "DELETE",
         body: JSON.stringify(bodyData),
       });
@@ -138,40 +113,40 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
         throw new Error("Failed to update the document: ");
       }
       // If the update is successful, update the documents state
-      setDocuments((docs) => docs.filter((d) => d._id != docId));
+      setFAQs((docs) => docs.filter((d) => d._id != faqId));
     } catch (error) {
       console.error("Failed to edit document:", error);
       // Handle errors, e.g., by setting an error state or showing a message
     }
     // Use the DELETE /api/group/deletePinnedDocument route
   };
-  const handleEditDocument = async (doc: Document) => {
+  const handleEditDocument = async (FAQ: FAQ) => {
     try {
       // Prepare the data for the request
       const bodyData = {
-        documentID: doc._id,
+        FAQid: FAQ._id,
         groupID: groupID,
-        name: nameEdit,
-        description: descriptionEdit,
+        question: questionEdit,
+        answer: answerEdit,
         // Include other necessary fieldsx
       };
 
       // Make the API call
-      const response = await customFetch(`${Endpoints.editPinnedDocument}`, {
+      const response = await customFetch(`${Endpoints.editFAQ}`, {
         method: "POST",
         body: JSON.stringify(bodyData),
       });
 
-      doc.name = nameEdit;
-      doc.description = descriptionEdit;
+      FAQ.question = questionEdit;
+      FAQ.answer = answerEdit;
 
       if (!response.ok) {
         throw new Error("Failed to update the document: ");
       }
 
-      setEditingDocumentId(null);
+      setEditingFAQId(null);
       // If the update is successful, update the documents state
-      setDocuments((docs) => docs.map((d) => (d._id === doc._id ? doc : d)));
+      setFAQs((docs) => docs.map((d) => (d._id === FAQ._id ? FAQ : d)));
     } catch (error) {
       console.error("Failed to edit document:", error);
       // Handle errors, e.g., by setting an error state or showing a message
@@ -182,13 +157,13 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
 
   // Function to initiate editing
   const startEditing = (item: any) => {
-    setEditingDocumentId(item._id);
-    setNameEdit(item.name); // Set initial value to item's current name
-    setDescriptionEdit(item.description); // Set initial value to item's current description
+    setEditingFAQId(item._id);
+    setQuestionEdit(item.question); // Set initial value to item's current name
+    setAnswerEdit(item.answer); // Set initial value to item's current description
   };
 
-  const renderItem = ({ item }: { item: Document }) => {
-    const isEditing = editingDocumentId === item._id;
+  const renderItem = ({ item }: { item: FAQ }) => {
+    const isEditing = editingFAQId === item._id;
 
     return (
       <View
@@ -201,24 +176,17 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
           borderColor: "#e1e1e1",
         }}
       >
-        <Icon
-          name="file-document-outline"
-          size={24}
-          color={colors.purple}
-          onPress={() => Linking.openURL(item.link)}
-          style={{ marginRight: 10 }}
-        />
         {isEditing ? (
           <>
             <TextInput
               style={[styles.textInput, { fontFamily: "Montserrat" }]}
-              value={nameEdit}
-              onChangeText={(text) => setNameEdit(text)}
+              value={questionEdit}
+              onChangeText={(text) => setQuestionEdit(text)}
             />
             <TextInput
               style={[styles.textInput, { fontFamily: "Montserrat" }]}
-              value={descriptionEdit}
-              onChangeText={(text) => setDescriptionEdit(text)}
+              value={answerEdit}
+              onChangeText={(text) => setAnswerEdit(text)}
             />
             <Button
               title="Done"
@@ -237,7 +205,7 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
           >
             <TouchableOpacity onPress={() => {}}>
               <Text style={{ fontFamily: "Montserrat", fontSize: 16 }}>
-                {item.name}
+                {item.question}
               </Text>
               <Text
                 style={{
@@ -246,7 +214,7 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
                   color: "#666",
                 }}
               >
-                {item.description}
+                {item.answer}
               </Text>
             </TouchableOpacity>
           </View>
@@ -273,30 +241,13 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
               </Text>
             </TouchableOpacity>
             {/* <Icon name="delete" size={24} color={colors.red} onPress={() => handleDeleteDocument(item._id)} /> */}
-            <TouchableOpacity onPress={() => handleDeleteDocument(item._id)}>
+            <TouchableOpacity onPress={() => handleDeleteFAQ(item._id)}>
               <FeatherIcon name="trash" size={15} color={colors.red} />
             </TouchableOpacity>
           </View>
         )}
       </View>
     );
-  };
-
-  const handleFileSelection = () => {
-    (fileInputRef.current as any)?.click();
-  };
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      setSelectedFile(file); // Save the file to state
-      //await uploadDocument(file);
-      // Proceed with your logic to handle the file
-    }
   };
 
   return (
@@ -309,10 +260,10 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
           fontFamily: "Montserrat",
         }}
       >
-        Manage Documents
+        Manage FAQs
       </Text>
       <FlatList
-        data={documents}
+        data={FAQs}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
       />
@@ -320,71 +271,39 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
         style={{ padding: 10, borderTopWidth: 1, borderTopColor: "#e1e1e1" }}
       >
         <TextInput
-          style={[
-            styles.textInput,
-            { marginBottom: 10, fontFamily: "Montserrat" },
-          ]}
-          value={newTitle}
-          onChangeText={setNewTitle}
-          placeholder="New Document Title"
+          style={[styles.textInput, { fontFamily: "Montserrat", marginBottom: 10, }]}
+          value={newQuestion}
+          onChangeText={setNewQuestion}
+          placeholder="New FAQ Question"
           placeholderTextColor={colors.gray}
         />
         <TextInput
           style={[styles.textInput, { fontFamily: "Montserrat" }]}
-          value={newDescription}
-          onChangeText={setNewDescription}
-          placeholder="New Document Description"
+          value={newAnswer}
+          onChangeText={setNewAnswer}
+          placeholder="New FAQ Answer"
           placeholderTextColor={colors.gray}
         />
-        <input
-          ref={fileInputRef}
-          type="file"
-          hidden
-          //accept="application/pdf"
-          onChange={handleFileChange}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            paddingVertical: 8,
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={{ flexDirection: "row" }}
-            onPress={handleFileSelection}
-          >
-            <Text
-              style={{ fontFamily: "Montserrat", fontSize: 15, marginLeft: 5 }}
-            >
-              Upload File
-            </Text>
-            <Icon name="paperclip" size={22} color={colors.purple} />
-          </TouchableOpacity>
-          {selectedFile && (
-            <Text
-              style={{ fontFamily: "Montserrat", fontSize: 15, marginLeft: 10 }}
-            >
-              {selectedFile.name}
-            </Text>
-          )}
-        </View>
-
         <TouchableOpacity
           style={{
             backgroundColor: colors.purple,
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 5,
+            marginTop: 10,
             paddingVertical: 12,
           }}
           onPress={handleAddDocument}
           disabled={isUploading}
         >
           <Text
-            style={{ fontFamily: "Montserrat", fontSize: 15, color: "white" }}
+            style={{
+              fontFamily: "Montserrat",
+              fontSize: 15,
+              color: "white",
+            }}
           >
-            {isUploading ? "Uploading..." : "Add Document"}
+            {isUploading ? "Adding FAQ..." : "Add FAQ"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -392,4 +311,4 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
   );
 };
 
-export default DocumentList;
+export default FAQList;

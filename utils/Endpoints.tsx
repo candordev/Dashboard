@@ -13,12 +13,10 @@
 // DEVELOPMENT
 //export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
-// PRODUCTION
+// PRODUCTIONw
 export const BASE_URL: string = `https://candoradmin.com/api`;
 
-
 //export const BASE_URL: string = `http://184.72.74.25:4000/api`;
-
 
 export const Endpoints = {
   base: BASE_URL,
@@ -150,4 +148,7 @@ export const Endpoints = {
   getChatForNumber: `${BASE_URL}/chat/getChatsForNumber?`,
   sendMessage:  `${BASE_URL}/chat/sendMessage`,
   updateNumberSettings:  `${BASE_URL}/chat/updateNumberSettings`,
+  addFAQ: `${BASE_URL}/group/addFAQ`,
+  getFAQs: `${BASE_URL}/group/getFAQs?`,
+
 };

@@ -131,14 +131,14 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderColor: colors.lightergray,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 7,
-    paddingVertical: 5,
+    paddingVertical: 7,
     backgroundColor: colors.white,
     outlineStyle: "none",
     fontFamily: "OpenSans",
-    fontWeight: "500",
+    fontWeight: "450" as any,
   },
   outerBox: {
     margin: 20,
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowRadius: 8,
+    flex: 1
   },
 });
 
