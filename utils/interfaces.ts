@@ -117,7 +117,8 @@ export interface Post {
   lat: String;
   mergedPosts: Post[],
   suggestedSimilarPost: Post
-  merged: Boolean
+  merged: Boolean,
+  viewOnly: Boolean
 }
 
 export interface Leader {

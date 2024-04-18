@@ -21,6 +21,8 @@ function IssueView(props: IssueViewProps): JSX.Element {
   const [updateTrigger, setUpdateTrigger] = useState(false);
   const [issue, setIssue] = useState<Post>(props.issue);
   const [loading, setLoading] = useState(true); // 
+  const [viewOnly, setViewOnly] = useState<Boolean>(false); // State to handle viewOnly
+
 
   const {post, setPost} = usePostContext();
 
@@ -57,6 +59,7 @@ function IssueView(props: IssueViewProps): JSX.Element {
           if (fetchedIssue) {
             setIssue(fetchedIssue);
             setPost(fetchedIssue);
+            setViewOnly(fetchedIssue.viewOnly); // Set viewOnly state based on fetched data
           }
         }
       } catch (error) {
@@ -113,9 +116,9 @@ function IssueView(props: IssueViewProps): JSX.Element {
       ]}
     >
 
-      <IssueLeftView issue={issue}/>
-      <IssueMiddleView updateTrigger={updateTrigger} issue={issue}/>
-      <IssueRightView fetchStatusUpdates={handleUpdateTrigger} issue={issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
+      <IssueLeftView issue={issue} viewOnly={viewOnly} />
+      <IssueMiddleView issue={issue} updateTrigger={updateTrigger} viewOnly={viewOnly} />
+      <IssueRightView issue={issue} fetchStatusUpdates={handleUpdateTrigger} viewOnly={viewOnly} onPopoverCloseComplete={props.onPopoverCloseComplete} />
 
     </View>
   );
