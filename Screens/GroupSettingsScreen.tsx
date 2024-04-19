@@ -51,7 +51,7 @@ const GroupSettingsScreen = ({ navigation }: any) => {
         <View style={{ flex: 1 }}>
           <TagEditor groupID={selectedGroupID} />
           <MemberManagement groupID={selectedGroupID} userID={state._id} />
-          <DownloadReport />
+          <DownloadReport groupID={selectedGroupID} />
         </View>
       </ScrollView>
     </OuterView>
