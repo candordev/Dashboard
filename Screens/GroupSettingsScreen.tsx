@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import MemberManagement from "../Components/MemberManagement"; // Update the import path as needed
 import { useUserContext } from "../Hooks/useUserContext";
@@ -11,6 +11,9 @@ import colors from "../Styles/colors";
 import OuterView from "../Components/OuterView";
 import { ScrollView } from "react-native-gesture-handler";
 import NotificationPopup from "../Components/NotificationPopup";
+import { Endpoints } from "../utils/Endpoints";
+import { customFetch } from "../utils/utils";
+import DownloadReport from "../Components/DownloadReport";
 
 const GroupSettingsScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
@@ -20,6 +23,7 @@ const GroupSettingsScreen = ({ navigation }: any) => {
       ? state.leaderGroups[0]._id
       : ""
   );
+
 
   const handleGroupSelect = (groupID: any) => {
     setSelectedGroupID(groupID);
@@ -47,6 +51,7 @@ const GroupSettingsScreen = ({ navigation }: any) => {
         <View style={{ flex: 1 }}>
           <TagEditor groupID={selectedGroupID} />
           <MemberManagement groupID={selectedGroupID} userID={state._id} />
+          <DownloadReport />
         </View>
       </ScrollView>
     </OuterView>
