@@ -13,7 +13,7 @@
 // DEVELOPMENT
 //export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
-// PRODUCTIONw
+// PRODUCTION
 export const BASE_URL: string = `https://candoradmin.com/api`;
 
 //export const BASE_URL: string = `http://184.72.74.25:4000/api`;
