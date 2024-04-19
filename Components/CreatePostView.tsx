@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import DatePicker from "react-datepicker";
 import { ScrollView, StyleSheet, TextInput, View, Image, ActivityIndicator} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import FeatherIcon from "react-native-vector-icons/Feather";
 import {
   GooglePlaceData,
   GooglePlaceDetail,
@@ -226,6 +227,13 @@ function CreatePostView(props: any) {
       style={additionalStyles.container}
       contentContainerStyle={{ rowGap: 10 }}
     >
+      <TouchableOpacity 
+         // Positioning the close icon
+        onPress={props.onClose} // Set the onPress to call onClose from props
+      >
+        <FeatherIcon name="x" size={24} color="red" />
+      </TouchableOpacity>
+
       <TextInput
         style={styles.textInput}
         placeholder="Title"
@@ -290,7 +298,7 @@ function CreatePostView(props: any) {
       </View>
       <TextInput
         style={styles.textInput}
-        placeholder="Constituent Email"
+        placeholder={state.groupType === "HOA" ? "Resident Email" : "Constituent Email"}
         placeholderTextColor={colors.lightgray}
         value={email}
         onChangeText={setEmail}
