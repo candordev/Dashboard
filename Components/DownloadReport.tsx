@@ -13,6 +13,8 @@ import DatePicker from "react-datepicker";
 import { ScrollView } from "react-native-gesture-handler";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
+import { set } from "lodash";
+import { ValueType } from "react-native-dropdown-picker";
 
 type DownloadReportProps = {
   groupID: string;
@@ -20,26 +22,52 @@ type DownloadReportProps = {
 
 const DownloadReport = ({ groupID }: DownloadReportProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
-  const [districts, setDistricts] = useState([
-    { label: "District 1", value: "district1" },
-    { label: "District 2", value: "district2" },
-    { label: "District 3", value: "district3" },
-  ]);
-  const [departments, setDepartments] = useState([
-    { label: "Department 1", value: "department1" },
-    { label: "Department 2", value: "department2" },
-    { label: "Department 3", value: "department3" },
-  ]);
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("")
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+  const [districts, setDistricts] = useState<{label: string, value: string}[]>([]);
+  const [departments, setDepartments] = useState<{label: string, value: string}[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    async function queryGroups() {
+    async function queryDistricts() {
+      try {
+        const url = Endpoints.getGroupByID +
+        new URLSearchParams({
+          groupID: groupID,
+        })
+        console.log("URL", url);
+        const res = await customFetch(
+          url,
+          {
+            method: "GET",
+          }
+        );
+        if (!res.ok) {
+          console.error("Error querying group", res);
+          return;
+        }
+        const resJson = await res.json();
+        if (resJson.districts) {
+          console.log("Districts", resJson.districts);
+          setDistricts([]);
+          const newDistrictsArray = [];
+          for (let district of resJson.districts) {
+            newDistrictsArray.push({
+              label: district.name,
+              value: district.name
+            });
+          }
+          setDistricts(newDistrictsArray);
+        }
+      } catch (error) {
+        console.error("Error querying group", error);
+      }
+    }
+    async function queryDepartments() {
       try {
         const res = await customFetch(
-          Endpoints.getGroupByID +
+          Endpoints.getDepartments +
             new URLSearchParams({
               groupID: groupID,
             }),
@@ -47,33 +75,82 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
             method: "GET",
           }
         );
+        if (!res.ok) {
+          console.error("Error querying departments", res);
+          return;
+        }
         const resJson = await res.json();
-        if (resJson.districts) {
-          console.log("Districts", resJson.districts);
-          setDistricts([]);
-          for (let district of resJson.districts) {
-            setDistricts((districts) => [
-              ...districts,
-              { label: district, value: district },
-            ]);
+        if (resJson && resJson.length > 0) {
+          console.log("Departments", resJson);
+          setDepartments([]);
+          const newDepartmentsArray = [];
+          for (let department of resJson) {
+            newDepartmentsArray.push({
+              label: department.name,
+              value: department._id
+            });
           }
+          setDepartments(newDepartmentsArray);
         }
       } catch (error) {
-        console.error("Error querying group", error);
+        console.error("Error querying departments", error);
       }
     }
-    queryGroups();
+    queryDistricts();
+    queryDepartments();
   }, [groupID]);
 
   async function downloadReport() {
-    // Logic to download report based on the selected values
+    try {
+      console.log("DOWNLOADING REPORT")
+      console.log("District", selectedDistrict)
+      const queryParams = new URLSearchParams({
+        groupID: groupID,
+        district: selectedDistrict ? selectedDistrict : "",
+        department: selectedDepartment ? selectedDepartment : "",
+        startDate: startDate ? startDate.toISOString() : "",
+        endDate: endDate ? endDate.toISOString() : "",
+        searchTerm: searchTerm ? searchTerm : "",
+      });
+
+      const res = await customFetch(
+        `${Endpoints.requestPDFInfo}${queryParams.toString()}`,
+        {
+          method: "GET",
+        }
+      );
+      if (!res.ok) {
+        let resJson = await res.json();
+        console.error("DOWNLOAD REPORT ERROR", resJson.error);
+        return;
+      }
+      const blob = await res.blob();
+      const pdfUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = "report.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(pdfUrl);
+    } catch (error) {
+      console.error("Error downloading report", error);
+    }
   }
+
+
+  const handleDeparmentSelection = (selectedValue: ValueType | null) => {
+    console.log("DEPARTMENT SELECTED", selectedValue as string);
+    setSelectedDepartment(selectedValue as string);
+    // console.log("yuhh", selectedDepartmentName)
+};
 
   return (
     <View style={styles.groupSettingsContainer}>
       <ScrollView>
         <Text style={additionalStyles.header}>Download Report</Text>
-        <View style={[additionalStyles.dropdownContainer, {zIndex: 5}]}>
+        {districts.length > 0 && (
+          <View style={[additionalStyles.dropdownContainer, {zIndex: 5}]}>
           <Text style={additionalStyles.inputLabel}>Select District:</Text>
           <DropDown
             placeholder="Select District"
@@ -84,7 +161,21 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
             multiple={false}
           />
         </View>
-        <View style={[additionalStyles.dropdownContainer, {zIndex: 4}]}>
+        )}
+        <View style={[additionalStyles.inputGroup, {zIndex: 4}]}>
+          <Text style={additionalStyles.inputLabel}>Select Department:</Text>
+          <DropDown
+            placeholder="Select Department"
+            value={selectedDepartment}
+            setValue={(value:string) => setSelectedDepartment(value)} // Pass a callback that sets the state
+            items={departments}
+            setItems={() => {}}
+            multiple={false}
+          />
+
+
+        </View>
+        <View style={[additionalStyles.dropdownContainer, {zIndex: 3}]}>
           <Text style={additionalStyles.inputLabel}>Start Date:</Text>
           <DatePicker
             selected={startDate}
@@ -93,7 +184,7 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
             popperPlacement="bottom-start"
           />
         </View>
-        <View style={[additionalStyles.dropdownContainer, {zIndex: 3}]}>
+        <View style={[additionalStyles.dropdownContainer, {zIndex: 2}]}>
           <Text style={additionalStyles.inputLabel}>End Date:</Text>
           <DatePicker
             selected={endDate}
@@ -103,24 +194,13 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
           />
         </View>
 
-        <View style={[additionalStyles.inputGroup, {zIndex: 2}]}>
+        <View style={[additionalStyles.inputGroup, {zIndex: 1}]}>
           <Text style={additionalStyles.inputLabel}>Search Term:</Text>
           <TextInput
             style={additionalStyles.input}
             value={searchTerm}
             onChangeText={setSearchTerm}
             placeholder="Enter search term"
-          />
-        </View>
-        <View style={[additionalStyles.inputGroup, {zIndex: 1}]}>
-          <Text style={additionalStyles.inputLabel}>Select Department:</Text>
-          <DropDown
-            placeholder="Select Department"
-            value={selectedDepartment}
-            setValue={setSelectedDepartment}
-            items={departments}
-            setItems={() => {}}
-            multiple={false}
           />
         </View>
         <TouchableOpacity
