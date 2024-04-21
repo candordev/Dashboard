@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  ActivityIndicator,
-} from "react-native";
-import Text from "./Text";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 import colors from "../Styles/colors";
 import styles from "../Styles/styles";
+import Text from "./Text";
 
 interface ButtonProps {
   text: string;
@@ -30,7 +25,11 @@ const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={loading}
     >
-      <Text style={[styles.bigButtonText, textStyle, {opacity: loading ? 0 : 1}]}>{text}</Text>
+      <Text
+        style={[styles.bigButtonText, textStyle, { opacity: loading ? 0 : 1 }]}
+      >
+        {text}
+      </Text>
       {loading && (
         <View
           style={{

@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  Button,
   TextInput,
   StyleSheet,
   Platform,
@@ -18,6 +17,7 @@ import { Linking } from "react-native"; // At the top with other imports
 import { error } from "console";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import styles from "../Styles/styles";
+import Button from "./Button";
 
 type MemberManagementProps = {
   groupID: string;
@@ -221,8 +221,9 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
               onChangeText={(text) => setDescriptionEdit(text)}
             />
             <Button
-              title="Done"
-              color={colors.purple}
+              text="Done"
+              style={{backgroundColor: colors.purple}}
+              textStyle={{fontSize: 14}}
               onPress={() => handleEditDocument(item)}
             />
           </>
@@ -369,24 +370,12 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
             </Text>
           )}
         </View>
-
-        <TouchableOpacity
-          style={{
-            backgroundColor: colors.purple,
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 5,
-            paddingVertical: 12,
-          }}
+        <Button
+          text="Add Document"
           onPress={handleAddDocument}
-          disabled={isUploading}
-        >
-          <Text
-            style={{ fontFamily: "Montserrat", fontSize: 15, color: "white" }}
-          >
-            {isUploading ? "Uploading..." : "Add Document"}
-          </Text>
-        </TouchableOpacity>
+          loading={isUploading}
+          style={{backgroundColor: colors.purple}}
+        />
       </View>
     </View>
   );

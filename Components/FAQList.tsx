@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  Button,
   TextInput,
   StyleSheet,
   Platform,
@@ -14,6 +13,8 @@ import { Endpoints } from "../utils/Endpoints"; // Update the import path as nee
 import colors from "../Styles/colors";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import styles from "../Styles/styles";
+import Button from "./Button";
+import { color } from "react-native-reanimated";
 
 type MemberManagementProps = {
   groupID: string;
@@ -189,8 +190,8 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
               onChangeText={(text) => setAnswerEdit(text)}
             />
             <Button
-              title="Done"
-              color={colors.purple}
+              text="Done"
+              style={{color: colors.purple}}
               onPress={() => handleEditDocument(item)}
             />
           </>
@@ -284,7 +285,13 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
           placeholder="New FAQ Answer"
           placeholderTextColor={colors.gray}
         />
-        <TouchableOpacity
+        <Button
+          text="Add FAQ"
+          onPress={handleAddDocument}
+          style={{backgroundColor: colors.purple}}
+          loading={isUploading}
+        />
+        {/* <TouchableOpacity
           style={{
             backgroundColor: colors.purple,
             alignItems: "center",
@@ -305,7 +312,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
           >
             {isUploading ? "Adding FAQ..." : "Add FAQ"}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

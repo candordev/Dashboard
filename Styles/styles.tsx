@@ -5,14 +5,14 @@ const styles = StyleSheet.create({
   bigButton: {
     backgroundColor: colors.black,
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
   },
   bigButtonText: {
     color: "white",
-    fontSize: 18,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "600",
   },
   purpleGeneralContainer: {
     flex: 1,

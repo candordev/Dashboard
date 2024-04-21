@@ -1,21 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import Text from "./Text";
+import Papa from "papaparse";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
-  Button,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
-import Papa from "papaparse";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
+import Icon from "react-native-vector-icons/MaterialIcons"; // or another icon library
+import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
-import { customFetch } from "../utils/utils";
-import { useUserContext } from "../Hooks/useUserContext";
 import { emptyFields } from "../utils/interfaces";
-import Icon from "react-native-vector-icons/MaterialIcons"; // or another icon library
+import { customFetch } from "../utils/utils";
 import AddLeader from "./AddLeader";
+import Text from "./Text";
 
 interface CSVImportComponentProps {
   onImportSuccess?: () => void; // Add this line
@@ -206,7 +205,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({
           body: JSON.stringify({
             title: postData.title,
             content: postData.content,
-            groupID:state.currentGroup,
+            groupID: state.currentGroup,
             visible: true,
             anonymous: false,
             postCreatedFrom: "dashboard import",
@@ -281,7 +280,7 @@ const CSVImportComponent: React.FC<CSVImportComponentProps> = ({
           lastName: lastName,
           departmentID: departmentID,
           email: email,
-          groupID:state.currentGroup,
+          groupID: state.currentGroup,
           type: "import",
         }),
       });
