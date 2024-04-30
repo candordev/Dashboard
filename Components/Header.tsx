@@ -64,6 +64,7 @@ const Header = ({
   }, [leaders]);
 
   useEffect(() => {
+    console.log("THIS IS THE GROUPID: ", groupID)
     fetchLeaders(); // Fetch leaders when the component mounts or when groupID changes
   }, [groupID]);
 
@@ -90,11 +91,11 @@ const Header = ({
       const resJson = await res.json();
 
       if (!res.ok) {
-        console.error(resJson.error);
+        console.error("THESE ARE LDERS ERROR:", resJson.error);
       }
       if (res.ok) {
         const result: UserProfile[] = resJson;
-        // console.log("leaders are", result);
+        console.log("THESE ARE LDERS: ", result);
 
         setLeaders(result);
       }
