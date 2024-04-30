@@ -273,7 +273,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
         onCancel={() => setShowConfirmationModal(false)}
       />
       <View style={chatStyles.titleDropdownContainer}>
-        {/* <Text style={chatStyles.chatTitle}>Private Chat</Text> */}
+        <Text style={chatStyles.chatTitle}>Private Chat</Text>
         <View>
           <DropDown
             placeholder="Chat Type"
