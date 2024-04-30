@@ -78,8 +78,7 @@ const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGro
 
     return (
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 10, backgroundColor: "white", zIndex: 10 }}>
-            {/* Existing DropDown and other components */}
-
+          
             <View style={{ flex: 4, marginRight: 10 }}> {/* Adjust flex value as needed */}
                   <DropDown
                     placeholder="Select a group"
@@ -88,12 +87,14 @@ const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGro
                     items={items}
                     setItems={() => {}}
                     multiple={false}
-                    backgroundColor="white"
+                    styles = {{ dropdownStyle: {borderWidth: 1}, dropDownContainerStyle: { borderWidth: 1 }}}
+                    backgroundColor={colors.white}
                     onClose={() => console.log("Dropdown closed")}
                     // Make sure your DropDown component styles allow it to fill this parent View
                 />
             </View>
-            <View style={{ flex: 1, marginTop: 10}}> {/* Adjust flex value as needed for the button to fit */}
+            
+            <View style={{ flex: 1}}> {/* Adjust flex value as needed for the button to fit */}
             <TouchableOpacity onPress={() => setIsPopoverVisible(true)} style={{ backgroundColor: colors.purple, padding: 10, borderRadius: 5 }}>
                 <Text style={{ color: "white", textAlign: 'center' }}>Create Group</Text>
             </TouchableOpacity>
@@ -109,8 +110,16 @@ const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGro
                     <ActivityIndicator size="large" color={colors.purple} />
                 ) : (
                     <>
+
                         <TextInput 
-                            style={{ backgroundColor: "white", padding: 10, marginBottom: 20, borderRadius: 5 }}
+                           style={{ 
+                            backgroundColor: "white", 
+                            padding: 10, 
+                            marginBottom: 20, 
+                            borderRadius: 5,
+                            borderColor: 'lightgray', 
+                            borderWidth: 1, 
+                          }}
                             placeholder="Enter group name" 
                             value={newGroupName} 
                             onChangeText={setNewGroupName} 
@@ -121,7 +130,6 @@ const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGro
                     </>
                 )}
             </View>
-                
             </Popover>
             </View>
         </View>

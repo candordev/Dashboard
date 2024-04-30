@@ -39,6 +39,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   const [emailError, setEmailError] = useState("");
 
   const [chatMode, setChatMode] = useState("authorities");
+
   const getChatModeItems = () => {
     return [
       {
@@ -101,8 +102,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
     socket.on("connect_error", (err: any) => {
       console.error("Connection error:", err.message);
     });
-    socket.on("new-comment", (newComment: Comment) => {
-      console.log("NEW COMMENT ALERT!", newComment); // This line will log the new comment
+    socket.on("new-comment", (newComment: Comment) => { 
       setPrivateComments((prevComments) => [...prevComments, newComment]);
     });
     return () => {
@@ -144,7 +144,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
               {isAuthor ? (
                 <>
                   <Text style={chatStyles.authorSelfDate}></Text>
-                  <Text style={chatStyles.userName}>Candor AI</Text>
+                  <Text style={chatStyles.userName}>{state.groupType === "HOA"  ? `Leader ${state.lastName}` : `Authority ${state.lastName}`}</Text>
                 </>
               ) : (
                 <>

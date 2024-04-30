@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Text from "./Text";
 import colors from "../Styles/colors";
 import IssueLeftView from "./IssueLeftView";
@@ -10,6 +10,7 @@ import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import { ActivityIndicator } from "react-native";
 import { usePostContext } from "../Hooks/usePostContext";
+import FeatherIcon from "react-native-vector-icons/Feather";
 
 interface IssueViewProps {
   issue: Post;
@@ -99,10 +100,24 @@ function IssueView(props: IssueViewProps): JSX.Element {
   }
 
   return (
+
+    <View style={{ flex: 1}}>
+    <View style={{ alignItems: 'flex-end'}}>  
+      <TouchableOpacity onPress={props.onPopoverCloseComplete}>
+        <Text style={{ fontSize: 17 , 
+          color: colors.purple,
+          paddingTop: 10, 
+          paddingRight: 15,
+          fontWeight: 'bold'
+        }}
+          >X</Text>
+      </TouchableOpacity>
+    </View>
     <View
       style={[
         {
           padding: 10,
+          paddingTop: 5,
           alignItems: "center",
           flexDirection: "row",
           flex: 1,
@@ -116,8 +131,8 @@ function IssueView(props: IssueViewProps): JSX.Element {
       <IssueLeftView issue={issue}/>
       <IssueMiddleView updateTrigger={updateTrigger} issue={issue}/>
       <IssueRightView fetchStatusUpdates={handleUpdateTrigger} issue={issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
-
     </View>
+  </View>
   );
 }
 
