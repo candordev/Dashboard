@@ -9,6 +9,7 @@ import CommentsSection from "./CommentSection"; // Adjust the import path as nee
 import IssueContent from "./IssueContent";
 import PrivateChat from "./PrivateChat";
 import Text from "./Text";
+import stylesImp from "../Styles/styles";
 
 interface IssueLeftViewProps {
   issue: Post;
@@ -121,6 +122,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     >
       <IssueContent issue={issue} />
       {/* Tab controls */}
+
       <View
         style={{
           backgroundColor: colors.white,
@@ -133,7 +135,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           alignContent: "flex-start", // Align content to the start
         }}
       >
-        <View style={styles.tabs}>
+        {/* <View style={styles.tabs}>
           <TouchableOpacity
             onPress={() => handleTabSelect("comments")}
             style={[styles.tab, activeTab === "comments" && styles.activeTab]}
@@ -160,13 +162,13 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
               Private Chat
             </Text>
           </TouchableOpacity>
-        </View>
-        {/* Tab content */}
+        </View> */}
+        {/* Tab content
         {activeTab === "comments" ? (
           <CommentsSection postID={props.issue._id} />
-        ) : (
+        ) : ( */}
           <PrivateChat issue={props.issue} />
-        )}
+        {/* )} */}
       </View>
     </View>
   );
