@@ -3,6 +3,8 @@ import { Dimensions, ScrollView, TextInput, TouchableOpacity, View } from "react
 import colors from "../Styles/colors";
 import { Post } from "../utils/interfaces";
 import Assignees from "./Assignees";
+import AssigneesTSPM from "./AssigneesTSPM";
+
 import Category from "./Category";
 import Deadline from "./Deadline";
 import Location from "./Location";
@@ -81,7 +83,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       }}
     >
     <View style={{ flex: 1, justifyContent: 'flex-start'}}>
-        <Assignees issue={issue} createPost={false} style={{ zIndex: 4}} />
+        <AssigneesTSPM issue={issue} createPost={false} style={{ zIndex: 4}} />
         <Category issueId={issue._id} createPost={false} style={{ zIndex: 3, marginTop: 10}} />
         <Deadline issue={issue} style={{ zIndex: 2, marginTop: 10 }} />
         {state.groupType == "HOA" ? 

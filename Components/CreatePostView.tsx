@@ -13,6 +13,7 @@ import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
 import Assignees from "./Assignees";
+import AssigneesTSPM from "./AssigneesTSPM";
 import Category from "./Category";
 import Text from "./Text";
 import styles from "../Styles/styles";
@@ -296,7 +297,7 @@ function CreatePostView(props: any) {
         onChangeText={setEmail}
       />
       <Deadline createPost={true} onChange={handleDateChange} style={{zIndex: 4}}/>
-    <Assignees
+    <AssigneesTSPM
         createPost={true}
         onAssigneesChange={handleAssigneesChange}
         onAssigneesChangeEmail={handleAssigneesChangeEmail}
