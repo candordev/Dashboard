@@ -291,11 +291,12 @@ function CreatePostView(props: any) {
       </View>
       <TextInput
         style={styles.textInput}
-        placeholder="Constituent Email"
+        placeholder={state.groupType !== "HOA" ? "Constituent Email" : "Resident Email"}
         placeholderTextColor={colors.lightgray}
         value={email}
         onChangeText={setEmail}
       />
+
       <Deadline createPost={true} onChange={handleDateChange} style={{zIndex: 4}}/>
     <AssigneesTSPM
         createPost={true}
