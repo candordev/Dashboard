@@ -13,6 +13,7 @@ import { useUserContext } from "../Hooks/useUserContext";
 import SupportScreen from "./SupportScreen";
 import ChatsScreen from "./ChatsScreen";
 import TrainChatScreen from "./TrainChat";
+import ChatInsightsScreen from "./ChatInsightsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -56,13 +57,14 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
   //   }
   // }, []);
 
-  const initialRouteName =
+   const initialRouteName =
     state.groupType === "AIChat" ? "chats" : state.master ? "master" : "all";
+   // const initialRouteName = "chatInsights";
 
   return (
     <Drawer.Navigator
       useLegacyImplementation={false}
-      //get the route name and pass it into LHN
+      //get the route name and pass it into LHN 
       drawerContent={(props) => (
         <LHN {...props} navigation={props.navigation} />
       )}
@@ -82,6 +84,11 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
         name="trainChat"
         component={TrainChatScreen}
         options={{ title: "Candor - Train Chat" }}
+      />
+       <Drawer.Screen
+        name="chatInsights"
+        component={ChatInsightsScreen}
+        options={{ title: "Candor - Chat Insights" }}
       />
       <Drawer.Screen
         name="master"

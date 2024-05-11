@@ -26,6 +26,7 @@ interface GroupInsightsComponentProps {
 
   const GroupInsightsComponent: React.FC<GroupInsightsComponentProps> = ({ sortType,masterID }) => {
     const [insights, setInsights] = useState([]);
+    
 
   const fetchInsights = async () => {
     try {

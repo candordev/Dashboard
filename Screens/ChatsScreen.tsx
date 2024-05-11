@@ -11,7 +11,7 @@ import ChatComponent from "./ChatComponent";
 
 // Step 1: Define the interface
 interface NumberItem {
-  number: string;
+  sessionId: string;
   priority: string;
 }
 
@@ -20,29 +20,64 @@ const ChatsScreen = ({ navigation }: any) => {
 
   // Step 2: Use the interface to type your state
   const [sortedNumbers, setSortedNumbers] = useState<NumberItem[]>([]);
-  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(
-    null
-  );
+  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  useEffect(() => {
-    if (
-      state.leaderGroups &&
-      state.leaderGroups[0] &&
-      state.leaderGroups[0].numbers
-    ) {
-      // Assuming numbers have a structure that matches the NumberItem interface
-      const sorted: NumberItem[] = [...state.leaderGroups[0].numbers].sort(
-        (a, b) => {
-          if (a.priority === "High") return -1;
-          if (b.priority === "High") return 1;
-          return 0;
-        }
-      );
+
+  async function getWebChats() {
+    try {
+
+      let params = new URLSearchParams({
+        groupID: state.currentGroup,
+      });
+
+      let endpoint = Endpoints.getAllWebChats + '?' +params;
+
+
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      const resJson = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(resJson.error);
+      }
+  
+      // Sorting logic: 'High' priority first, others in reverse order
+      const sorted: NumberItem[] = resJson.data.sort((a: { priority: string; _id: any; }, b: { priority: string; _id: string; }) => {
+        // Prioritize 'High' at the top
+        if (a.priority === "High" && b.priority !== "High") return -1;
+        if (a.priority !== "High" && b.priority === "High") return 1;
+  
+        // For non-'High' priorities, reverse the order
+        return b._id.localeCompare(a._id); // Assuming _id can be used to determine the original order
+      });
+  
+      console.log("sorted!!! ", sorted);
       setSortedNumbers(sorted);
-      setSelectedPhoneNumber(sorted.length ? sorted[0].number : null);
+      setSelectedPhoneNumber(sorted.length ? sorted[0].sessionId : null);
+      
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return null;
     }
-  }, [state.leaderGroups]);
+  }
+  
+
+
+  const handlePriorityChange = async (sessionId: string) => {
+    console.log("pri changed!!!")
+    await getWebChats()
+    setSelectedPhoneNumber(sessionId)
+  };
+
+  useEffect(() => {
+    getWebChats();
+  }, []);
 
   return (
     <>
@@ -54,7 +89,7 @@ const ChatsScreen = ({ navigation }: any) => {
         }}
       >
         <View style={{ flex: 1, borderRightWidth: 1, borderColor: colors.lightergray}}>
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -80,11 +115,10 @@ const ChatsScreen = ({ navigation }: any) => {
               size={24} // Adjust size as needed
               color={colors.gray} // Adjust color as needed
               onPress={() => {
-                /* Your icon action here */
               }}
-              style={{ margin: 7 }} // Adjust spacing as needed
+              style={{ margin: 7 }} 
             />
-          </View>
+          </View> */}
 
           {/* FlatList for displaying numbers */}
           <FlatList
@@ -92,10 +126,10 @@ const ChatsScreen = ({ navigation }: any) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() => setSelectedPhoneNumber(item.number)}
+                onPress={() => setSelectedPhoneNumber(item.sessionId)}
                 style={{
                   backgroundColor:
-                    item.number === selectedPhoneNumber
+                    item.sessionId === selectedPhoneNumber
                       ? colors.lightergray
                       : colors.white,
                   padding: 12,
@@ -111,7 +145,7 @@ const ChatsScreen = ({ navigation }: any) => {
                     color: colors.darkGray,
                   }}
                 >
-                  {item.number} - Priority: {item.priority}
+                  {item.sessionId} - Priority: {item.priority}
                 </Text>
               </TouchableOpacity>
             )}
@@ -120,7 +154,7 @@ const ChatsScreen = ({ navigation }: any) => {
 
         <View style={{ flex: 3, padding: 20 }}>
           {selectedPhoneNumber ? (
-            <ChatComponent phoneNumber={selectedPhoneNumber} />
+            <ChatComponent onPriorityChange={handlePriorityChange} phoneNumber={selectedPhoneNumber} />
           ) : null}
         </View>
       </OuterView>

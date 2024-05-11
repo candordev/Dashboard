@@ -10,27 +10,35 @@ import {
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
-import { customFetch } from "../utils/utils";
+import { customFetch, formatDate} from "../utils/utils";
 // import TextInput from '../Components/Native/TextInput';
 import Icon from "react-native-vector-icons/FontAwesome";
 import styles from "../Styles/styles";
 import Button from "../Components/Button";
 import ExpandableTextInput from "../Components/ExpandableTextInput";
+import { useUserContext } from "../Hooks/useUserContext";
+
 
 interface ChatComponentProps {
   phoneNumber: string; // Assuming phoneNumber is a string
+  //onPriorityChange?: () => void;
+  onPriorityChange?: (sessionId: string) => void;
+
+
 }
 
 interface MessageItem {
   _id: string;
   content: string;
   author: "AI" | "Resident" | "Leader"; // Assuming these are the only possible authors
+  date: string;
 }
 
-const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
+const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityChange }) => {
   const [inputText, setInputText] = useState(""); // State to hold the input text
   const [isAITurnedOn, setIsAITurnedOn] = useState(false);
   const [priority, setPriority] = useState("Low");
+  const { state, dispatch } = useUserContext();
 
   const toggleAI = async () => {
     const newAIState = !isAITurnedOn;
@@ -40,7 +48,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
       const response = await customFetch(Endpoints.updateNumberSettings, {
         method: "POST",
         body: JSON.stringify({
-          phoneNumber: phoneNumber, // Make sure this is encoded if necessary
+          //phoneNumber: phoneNumber, // Make sure this is encoded if necessary
+          groupID: state.currentGroup,
+          sessionId: phoneNumber,
           AIReply: newAIState,
         }),
       });
@@ -52,6 +62,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
 
       // Optionally update local state based on response
       console.log("AI state updated successfully");
+      if(onPriorityChange) onPriorityChange(phoneNumber)
     } catch (error) {
       console.error("Error updating AI state:", error);
       // Rollback in case of error
@@ -67,7 +78,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
       const response = await customFetch(Endpoints.updateNumberSettings, {
         method: "POST",
         body: JSON.stringify({
-          phoneNumber: phoneNumber, // Make sure this is encoded if necessary
+          groupID: state.currentGroup,
+          sessionId: phoneNumber,
+          //phoneNumber: phoneNumber, // Make sure this is encoded if necessary
           priority: newPriority,
         }),
       });
@@ -79,6 +92,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
 
       // Optionally update local state based on response
       console.log("Priority updated successfully");
+      if(onPriorityChange) onPriorityChange(phoneNumber)
+
     } catch (error) {
       console.error("Error updating priority:", error);
       // Rollback in case of error
@@ -102,11 +117,12 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
     try {
       console.log("phone Number: ", phoneNumber);
       const queryParams = new URLSearchParams({
-        phoneNumber,
+        sessionId: phoneNumber,
         page: page.toString(),
         limit: limit.toString(),
+        groupID: state.currentGroup
       });
-      const url = `${Endpoints.getChatForNumber}${queryParams.toString()}`;
+      const url = `${Endpoints.getWebChats}?${queryParams.toString()}`;
       const response = await customFetch(url, { method: "GET" });
       if (!response.ok) {
         console.error("Error fetching chats: ", response.statusText);
@@ -116,7 +132,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
       const data = await response.json();
       setPriority(data.priority);
       setIsAITurnedOn(data.AIReply);
-      console.log("DATA: ", data);
+      console.log("DATA RETURNED: ", data);
+      
       // Assuming 'data' is an array of MessageItem. If it's nested, you'll need to adjust the path.
       return data.data;
     } catch (error) {
@@ -136,6 +153,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
           body: JSON.stringify({
             phoneNumber: phoneNumber,
             message: inputText,
+            groupID: state.currentGroup
           }),
         });
 
@@ -146,6 +164,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
             _id: newMessageData._id, // Assuming the response has an _id field
             content: newMessageData.content, // Assuming the response has a content field
             author: "Leader", // Set the author based on the context; adjust as needed
+            date: newMessageData.date, // Make sure this is the correct field from your API
             // include any other fields from MessageItem if necessary
           };
           setMessages((messages) => [newMessage, ...messages]);
@@ -201,7 +220,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
 
   const renderMessage = ({ item }: { item: MessageItem }) => {
     const rightMessage = item.author === "Leader" || item.author === "AI";
-
+    const formattedDate = formatDate(item.date); // Ensure you handle formatting as needed
+  
     return (
       <View
         style={{
@@ -211,25 +231,36 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
           marginLeft: rightMessage ? 100 : 0,
         }}
       >
-        <Text
-          style={{
-            color: colors.purple,
-            fontSize: 14, // Slightly larger font size
-            fontFamily: "Montserrat", // Set the fontFamily to Montserrat
-            alignSelf: rightMessage ? "flex-end" : "flex-start",
-            fontWeight: "500",
-            marginHorizontal: 5,
-          }}
-        >
-          {item.author}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text
+            style={{
+              color: colors.purple,
+              fontSize: 14.5,
+              fontFamily: "Montserrat",
+              fontWeight: "500",
+              marginHorizontal: 5,
+            }}
+          >
+            {item.author}
+          </Text>
+          <Text
+            style={{
+              color: colors.gray, // Set the color to gray for the date
+              fontSize: 14, // You can make the font size smaller if desired
+              fontFamily: "Montserrat",
+              fontWeight: "500",
+            }}
+          >
+            {` ${formattedDate}`}
+          </Text>
+        </View>
         <View
           style={{
             backgroundColor: rightMessage ? colors.purple : colors.lightergray,
             borderRadius: 20,
             padding: 10,
-            paddingHorizontal: 12.5,
             marginTop: 3,
+            alignSelf: 'baseline'
           }}
         >
           <Text
@@ -282,7 +313,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
         {/* Buttons Container */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {/* AI Toggle Button */}
-          <Button
+          {/* <Button
             text={isAITurnedOn ? "AI ON" : "AI OFF"}
             onPress={toggleAI}
             style={{
@@ -290,7 +321,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
               marginRight: 5,
             }}
             textStyle={{ color: colors.white, fontSize: 14, fontWeight: 700 }}
-          />
+          /> */}
           {/* Priority Toggle Button */}
           <Button
             text={`Priority: ${priority}`}
@@ -320,7 +351,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
         }
       />
 
-      <View
+      {/* <View
         style={[
           styles.textInput,
           {
@@ -349,7 +380,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber }) => {
             color={inputText.trim() ? colors.purple : colors.lightgray}
           />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

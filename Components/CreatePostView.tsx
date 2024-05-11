@@ -21,6 +21,7 @@ import Deadline from "./Deadline";
 import Location from "./Location";
 import { useDropzone } from 'react-dropzone';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Or any other icon library you prefer
+import LocationHOA from "./LocationHOA";
 
 
 function CreatePostView(props: any) {
@@ -86,8 +87,12 @@ function CreatePostView(props: any) {
       formData.append('anonymous', false.toString());
       formData.append('postCreatedFrom', "dashboard");
       formData.append('proposalFromEmail', email);
-      formData.append('location', location);
-      formData.append('neighborhood', neighborhood);
+      if(state.groupType == "HOA"){
+        formData.append('location', location);
+      }else{
+        formData.append('location', location);
+        formData.append('neighborhood', neighborhood);
+      }
       formData.append('assigneeUsernames', JSON.stringify(selectedAssignees));
       formData.append('categoryNames', JSON.stringify(selectedCategories));
       formData.append('deadline', selectedDate ? selectedDate.toISOString() : '');
@@ -165,7 +170,36 @@ function CreatePostView(props: any) {
   //   } catch (error) {
   //     console.error("Network error, please try again later.", error);
   //   }
-  // };
+  // };\
+
+  const handleSelectHOA = async (
+    address: string,
+  ): Promise<string> => {
+    // FIX THIS TO CALL THE CREATPOSTSETNEIGHBORHOODROUTE
+    setLocation(address);
+
+    // try {
+    //   const queryParams = new URLSearchParams({ address: address });
+    //   let res: Response = await customFetch(
+    //     `${Endpoints.getNeighborhoodCreatePost}${queryParams.toString()}`,
+    //     { method: "GET" }
+    //   );
+
+    //   let resJson = await res.json();
+    //   if (!res.ok) {
+    //     console.error("Error setting neighborhood:", resJson.error);
+    //   } else {
+    //     // console.log("THE NEIGHBORHOOD: ", resJson.neighborhood);
+    //     setNeighborhood(resJson.neighborhood);
+    //     return resJson.neighborhood;
+    //     setNeighborhood(resJson.neighborhood); // Update the input box with the neighborhood
+    //     setKey((prevKey) => prevKey + 1);
+    //   }
+    // } catch (error) {
+    //   console.error("Error loading posts. Please try again later.", error);
+    // }
+    return "";
+  };
 
   const handleSelect = async (
     data: GooglePlaceData,
@@ -308,10 +342,10 @@ function CreatePostView(props: any) {
         onCategoryChange={handleCategoryChange}
         style={{ zIndex: 2 }}
       />
-      <Location
-        createPost={true}
-        onChange={async (data, details) => handleSelect(data, details)}
-      />
+       {state.groupType == "HOA" ? 
+        <LocationHOA createPost={true} onChange={async (address: string) => handleSelectHOA(address)} style={{ zIndex: 1, marginTop: 10, marginBottom: 10 }} />
+        : <Location createPost={true} onChange={async (data, details) => handleSelect(data, details)} style={{ zIndex: 1, marginTop: 10, marginBottom: 10}}/>
+        } 
       <TouchableOpacity
           style={[additionalStyles.toggleButton, isLoading && { backgroundColor: colors.lightgray }]} // Optional: change background color when loading
           onPress={handleDone}
