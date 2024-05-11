@@ -9,6 +9,7 @@ import { useNotification } from "../Structure/NotificationContext"; // Update th
 import colors from "../Styles/colors";
 import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import ProfilePicture from "./ProfilePicture";
+import SearchBar from "./SearchBar";
 import Text from "./Text";
 
 interface LHNProps {
@@ -20,6 +21,11 @@ const LHN = (props: LHNProps) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
+  const [searchPhrase, setSearchPhrase] = useState('');
+
+  const filteredGroups = state.leaderGroups.filter(group =>
+    group.name.toLowerCase().includes(searchPhrase.toLowerCase())
+  );
 
   const isFirstRender = useRef(true);
 
@@ -142,48 +148,50 @@ const LHN = (props: LHNProps) => {
               icon="list"
               selected={navIndex === 2}
             />
-            <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
-              <ScrollView>
-                {state.leaderGroups.map(
-                  (
-                    group: { _id: any; name: string | any[] },
-                    index: React.Key | null | undefined
-                  ) => (
-                    <Pressable
-                      key={index}
-                      onPress={() => handleGroupSelect(group._id)}
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginVertical: 4,
-                      }}
-                    >
-                      <FeatherIcon
-                        name="trello"
-                        size={20}
-                        color={colors.white}
-                        style={{ marginRight: 10 }}
-                      />
-                      <Text
-                        style={{
-                          color: colors.white,
-                          fontFamily: "Montserrat",
-                          textAlign: "left",
-                          flex: 1,
-                        }}
-                      >
-                        {group.name.length > 15
-                          ? `${group.name.slice(0, 15)}...`
-                          : group.name}
-                      </Text>
-                    </Pressable>
-                  )
-                )}
-              </ScrollView>
-            </View>
-          </>
-        ) : (
+          <View style={{ width: "100%"}}>
+            <SearchBar 
+              searchPhrase={searchPhrase}
+              setSearchPhrase={setSearchPhrase}
+              placeholder="Search groups..."
+            />
+          </View>
+          <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
+            <ScrollView>
+              {filteredGroups.map((group, index) => (
+                <Pressable
+                  key={index}
+                  onPress={() => handleGroupSelect(group._id)}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginVertical: 4,
+                  }}
+                >
+                  <FeatherIcon
+                    name="trello"
+                    size={20}
+                    color={colors.white}
+                    style={{ marginRight: 10 }}
+                  />
+                  <Text
+                    style={{
+                      color: colors.white,
+                      fontFamily: "Montserrat",
+                      textAlign: "left",
+                      flex: 1,
+                    }}
+                  >
+                    {group.name.length > 15
+                      ? `${group.name.slice(0, 15)}...`
+                      : group.name}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        </>
+      ) : (
           <NavItem
             name={"Issues"}
             route="/all"
