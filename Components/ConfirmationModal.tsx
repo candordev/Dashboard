@@ -3,6 +3,7 @@ import { Modal, View, StyleSheet, ActivityIndicator } from 'react-native';
 import Text from './Text'; // Assuming Text is a custom component.
 import Button from './Button'; // Assuming Button is a custom component.
 import colors from '../Styles/colors';
+import { useUserContext } from "../Hooks/useUserContext";
 
 interface ConfirmationModalProps {
   isVisible: boolean;
@@ -16,7 +17,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onCancel,
 }) => {
   const [isPosting, setIsPosting] = useState(false);
-  
+  const { state, dispatch } = useUserContext();
   const handleConfirm = async () => {
     setIsPosting(true); // Start the loader
     try {
@@ -46,7 +47,9 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                   textAlign: 'center',
                   flexShrink: 1,
                 }}>
-                Are you sure you want to send this email to the constituent?
+                {state.groupType !== "HOA"
+                  ? "Are you sure you want to send this email to the constituent?"
+                  : "Are you sure you want to send this email to the resident?"}
               </Text>
               <View style={additionalStyles.buttonContainer}>
                 <Button
