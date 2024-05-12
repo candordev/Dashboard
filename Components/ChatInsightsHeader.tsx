@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     width: '23%',
+    minHeight: 80
   },
   cardTitle: {
     color: colors.black,

@@ -61,7 +61,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
      <NotificationPopup navigation={navigation} />
     <OuterView style={{ backgroundColor: colors.white, flexDirection: 'column', flex: 1, borderRadius: 20, overflow: 'visible'}}> 
       {chatInsights && (
-          <View style={{flex: 0.15, padding: 10}}>
+          <View style={{flex: 0.15, margin: 10}}>
             <ChatInsightsHeader chatInsights={chatInsights} />
           </View>
         )}        
