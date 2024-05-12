@@ -1,98 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextInput, TouchableOpacity, View, Text } from "react-native";
 import colors from "../Styles/colors";
-import { customFetch } from "../utils/utils"; // Assuming customFetch is your utility function for making fetch requests
+import { customFetch } from "../utils/utils"; 
 import OuterComponentView from "./PopoverComponentView";
 import { Endpoints } from "../utils/Endpoints";
-import { Post } from "../utils/interfaces"; // Assuming this is where you've defined your Post interface
+import { Post } from "../utils/interfaces"; 
 
-// Define a type for the component's props
 type LocationProps = {
-  issue: Post; // Using the Post interface for the issue
+  issue?: Post;
   style?: any;
+  createPost?: Boolean;
+  onChange?: (address: string) => Promise<string>;
 };
 
-const Location: React.FC<LocationProps> = ({ issue, style}) => {
+const Location: React.FC<LocationProps> = ({ issue, style, createPost, onChange }) => {
   const [location, setLocation] = useState(issue?.location ?? "");
   const [editing, setEditing] = useState(false);
 
   const handleDone = async () => {
+
+    console.log("empty location: ", )
+    let passLoc = location;
+    if(!location){
+      passLoc = " ";
+    }
     try {
-      let response = await customFetch(Endpoints.editPost, {
+      const response = await customFetch(Endpoints.editPost, {
         method: "POST",
         body: JSON.stringify({
-          location: location,
+          location: passLoc,
           postID: issue?._id,
         }),
       });
 
-      let jsonResponse = await response.json();
+      const jsonResponse = await response.json();
       if (!response.ok) {
-        throw new Error(jsonResponse.error || 'An error occurred while updating the location');
+        throw new Error(jsonResponse.error || "An error occurred while updating the location");
       }
 
       console.log("Location updated successfully:", jsonResponse);
-      setEditing(false); // Exit editing mode
+      setEditing(false); 
     } catch (error) {
-      console.error("Error updating location:");
+      console.error("Error updating location:", error);
     }
   };
 
   return (
     <OuterComponentView title={"Location"} style={style}>
-      {location || editing ? (
         <>
-          {editing ? (
-            <TextInput
-              value={location}
-              onChangeText={setLocation}
-              style={{
-                fontSize: 16,
-                borderColor: colors.lightgray,
-                borderWidth: 1,
-                borderRadius: 10,
-                padding: 10,
-              }}
-            />
-          ) : (
-            <Text style={{ fontSize: 16, padding: 10 }}>{location}</Text>
-          )}
-          <TouchableOpacity
-            onPress={() => {
-              if (editing) {
-                handleDone();
-              } else {
-                setEditing(true);
+          <TextInput
+            value={location}
+            onChangeText={async (newLocation) => {
+              setLocation(newLocation);
+              if (createPost && onChange) {
+                await onChange(newLocation); 
               }
             }}
             style={{
-              backgroundColor: editing ? colors.lightestgray : colors.purple,
+              fontSize: 16,
+              borderColor: colors.lightgray,
+              borderWidth: 1,
               borderRadius: 10,
               padding: 10,
-              marginTop: editing || location ? 10 : 5, // Reduce the margin top if no location
             }}
-          >
-            <Text style={{ color: editing ? colors.black : colors.white, textAlign: 'center', fontSize: 16, fontWeight: "600", fontFamily: "Montserrat"}}>
-              {editing ? 'Done' : 'Edit'}
-            </Text>
-          </TouchableOpacity>
+          />
+
+          {!createPost && (
+            <TouchableOpacity
+              onPress={handleDone}
+              style={{
+                backgroundColor: colors.purple,
+                borderRadius: 10,
+                padding: 10,
+                marginTop: 10,
+              }}
+            >
+              <Text style={{ color: colors.white, textAlign: "center", fontSize: 16, fontWeight: "600", fontFamily: "Montserrat" }}>
+                Save
+              </Text>
+            </TouchableOpacity>
+          )}
         </>
-      ) : (
-        // Render the "Add Location" button with reduced marginTop
-        <TouchableOpacity
-          onPress={() => setEditing(true)}
-          style={{
-            backgroundColor: colors.purple,
-            borderRadius: 10,
-            padding: 10,
-            marginTop: 5, // Reduced marginTop when no location is present
-          }}
-        >
-          <Text style={{ color: colors.white, textAlign: 'center', fontSize: 16, fontWeight: "600", fontFamily: "Montserrat"}}>
-            Add Location
-          </Text>
-        </TouchableOpacity>
-      )}
     </OuterComponentView>
   );
 };

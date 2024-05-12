@@ -126,11 +126,17 @@ const LHN = (props: LHNProps) => {
             icon="message-circle"
             selected={navIndex === 0}
           />
-          <NavItem
+          {/* <NavItem
           name={"Train"}
           route="/trainChat"
           icon="activity"
           selected={navIndex === 1}
+          /> */}
+          <NavItem
+          name={"ChatInsights"}
+          route="/chatInsights"
+          icon="pie-chart"
+          selected={navIndex === 2}
           />
         </>
         )}
@@ -184,12 +190,14 @@ const LHN = (props: LHNProps) => {
             </View>
           </>
         ) : (
-          <NavItem
-            name={"Issues"}
-            route="/all"
-            icon="list"
-            selected={navIndex === 3}
-          />
+          state.groupType !== "AIChat" && (
+            <NavItem
+              name={"Issues"}
+              route="/all"
+              icon="list"
+              selected={navIndex === 3}
+            />
+          )
         )}
         {state.groupType !== "AIChat" && (
           <NavItem
@@ -199,12 +207,13 @@ const LHN = (props: LHNProps) => {
             unreadCount={unread}
             selected={navIndex === 4}
           />
+          
         )}
         <NavItem
           name={"Settings"}
           route="/settings"
           icon="settings"
-          selected={navIndex === 5}
+          selected={navIndex === 6}
         />
         {state.groupType !== "AIChat" && (
           <NavItem
@@ -219,7 +228,7 @@ const LHN = (props: LHNProps) => {
           name="24/7 Support"
           route="/support"
           icon="check-circle"
-          selected={navIndex === 7}
+          selected={navIndex === 8}
         />
         <View style={{ flex: 1 }} />
         <NavItem

@@ -89,6 +89,7 @@ function NavigationWrapper() {
         groupSettings: "groupSettings",
         chats: "chats",
         trainChat: "trainChat",
+        chatInsights: "chatInsights",
         master: "master",
         NotFound: "404",
       },
@@ -103,8 +104,6 @@ function NavigationWrapper() {
           <>
             <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="root" component={Root} />
-
-            {/* other authenticated screens */}
           </>
         ) : (
           <>

@@ -120,6 +120,29 @@ export interface Post {
   merged: Boolean
 }
 
+// Interface definition for the chat insights data
+export interface ChatInsights {
+  chatsTodayWeb: number;
+  messagesTodayWeb: number;
+  chatsPastMonthWeb: number;
+  messagesPastMonthWeb: number;
+  unansweredQuestionsWeb: number;
+  unansweredResidentQuestionsContentWeb: string[];
+  chatsTodayPhone: number;
+  messagesTodayPhone: number;
+  chatsPastMonthPhone: number;
+  messagesPastMonthPhone: number;
+  unansweredQuestionsPhone: number;
+  unansweredResidentQuestionsContentPhone: string[];
+  allTimeUserTypes: {
+    _id: string;
+    userType: string;
+    uniqueSessionsCount: number;
+  }[];
+  messagesPerDayLineGraphPhone: { date: string; count: number }[];
+  messagesPerDayLineGraphWeb: { date: string; count: number }[];
+}
+
 export interface Leader {
   _id: string;
   firstName: string;

@@ -7,14 +7,15 @@
 // }
 
 // local
-export const BASE_URL : string = `http://localhost:4000/api`;
+//export const BASE_URL : string = `http://localhost:4000/api`;
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
 //export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
 // PRODUCTION
-// export const BASE_URL: string = `https://candoradmin.com/api`;
+export const BASE_URL: string = `https://candoradmin.com/api`;
+
 
 //export const BASE_URL: string = `http://184.72.74.25:4000/api`;
 
@@ -152,4 +153,7 @@ export const Endpoints = {
   getFAQs: `${BASE_URL}/group/getFAQs?`,
   editFAQ: `${BASE_URL}/group/editFAQ`,
   deleteFAQ: `${BASE_URL}/group/deleteFAQ`,
+  getChatInsights: `${BASE_URL}/chat/getChatInsights`,
+  getWebChats: `${BASE_URL}/chat/getWebChats`,
+  getAllWebChats: `${BASE_URL}/chat/getAllWebChats`,
 };

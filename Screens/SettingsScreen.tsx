@@ -26,6 +26,8 @@ type Props = PropsWithChildren<{
 }>;
 
 function SettingsScreen({ route, navigation }: Props): JSX.Element {
+  const { state, dispatch } = useUserContext();
+
   return (
     <>
       <NotificationPopup navigation={navigation} />
@@ -34,7 +36,7 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
         {/* <DepartmentSettings />
         <TagSettings />
         <DeadlineSettings /> */}
-        <EmailSettings />
+       {state.groupType != "AIChat" && (  <EmailSettings />)}
       </OuterView>
     </>
   );

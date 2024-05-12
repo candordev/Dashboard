@@ -160,6 +160,24 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     flex: 1
   },
+  insightsSection: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: colors.white,
+    shadowColor: colors.black,
+    shadowRadius: 4,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.2,
+    flexShrink: 1,
+  },
+  insightsSectionTitle: {
+    fontFamily: "OpenSans",
+    fontSize: 30,
+    fontWeight: "500",
+  },
 });
 
 export default styles;
