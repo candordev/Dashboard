@@ -57,9 +57,9 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
   //   }
   // }, []);
 
-   const initialRouteName =
-    state.groupType === "AIChat" ? "chats" : state.master ? "master" : "all";
-   // const initialRouteName = "chatInsights";
+   //const initialRouteName =
+    // state.groupType === "AIChat" ? "chats" : state.master ? "master" : "all";
+   const initialRouteName = "chatInsights";
 
   return (
     <Drawer.Navigator

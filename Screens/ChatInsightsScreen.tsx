@@ -60,24 +60,28 @@ const ChatInsightsScreen = ({ navigation }: any) => {
     <>
      <NotificationPopup navigation={navigation} />
     <OuterView style={{ backgroundColor: colors.white, flexDirection: 'column', flex: 1, borderRadius: 20, overflow: 'visible'}}> 
-        {chatInsights && <ChatInsightsHeader chatInsights={chatInsights} />}
-        <View style={additionalStyles.insightsSection}>
-            <Text
-                style={{
-                    color: colors.black,
-                    fontFamily: "OpenSans",
-                    fontSize: 25,
-                    fontWeight: "450",
-                }}
-            >
-                Issues
-            </Text>
-            {/* <ScrollView showsHorizontalScrollIndicator={true} horizontal={true}> */}
-                <ChatsLineGraph data={chatInsights?.messagesPerDayLineGraphWeb || []} />
-            {/* </ScrollView> */}
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: "space-around"}}>
-        <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
+      {chatInsights && (
+          <View style={{flex: 0.15, padding: 10}}>
+            <ChatInsightsHeader chatInsights={chatInsights} />
+          </View>
+        )}        
+      <View style={[additionalStyles.insightsSection, {flex: 0.43}]}>
+                <Text
+                    style={{
+                        color: colors.black,
+                        fontFamily: "OpenSans",
+                        fontSize: 25,
+                        fontWeight: "450",
+                    }}
+                >
+                    Issues
+                </Text>
+                <View style={{flex: 1, overflow: 'hidden'}}>
+                  <ChatsLineGraph data={chatInsights?.messagesPerDayLineGraphWeb || []} />
+                </View>
+            </View>
+        <View style={{flexDirection: 'row', justifyContent: "space-around", flex: 0.5}}>
+        <View style={[additionalStyles.insightsSection, { flex: 1}]}>
             <Text
                 style={{
                     color: colors.black,
@@ -92,7 +96,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                 <InsightsBarChart chatInsights={chatInsights}/>
              </View>
         </View>
-        <View style={[additionalStyles.insightsSection, { flex: 1, maxHeight: 400 }]}>
+        <View style={[additionalStyles.insightsSection, { flex: 1}]}>
             <Text
                 style={{
                     color: colors.black,
