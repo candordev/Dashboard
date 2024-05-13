@@ -24,26 +24,23 @@ const LoginScreen = () => {
   };
 
   const handleLogin = async () => {
-    const initialAuthState = getAuth().currentUser;
-    console.log("Initial Auth State:", initialAuthState);
     setLoading(true);
     setError("");
+    const initialAuthState = getAuth().currentUser;
+    console.log("Initial Auth State:", initialAuthState);
     try {
       const auth = getAuth();
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          console.log("This is the user credentials", userCredential);
-          const newState = getAuth().currentUser;
-          console.log("New State:", newState);
-          // Signed in
-
-          const user = userCredential.user;
-          //navigation.navigate('root'); // Navigate to the desired screen
-          // ...
-        })
-        .catch((error) => {
-          setError(error.message); // Update the error message
-        });
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("This is the user credentials", userCredential);
+      const newState = getAuth().currentUser;
+      console.log("New State:", newState);
+    } catch (error: any) {
+      console.log(error);
+      setError("Invalid Login");
     } finally {
       setLoading(false);
     }
@@ -134,10 +131,15 @@ const LoginScreen = () => {
         <Button
           text="Login"
           onPress={handleLogin}
-          style={{ marginTop: 10, marginBottom: 5, width: "100%"}}
+          style={{ marginTop: 10, marginBottom: 5, width: "100%" }}
+          loading={loading}
         />
       </View>
-      {error ? <Text style={{color: colors.red}}>{error}</Text> : null}
+      {error ? (
+        <Text style={{ color: colors.white, marginTop: 20, fontWeight: "500" }}>
+          {error}
+        </Text>
+      ) : null}
       {/* Include loading state and other UI components */}
     </View>
   );
