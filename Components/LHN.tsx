@@ -121,10 +121,10 @@ const LHN = (props: LHNProps) => {
         {state.groupType === "AIChat" && (
           <>
           <NavItem
-            name={"Chats"}
-            route="/chats"
-            icon="message-circle"
-            selected={navIndex === 0}
+          name={"ChatInsights"}
+          route="/chatInsights"
+          icon="pie-chart"
+          selected={navIndex === 2}
           />
           {/* <NavItem
           name={"Train"}
@@ -132,12 +132,13 @@ const LHN = (props: LHNProps) => {
           icon="activity"
           selected={navIndex === 1}
           /> */}
-          <NavItem
-          name={"ChatInsights"}
-          route="/chatInsights"
-          icon="pie-chart"
-          selected={navIndex === 2}
+                    <NavItem
+            name={"Chats"}
+            route="/chats"
+            icon="message-circle"
+            selected={navIndex === 0}
           />
+
         </>
         )}
         {state.master ? (
