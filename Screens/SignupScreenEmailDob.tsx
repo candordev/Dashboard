@@ -326,7 +326,7 @@ function SignupScreenEmailDob({
       >
         Simplify Change
       </Text>
-      <View style={{ width: "30%", alignItems: "center" }}>
+      <View style={{ width: "30%", alignItems: "center", paddingBottom: 20, }}>
         {/* First Name Input */}
         <View
           style={{
@@ -348,20 +348,6 @@ function SignupScreenEmailDob({
                 }}
               />
             </View>
-            <Text
-              style={{
-                position: "absolute", // Position absolute
-                bottom: -20, // Adjust this value as needed
-                left: 0,
-                right: 0,
-                color: firstNameError ? colors.red : "transparent",
-                fontSize: 11,
-                textAlign: "center",
-                height: 35, // Increase height as needed
-              }}
-            >
-              {firstNameError || null}
-            </Text>
           </View>
 
           {/* Container for Last Name Input and Error */}
@@ -378,20 +364,6 @@ function SignupScreenEmailDob({
                 }}
               />
             </View>
-            <Text
-              style={{
-                position: "absolute", // Position absolute
-                bottom: -20, // Adjust this value as needed
-                left: 0,
-                right: 0,
-                color: lastNameError ? colors.red : "transparent",
-                fontSize: 11,
-                textAlign: "center",
-                height: 35, // Increase height as needed
-              }}
-            >
-              {lastNameError || " "}
-            </Text>
           </View>
         </View>
 
@@ -410,20 +382,6 @@ function SignupScreenEmailDob({
             autoCapitalize="none"
           />
         </View>
-        <Text
-          style={{
-            position: "absolute", // Position absolute
-            bottom: -20, // Adjust this value as needed
-            left: 0,
-            right: 0,
-            color: emailError ? colors.red : "transparent",
-            fontSize: 11,
-            textAlign: "center",
-            height: 448, // Increase height as needed
-          }}
-        >
-          {emailError || " "}
-        </Text>
         {/* Username Input */}
         <View style={styles.inputContainer}>
           <TextInput
@@ -437,20 +395,6 @@ function SignupScreenEmailDob({
             }}
           />
         </View>
-        <Text
-          style={{
-            position: "absolute", // Position absolute
-            bottom: -20, // Adjust this value as needed
-            left: 0,
-            right: 0,
-            color: usernameError ? colors.red : "transparent",
-            fontSize: 11,
-            textAlign: "center",
-            height: 389, // Increase height as needed
-          }}
-        >
-          {usernameError || " "}
-        </Text>
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -490,20 +434,6 @@ function SignupScreenEmailDob({
             )}
           </Pressable>
         </View>
-        <Text
-          style={{
-            position: "absolute", // Position absolute
-            bottom: -20, // Adjust this value as needed
-            left: 0,
-            right: 0,
-            color: error ? colors.red : "transparent",
-            fontSize: 11,
-            textAlign: "center",
-            height: 205, // Increase height as needed
-          }}
-        >
-          {error || " "}
-        </Text>
 
         <View style={{ marginBottom: 10 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -578,6 +508,66 @@ function SignupScreenEmailDob({
           style={{ marginTop: 10, width: "100%" }}
           loading={loading}
         />
+        {error ? (
+          <Text
+            style={{
+              color: colors.white,
+              marginTop: 20,
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            {error}
+          </Text>
+        ) : null}
+        {firstNameError ? (
+          <Text
+            style={{
+              color: colors.white,
+              marginTop: 20,
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            {firstNameError}
+          </Text>
+        ) : null}
+        {lastNameError ? (
+          <Text
+            style={{
+              color: colors.white,
+              marginTop: 20,
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            {lastNameError}
+          </Text>
+        ) : null}
+        {usernameError ? (
+          <Text
+            style={{
+              color: colors.white,
+              marginTop: 20,
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            {usernameError}
+          </Text>
+        ) : null}
+        {emailError ? (
+          <Text
+            style={{
+              color: colors.white,
+              marginTop: 20,
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            {emailError}
+          </Text>
+        ) : null}
       </View>
     </View>
   );
