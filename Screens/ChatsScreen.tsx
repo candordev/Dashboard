@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import OuterView from "../Components/OuterView";
@@ -15,13 +15,17 @@ interface NumberItem {
   priority: string;
 }
 
-const ChatsScreen = ({ navigation }: any) => {
+const ChatsScreen = ({ navigation, route }: any) => {
   const { state } = useUserContext();
+  const { sessionId } = route.params;
+
 
   // Step 2: Use the interface to type your state
   const [sortedNumbers, setSortedNumbers] = useState<NumberItem[]>([]);
-  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(null);
+  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(sessionId || null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const flatListRef = useRef<FlatList>(null);
+
 
 
   async function getWebChats() {
@@ -61,9 +65,10 @@ const ChatsScreen = ({ navigation }: any) => {
       setSortedNumbers(sorted);
       setSelectedPhoneNumber(sorted.length ? sorted[0].sessionId : null);
       
+      return sorted;
     } catch (error) {
       console.error('Error fetching user data:', error);
-      return null;
+      return [];
     }
   }
   
@@ -71,13 +76,48 @@ const ChatsScreen = ({ navigation }: any) => {
 
   const handlePriorityChange = async (sessionId: string) => {
     console.log("pri changed!!!")
-    await getWebChats()
+    const sorted = await getWebChats();
     setSelectedPhoneNumber(sessionId)
+
+    if(sorted && sorted.length > 0 && sessionId){
+        const index = sorted.findIndex(item => item.sessionId === sessionId);
+        if (index !== -1) {
+          flatListRef.current?.scrollToIndex({ index, animated: true });
+        }
+    }
   };
 
   useEffect(() => {
-    getWebChats();
-  }, []);
+    const fetchChats = async () => {
+      console.log("sessionId FOUND: ", sessionId);
+      const sorted = await getWebChats();
+      console.log("sorted length: ", sorted?.length);
+
+      if (sessionId && sorted && sorted.length > 0) {
+        setSelectedPhoneNumber(sessionId);
+        const index = sorted.findIndex(item => item.sessionId === sessionId);
+        console.log("FOUND?", index);
+
+        // Add a delay to ensure FlatList items are rendered
+        setTimeout(() => {
+          if (index !== -1) {
+            flatListRef.current?.scrollToIndex({ index, animated: true });
+          }
+        }, 500); // Adjust delay as necessary
+      }
+    };
+
+    fetchChats();
+  }, [sessionId]);
+
+  const handleScrollToIndexFailed = (info: any) => {
+    const wait = new Promise(resolve => setTimeout(resolve, 500));
+    wait.then(() => {
+      flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+    });
+  };
+
+  
 
   return (
     <>
@@ -122,6 +162,7 @@ const ChatsScreen = ({ navigation }: any) => {
 
           {/* FlatList for displaying numbers */}
           <FlatList
+            ref={flatListRef}
             data={sortedNumbers}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
@@ -149,6 +190,8 @@ const ChatsScreen = ({ navigation }: any) => {
                 </Text>
               </TouchableOpacity>
             )}
+            onScrollToIndexFailed={handleScrollToIndexFailed}
+
           />
         </View>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, FlatList, StyleSheet, Platform } from 'react-native';
+import { View, ScrollView, FlatList, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import Text from '../Components/Text';
 import colors from '../Styles/colors';
 import { customFetch } from '../utils/utils';
@@ -53,6 +53,10 @@ const ChatInsightsScreen = ({ navigation }: any) => {
   useEffect(() => {
     fetchChatInsights();
   }, []);
+
+  const handleCardPress = (sessionId: string) => {
+    navigation.navigate('chats', { sessionId });
+  };
 
 
   
@@ -109,9 +113,15 @@ const ChatInsightsScreen = ({ navigation }: any) => {
             </Text>
             <ScrollView>
                 {chatInsights?.unansweredResidentQuestionsContentWeb?.map((question, index) => (
-                <View key={index} style={[styles.card, styles.shadow]}>
-                    <Text style={{ fontFamily: "Montserrat", fontSize: 16, color: colors.darkGray }}>{question}</Text>
-                </View>
+                  <TouchableOpacity
+                    key={index}
+                    style={[styles.card, styles.shadow]}
+                    onPress={() => handleCardPress(question.sessionId)}
+                  >
+                  <Text style={{ fontFamily: "Montserrat", fontSize: 16, color: colors.darkGray }}>
+                    {question.userType}: {question.content}
+                  </Text>
+                </TouchableOpacity>
                 ))}
             </ScrollView>
         </View>

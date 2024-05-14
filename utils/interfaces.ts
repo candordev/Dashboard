@@ -127,7 +127,11 @@ export interface ChatInsights {
   chatsPastMonthWeb: number;
   messagesPastMonthWeb: number;
   unansweredQuestionsWeb: number;
-  unansweredResidentQuestionsContentWeb: string[];
+  unansweredResidentQuestionsContentWeb: {
+    sessionId: string;
+    userType: string;
+    content: string;
+  }[];
   chatsTodayPhone: number;
   messagesTodayPhone: number;
   chatsPastMonthPhone: number;
