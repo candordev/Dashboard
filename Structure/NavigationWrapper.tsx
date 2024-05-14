@@ -11,6 +11,7 @@ import { useSignup } from "../Hooks/useSignup";
 import LaunchScreen from "../Screens/LaunchScreen";
 import LoginScreen from "../Screens/LoginScreen";
 import SignupStack from "../Screens/SignupStack";
+import ChatsScreen from "../Screens/ChatsScreen";
 
 const Stack = createStackNavigator();
 
@@ -104,6 +105,7 @@ function NavigationWrapper() {
           <>
             <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="root" component={Root} />
+            <Stack.Screen name="chats" component={ChatsScreen} /> 
           </>
         ) : (
           <>
