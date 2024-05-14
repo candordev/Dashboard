@@ -70,9 +70,16 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
         setIsInputDisabled(false);
       } else {
         setIsInputDisabled(true);
-        setEmailError(
-          "There's No Constituent Email associated with this Issue. Please Fill it in the Issue Description Above."
-        );
+        if(state.groupType !== "HOA") {
+          setEmailError(
+            "There's no constituent email associated with this issue. Please fill it in the issue description above."
+          );
+        } else {
+          setEmailError(
+            "There's no resident email associated with this issue. Please fill it in the issue description above."
+          );
+        }
+        
       }
     } else {
       setEmailError("");
