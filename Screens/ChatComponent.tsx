@@ -38,6 +38,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
   const [inputText, setInputText] = useState(""); // State to hold the input text
   const [isAITurnedOn, setIsAITurnedOn] = useState(false);
   const [priority, setPriority] = useState("Low");
+  const [userType,setUserType] = useState("");
   const { state, dispatch } = useUserContext();
 
   const toggleAI = async () => {
@@ -130,9 +131,10 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
       }
 
       const data = await response.json();
+      setUserType(data.data[1].userType)
       setPriority(data.priority);
       setIsAITurnedOn(data.AIReply);
-      console.log("DATA RETURNED: ", data);
+      console.log("DATA RETURNED NEW: ", data);
       
       // Assuming 'data' is an array of MessageItem. If it's nested, you'll need to adjust the path.
       return data.data;
@@ -308,7 +310,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
             fontFamily: "Montserrat",
           }}
         >
-          {phoneNumber}
+          {phoneNumber + "(" + userType + ")"}
         </Text>
         {/* Buttons Container */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
