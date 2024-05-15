@@ -126,12 +126,12 @@ const LHN = (props: LHNProps) => {
           icon="pie-chart"
           selected={navIndex === 2}
           />
-          {/* <NavItem
+          <NavItem
           name={"Train"}
           route="/trainChat"
           icon="activity"
           selected={navIndex === 1}
-          /> */}
+          />
                     <NavItem
             name={"Chats"}
             route="/chats"
@@ -147,7 +147,7 @@ const LHN = (props: LHNProps) => {
               name={"Master"}
               route="/master"
               icon="list"
-              selected={navIndex === 2}
+              selected={navIndex === 3}
             />
             <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
               <ScrollView>
@@ -206,7 +206,7 @@ const LHN = (props: LHNProps) => {
             route="/inbox"
             icon="inbox"
             unreadCount={unread}
-            selected={navIndex === 4}
+            selected={navIndex === 5}
           />
           
         )}
@@ -221,7 +221,7 @@ const LHN = (props: LHNProps) => {
             name={"Group Settings"}
             route="/groupSettings"
             icon="user"
-            selected={navIndex === 6}
+            selected={navIndex === 7}
           />
         )}
 
