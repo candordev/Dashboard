@@ -156,4 +156,8 @@ export const Endpoints = {
   getChatInsights: `${BASE_URL}/chat/getChatInsights`,
   getWebChats: `${BASE_URL}/chat/getWebChats`,
   getAllWebChats: `${BASE_URL}/chat/getAllWebChats`,
+  getChunks: `${BASE_URL}/document/getChunks`,
+  addChunk: `${BASE_URL}/document/addChunk`,
+  deleteChunk: `${BASE_URL}/document/deleteChunk`,
+  editChunk: `${BASE_URL}/document/editChunk`,
 };
