@@ -81,7 +81,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                     Issues
                 </Text>
                 <View style={{flex: 1, overflow: 'hidden'}}>
-                  <ChatsLineGraph data={chatInsights?.messagesPerDayLineGraphWeb || []} />
+                  <ChatsLineGraph data={chatInsights?.chatsPerDayLineGraphWeb || []} />
                 </View>
             </View>
         <View style={{flexDirection: 'row', justifyContent: "space-around", flex: 0.5}}>

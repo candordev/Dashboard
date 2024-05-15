@@ -143,8 +143,8 @@ export interface ChatInsights {
     userType: string;
     uniqueSessionsCount: number;
   }[];
-  messagesPerDayLineGraphPhone: { date: string; count: number }[];
-  messagesPerDayLineGraphWeb: { date: string; count: number }[];
+  chatsPerDayLineGraphPhone: { date: string; count: number }[];
+  chatsPerDayLineGraphWeb: { date: string; count: number }[];
 }
 
 export interface Leader {
