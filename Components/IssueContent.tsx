@@ -66,6 +66,10 @@ const IssueContent: React.FC<IssueContent> = (props) => {
     });
   };
 
+  const handleCloseNoEdit = () => {
+    setModalVisible(false); // Explicitly close the modal
+  };
+
   const handleDoneEditPost = async () => {
     try {
       let res = await customFetch(Endpoints.editPost, {
@@ -342,7 +346,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           imageCaptions={captions || []}
           editing={false}
           imgURLs={imgURLs || []}
-          handleClose={handleCloseModal}
+          handleClose={handleCloseNoEdit}
           />
         )}
         

@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightgray,
     borderRadius: 10,
     padding: 10,
-    marginLeft: 5,
+    marginRight: 5,
   },
   doneButton: {
     backgroundColor: colors.purple,
