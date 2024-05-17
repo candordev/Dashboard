@@ -101,29 +101,35 @@ const EditImagesModal: React.FC<EditImagesModalProps> = ({ visible, postID, imgU
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <ScrollView horizontal contentContainerStyle={styles.scrollView}>
-            {previewURLs.map((url, index) => (
-              <View key={index} style={styles.imageContainer}>
-                <Image source={{ uri: url }} style={styles.image} />
-                {editing ? (
-                  <TextInput
-                    style={styles.captionInput}
-                    onChangeText={(text) => handleCaptionChange(text, index)}
-                    value={captions[index]}
-                    placeholder="Edit caption"
-                  />
-                ) : (
-                  <Text style={styles.captionText}>{captions[index]}</Text>
-                )}
-                {editing && (
-                  <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={() => handleRemoveImage(index)}
-                  >
-                    <Text style={styles.deleteButtonText}>X</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            ))}
+            {
+              previewURLs.length === 0 ? (
+                <Text style={styles.captionText}>No images to display</Text>
+              ) : (
+                previewURLs.map((url, index) => (
+                  <View key={index} style={styles.imageContainer}>
+                    <Image source={{ uri: url }} style={styles.image} />
+                    {editing ? (
+                      <>
+                        <TextInput
+                          style={styles.captionInput}
+                          onChangeText={(text) => handleCaptionChange(text, index)}
+                          value={captions[index]}
+                          placeholder="Edit caption"
+                        />
+                        <TouchableOpacity
+                          style={styles.deleteButton}
+                          onPress={() => handleRemoveImage(index)}
+                        >
+                          <Text style={styles.deleteButtonText}>X</Text>
+                        </TouchableOpacity>
+                      </>
+                    ) : (
+                      <Text style={styles.captionText}>{captions[index]}</Text>
+                    )}
+                  </View>
+                ))
+              )
+            }
           </ScrollView>
           {editing && (
             <>
@@ -206,7 +212,6 @@ const styles = StyleSheet.create({
     maxHeight: '80%',
   },
   scrollView: {
-    flexDirection: 'row',
     marginVertical: 20,
   },
   imageContainer: {
