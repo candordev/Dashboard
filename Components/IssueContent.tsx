@@ -9,6 +9,7 @@ import Text from "./Text";
 import { UserProfile, Post } from "../utils/interfaces";
 import { usePostContext } from "../Hooks/usePostContext";
 import ProgressBar from "./ProgressBar";
+import EditImagesModal from "./EditImagesModal";
 
 type IssueContent = {
   issue: Post;
@@ -16,41 +17,76 @@ type IssueContent = {
 
 const IssueContent: React.FC<IssueContent> = (props) => {
   const [editing, setEditing] = useState(false);
-
+  const [modalVisible, setModalVisible] = useState(false); 
   const [title, setTitle] = useState(props.issue.title);
   const [content, setContent] = useState(props.issue.content);
-  const [imageFile, setImageFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState('');
-
   const [isEditing, setIsEditing] = useState(false);
   const { post, setPost } = usePostContext();
   const [visibility, setVisibility] = useState(props.issue.visible);
-
-  
-
-
   const [email, setEmail] = useState(post?.proposalFromEmail);
+  const [imgURLs, setImgURLs] = useState<string[]>([]);
+  const [captions, setCaptions] = useState<string[]>([]);
 
+  useEffect(() => {
+    setTitle(props.issue.title);
+    setContent(props.issue.content);
+    let queriedUrls: React.SetStateAction<string[]> = []
+    let queriedCaptions: React.SetStateAction<string[]> = []
+    if (props.issue.imgURLs) {
+      props.issue.imgURLs.forEach(element => {
+        queriedUrls.push(element.url)
+        queriedCaptions.push(element.caption)
+      });
+    }
+    setImgURLs(queriedUrls);
+    setCaptions(queriedCaptions);
+  }, [props.issue]);
+
+  const handleToggleModal = () => {
+    console.log("image toggling", props.issue.imgURLs)
+    setModalVisible(!modalVisible); // Toggles the state of modal visibility
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false); // Explicitly close the modal
+    fetchPost(props.issue._id).then((fetchedIssue) => {
+      if (fetchedIssue && fetchedIssue.imgURLs) {
+        let queriedUrls: React.SetStateAction<string[]> = []
+        let queriedCaptions: React.SetStateAction<string[]> = []
+        if (fetchedIssue.imgURLs) {
+          fetchedIssue.imgURLs.forEach(element => {
+            queriedUrls.push(element.url)
+            queriedCaptions.push(element.caption)
+          });
+        }
+        console.log("AFTER CLOSE", queriedUrls, queriedCaptions)
+        setImgURLs(queriedUrls);
+        setCaptions(queriedCaptions);
+      }
+    });
+  };
+
+  const handleCloseNoEdit = () => {
+    setModalVisible(false); // Explicitly close the modal
+  };
 
   const handleDoneEditPost = async () => {
     try {
-      let res: Response = await customFetch(Endpoints.editPost, {
+      let res = await customFetch(Endpoints.editPost, {
         method: "POST",
         body: JSON.stringify({
           proposalFromEmail: email,
-          postID: post?._id, 
+          postID: post?._id,
         }),
       });
-
       let resJson = await res.json();
       if (!res.ok) {
-        setEmail(post?.proposalFromEmail); // set to previous email
+        setEmail(post?.proposalFromEmail);
         console.error("Error while editing post: ", resJson.error);
       } else {
         setIsEditing(false);
-        if (!(email === post?.proposalFromEmail)) {
-          setPost({ ...props.issue, proposalFromEmail: email || "" });
-          console.log("Handle Succeeded and new Post Email Set: ", post?.proposalFromEmail)
+        if (email !== post?.proposalFromEmail) {
+          setPost({ ...post, proposalFromEmail: email || "" });
         }
       }
     } catch (error) {
@@ -58,103 +94,75 @@ const IssueContent: React.FC<IssueContent> = (props) => {
     }
   };
 
-
-  const clearImage = () => {
-    setImageFile(null);
-    setPreviewUrl('');
-  };
-
-  const onImageChange = (event: any) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    } else {
-      alert('Please select an image file.');
+  const fetchPost = async (postId: string | undefined) => {
+    try {
+      if (postId) {
+        let res: Response = await customFetch(
+          Endpoints.getPostById +
+            new URLSearchParams({
+              postID: postId,
+            }),
+          {
+            method: "GET",
+          }
+        );
+        let resJson = await res.json();
+        if (!res.ok) {
+          return null
+        }
+        if (res.ok) {
+          const result: Post = resJson;
+          // console.info("fetched post is ", result);
+          return result;
+        }
+      }
+    } catch (error) {
+      return null
     }
   };
 
-
-  useEffect(() => {
-    console.log("THE VIsIBILITY: ", props.issue.visible)
-    // console.log("title changed to", props.title)
-    setTitle(props.issue.title);
-    setPreviewUrl(props.issue.imgURL ?? ''); // Use null if props.previewURl is undefined
-  }, [props.issue.title, props.issue.imgURL]);
-
-  useEffect(() => {
-    setContent(props.issue.content);
-  }, [props.issue.content]);
-
   const handleDone = async () => {
     try {
-      let formData = new FormData();
-      formData.append('title', title);
-      formData.append('content', content);
-      formData.append('postID', props.issue._id); // Assuming issueID is used to identify the post being edited
-  
-      // Check if there is an image to upload
-      if (imageFile) {
-        formData.append('image', imageFile);
-      }
-  
       let res = await customFetch(Endpoints.editPost, {
         method: "POST",
-        body: formData,
-      },0,
-      true
-      );
-  
+        body: JSON.stringify({
+          title: title,
+          content: content,
+          postID: props.issue._id,
+        })
+      });
+
       let resJson = await res.json();
       if (!res.ok) {
         console.error(resJson.error);
       } else {
         setEditing(false);
-        // Handle success, e.g., showing a success message or updating the UI accordingly
       }
     } catch (error) {
       console.error("Error while editing post. Please try again later.", error);
-      // Handle error, e.g., showing an error message
     }
   };
-  
 
   const toggleVisibility = async () => {
-    console.log("current visiblity: ", visibility)
-    const newVisibility = visibility ? false : true;
-    console.log("new visiblity: ", newVisibility)
-    
-
+    const newVisibility = !visibility;
     try {
-      console.log("In here 1")
-      let res: Response = await customFetch(Endpoints.editPost, {
+      let res = await customFetch(Endpoints.editPost, {
         method: "POST",
         body: JSON.stringify({
           visible: newVisibility,
-          postID: post?._id, // Assuming issue._id is the ID of the post to be edited
+          postID: post?._id,
         }),
       });
 
       let resJson = await res.json();
-      console.log("In here 2")
       if (!res.ok) {
-        console.log("In here 3")
         console.error("Error while editing post: ", resJson.error);
       } else {
-        console.log("In here 4")
         setVisibility(newVisibility);
-        // setIsEditing(false);
-        // if (!(email === post?.proposalFromEmail)) {
-        //   setPost({ ...props.issue, proposalFromEmail: email || "" });
-        //   console.log("Handle Succeeded and new Post Email Set: ", post?.proposalFromEmail)
-        // }
       }
     } catch (error) {
       console.error("Error editing post. Please try again later.", error);
     }
-
-  
-    // Here you might also want to update the visibility state of the issue in your backend or state management logic
   };
   
 
@@ -274,44 +282,6 @@ const IssueContent: React.FC<IssueContent> = (props) => {
             multiline={true}
             numberOfLines={content.length / 30 + 1}
           />
-          {previewUrl ? (
-            <>
-              <div style={{ marginBottom: 2 }}>
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  style={{ maxWidth: "100%", maxHeight: "200px" }}
-                />
-              </div>
-              <TouchableOpacity
-                style={styles.removeImageButton}
-                onPress={() => {
-                  clearImage(); // This function needs to clear the previewUrl and the file selection
-                }}
-              >
-                <Text style={styles.buttonText}>Remove Image</Text>
-              </TouchableOpacity>
-            </>
-          ) : (
-            <TouchableOpacity
-              style={styles.imageIcon}
-              onPress={() => {
-                const inputElement = document.getElementById("image-input");
-                if (inputElement !== null) {
-                  inputElement.click();
-                }
-              }}
-            >
-              <input
-                type="file"
-                accept="image/*"
-                onChange={onImageChange}
-                style={{ display: "none" }}
-                id="image-input"
-              />
-              <Text style={styles.buttonText}>Select Image</Text>
-            </TouchableOpacity>
-          )}
         </View>
       ) : (
         <>
@@ -341,15 +311,7 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           <Text style={{ fontSize: 14, marginTop: 5, marginBottom: 10 }}>
             {content}
           </Text>
-          {previewUrl && (
-            <div style={{ marginBottom: 2 }}>
-              <img
-                src={previewUrl}
-                alt="Preview"
-                style={{ maxWidth: "100%", maxHeight: "200px" }}
-              />
-            </div>
-          )}
+          
         </>
       )}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginTop: 10 }}>
@@ -364,10 +326,64 @@ const IssueContent: React.FC<IssueContent> = (props) => {
           }}
           textStyle={{
             color: colors.white,
-            fontSize: 12,
+            fontSize: 14,
             fontWeight: "500",
           }}
         />
+        {editing ? (
+          <EditImagesModal
+          visible={modalVisible}
+          postID={props.issue._id}
+          imageCaptions={captions || []}
+          editing={true}
+          imgURLs={imgURLs || []}
+          handleClose={handleCloseModal}
+          />
+        ) : (
+          <EditImagesModal
+          visible={modalVisible}
+          postID={props.issue._id}
+          imageCaptions={captions || []}
+          editing={false}
+          imgURLs={imgURLs || []}
+          handleClose={handleCloseNoEdit}
+          />
+        )}
+        
+        {editing ? (
+          <Button
+            text="Edit Photos"
+            onPress={handleToggleModal}
+            style={{
+              backgroundColor: colors.purple,
+              marginRight: 5,
+              height: 30
+            }}
+            textStyle={{
+              color: colors.white,
+              fontSize: 14,
+              fontWeight: "500"
+            }}
+          />
+        ) : (
+          props.issue.imgURLs && props.issue.imgURLs.length > 0 && (
+              <Button
+              text="View Photos"
+              onPress={handleToggleModal}
+              style={{
+                backgroundColor: colors.lightestgray,
+                marginRight: 5,
+                height: 30
+              }}
+              textStyle={{
+                color: colors.black,
+                fontSize: 14,
+                fontWeight: "500"
+              }}
+            />
+          )
+          )}
+
         <Button
           text={editing ? "Done" : "Edit"}
           onPress={() => {

@@ -60,6 +60,10 @@ export interface AdminPoint {
   points: number;
 }
 
+export interface FileCaption {
+  url: string;
+  caption: string;
+}
 // TODO: remove user field (redundant, inside of userProfile)
 export interface Post {
   visible: boolean;
@@ -86,6 +90,8 @@ export interface Post {
   userSaved: boolean;
   userProfile: UserProfile;
   imgURL?: string;
+  imgURLs?: FileCaption[];
+  videoURLs?: FileCaption;
   popularity: number;
   deleted: boolean;
   politicianLikes: UserProfile[];
