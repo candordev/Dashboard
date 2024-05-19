@@ -366,21 +366,23 @@ const IssueContent: React.FC<IssueContent> = (props) => {
             }}
           />
         ) : (
-          <Button
-            text="View Photos"
-            onPress={handleToggleModal}
-            style={{
-              backgroundColor: colors.lightestgray,
-              marginRight: 5,
-              height: 30
-            }}
-            textStyle={{
-              color: colors.black,
-              fontSize: 14,
-              fontWeight: "500"
-            }}
-          />
-)}
+          props.issue.imgURLs && props.issue.imgURLs.length > 0 && (
+              <Button
+              text="View Photos"
+              onPress={handleToggleModal}
+              style={{
+                backgroundColor: colors.lightestgray,
+                marginRight: 5,
+                height: 30
+              }}
+              textStyle={{
+                color: colors.black,
+                fontSize: 14,
+                fontWeight: "500"
+              }}
+            />
+          )
+          )}
 
         <Button
           text={editing ? "Done" : "Edit"}
