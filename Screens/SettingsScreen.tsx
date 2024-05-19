@@ -3,6 +3,7 @@ import { TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import NotificationPopup from "../Components/NotificationPopup";
 import OuterView from "../Components/OuterView";
+import SmsOptInOut from "../Components/SmsOptInOut";
 import ProfilePicture from "../Components/ProfilePicture";
 import Text from "../Components/Text";
 import { useUserContext } from "../Hooks/useUserContext";
@@ -33,6 +34,7 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
       <NotificationPopup navigation={navigation} />
       <OuterView style={{backgroundColor: colors.white}}>
         <GeneralSettings />
+        {/* <SmsOptInOut /> */}
         {/* <DepartmentSettings />
         <TagSettings />
         <DeadlineSettings /> */}
