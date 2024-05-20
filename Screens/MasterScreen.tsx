@@ -112,7 +112,7 @@ const MasterScreen = ({ navigation }: any) => {
           />
         </View>
       </View> 
-      <GroupInsightsComponent masterID={state.master ? state.master._id : undefined} sortType={selectedSort}/>
+      <GroupInsightsComponent masterID={state.master ? state.master._id : undefined} sortType={selectedSort} navigation={navigation}/>
     </View>
     </OuterView>
     </>

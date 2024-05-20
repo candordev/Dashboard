@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   container: {
     height: 36,
     alignItems: "center",
-    width: "100%",
     backgroundColor: colors.background,
   },
   searchBar: {
@@ -73,12 +72,12 @@ const styles = StyleSheet.create({
     // borderWidth: 2,
     // borderColor: colors.lightergray,
     borderRadius: 15,
-    alignItems: "center",
     width: "100%",
+    alignItems: "center",
   },
   input: {
     fontSize: 15,
-    fontFamily: "OpenSans",
+    fontFamily: "Montserrat",
     marginLeft: 10,
     fontWeight: '500' as any,
     flex: 1,
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     outlineStyle: "none",
   },
-  clearButton: {
-    marginLeft: 10,
-  },
+  // clearButton: {
+  //   marginLeft: 10,
+  // },
 });

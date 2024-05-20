@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Platform } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Platform, Pressable } from 'react-native';
 import colors from '../Styles/colors';
 import { customFetch } from '../utils/utils';
 import { Endpoints } from '../utils/Endpoints';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useUserContext } from "../Hooks/useUserContext";
 
 interface InsightValues {
     step0: number;
@@ -20,13 +21,13 @@ interface InsightValues {
 interface GroupInsightsComponentProps {
     masterID: string;
     sortType: string | undefined; // Add this prop to accept the sort type
-
+    navigation: any;
   }
   
 
-  const GroupInsightsComponent: React.FC<GroupInsightsComponentProps> = ({ sortType,masterID }) => {
+  const GroupInsightsComponent: React.FC<GroupInsightsComponentProps> = ({ sortType,masterID,navigation }) => {
     const [insights, setInsights] = useState([]);
-    
+    const { state, dispatch } = useUserContext();
 
   const fetchInsights = async () => {
     try {
@@ -50,6 +51,15 @@ interface GroupInsightsComponentProps {
     }
   };
 
+  const handleGroupSelect = async (currentGroup: any) => {
+    console.log("currentGroup", currentGroup);
+    // Update the current group in the global state
+    await dispatch({ type: "SET_CURRENT_GROUP", payload: currentGroup });
+    console.log("Event Triggg: ", state.currentGroup);
+    // Navigate to the "All" screen
+    navigation.navigate("all");
+  };
+
   useEffect(() => {
     fetchInsights();
   }, [masterID, sortType]); // Dependency on masterID to refetch if it changes
@@ -59,31 +69,33 @@ interface GroupInsightsComponentProps {
       <FlatList
         data={insights}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => {
+        renderItem={({ item}) => {
             const groupName = Object.keys(item)[0];
-            console.log("an item", (Object.values(item as GroupInsights)[0][0]));
+            console.log("an item", (Object.values(item as GroupInsights)[0][4]));
             return (
-            <View style={styles.groupContainer}>
-              <Text style={styles.groupName}>{groupName}</Text>
-              <View style={styles.insightsContainer}>
-                <View style={[styles.card, styles.shadow]}>
-                  <Text style={styles.cardNumber}>{(Object.values(item as GroupInsights)[0][0])}</Text>
-                  <Text style={styles.cardTitle}>Total Unassigned Issues</Text>
+              <Pressable onPress={() => handleGroupSelect((Object.values(item as GroupInsights)[0][4]))}>
+                <View style={styles.groupContainer}>
+                  <Text style={styles.groupName}>{groupName}</Text>
+                  <View style={styles.insightsContainer}>
+                    <View style={[styles.card, styles.shadow]}>
+                      <Text style={styles.cardNumber}>{(Object.values(item as GroupInsights)[0][0])}</Text>
+                      <Text style={styles.cardTitle}>Total Unassigned Issues</Text>
+                    </View>
+                    <View style={[styles.card, styles.shadow]}>
+                      <Text style={styles.cardNumber}>{(Object.values(item as GroupInsights)[0][1])}</Text>
+                      <Text style={styles.cardTitle}>Total Issues w/ 0 Updates</Text>
+                    </View>
+                    <View style={[styles.card, styles.shadow]}>
+                      <Text style={styles.cardNumber}>{Object.values(item as GroupInsights)[0][2]}</Text>
+                      <Text style={styles.cardTitle}>High Priority</Text>
+                    </View>
+                    <View style={[styles.card, styles.shadow]}>
+                      <Text style={styles.cardNumber}>{(Object.values(item as GroupInsights)[0][3])}</Text>
+                      <Text style={styles.cardTitle}>Medium Priority</Text>
+                    </View>
+                  </View>
                 </View>
-                <View style={[styles.card, styles.shadow]}>
-                  <Text style={styles.cardNumber}>{(Object.values(item as GroupInsights)[0][1])}</Text>
-                  <Text style={styles.cardTitle}>Total Issues w/ 0 Updates</Text>
-                </View>
-                <View style={[styles.card, styles.shadow]}>
-                  <Text style={styles.cardNumber}>{Object.values(item as GroupInsights)[0][2]}</Text>
-                  <Text style={styles.cardTitle}>High Priority</Text>
-                </View>
-                <View style={[styles.card, styles.shadow]}>
-                  <Text style={styles.cardNumber}>{(Object.values(item as GroupInsights)[0][3])}</Text>
-                  <Text style={styles.cardTitle}>Medium Priority</Text>
-                </View>
-              </View>
-            </View>
+              </Pressable>
           );
         }}
       />
