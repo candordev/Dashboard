@@ -27,10 +27,12 @@ interface GroupInsightsComponentProps {
 
   const GroupInsightsComponent: React.FC<GroupInsightsComponentProps> = ({ sortType,masterID,navigation }) => {
     const [insights, setInsights] = useState([]);
+    const [activities, setActivities] = useState({} as any);
     const { state, dispatch } = useUserContext();
 
   const fetchInsights = async () => {
     try {
+      console.log("master", masterID)
       const response = await customFetch(
           `${Endpoints.getMasterInsights}masterID=${masterID}&sortFilter=${sortType}`,
 
@@ -43,6 +45,8 @@ interface GroupInsightsComponentProps {
         const data = await response.json();
         console.log("insights", data.insights)
         setInsights(data.insights); // Assuming the API response structure
+        console.log("activities", data.activities)
+        setActivities(data.activities);
       } else {
         console.error("Failed to fetch group insights.");
       }
@@ -71,11 +75,16 @@ interface GroupInsightsComponentProps {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item}) => {
             const groupName = Object.keys(item)[0];
-            console.log("an item", (Object.values(item as GroupInsights)[0][4]));
+            const isNewActivity = activities[groupName] ? activities[groupName] : false;
+            console.log("is new activity", isNewActivity);
+            console.log("an item", (Object.values(item as GroupInsights)[0]));
             return (
               <Pressable onPress={() => handleGroupSelect((Object.values(item as GroupInsights)[0][4]))}>
                 <View style={styles.groupContainer}>
-                  <Text style={styles.groupName}>{groupName}</Text>
+                  <View style={styles.groupNameContainer}>
+                    <View style={isNewActivity ? styles.redDot : styles.invisibleDot} />
+                    <Text style={styles.groupName}>{groupName}</Text>
+                  </View>
                   <View style={styles.insightsContainer}>
                     <View style={[styles.card, styles.shadow]}>
                       <Text style={styles.cardNumber}>{(Object.values(item as GroupInsights)[0][0])}</Text>
@@ -108,6 +117,41 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 20,
     zIndex: 1
+  },
+  groupNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    verticalAlign: 'middle',
+    width: '100%',
+  },
+  redDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'red',
+    marginRight: 10,
+    marginBottom: 13,
+    alignSelf: 'center', 
+  },
+  invisibleDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'transparent',
+    marginRight: 10,
+    marginBottom: 13,
+    alignSelf: 'center', 
+  },
+  newActivityText: {
+    marginLeft: 5,
+    color: 'red',
+    fontFamily: 'Montserrat',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  newActivityIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   groupContainer: {
     marginBottom: 20,
