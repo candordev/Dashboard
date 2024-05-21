@@ -11,6 +11,8 @@ import colors from "../Styles/colors";
 import OuterView from "../Components/OuterView";
 import { ScrollView } from "react-native-gesture-handler";
 import NotificationPopup from "../Components/NotificationPopup";
+import GroupActivityResetTime from "../Components/GroupActivityResetTime";
+import DownloadReport from "../Components/DownloadReport";
 
 const GroupSettingsScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
@@ -43,10 +45,12 @@ const GroupSettingsScreen = ({ navigation }: any) => {
           <DocumentList groupID={selectedGroupID} />
           <DepartmentEditor groupID={selectedGroupID} />
           <PrioritySetter groupID={selectedGroupID} />
+          <GroupActivityResetTime groupID={selectedGroupID} />
         </View>
         <View style={{ flex: 1 }}>
           <TagEditor groupID={selectedGroupID} />
           <MemberManagement groupID={selectedGroupID} userID={state._id} />
+          <DownloadReport groupID={selectedGroupID} />
         </View>
       </ScrollView>
     </OuterView>

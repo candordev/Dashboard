@@ -9,6 +9,7 @@ import { useNotification } from "../Structure/NotificationContext"; // Update th
 import colors from "../Styles/colors";
 import { downloadPDF, getUnreadNotifs } from "../utils/utils";
 import ProfilePicture from "./ProfilePicture";
+import SearchBar from "./SearchBar";
 import Text from "./Text";
 
 interface LHNProps {
@@ -20,6 +21,11 @@ const LHN = (props: LHNProps) => {
   const [unread, setUnread] = useState<number>(0);
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
+  const [searchPhrase, setSearchPhrase] = useState("");
+
+  const filteredGroups = state.leaderGroups.filter((group) =>
+    group.name.toLowerCase().includes(searchPhrase.toLowerCase())
+  );
 
   const isFirstRender = useRef(true);
 
@@ -120,26 +126,25 @@ const LHN = (props: LHNProps) => {
         ></View>
         {state.groupType === "AIChat" && (
           <>
-          <NavItem
-          name={"ChatInsights"}
-          route="/chatInsights"
-          icon="pie-chart"
-          selected={navIndex === 2}
-          />
-          <NavItem
-          name={"Train"}
-          route="/trainChat"
-          icon="activity"
-          selected={navIndex === 1}
-          />
-                    <NavItem
-            name={"Chats"}
-            route="/chats"
-            icon="message-circle"
-            selected={navIndex === 0}
-          />
-
-        </>
+            <NavItem
+              name={"ChatInsights"}
+              route="/chatInsights"
+              icon="pie-chart"
+              selected={navIndex === 2}
+            />
+            <NavItem
+              name={"Train"}
+              route="/trainChat"
+              icon="activity"
+              selected={navIndex === 1}
+            />
+            <NavItem
+              name={"Chats"}
+              route="/chats"
+              icon="message-circle"
+              selected={navIndex === 0}
+            />
+          </>
         )}
         {state.master ? (
           <>
@@ -149,13 +154,23 @@ const LHN = (props: LHNProps) => {
               icon="list"
               selected={navIndex === 3}
             />
-            <View style={{ maxHeight: 140, paddingLeft: 30, marginBottom: 18 }}>
-              <ScrollView>
-                {state.leaderGroups.map(
-                  (
-                    group: { _id: any; name: string | any[] },
-                    index: React.Key | null | undefined
-                  ) => (
+            <View style={{ backgroundColor: colors.darkGray, padding: 7.5, borderRadius: 10, marginBottom: 10, }}>
+              <SearchBar
+                searchPhrase={searchPhrase}
+                setSearchPhrase={setSearchPhrase}
+                placeholder="Search groups..."
+                containerStyle={{
+                  width: "100%",
+                  borderRadius: 10,
+                  marginBottom: 5,
+                  backgroundColor: colors.white,
+                }}
+              />
+              <View
+                style={{ height: Math.min(140, state.leaderGroups.length * 28), paddingLeft: 25, marginBottom: 5 }}
+              >
+                <ScrollView>
+                  {filteredGroups.map((group, index) => (
                     <Pressable
                       key={index}
                       onPress={() => handleGroupSelect(group._id)}
@@ -185,20 +200,18 @@ const LHN = (props: LHNProps) => {
                           : group.name}
                       </Text>
                     </Pressable>
-                  )
-                )}
-              </ScrollView>
+                  ))}
+                </ScrollView>
+              </View>
             </View>
           </>
         ) : (
-          state.groupType !== "AIChat" && (
-            <NavItem
-              name={"Issues"}
-              route="/all"
-              icon="list"
-              selected={navIndex === 3}
-            />
-          )
+          <NavItem
+            name={"Issues"}
+            route="/all"
+            icon="list"
+            selected={navIndex === 3}
+          />
         )}
         {state.groupType !== "AIChat" && (
           <NavItem
@@ -208,7 +221,6 @@ const LHN = (props: LHNProps) => {
             unreadCount={unread}
             selected={navIndex === 5}
           />
-          
         )}
         <NavItem
           name={"Settings"}

@@ -7,7 +7,9 @@
 // }
 
 // local
+
 // export const BASE_URL : string = `http://localhost:4000/api`;
+
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
 
 // DEVELOPMENT
@@ -160,4 +162,6 @@ export const Endpoints = {
   addChunk: `${BASE_URL}/document/addChunk`,
   deleteChunk: `${BASE_URL}/document/deleteChunk`,
   editChunk: `${BASE_URL}/document/editChunk`,
+  getActivityStatus: `${BASE_URL}/group/getActivityStatus?`,
+  editActivityResetDuration: `${BASE_URL}/group/editActivityResetDuration?`,
 };
