@@ -15,6 +15,7 @@ import FeatherIcon from "react-native-vector-icons/Feather";
 import styles from "../Styles/styles";
 import Button from "./Button";
 import { color } from "react-native-reanimated";
+import SearchBar from "./SearchBar";
 
 type MemberManagementProps = {
   documentTitle: string;
@@ -34,6 +35,11 @@ const RawChunks = ({ documentTitle, headerTitle }: MemberManagementProps) => {
   const [newContent, setNewContent] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [inputHeight, setInputHeight] = useState(0);
+  const [searchPhrase, setSearchPhrase] = useState("");
+
+  const filteredChunks = Chunks.filter((chunk) =>
+    chunk.content.toLowerCase().includes(searchPhrase.toLowerCase()) || chunk.documentTitle.toLowerCase().includes(searchPhrase.toLowerCase())
+  );
 
 
   useEffect(() => {
@@ -250,8 +256,19 @@ const RawChunks = ({ documentTitle, headerTitle }: MemberManagementProps) => {
       >
         {headerTitle}
       </Text>
+      <SearchBar
+        searchPhrase={searchPhrase}
+        setSearchPhrase={setSearchPhrase}
+        placeholder="Search chunks..."
+        containerStyle={{
+          width: "100%",
+          borderRadius: 10,
+          marginBottom: 5,
+          backgroundColor: colors.white,
+        }}
+      />
       <FlatList
-        data={Chunks}
+        data={filteredChunks}
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
       />
