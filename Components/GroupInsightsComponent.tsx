@@ -56,6 +56,7 @@ interface GroupInsightsComponentProps {
     }
   };
 
+  // Next two methods are bad code. Fix
   const fetchActivities = async () => {
     try {
       console.log("master", masterID)
@@ -79,6 +80,14 @@ interface GroupInsightsComponentProps {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchActivities();
+
+      return;
+    }, [])
+  );
+
   const handleGroupSelect = async (currentGroup: any) => {
     console.log("currentGroup", currentGroup);
     // Update the current group in the global state
@@ -87,18 +96,6 @@ interface GroupInsightsComponentProps {
     // Navigate to the "All" screen
     navigation.navigate("all");
   };
-
-  useEffect(() => {
-    fetchActivities();
-  }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchActivities();
-
-      return;
-    }, [])
-  );
 
   useEffect(() => {
     fetchInsights();
