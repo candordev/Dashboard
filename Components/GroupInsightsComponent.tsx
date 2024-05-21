@@ -5,6 +5,7 @@ import { customFetch } from '../utils/utils';
 import { Endpoints } from '../utils/Endpoints';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useUserContext } from "../Hooks/useUserContext";
+import { useFocusEffect } from '@react-navigation/native';
 
 interface InsightValues {
     step0: number;
@@ -55,6 +56,29 @@ interface GroupInsightsComponentProps {
     }
   };
 
+  const fetchActivities = async () => {
+    try {
+      console.log("master", masterID)
+      const response = await customFetch(
+          `${Endpoints.getMasterInsights}masterID=${masterID}&sortFilter=${sortType}`,
+
+        {
+          method: "GET",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("activities", data.activities)
+        setActivities(data.activities);
+      } else {
+        console.error("Failed to fetch group insights.");
+      }
+    } catch (error) {
+      console.error("Error fetching group insights:", error);
+    }
+  };
+
   const handleGroupSelect = async (currentGroup: any) => {
     console.log("currentGroup", currentGroup);
     // Update the current group in the global state
@@ -63,6 +87,18 @@ interface GroupInsightsComponentProps {
     // Navigate to the "All" screen
     navigation.navigate("all");
   };
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchActivities();
+
+      return;
+    }, [])
+  );
 
   useEffect(() => {
     fetchInsights();
