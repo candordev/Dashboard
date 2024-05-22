@@ -22,10 +22,14 @@ const LHN = (props: LHNProps) => {
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
   const [searchPhrase, setSearchPhrase] = useState("");
-
-  const filteredGroups = state.leaderGroups.filter((group) =>
-    group.name.toLowerCase().includes(searchPhrase.toLowerCase())
-  );
+  
+  let filteredGroups = []
+  if(state && state.leaderGroups) {
+    filteredGroups = state.leaderGroups.filter((group) =>
+      group.name.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
+  }
+  
 
   const isFirstRender = useRef(true);
 
