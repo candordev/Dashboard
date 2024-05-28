@@ -34,7 +34,7 @@ const ChatsLineGraph: React.FC<CasesChartProps> = ({ data }) => {
           interval={"preserveEnd"}
         />
         <Tooltip />
-        <Legend />
+        {/* <Legend /> */}
         <Line
           type="monotone"
           dataKey="count"

@@ -18,6 +18,7 @@ const OuterView: React.FC<OuterViewProps> = ({ children, style }) => {
           marginLeft: 0,
           borderRadius: 20,
           padding: 10,
+          overflow: "hidden",
         }, style]}
       >
         {children}

@@ -120,7 +120,6 @@ const ChatsScreen = ({ navigation, route }: any) => {
   
 
   return (
-    <>
       <OuterView
         style={{
           backgroundColor: colors.white,
@@ -201,7 +200,6 @@ const ChatsScreen = ({ navigation, route }: any) => {
           ) : null}
         </View>
       </OuterView>
-    </>
   );
 };
 

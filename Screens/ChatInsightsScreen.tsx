@@ -78,7 +78,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                         fontWeight: "450",
                     }}
                 >
-                    Issues
+                    Chats
                 </Text>
                 <View style={{flex: 1, overflow: 'hidden'}}>
                   <ChatsLineGraph data={chatInsights?.chatsPerDayLineGraphWeb || []} />
