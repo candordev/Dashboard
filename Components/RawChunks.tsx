@@ -265,7 +265,9 @@ const RawChunks = ({ documentTitle, headerTitle }: MemberManagementProps) => {
           borderRadius: 10,
           marginBottom: 5,
           backgroundColor: colors.white,
+          marginTop: 10,
         }}
+        searchBarStyle={{backgroundColor: colors.lightestgray}}
       />
       <FlatList
         data={filteredChunks}
