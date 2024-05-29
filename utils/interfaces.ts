@@ -60,6 +60,14 @@ export interface AdminPoint {
   points: number;
 }
 
+export interface LeadContact {
+  sessionId: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  _id: string;
+}
 export interface FileCaption {
   url: string;
   caption: string;

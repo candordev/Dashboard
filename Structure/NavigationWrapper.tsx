@@ -92,6 +92,7 @@ function NavigationWrapper() {
         trainChat: "trainChat",
         chatInsights: "chatInsights",
         master: "master",
+        leads: "leads",
         NotFound: "404",
       },
     },
