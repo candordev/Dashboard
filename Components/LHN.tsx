@@ -148,6 +148,12 @@ const LHN = (props: LHNProps) => {
               icon="message-circle"
               selected={navIndex === 0}
             />
+            <NavItem
+              name={"Leads"}
+              route="/leads"
+              icon="user"
+              selected={navIndex === 9}
+            />
           </>
         )}
         {state.master ? (
@@ -214,7 +220,7 @@ const LHN = (props: LHNProps) => {
             name={"Issues"}
             route="/all"
             icon="list"
-            selected={navIndex === 3}
+            selected={navIndex === 4}
           />
         )}
         {state.groupType !== "AIChat" && (

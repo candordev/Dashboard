@@ -10,7 +10,6 @@ import RawChunks from "../Components/RawChunks";
 
 const TrainChatScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
-  const groupID = state.leaderGroups[0]._id;
 
   return (
     <OuterView

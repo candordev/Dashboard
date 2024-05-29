@@ -12,6 +12,7 @@ import MasterScreen from "./MasterScreen"; // Adjust the import path as necessar
 import { useUserContext } from "../Hooks/useUserContext";
 import SupportScreen from "./SupportScreen";
 import ChatsScreen from "./ChatsScreen";
+import LeadsScreen from "./LeadsScreen";
 import TrainChatScreen from "./TrainChat";
 import ChatInsightsScreen from "./ChatInsightsScreen";
 
@@ -120,6 +121,11 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
         component={SupportScreen}
         options={{ title: "Candor - 24/7 Support" }}
       />
+      <Drawer.Screen
+        name="leads"
+        component={LeadsScreen}
+        options={{ title: "Candor - Leads" }}
+      /> 
     </Drawer.Navigator>
   );
 }
