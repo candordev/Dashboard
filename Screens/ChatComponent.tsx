@@ -315,7 +315,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
         {/* Buttons Container */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {/* AI Toggle Button */}
-          {/* <Button
+          <Button
             text={isAITurnedOn ? "AI ON" : "AI OFF"}
             onPress={toggleAI}
             style={{
@@ -323,8 +323,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
               marginRight: 5,
             }}
             textStyle={{ color: colors.white, fontSize: 14, fontWeight: 700 }}
-          /> */}
-          {/* Priority Toggle Button */}
+          /> 
           <Button
             text={`Priority: ${priority}`}
             onPress={togglePriority}
@@ -353,7 +352,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
         }
       />
 
-      {/* <View
+       <View
         style={[
           styles.textInput,
           {
@@ -382,7 +381,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
             color={inputText.trim() ? colors.purple : colors.lightgray}
           />
         </TouchableOpacity>
-      </View> */}
+      </View> 
     </View>
   );
 };

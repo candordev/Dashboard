@@ -128,7 +128,7 @@ const ChatsScreen = ({ navigation, route }: any) => {
         }}
       >
         <View style={{ flex: 1, borderRightWidth: 1, borderColor: colors.lightergray}}>
-          {/* <View
+         <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -157,7 +157,7 @@ const ChatsScreen = ({ navigation, route }: any) => {
               }}
               style={{ margin: 7 }} 
             />
-          </View> */}
+          </View> 
 
           {/* FlatList for displaying numbers */}
           <FlatList
