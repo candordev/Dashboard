@@ -15,6 +15,7 @@ import { formatDate } from "../utils/utils";
 import styles from "../Styles/styles";
 
 interface CardProps {
+  navigation: any;  
   issue: Post;
   onPopoverCloseComplete: () => void; // Add this line
   hasInitialOpen: () => void; // Add this line
@@ -102,6 +103,7 @@ function Card(props: CardProps & { initialOpen?: boolean }): JSX.Element {
       }}
     >
       <IssueView
+        navigation={props.navigation}
         issue={props.issue}
         onPopoverCloseComplete={props.onPopoverCloseComplete}
       />
