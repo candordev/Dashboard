@@ -100,7 +100,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                 <InsightsBarChart chatInsights={chatInsights}/>
              </View>
         </View>
-        <View style={[additionalStyles.insightsSection, { flex: 1}]}>
+        {/* <View style={[additionalStyles.insightsSection, { flex: 1}]}>
             <Text
                 style={{
                     color: colors.black,
@@ -124,7 +124,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                 </TouchableOpacity>
                 ))}
             </ScrollView>
-        </View>
+        </View> */}
     </View>
     </OuterView>
     </>

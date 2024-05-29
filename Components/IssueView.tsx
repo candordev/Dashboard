@@ -13,6 +13,7 @@ import { usePostContext } from "../Hooks/usePostContext";
 import FeatherIcon from "react-native-vector-icons/Feather";
 
 interface IssueViewProps {
+  navigation: any;
   issue: Post;
   onPopoverCloseComplete: () => void; // Add this line
   style?: any;
@@ -42,7 +43,7 @@ function IssueView(props: IssueViewProps): JSX.Element {
         }
         if (res.ok) {
           const result: Post = resJson;
-          // console.info("fetched post is ", result);
+          console.info("fetched post is ", result);
           return result;
         }
       }
@@ -128,7 +129,7 @@ function IssueView(props: IssueViewProps): JSX.Element {
       ]}
     >
 
-      <IssueLeftView issue={issue}/>
+      <IssueLeftView issue={issue} navigation={props.navigation}/>
       <IssueMiddleView updateTrigger={updateTrigger} issue={issue}/>
       <IssueRightView fetchStatusUpdates={handleUpdateTrigger} issue={issue} onPopoverCloseComplete={props.onPopoverCloseComplete}/>
     </View>

@@ -354,6 +354,7 @@ const AllScreen = ({ navigation }: any) => {
                   data={posts}
                   renderItem={({ item }) => (
                     <Card
+                      navigation={navigation}
                       key={item._id}
                       issue={item}
                       onPopoverCloseComplete={handlePopoverCloseComplete} // Pass the handler here
