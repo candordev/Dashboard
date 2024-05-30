@@ -10,8 +10,10 @@ import IssueContent from "./IssueContent";
 import PrivateChat from "./PrivateChat";
 import Text from "./Text";
 import stylesImp from "../Styles/styles";
+import ChatLinkButton from "./ChatLinkButton";
 
 interface IssueLeftViewProps {
+  navigation: any;
   issue: Post;
 }
 
@@ -33,6 +35,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
   useEffect(() => {
     // console.log("title changed to", props.issue.title)
     setIssue(props.issue);
+    console.log("passed issue", props.issue);
   }, [props.issue]);
 
   // Modified useEffect for initial and subsequent loads
@@ -122,7 +125,12 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
     >
       <IssueContent issue={issue} />
       {/* Tab controls */}
-
+      {issue.associatedChatSessionId && (
+          <ChatLinkButton
+            sessionId={issue.associatedChatSessionId}
+            navigation={props.navigation}
+          />
+        )}
       <View
         style={{
           backgroundColor: colors.white,
@@ -135,40 +143,7 @@ function IssueLeftView(props: IssueLeftViewProps): JSX.Element {
           alignContent: "flex-start", // Align content to the start
         }}
       >
-        {/* <View style={styles.tabs}>
-          <TouchableOpacity
-            onPress={() => handleTabSelect("comments")}
-            style={[styles.tab, activeTab === "comments" && styles.activeTab]}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "comments" && styles.activeTabText,
-              ]}
-            >
-              Comments
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleTabSelect("chat")}
-            style={[styles.tab, activeTab === "chat" && styles.activeTab]}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === "chat" && styles.activeTabText,
-              ]}
-            >
-              Private Chat
-            </Text>
-          </TouchableOpacity>
-        </View> */}
-        {/* Tab content
-        {activeTab === "comments" ? (
-          <CommentsSection postID={props.issue._id} />
-        ) : ( */}
           <PrivateChat issue={props.issue} />
-        {/* )} */}
       </View>
     </View>
   );

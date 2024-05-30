@@ -131,7 +131,8 @@ export interface Post {
   lat: String;
   mergedPosts: Post[],
   suggestedSimilarPost: Post
-  merged: Boolean
+  merged: Boolean,
+  associatedChatSessionId: string;
 }
 
 // Interface definition for the chat insights data

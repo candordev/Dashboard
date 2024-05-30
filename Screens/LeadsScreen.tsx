@@ -11,12 +11,15 @@ import styles from "../Styles/styles";
 import OuterView from "../Components/OuterView";
 import ContactsTable from "../Components/ContactsTable";
 import { useUserContext } from "../Hooks/useUserContext";
+import { ScrollView } from "react-native-gesture-handler";
 
 const LeadsScreen = ({ navigation }: any) => {
   const { state, dispatch } = useUserContext();
   return (
     <OuterView style={{backgroundColor: colors.white}}>
-        <ContactsTable groupID={state.currentGroup} navigation={navigation}/>
+        <ScrollView>
+            <ContactsTable groupID={state.currentGroup} navigation={navigation}/>
+        </ScrollView>
     </OuterView>
   );
 };
