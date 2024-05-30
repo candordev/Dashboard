@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   TextInput,
+  Modal,
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
@@ -14,9 +15,11 @@ import { customFetch, formatDate} from "../utils/utils";
 // import TextInput from '../Components/Native/TextInput';
 import Icon from "react-native-vector-icons/FontAwesome";
 import styles from "../Styles/styles";
+import {  StyleSheet, } from "react-native";
 import Button from "../Components/Button";
 import ExpandableTextInput from "../Components/ExpandableTextInput";
 import { useUserContext } from "../Hooks/useUserContext";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 
 interface ChatComponentProps {
@@ -33,13 +36,23 @@ interface MessageItem {
   author: "AI" | "Resident" | "Leader"; // Assuming these are the only possible authors
   date: string;
 }
+interface ContactInfo {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+}
+
 
 const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityChange }) => {
   const [inputText, setInputText] = useState(""); // State to hold the input text
   const [isAITurnedOn, setIsAITurnedOn] = useState(false);
   const [priority, setPriority] = useState("Low");
-  const [userType,setUserType] = useState("");
+  const [userType,setUserType] = useState(""); 
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const { state, dispatch } = useUserContext();
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   const toggleAI = async () => {
     const newAIState = !isAITurnedOn;
@@ -131,6 +144,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
       }
 
       const data = await response.json();
+
+      setContactInfo(data.contactInfo);
       setUserType(data.data[1].userType)
       setPriority(data.priority);
       setIsAITurnedOn(data.AIReply);
@@ -179,6 +194,14 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
         console.error("Network error while sending message:", error);
       }
     }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleInfoPress = () => {
+    setModalVisible(true);
   };
 
   function fetchMoreChats() {
@@ -302,7 +325,42 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
         }}
       >
         {/* Phone Number Display */}
-        <Text
+        {contactInfo && (
+              <TouchableOpacity onPress={handleInfoPress}>
+                <MaterialIcons name="info" size={24} color={colors.purple} style={{marginRight: 5.3}}/>
+              </TouchableOpacity>
+            )}
+            <Modal
+            visible={modalVisible}
+            transparent={true}
+            // animationType="slide"
+            onRequestClose={closeModal}
+          >
+            <View style={additionalStyles.modalBackground}>
+              <View style={additionalStyles.modalContainer}>
+                <Text style={additionalStyles.modalText}>First Name: {contactInfo?.firstName || 'N/A'}</Text>
+                <Text style={additionalStyles.modalText}>Last Name: {contactInfo?.lastName || 'N/A'}</Text>
+                <Text style={additionalStyles.modalText}>Email: {contactInfo?.email || 'N/A'}</Text>
+                <Text style={additionalStyles.modalText}>Phone Number: {contactInfo?.phoneNumber || 'N/A'}</Text>
+                <TouchableOpacity onPress={closeModal} style={additionalStyles.closeButton}>
+                  <Text style={additionalStyles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+          <Text
+          style={{
+            flex: 1,
+            color: colors.black,
+            fontSize: 18,
+            fontFamily: "Montserrat",
+          }}
+        >
+          {contactInfo && (contactInfo.firstName || contactInfo.lastName)
+            ? `${contactInfo.firstName || ''} ${contactInfo.lastName || ''}`.trim()
+            : phoneNumber} ({userType})
+        </Text>
+        {/* <Text
           style={{
             flex: 1,
             color: colors.black,
@@ -311,10 +369,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
           }}
         >
           {phoneNumber + "(" + userType + ")"}
-        </Text>
+        </Text> */}
         {/* Buttons Container */}
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          {/* AI Toggle Button */}
           <Button
             text={isAITurnedOn ? "AI ON" : "AI OFF"}
             onPress={toggleAI}
@@ -335,7 +392,6 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
           />
         </View>
       </View>
-
       <FlatList
         inverted
         onEndReached={handleOnEndReached}
@@ -385,5 +441,38 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
     </View>
   );
 };
+
+const additionalStyles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    // width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    alignSelf: 'flex-start',
+    fontSize: 16,
+    marginVertical: 5,
+    fontFamily: 'Montserrat'
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: colors.purple,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Montserrat'
+  },
+});
 
 export default ChatComponent;
