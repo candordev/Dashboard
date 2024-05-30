@@ -10,11 +10,18 @@ import { customFetch } from "../utils/utils";
 import ChatComponent from "./ChatComponent";
 
 // Step 1: Define the interface
+interface ContactInfo {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+}
+
 interface NumberItem {
   sessionId: string;
   priority: string;
+  contactInfo?: ContactInfo;
 }
-
 const ChatsScreen = ({ navigation, route }: any) => {
   const { state } = useUserContext();
   const { sessionId } = route.params;
@@ -30,7 +37,6 @@ const ChatsScreen = ({ navigation, route }: any) => {
 
   async function getWebChats() {
     try {
-
       let params = new URLSearchParams({
         groupID: state.currentGroup,
       });
@@ -52,14 +58,16 @@ const ChatsScreen = ({ navigation, route }: any) => {
       }
   
       // Sorting logic: 'High' priority first, others in reverse order
-      const sorted: NumberItem[] = resJson.data.sort((a: { priority: string; _id: any; }, b: { priority: string; _id: string; }) => {
-        // Prioritize 'High' at the top
-        if (a.priority === "High" && b.priority !== "High") return -1;
-        if (a.priority !== "High" && b.priority === "High") return 1;
+      // const sorted: NumberItem[] = resJson.data.sort((a: { priority: string; _id: any; }, b: { priority: string; _id: string; }) => {
+      //   // Prioritize 'High' at the top
+      //   if (a.priority === "High" && b.priority !== "High") return -1;
+      //   if (a.priority !== "High" && b.priority === "High") return 1;
   
-        // For non-'High' priorities, reverse the order
-        return b._id.localeCompare(a._id); // Assuming _id can be used to determine the original order
-      });
+      //   // For non-'High' priorities, reverse the order
+      //   return b._id.localeCompare(a._id); // Assuming _id can be used to determine the original order
+      // });
+
+      const sorted = resJson.data;
   
       console.log("sorted!!! ", sorted);
       setSortedNumbers(sorted);
@@ -80,7 +88,7 @@ const ChatsScreen = ({ navigation, route }: any) => {
     setSelectedPhoneNumber(sessionId)
 
     if(sorted && sorted.length > 0 && sessionId){
-        const index = sorted.findIndex(item => item.sessionId === sessionId);
+        const index = sorted.findIndex((item: { sessionId: string; }) => item.sessionId === sessionId);
         if (index !== -1) {
           flatListRef.current?.scrollToIndex({ index, animated: true });
         }
@@ -95,7 +103,7 @@ const ChatsScreen = ({ navigation, route }: any) => {
 
       if (sessionId && sorted && sorted.length > 0) {
         setSelectedPhoneNumber(sessionId);
-        const index = sorted.findIndex(item => item.sessionId === sessionId);
+        const index = sorted.findIndex((item: { sessionId: any; }) => item.sessionId === sessionId);
         console.log("FOUND?", index);
 
         // Add a delay to ensure FlatList items are rendered
@@ -185,7 +193,9 @@ const ChatsScreen = ({ navigation, route }: any) => {
                     color: colors.darkGray,
                   }}
                 >
-                  {item.sessionId} - Priority: {item.priority}
+                  {item.contactInfo && item.contactInfo.firstName && item.contactInfo.lastName
+                  ? `${item.contactInfo.firstName} ${item.contactInfo.lastName}`
+                  : item.sessionId} - Priority: {item.priority}
                 </Text>
               </TouchableOpacity>
             )}
