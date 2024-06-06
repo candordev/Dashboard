@@ -52,6 +52,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const { state, dispatch } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
+  const [city, setCity] = useState("");
 
 
   const toggleAI = async () => {
@@ -149,6 +150,9 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
       setUserType(data.data[1].userType)
       setPriority(data.priority);
       setIsAITurnedOn(data.AIReply);
+      if (data.location) {
+        setCity(data.location.city);
+      }
       console.log("DATA RETURNED NEW: ", data);
       
       // Assuming 'data' is an array of MessageItem. If it's nested, you'll need to adjust the path.
@@ -359,6 +363,18 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
           {contactInfo && (contactInfo.firstName || contactInfo.lastName)
             ? `${contactInfo.firstName || ''} ${contactInfo.lastName || ''}`.trim()
             : phoneNumber} ({userType})
+          <Text
+            style={{
+              flex: 1,
+              color: colors.purple,
+              fontSize: 18,
+              textAlign: "left",
+              marginLeft: 5,
+              fontFamily: "Montserrat",
+            }}
+          >
+            {city}
+          </Text>
         </Text>
         {/* <Text
           style={{
