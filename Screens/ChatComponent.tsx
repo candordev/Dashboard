@@ -54,6 +54,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const { state, dispatch } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
+  const [city, setCity] = useState("");
 
 
   useEffect(() => {
@@ -222,7 +223,10 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       }
       setPriority(data.priority);
       setIsAITurnedOn(data.AIReply);
-  
+
+      if (data.location) {
+        setCity(data.location.city);
+      }
       console.log("DATA RETURNED NEW: ", data);
       
       return data.data;
@@ -433,6 +437,18 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
           {contactInfo && (contactInfo.firstName || contactInfo.lastName)
             ? `${contactInfo.firstName || ''} ${contactInfo.lastName || ''}`.trim()
             : phoneNumber} ({userType})
+          <Text
+            style={{
+              flex: 1,
+              color: colors.purple,
+              fontSize: 18,
+              textAlign: "left",
+              marginLeft: 5,
+              fontFamily: "Montserrat",
+            }}
+          >
+            {city}
+          </Text>
         </Text>
         {/* <Text
           style={{
