@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
-import { Endpoints } from "../utils/Endpoints";
+import { BASE_URL, Endpoints } from "../utils/Endpoints";
 import { customFetch, formatDate} from "../utils/utils";
 // import TextInput from '../Components/Native/TextInput';
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -20,12 +20,14 @@ import Button from "../Components/Button";
 import ExpandableTextInput from "../Components/ExpandableTextInput";
 import { useUserContext } from "../Hooks/useUserContext";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { io } from "socket.io-client";
 
 
 interface ChatComponentProps {
   phoneNumber: string; // Assuming phoneNumber is a string
   //onPriorityChange?: () => void;
   onPriorityChange?: (sessionId: string) => void;
+  chatType: string;
 
 
 }
@@ -44,7 +46,7 @@ interface ContactInfo {
 }
 
 
-const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityChange }) => {
+const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, onPriorityChange }) => {
   const [inputText, setInputText] = useState(""); // State to hold the input text
   const [isAITurnedOn, setIsAITurnedOn] = useState(false);
   const [priority, setPriority] = useState("Low");
@@ -54,67 +56,130 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
   const [modalVisible, setModalVisible] = useState(false);
 
 
+  useEffect(() => {
+    const socketName =
+      BASE_URL == "https://candoradmin.com/api"
+        ? "https://candoradmin.com"
+        : "http://localhost:4000";
+    const socket = io(socketName, {
+      withCredentials: false,
+      // Add any additional options here
+    });
+    // Construct the room name based on chatMode and postID
+    const roomName = `${phoneNumber}`;
+
+    // console.log("ROOM NAME", roomName)
+    socket.on("connect", () => {
+      console.log("Connected to Socket.io server for join chat");
+      // Join the room specific to the chatMode and postID
+      socket.emit("join-chat", roomName);
+    });
+
+    socket.on("connect_error", (err: any) => {
+      console.error("Connection error:", err.message);
+    });
+
+    socket.on("new-message", (newMessage: MessageItem) => { 
+      console.log("new message! ", newMessage)
+      setMessages((prevMessages) => [newMessage, ...prevMessages]);
+    });
+
+    return () => {
+      // Leave the room when the component unmounts or chatMode/postID changes
+      socket.emit("leave-room", roomName);
+      socket.disconnect();
+      console.log("DISCONNECTED FROM SOCKET");
+    };
+  }, [phoneNumber]); // Add chatMode to the dependency array
+
+
+
   const toggleAI = async () => {
     const newAIState = !isAITurnedOn;
     setIsAITurnedOn(newAIState);
-
+  
+    const isPhoneNumber = /^\+?[1-9]\d{1,14}$/.test(phoneNumber);
+  
+    // Define the base structure of the bodyData object
+    const bodyData: {
+      groupID: any;
+      AIReply: boolean;
+      phoneNumber?: string;
+      sessionId?: string;
+    } = {
+      groupID: state.currentGroup,
+      AIReply: newAIState,
+    };
+  
+    // Conditionally add phoneNumber or sessionId
+    if (isPhoneNumber) {
+      bodyData.phoneNumber = phoneNumber;
+    } else {
+      bodyData.sessionId = phoneNumber;
+    }
+  
     try {
       const response = await customFetch(Endpoints.updateNumberSettings, {
         method: "POST",
-        body: JSON.stringify({
-          //phoneNumber: phoneNumber, // Make sure this is encoded if necessary
-          groupID: state.currentGroup,
-          sessionId: phoneNumber,
-          AIReply: newAIState,
-        }),
+        body: JSON.stringify(bodyData),
       });
-
+  
       if (!response.ok) {
-        // Handle response errors
         throw new Error("Failed to update AI state");
       }
-
-      // Optionally update local state based on response
+  
       console.log("AI state updated successfully");
-      if(onPriorityChange) onPriorityChange(phoneNumber)
+      if (onPriorityChange) onPriorityChange(phoneNumber);
     } catch (error) {
       console.error("Error updating AI state:", error);
-      // Rollback in case of error
       setIsAITurnedOn(!newAIState);
     }
   };
+  
 
   const togglePriority = async () => {
     const newPriority = priority === "Low" ? "High" : "Low";
     setPriority(newPriority);
-
+  
+    const isPhoneNumber = /^\+?[1-9]\d{1,14}$/.test(phoneNumber);
+    
+    // Define the base structure of the bodyData object
+    const bodyData: {
+      groupID: any;
+      priority: string;
+      phoneNumber?: string;
+      sessionId?: string;
+    } = {
+      groupID: state.currentGroup,
+      priority: newPriority,
+    };
+  
+    // Conditionally add phoneNumber or sessionId
+    if (isPhoneNumber) {
+      bodyData.phoneNumber = phoneNumber;
+    } else {
+      bodyData.sessionId = phoneNumber;
+    }
+  
     try {
       const response = await customFetch(Endpoints.updateNumberSettings, {
         method: "POST",
-        body: JSON.stringify({
-          groupID: state.currentGroup,
-          sessionId: phoneNumber,
-          //phoneNumber: phoneNumber, // Make sure this is encoded if necessary
-          priority: newPriority,
-        }),
+        body: JSON.stringify(bodyData),
       });
-
+  
       if (!response.ok) {
-        // Handle response errors
         throw new Error("Failed to update priority");
       }
-
-      // Optionally update local state based on response
+  
       console.log("Priority updated successfully");
-      if(onPriorityChange) onPriorityChange(phoneNumber)
-
+      if (onPriorityChange) onPriorityChange(phoneNumber);
     } catch (error) {
       console.error("Error updating priority:", error);
-      // Rollback in case of error
       setPriority(priority === "Low" ? "High" : "Low");
     }
   };
-
+  
+  
   const [messages, setMessages] = useState<MessageItem[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -122,42 +187,51 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
   const limit = 15; // Set your desired limit
   const [hasMore, setHasMore] = useState(true); // Flag to determine if there are more items to load
 
+
   async function fetchAIChat(
-    phoneNumber: string,
+    identifier: string,
     page: number,
     limit: number
   ): Promise<MessageItem[] | undefined> {
-    // have this also fetch the AI tuned on and priority stuff
     try {
-      console.log("phone Number: ", phoneNumber);
+      const isPhoneNumber = /^\+?[1-9]\d{1,14}$/.test(identifier); // Regex to check if identifier is a phone number
+      if(isPhoneNumber){
+        setContactInfo(null)
+      }
       const queryParams = new URLSearchParams({
-        sessionId: phoneNumber,
+        [isPhoneNumber ? 'phoneNumber' : 'sessionId']: identifier,
         page: page.toString(),
         limit: limit.toString(),
         groupID: state.currentGroup
       });
-      const url = `${Endpoints.getWebChats}?${queryParams.toString()}`;
+  
+      const url = isPhoneNumber 
+        ? `${Endpoints.getChatForNumber}?${queryParams.toString()}` 
+        : `${Endpoints.getWebChats}?${queryParams.toString()}`;
+  
       const response = await customFetch(url, { method: "GET" });
       if (!response.ok) {
         console.error("Error fetching chats: ", response.statusText);
         return undefined;
       }
-
+  
       const data = await response.json();
-
-      setContactInfo(data.contactInfo);
-      setUserType(data.data[1].userType)
+      if (!isPhoneNumber) {
+        setContactInfo(data.contactInfo);
+        setUserType(data.data[1]?.userType);
+      }
       setPriority(data.priority);
       setIsAITurnedOn(data.AIReply);
+  
       console.log("DATA RETURNED NEW: ", data);
       
-      // Assuming 'data' is an array of MessageItem. If it's nested, you'll need to adjust the path.
       return data.data;
     } catch (error) {
       console.error("Network error while fetching chats: ", error);
       return undefined;
     }
   }
+  
 
   const handleSendChat = async () => {
     if (inputText.trim()) {
@@ -205,7 +279,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
   };
 
   function fetchMoreChats() {
-    if (loading || !hasMore) return;
+    //if (loading || !hasMore) return;
     setLoading(true);
     console.log("fetch ran with page: ", page);
     fetchAIChat(phoneNumber, page, limit)
@@ -231,7 +305,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
     setMessages([]);
     setHasMore(true);
     setLoading(false);
-  }, [phoneNumber]); // Runs when phoneNumber changes
+  }, [phoneNumber, chatType]); // Runs when phoneNumber changes
 
   useEffect(() => {
     // A separate effect that depends on `page` to fetch chats
@@ -241,7 +315,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, onPriorityCh
       // This condition can help ensure we're in a reset state; adjust logic as needed
       fetchMoreChats();
     }
-  }, [page, phoneNumber]); // Runs after `page` is updated, and also accounts for phoneNumber changes
+  }, [page, phoneNumber, chatType]); // Runs after `page` is updated, and also accounts for phoneNumber changes
 
   const renderMessage = ({ item }: { item: MessageItem }) => {
     const rightMessage = item.author === "Leader" || item.author === "AI";

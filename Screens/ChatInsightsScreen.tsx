@@ -53,11 +53,19 @@ const ChatInsightsScreen = ({ navigation }: any) => {
   useEffect(() => {
     fetchChatInsights();
   }, []);
+  const handleCardPress = (id: string) => {
+    if (state.groupType === "InternalAIChat") {
+      // Handle navigation or action for phone number
+      console.log(`Phone number: ${id}`);
+      navigation.navigate('chats', { sessionId: id });
 
-  const handleCardPress = (sessionId: string) => {
-    navigation.navigate('chats', { sessionId });
+    } else {
+      navigation.navigate('chats', { sessionId: id });
+    }
   };
+  
 
+  const isInternalAIChat = state.groupType === "InternalAIChat";
 
   
   return (
@@ -81,26 +89,30 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                     Chats
                 </Text>
                 <View style={{flex: 1, overflow: 'hidden'}}>
-                  <ChatsLineGraph data={chatInsights?.chatsPerDayLineGraphWeb || []} />
+                <ChatsLineGraph 
+                  data={isInternalAIChat ? chatInsights?.chatsPerDayLineGraphPhone || [] : chatInsights?.chatsPerDayLineGraphWeb || []} 
+                />
                 </View>
             </View>
         <View style={{flexDirection: 'row', justifyContent: "space-around", flex: 0.5}}>
-        <View style={[additionalStyles.insightsSection, { flex: 1}]}>
-            <Text
-                style={{
-                    color: colors.black,
-                    fontFamily: "Montserrat",
-                    fontSize: 25,
-                    fontWeight: "450",
-                }}
-            >
+        {state.groupType !== "InternalAIChat" && (
+        <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
+          <Text
+            style={{
+              color: colors.black,
+              fontFamily: "Montserrat",
+              fontSize: 25,
+              fontWeight: "450",
+            }}
+          >
             All Time User Types
-            </Text>
-            <View style={{ alignItems: 'center', flex: 1}}>
-                <InsightsBarChart chatInsights={chatInsights}/>
-             </View>
+          </Text>
+          <View style={{ alignItems: 'center', flex: 1 }}>
+            <InsightsBarChart chatInsights={chatInsights} />
+          </View>
         </View>
-        {/* <View style={[additionalStyles.insightsSection, { flex: 1}]}>
+      )}
+        <View style={[additionalStyles.insightsSection, { flex: 1}]}>
             <Text
                 style={{
                     color: colors.black,
@@ -112,19 +124,33 @@ const ChatInsightsScreen = ({ navigation }: any) => {
             Unanswered Questions
             </Text>
             <ScrollView>
-                {chatInsights?.unansweredResidentQuestionsContentWeb?.map((question, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={[styles.card, styles.shadow]}
-                    onPress={() => handleCardPress(question.sessionId)}
-                  >
+            {isInternalAIChat ? (
+              chatInsights?.unansweredResidentQuestionsContentPhone?.map((question, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.card, styles.shadow]}
+                  onPress={() => handleCardPress(question.phoneNumber)}
+                >
+                  <Text style={{ fontFamily: "Montserrat", fontSize: 16, color: colors.darkGray }}>
+                    {question.content}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            ) : (
+              chatInsights?.unansweredResidentQuestionsContentWeb?.map((question, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.card, styles.shadow]}
+                  onPress={() => handleCardPress(question.sessionId)}
+                >
                   <Text style={{ fontFamily: "Montserrat", fontSize: 16, color: colors.darkGray }}>
                     {question.userType}: {question.content}
                   </Text>
                 </TouchableOpacity>
-                ))}
-            </ScrollView>
-        </View> */}
+              ))
+            )}
+          </ScrollView>
+        </View>
     </View>
     </OuterView>
     </>

@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, Text, TouchableOpacity, View } from "react-native";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import OuterView from "../Components/OuterView";
 import SearchBar from "../Components/SearchBar";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
 import { Endpoints } from "../utils/Endpoints";
-import { customFetch } from "../utils/utils";
 import ChatComponent from "./ChatComponent";
+import { TabView, TabBar } from 'react-native-tab-view';
+import { Modal, TextInput } from "react-native";
+import Button from "../Components/Button";
 
 // Step 1: Define the interface
 interface ContactInfo {
@@ -18,198 +20,266 @@ interface ContactInfo {
 }
 
 interface NumberItem {
-  sessionId: string;
+  sessionId?: string;
+  number?: string;
   priority: string;
   contactInfo?: ContactInfo;
 }
+
 const ChatsScreen = ({ navigation, route }: any) => {
   const { state } = useUserContext();
   const { sessionId } = route.params;
-
+  const [loading, setLoading] = useState(false);
 
   // Step 2: Use the interface to type your state
-  const [sortedNumbers, setSortedNumbers] = useState<NumberItem[]>([]);
+  const [webChats, setWebChats] = useState<NumberItem[]>([]);
+  const [smsChats, setSmsChats] = useState<NumberItem[]>([]);
   const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string | null>(sessionId || null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const flatListRef = useRef<FlatList>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("+1");
+  const [message, setMessage] = useState("");
 
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'webChats', title: 'Web Chats' },
+    { key: 'smsChats', title: 'SMS Chats' },
+  ]);
 
-
-  async function getWebChats() {
+  const fetchChats = async () => {
+    setLoading(true);
     try {
-      let params = new URLSearchParams({
-        groupID: state.currentGroup,
-      });
+      const webChatsEndpoint = `${Endpoints.getAllWebChats}?groupID=${state.currentGroup}`;
+      const smsChatsEndpoint = `${Endpoints.getAllSMSChats}?groupID=${state.currentGroup}`;
+      const [webResponse, smsResponse] = await Promise.all([
+        fetch(webChatsEndpoint, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }),
+        fetch(smsChatsEndpoint, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }),
+      ]);
 
-      let endpoint = Endpoints.getAllWebChats + '?' +params;
+      const webChatsData = await webResponse.json();
+      const smsChatsData = await smsResponse.json();
 
-
-      const response = await fetch(endpoint, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-      const resJson = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(resJson.error);
+      if (!webResponse.ok) {
+        throw new Error(webChatsData.error);
       }
-  
-      // Sorting logic: 'High' priority first, others in reverse order
-      // const sorted: NumberItem[] = resJson.data.sort((a: { priority: string; _id: any; }, b: { priority: string; _id: string; }) => {
-      //   // Prioritize 'High' at the top
-      //   if (a.priority === "High" && b.priority !== "High") return -1;
-      //   if (a.priority !== "High" && b.priority === "High") return 1;
-  
-      //   // For non-'High' priorities, reverse the order
-      //   return b._id.localeCompare(a._id); // Assuming _id can be used to determine the original order
-      // });
+      if (!smsResponse.ok) {
+        throw new Error(smsChatsData.error);
+      }
 
-      const sorted = resJson.data;
-  
-      console.log("sorted!!! ", sorted);
-      setSortedNumbers(sorted);
-      setSelectedPhoneNumber(sorted.length ? sorted[0].sessionId : null);
-      
-      return sorted;
+      setWebChats(webChatsData.data);
+      setSmsChats(smsChatsData.data);
+      setSelectedPhoneNumber(
+        webChatsData.data.length ? webChatsData.data[0].sessionId : smsChatsData.data.length ? smsChatsData.data[0].number : null
+      );
     } catch (error) {
       console.error('Error fetching user data:', error);
-      return [];
-    }
-  }
-  
-
-
-  const handlePriorityChange = async (sessionId: string) => {
-    console.log("pri changed!!!")
-    const sorted = await getWebChats();
-    setSelectedPhoneNumber(sessionId)
-
-    if(sorted && sorted.length > 0 && sessionId){
-        const index = sorted.findIndex((item: { sessionId: string; }) => item.sessionId === sessionId);
-        if (index !== -1) {
-          flatListRef.current?.scrollToIndex({ index, animated: true });
-        }
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchChats = async () => {
-      console.log("sessionId FOUND: ", sessionId);
-      const sorted = await getWebChats();
-      console.log("sorted length: ", sorted?.length);
+    fetchChats();
+  }, []);
 
-      if (sessionId && sorted && sorted.length > 0) {
-        setSelectedPhoneNumber(sessionId);
-        const index = sorted.findIndex((item: { sessionId: any; }) => item.sessionId === sessionId);
-        console.log("FOUND?", index);
+  const handlePriorityChange = async (id: string, key: string) => {
+    await fetchChats();
+    setSelectedPhoneNumber(id);
+    const data = key === 'webChats' ? webChats : smsChats;
+    const index = data.findIndex(item => item.sessionId === id || item.number === id);
+    if (index !== -1) {
+      flatListRef.current?.scrollToIndex({ index, animated: true });
+    }
+  };
 
-        // Add a delay to ensure FlatList items are rendered
-        setTimeout(() => {
-          if (index !== -1) {
-            flatListRef.current?.scrollToIndex({ index, animated: true });
-          }
-        }, 500); // Adjust delay as necessary
-      }
+  const handleSend = async () => {
+    const endpoint = `${Endpoints.sendMessage}`;
+    const payload = {
+      phoneNumber: phoneNumber,
+      message: message,
+      groupID: state.currentGroup
     };
 
-    fetchChats();
-  }, [sessionId]);
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
+      const responseData = await response.json();
+      console.log('Message sent successfully:', responseData);
+      await fetchChats();
+      setModalVisible(false);
+      setPhoneNumber("+1");
+      setMessage("");
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
 
   const handleScrollToIndexFailed = (info: any) => {
-    const wait = new Promise(resolve => setTimeout(resolve, 500));
+    const wait = new Promise((resolve) => setTimeout(resolve, 500));
     wait.then(() => {
       flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
     });
   };
 
-  
+  const renderScene = ({ route }: any) => {
+    const data = route.key === 'webChats' ? webChats : smsChats;
+    const keyExtractor = route.key === 'webChats' ? (item: any, index: number) => item.sessionId || index.toString() : (item: any, index: number) => item.number || index.toString();
 
-  return (
-      <OuterView
-        style={{
-          backgroundColor: colors.white,
-          flexDirection: "row",
-          padding: 0,
-        }}
-      >
-        <View style={{ flex: 1, borderRightWidth: 1, borderColor: colors.lightergray}}>
-         <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginVertical: 7,
-            }}
-          >
-            <SearchBar
-              searchPhrase={searchQuery}
-              setSearchPhrase={setSearchQuery}
-              placeholder="Search Residents"
-              containerStyle={{
-                flex: 1,
-                backgroundColor: colors.white,
-                margin: 10,
-              }}
-              searchBarStyle={{
-                borderWidth: 1.3,
-                borderColor: colors.lightestgray,
-              }}
-            />
-            <AntDesignIcon
-              name="form" // The name of the icon from AntDesign
-              size={24} // Adjust size as needed
-              color={colors.gray} // Adjust color as needed
-              onPress={() => {
-              }}
-              style={{ margin: 7 }} 
-            />
-          </View> 
-
-          {/* FlatList for displaying numbers */}
+    return (
+      <>
+        {loading ? (
+          <ActivityIndicator size="small" color={colors.purple} />
+        ) : (
           <FlatList
             ref={flatListRef}
-            data={sortedNumbers}
-            keyExtractor={(item, index) => index.toString()}
+            data={data}
+            keyExtractor={keyExtractor}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() => setSelectedPhoneNumber(item.sessionId)}
+                onPress={() => setSelectedPhoneNumber(item.sessionId || item.number)}
                 style={{
-                  backgroundColor:
-                    item.sessionId === selectedPhoneNumber
-                      ? colors.lightergray
-                      : colors.white,
+                  backgroundColor: (item.sessionId === selectedPhoneNumber || item.number === selectedPhoneNumber) ? colors.lightergray : colors.white,
                   padding: 12,
                   paddingLeft: 15,
                   borderBottomColor: colors.lightergray,
                   borderBottomWidth: 1,
                 }}
               >
-                <Text
-                  style={{
-                    fontFamily: "Montserrat",
-                    fontSize: 16,
-                    color: colors.darkGray,
-                  }}
-                >
+                <Text style={{ fontFamily: "Montserrat", fontSize: 16, color: colors.darkGray }}>
                   {item.contactInfo && item.contactInfo.firstName && item.contactInfo.lastName
-                  ? `${item.contactInfo.firstName} ${item.contactInfo.lastName}`
-                  : item.sessionId} - Priority: {item.priority}
+                    ? `${item.contactInfo.firstName} ${item.contactInfo.lastName}`
+                    : item.sessionId || item.number} - Priority: {item.priority}
                 </Text>
               </TouchableOpacity>
             )}
             onScrollToIndexFailed={handleScrollToIndexFailed}
-
           />
-        </View>
+        )}
+      </>
+    );
+  };
 
-        <View style={{ flex: 3, padding: 20 }}>
-          {selectedPhoneNumber ? (
-            <ChatComponent onPriorityChange={handlePriorityChange} phoneNumber={selectedPhoneNumber} />
-          ) : null}
+  return (
+    <OuterView style={{ backgroundColor: colors.white, flexDirection: "row", padding: 0 }}>
+      <View style={{ flex: 1, borderRightWidth: 1, borderColor: colors.lightergray }}>
+        {state.groupType === 'InternalAIChat' ? (
+          renderScene({ route: { key: 'smsChats' } })
+        ) : (
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: Dimensions.get('window').width }}
+            renderTabBar={(props) => (
+              <TabBar
+                {...props}
+                indicatorStyle={{ backgroundColor: colors.purple, height: 2 }}
+                style={{ backgroundColor: colors.white }}
+                labelStyle={{ color: colors.black }}
+              />
+            )}
+          />
+        )}
+        <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 7 }}>
+          <SearchBar
+            searchPhrase={searchQuery}
+            setSearchPhrase={setSearchQuery}
+            placeholder="Search Residents"
+            containerStyle={{ flex: 1, backgroundColor: colors.white, margin: 10 }}
+            searchBarStyle={{ borderWidth: 1.3, borderColor: colors.lightestgray }}
+          />
+          {state.groupType === 'InternalAIChat' && (
+            <AntDesignIcon
+              name="form"
+              size={24}
+              color={colors.gray}
+              onPress={() => setModalVisible(true)}
+              style={{ margin: 7 }}
+            />
+          )}
         </View>
-      </OuterView>
+      </View>
+      <View style={{ flex: 3, padding: 20 }}>
+        {selectedPhoneNumber ? (
+          <ChatComponent
+            onPriorityChange={(id: string) => handlePriorityChange(id, routes[index].key)}
+            phoneNumber={selectedPhoneNumber}
+            chatType={routes[index].key}
+          />
+        ) : null}
+      </View>
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <View style={{ width: 300, padding: 20, backgroundColor: colors.white, borderRadius: 10 }}>
+            <TextInput
+              style={{
+                borderBottomWidth: 1,
+                borderColor: colors.gray,
+                marginBottom: 20,
+                paddingVertical: 10,
+                fontSize: 18,
+                color: colors.black,
+              }}
+              onChangeText={setPhoneNumber}
+              value={phoneNumber}
+              placeholder="Phone Number"
+              placeholderTextColor={colors.lightergray}
+              keyboardType="phone-pad"
+              underlineColorAndroid="transparent" // Remove blue underline on Android
+            />
+            <TextInput
+              style={{
+                borderBottomWidth: 1,
+                borderColor: colors.gray,
+                marginBottom: 20,
+                paddingVertical: 10,
+                fontSize: 18,
+                color: colors.black,
+                fontFamily: 'Montserrat'
+              }}
+              onChangeText={setMessage}
+              value={message}
+              placeholder="Message"
+              placeholderTextColor={colors.gray}
+              multiline
+              underlineColorAndroid="transparent" // Remove blue underline on Android
+            />
+            <Button text="Send" onPress={handleSend} style={{ marginBottom: 5, backgroundColor: colors.purple }} />
+            <Button text="Cancel" onPress={() => setModalVisible(false)} style={{ backgroundColor: colors.gray }} />
+          </View>
+        </View>
+      </Modal>
+    </OuterView>
   );
 };
 
