@@ -25,7 +25,7 @@ const LHN = (props: LHNProps) => {
   
   let filteredGroups = []
   if(state && state.leaderGroups) {
-    filteredGroups = state.leaderGroups.filter((group) =>
+    filteredGroups = state.leaderGroups.filter((group: { name: string; }) =>
       group.name.toLowerCase().includes(searchPhrase.toLowerCase())
     );
   }
@@ -128,7 +128,7 @@ const LHN = (props: LHNProps) => {
             paddingBottom: 10,
           }}
         ></View>
-        {state.groupType === "AIChat" && (
+        {(state.groupType === "AIChat" || state.groupType === "InternalAIChat") && (
           <>
             <NavItem
               name={"ChatInsights"}
@@ -136,24 +136,28 @@ const LHN = (props: LHNProps) => {
               icon="pie-chart"
               selected={navIndex === 2}
             />
+        {(state.groupType != "InternalAIChat") && (
             <NavItem
               name={"Train"}
               route="/trainChat"
               icon="activity"
               selected={navIndex === 1}
             />
+        )}
             <NavItem
               name={"Chats"}
               route="/chats"
               icon="message-circle"
               selected={navIndex === 0}
             />
+        {(state.groupType != "InternalAIChat") && (
             <NavItem
               name={"Leads"}
               route="/leads"
               icon="user"
               selected={navIndex === 9}
             />
+          )}
           </>
         )}
         {state.master ? (
@@ -180,7 +184,7 @@ const LHN = (props: LHNProps) => {
                 style={{ height: Math.min(140, state.leaderGroups.length * 28), paddingLeft: 25, marginBottom: 5 }}
               >
                 <ScrollView>
-                  {filteredGroups.map((group, index) => (
+                  {filteredGroups.map((group: { _id: any; name: string | any[]; }, index: React.Key | null | undefined) => (
                     <Pressable
                       key={index}
                       onPress={() => handleGroupSelect(group._id)}
@@ -223,7 +227,7 @@ const LHN = (props: LHNProps) => {
             selected={navIndex === 4}
           />
         )}
-        {state.groupType !== "AIChat" && (
+        {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
           <NavItem
             name={"Inbox"}
             route="/inbox"
@@ -238,7 +242,7 @@ const LHN = (props: LHNProps) => {
           icon="settings"
           selected={navIndex === 6}
         />
-        {state.groupType !== "AIChat" && (
+        {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
           <NavItem
             name={"Group Settings"}
             route="/groupSettings"

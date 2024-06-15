@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import colors from '../Styles/colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ChatInsights } from '../utils/interfaces';
+import { useUserContext } from '../Hooks/useUserContext';
 
 
 // Interface to type the props
@@ -11,25 +12,38 @@ interface ChatInsightsHeaderProps {
   }
 
 const ChatInsightsHeader: React.FC<ChatInsightsHeaderProps> = ({ chatInsights }) => {
-    return (
-      <View style={styles.insightsContainer}>
-        <View style={[styles.card, styles.shadow]}>
-          <Text style={styles.cardNumber}>{chatInsights.chatsTodayWeb}</Text>
-          <Text style={styles.cardTitle}>Chats Today</Text>
-        </View>
-        <View style={[styles.card, styles.shadow]}>
-          <Text style={styles.cardNumber}>{chatInsights.messagesTodayWeb}</Text>
-          <Text style={styles.cardTitle}>Messages Today</Text>
-        </View>
-        <View style={[styles.card, styles.shadow]}>
-          <Text style={styles.cardNumber}>{chatInsights.chatsPastMonthWeb}</Text>
-          <Text style={styles.cardTitle}>Chats Past Month</Text>
-        </View>
-        <View style={[styles.card, styles.shadow]}>
-          <Text style={styles.cardNumber}>{chatInsights.messagesPastMonthWeb}</Text>
-          <Text style={styles.cardTitle}>Messages Past Month</Text>
-        </View>
+  const { state } = useUserContext();
+
+  // Determine whether to use web or phone data based on state.groupType
+  const isInternalAIChat = state.groupType === "InternalAIChat";
+
+  return (
+    <View style={styles.insightsContainer}>
+      <View style={[styles.card, styles.shadow]}>
+        <Text style={styles.cardNumber}>
+          {isInternalAIChat ? chatInsights.chatsTodayPhone : chatInsights.chatsTodayWeb}
+        </Text>
+        <Text style={styles.cardTitle}>Chats Today</Text>
       </View>
+      <View style={[styles.card, styles.shadow]}>
+        <Text style={styles.cardNumber}>
+          {isInternalAIChat ? chatInsights.messagesTodayPhone : chatInsights.messagesTodayWeb}
+        </Text>
+        <Text style={styles.cardTitle}>Messages Today</Text>
+      </View>
+      <View style={[styles.card, styles.shadow]}>
+        <Text style={styles.cardNumber}>
+          {isInternalAIChat ? chatInsights.chatsPastMonthPhone : chatInsights.chatsPastMonthWeb}
+        </Text>
+        <Text style={styles.cardTitle}>Chats Past Month</Text>
+      </View>
+      <View style={[styles.card, styles.shadow]}>
+        <Text style={styles.cardNumber}>
+          {isInternalAIChat ? chatInsights.messagesPastMonthPhone : chatInsights.messagesPastMonthWeb}
+        </Text>
+        <Text style={styles.cardTitle}>Messages Past Month</Text>
+      </View>
+    </View>
   );
 };
 

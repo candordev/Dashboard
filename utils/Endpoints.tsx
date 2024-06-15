@@ -150,7 +150,7 @@ export const Endpoints = {
   removeLeaderFromDepartment: `${BASE_URL}/department/removeLeader?`,
   editCCEmail: `${BASE_URL}/profile/editCCEmail?`,
   getAvailableSupportUsers: `${BASE_URL}/profile/getAvailableSupportUsers?`,
-  getChatForNumber: `${BASE_URL}/chat/getChatsForNumber?`,
+  getChatForNumber: `${BASE_URL}/chat/getChatsForNumber`,
   sendMessage:  `${BASE_URL}/chat/sendMessage`,
   updateNumberSettings:  `${BASE_URL}/chat/updateNumberSettings`,
   addFAQ: `${BASE_URL}/group/addFAQ`,
@@ -167,4 +167,5 @@ export const Endpoints = {
   getActivityStatus: `${BASE_URL}/group/getActivityStatus?`,
   editActivityResetDuration: `${BASE_URL}/group/editActivityResetDuration?`,
   getProspectiveClients: `${BASE_URL}/chat/getProspectiveClients?`,
+  getAllSMSChats: `${BASE_URL}/chat/getAllSMSChats`,
 };

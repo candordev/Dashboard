@@ -152,8 +152,11 @@ export interface ChatInsights {
   chatsPastMonthPhone: number;
   messagesPastMonthPhone: number;
   unansweredQuestionsPhone: number;
-  unansweredResidentQuestionsContentPhone: string[];
-  allTimeUserTypes: {
+  unansweredResidentQuestionsContentPhone: {
+    phoneNumber: string;
+    content: string;
+  }[];
+    allTimeUserTypes: {
     _id: string;
     userType: string;
     uniqueSessionsCount: number;
