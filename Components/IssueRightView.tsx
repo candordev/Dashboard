@@ -83,7 +83,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
       }}
     >
     <View style={{ flex: 1, justifyContent: 'flex-start'}}>
-        <AssigneesTSPM issue={issue} createPost={false} style={{ zIndex: 4}} />
+        <Assignees issue={issue} createPost={false} style={{ zIndex: 4}} />
         <Category issueId={issue._id} createPost={false} style={{ zIndex: 3, marginTop: 10}} />
         <Deadline issue={issue} style={{ zIndex: 2, marginTop: 10 }} />
         {state.groupType == "HOA" ? 
