@@ -28,6 +28,7 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
   const [departments, setDepartments] = useState<{label: string, value: string}[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function queryDistricts() {
@@ -90,6 +91,10 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
               value: department._id
             });
           }
+          newDepartmentsArray.push({
+            label: "All Departments",
+            value: ""
+          });
           setDepartments(newDepartmentsArray);
         }
       } catch (error) {
@@ -102,12 +107,13 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
 
   async function downloadReport() {
     try {
+      setError(null);
       console.log("DOWNLOADING REPORT")
       console.log("District", selectedDistrict)
       const queryParams = new URLSearchParams({
         groupID: groupID,
         district: selectedDistrict ? selectedDistrict : "",
-        department: selectedDepartment ? selectedDepartment : "",
+        departmentID: selectedDepartment ? selectedDepartment : "",
         startDate: startDate ? startDate.toISOString() : "",
         endDate: endDate ? endDate.toISOString() : "",
         searchTerm: searchTerm ? searchTerm : "",
@@ -122,6 +128,7 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
       if (!res.ok) {
         let resJson = await res.json();
         console.error("DOWNLOAD REPORT ERROR", resJson.error);
+        setError(resJson.error);
         return;
       }
       const blob = await res.blob();
@@ -135,6 +142,7 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
       URL.revokeObjectURL(pdfUrl);
     } catch (error) {
       console.error("Error downloading report", error);
+      setError("Failed to download report. Please try again later.");
     }
   }
 
@@ -203,6 +211,9 @@ const DownloadReport = ({ groupID }: DownloadReportProps) => {
             placeholder="Enter search term"
           />
         </View>
+        {error !== "" && (
+            <Text style={additionalStyles.errorMessage}>{error}</Text>
+          )}
         <TouchableOpacity
           onPress={downloadReport}
           style={additionalStyles.button}
@@ -256,6 +267,13 @@ const additionalStyles = StyleSheet.create({
     zIndex: 1000, // Ensures dropdowns are on top
     width: "100%", // Match parent width to avoid UI misalignment
     marginVertical: 10,
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 10,
+    fontFamily: "Montserrat",
   },
 });
 
