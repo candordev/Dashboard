@@ -45,7 +45,9 @@ const GroupSettingsScreen = ({ navigation }: any) => {
           <DocumentList groupID={selectedGroupID} />
           <DepartmentEditor groupID={selectedGroupID} />
           <PrioritySetter groupID={selectedGroupID} />
-          <GroupActivityResetTime groupID={selectedGroupID} />
+          {state.master != null && (
+            <GroupActivityResetTime groupID={selectedGroupID} />
+          )}
         </View>
         <View style={{ flex: 1 }}>
           <TagEditor groupID={selectedGroupID} />
