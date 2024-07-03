@@ -169,4 +169,6 @@ export const Endpoints = {
   getProspectiveClients: `${BASE_URL}/chat/getProspectiveClients?`,
   getAllSMSChats: `${BASE_URL}/chat/getAllSMSChats`,
   editEvent: `${BASE_URL}/event/editEvent`,
+  createEvent: `${BASE_URL}/event/createEvent`,
+  deleteEvent: `${BASE_URL}/event/deleteEvent`,
 };
