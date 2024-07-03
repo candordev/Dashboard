@@ -7,6 +7,7 @@ import Button from "./Button";
 import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 import { fitBounds } from "google-map-react";
+import { useUserContext } from "../Hooks/useUserContext";
 
 const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => void }) => {
     const { title, description, date, startTime, endTime, location, xCord, yCord, level, imageUrl } = event;
@@ -23,6 +24,7 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
     const [updatedYCord, setUpdatedYCord] = useState(yCord);
     const [updatedLevel, setUpdatedLevel] = useState(level);
     const [updatedImageUrl, setUpdatedImageUrl] = useState(imageUrl);
+    const {state, dispatch} = useUserContext();
 
     function formatDate(dateString: string) {
         const date = new Date(dateString);
@@ -48,6 +50,7 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
                 level: updatedLevel,
                 imageUrl: updatedImageUrl,
                 eventId: event._id,
+                groupId: state.currentGroup
               }),
             });
       
@@ -79,6 +82,7 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
                 method: "DELETE",
                 body: JSON.stringify({
                     eventId: eventId,
+                    groupId: state.currentGroup
                 }),
             });
 
