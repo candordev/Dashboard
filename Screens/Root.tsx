@@ -12,6 +12,7 @@ import MasterScreen from "./MasterScreen"; // Adjust the import path as necessar
 import { useUserContext } from "../Hooks/useUserContext";
 import SupportScreen from "./SupportScreen";
 import ChatsScreen from "./ChatsScreen";
+import EventsScreen from "./EventsScreen";
 import LeadsScreen from "./LeadsScreen";
 import TrainChatScreen from "./TrainChat";
 import ChatInsightsScreen from "./ChatInsightsScreen";
@@ -58,8 +59,15 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
   //   }
   // }, []);
 
-   const initialRouteName =
-    (state.groupType === "AIChat" || state.groupType === "InternalAIChat") ? "chatInsights" : state.master ? "master" : "all";
+  const initialRouteName = 
+    state.groupType === "AIChat" || state.groupType === "InternalAIChat" 
+      ? "chatInsights" 
+      : state.groupType === "Convention" 
+        ? "events" 
+        : state.master 
+          ? "master" 
+          : "all";
+
    //const initialRouteName = "chatInsights";
 
   return (
@@ -125,6 +133,11 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
         name="leads"
         component={LeadsScreen}
         options={{ title: "Candor - Leads" }}
+      /> 
+      <Drawer.Screen
+        name="events"
+        component={EventsScreen}
+        options={{ title: "Candor - Events" }}
       /> 
     </Drawer.Navigator>
   );

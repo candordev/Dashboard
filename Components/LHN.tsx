@@ -93,6 +93,47 @@ const LHN = (props: LHNProps) => {
     }
   }, []);
 
+  if (state.groupType === "Convention") {
+    return <View style={styles.container}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          paddingBottom: 10,
+        }}
+      >
+        <ProfilePicture
+          imageUrl={state.imageUrl}
+          type="profile"
+          style={{ marginVertical: 10 }}
+        />
+        <Text
+          style={{
+            color: colors.white,
+            fontWeight: "500",
+            textAlign: "center",
+            fontSize: 13,
+            marginBottom: 20,
+          }}
+        >
+          {state.firstName} {state.lastName}
+        </Text>
+      </View>
+      <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: 10,
+          }}
+      ></View>
+      <NavItem
+        name={"Events"}
+        route="/events"
+        icon="calendar"
+        selected={navIndex === 10}/>
+    </View>
+  }
+
   return (
     <View style={styles.container}>
       <View
@@ -250,7 +291,6 @@ const LHN = (props: LHNProps) => {
             selected={navIndex === 7}
           />
         )}
-
         <NavItem
           name="24/7 Support"
           route="/support"
