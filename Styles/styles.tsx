@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     padding: 12,
     outlineStyle: "none",
+    fontFamily: "OpenSans-Regular",
   },
   card: {
     backgroundColor: colors.white,

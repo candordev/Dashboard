@@ -131,6 +131,15 @@ const LHN = (props: LHNProps) => {
         route="/events"
         icon="calendar"
         selected={navIndex === 10}/>
+        <View style={{ flex: 1 }} />
+        <NavItem
+          name="Sign out"
+          onPress={() => {
+            useSignout({ dispatch });
+          }}
+          icon="log-out"
+          selected={false}
+        />
     </View>
   }
 
