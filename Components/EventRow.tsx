@@ -8,6 +8,7 @@ import { customFetch } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 import { fitBounds } from "google-map-react";
 import { useUserContext } from "../Hooks/useUserContext";
+import EventImageModal from "./EventImageModal";
 
 const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => void }) => {
     const { title, description, date, startTime, endTime, location, xCord, yCord, level, imageUrl } = event;
@@ -25,6 +26,7 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
     const [updatedLevel, setUpdatedLevel] = useState(level);
     const [updatedImageUrl, setUpdatedImageUrl] = useState(imageUrl);
     const {state, dispatch} = useUserContext();
+    const [editImagesModalVisible, setEditImagesModalVisible] = useState(false); 
 
     function formatDate(dateString: string) {
         const date = new Date(dateString);
@@ -74,6 +76,16 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
                 setText(number);
             }
         }
+    };
+
+    const handleCloseModal = () => {
+        setEditImagesModalVisible(false); // Explicitly close the modal
+        fetchEvents();
+      };
+
+    const handleOpenModal = () => {
+        // Add your event handling logic here
+        setEditImagesModalVisible(true);
     };
 
     const handleDelete = async (eventId: string) => {
@@ -137,6 +149,13 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
             <TextElement text={updatedYCord.toString()} setText={(text) => handleNumberChange(text, setUpdatedYCord)} edit={edit} flex={0.3} keyboardType="numeric" />
             <TextElement text={updatedLevel.toString()} setText={(text) => handleNumberChange(text, setUpdatedLevel)} edit={edit} flex={0.3} keyboardType="numeric" />
             <Button
+                    text="I"
+                    onPress={() => {
+                        handleOpenModal();
+                    }}
+                    style={{borderRadius: 5, margin: 5, padding: 5, width: fitBounds, backgroundColor: colors.purple, justifyContent: "center", alignItems: "center" }}
+                />
+            <Button
                     text="Delete"
                     onPress={() => {
                         handleDelete(event._id);
@@ -159,6 +178,12 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
                     style={{ width: 50, height: 30, borderRadius: 5, backgroundColor: colors.purple, justifyContent: "center", alignItems: "center" }}
                 />
             )}
+            <EventImageModal
+                visible={editImagesModalVisible}
+                handleClose={handleCloseModal}
+                eventId={event._id}
+                imageUrl={updatedImageUrl}
+            />
         </View>
     );
 }
