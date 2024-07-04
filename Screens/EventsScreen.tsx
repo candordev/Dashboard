@@ -17,6 +17,7 @@ import { useUserContext } from "../Hooks/useUserContext";
 import CreateEventModal from "../Components/CreateEventModal";
 import { set } from "lodash";
 import TextInput from "../Components/Native/TextInput";
+import Icon from "react-native-vector-icons/Feather"
 
 const EventsScreen = ({ navigation }: any) => {
     const [error, setError] = useState<string>("");
@@ -103,10 +104,10 @@ const EventsScreen = ({ navigation }: any) => {
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>Events</Text>
                 <TouchableOpacity style={styles.addButton} onPress={handleOpenCreateModal}>
-                    <Text style={styles.addButtonText}>+</Text>
+                    <Icon name="plus" size={20} color={colors.white} />
                 </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: "row", flex: 1, borderBottomWidth: 1, borderBottomColor: colors.lightgray, alignItems: "center", padding: 10, columnGap: 5 }}>
+            <View style={{ flexDirection: "row", flex: 1, borderBottomWidth: 1, borderBottomColor: colors.lightgray, alignItems: "center", padding: 20, columnGap: 5 }}>
                 <TextElement text={"Title"} setText={() => {}} edit={false} flex={1.5}/>
                 <TextElement text={"Description"} setText={() => {}} edit={false} flex={1.5} />
                 <TextElement text={"Date"} setText={() => {}} edit={false} flex={1} keyboardType="numeric" />
@@ -152,11 +153,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.purple,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    addButtonText: {
-        color: colors.white,
-        fontSize: 30,
-        lineHeight: 30, // Adjust this if the + sign is not vertically centered
     },
 });
 

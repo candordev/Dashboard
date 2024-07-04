@@ -135,7 +135,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ handleClose, visibl
                             placeholder="Enter location"
                         />
                     </View>
-                    <View style={styles.inputGroup}>
+                    <View style={[styles.inputGroup, {zIndex: 3}]}>
                         <Text style={styles.inputLabel}>Date:</Text>
                         <DatePicker
                             selected={date}
@@ -145,7 +145,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ handleClose, visibl
                             className="date-picker"
                         />
                     </View>
-                    <View style={styles.inputGroup}>
+                    <View style={[styles.inputGroup, {zIndex: 2}]}>
                         <Text style={styles.inputLabel}>Start Time:</Text>
                         <DatePicker
                             selected={startTime}
@@ -159,7 +159,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ handleClose, visibl
                             className="date-picker"
                         />
                     </View>
-                    <View style={styles.inputGroup}>
+                    <View style={[styles.inputGroup, {zIndex: 1}]}>
                         <Text style={styles.inputLabel}>End Time:</Text>
                         <DatePicker
                             selected={endTime}
@@ -241,21 +241,10 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: "white",
+        backgroundColor: colors.white,
         borderRadius: 20,
         padding: 20,
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        minWidth: '80%',
-        minHeight: '80%',
-        position: 'relative',
     },
     closeButton: {
         position: 'absolute',
