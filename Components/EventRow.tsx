@@ -12,7 +12,6 @@ import EventImageModal from "./EventImageModal";
 
 const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => void }) => {
     const { title, description, date, startTime, endTime, location, xCord, yCord, level, imageUrl } = event;
-
     const [edit, setEdit] = useState(false);
 
     const [updatedTitle, setUpdatedTitle] = useState(title);
