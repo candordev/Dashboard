@@ -50,7 +50,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ handleClose, visibl
         try {
             setError("");
             let formData = new FormData();
-            formData.append('title', title); 
+            formData.append('title', title);
             formData.append('description', description);
             formData.append('location', location);
             formData.append('date', date ? date.toISOString() : '');
@@ -64,19 +64,19 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({ handleClose, visibl
             if(file) {
                 formData.append('image', file);
             }
-        
+
             let res = await customFetch(Endpoints.createEvent, {
                 method: "POST",
                 body: formData,
             }, 0, true);
-        
+
             if (!res.ok) {
                 let resJson = await res.json();
                 setError(resJson.error);
             } else {
                 handleClose();
             }
-            
+
             // Reset fields and close modal after submission
             setTitle('');
             setDescription('');
@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         width: '100%',
+        flex: 1
     },
     inputGroup: {
         marginVertical: 4,
