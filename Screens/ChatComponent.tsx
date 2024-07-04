@@ -219,7 +219,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       const data = await response.json();
       if (!isPhoneNumber) {
         setContactInfo(data.contactInfo);
-        setUserType(data.data[1]?.userType);
+        console.log("THIS THE DATA BEING USED: ", )
+        setUserType(data.data[data.data.length - 1]?.userType);
       }
       setPriority(data.priority);
       setIsAITurnedOn(data.AIReply);
