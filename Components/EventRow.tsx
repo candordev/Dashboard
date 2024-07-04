@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { TextInput, View, StyleSheet, KeyboardTypeOptions } from "react-native";
-import { Event } from "../utils/interfaces"; 
+import { Event } from "../utils/interfaces";
 import colors from "../Styles/colors";
 import Text from "./Text";
 import Button from "./Button";
@@ -25,7 +25,7 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
     const [updatedLevel, setUpdatedLevel] = useState(level);
     const [updatedImageUrl, setUpdatedImageUrl] = useState(imageUrl);
     const {state, dispatch} = useUserContext();
-    const [editImagesModalVisible, setEditImagesModalVisible] = useState(false); 
+    const [editImagesModalVisible, setEditImagesModalVisible] = useState(false);
 
     function formatDate(dateString: string) {
         const date = new Date(dateString);
@@ -54,7 +54,7 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
                 groupId: state.currentGroup
               }),
             });
-      
+
             if (!res.ok) {
               const resJson = await res.json();
               console.error("Error with changing event:", resJson.error);
@@ -137,16 +137,16 @@ const EventRow = ({ event, fetchEvents }: { event: Event, fetchEvents: () => voi
     }, []);
 
     return (
-        <View style={{ flexDirection: "row", flex: 1, borderBottomWidth: 1, borderBottomColor: colors.lightgray, alignItems: "center", padding: 10 }}>
-            <TextElement text={updatedTitle} setText={setUpdatedTitle} edit={edit} flex={1} />
-            <TextElement text={updatedDescription} setText={setUpdatedDescription} edit={edit} flex={2} />
-            <TextElement text={updatedDate} setText={setUpdatedDate} edit={edit} flex={0.5} keyboardType="numeric" />
-            <TextElement text={updatedStartTime} setText={setUpdatedStartTime} edit={edit} flex={0.5} />
-            <TextElement text={updatedEndTime} setText={setUpdatedEndTime} edit={edit} flex={0.5} />
-            <TextElement text={updatedLocation} setText={setUpdatedLocation} edit={edit} flex={1} />
-            <TextElement text={updatedXCord.toString()} setText={(text) => handleNumberChange(text, setUpdatedXCord)} edit={edit} flex={0.3} keyboardType="numeric" />
-            <TextElement text={updatedYCord.toString()} setText={(text) => handleNumberChange(text, setUpdatedYCord)} edit={edit} flex={0.3} keyboardType="numeric" />
-            <TextElement text={updatedLevel.toString()} setText={(text) => handleNumberChange(text, setUpdatedLevel)} edit={edit} flex={0.3} keyboardType="numeric" />
+        <View style={{ flexDirection: "row", flex: 1, borderBottomWidth: 1, borderBottomColor: colors.lightgray, alignItems: "center", padding: 10, columnGap: 5 }}>
+            <TextElement text={updatedTitle} setText={setUpdatedTitle} edit={edit} flex={1.5}/>
+            <TextElement text={updatedDescription} setText={setUpdatedDescription} edit={edit} flex={1.5} />
+            <TextElement text={updatedDate} setText={setUpdatedDate} edit={edit} flex={1} keyboardType="numeric" />
+            <TextElement text={updatedStartTime} setText={setUpdatedStartTime} edit={edit} flex={0.7} />
+            <TextElement text={updatedEndTime} setText={setUpdatedEndTime} edit={edit} flex={0.7} />
+            <TextElement text={updatedLocation} setText={setUpdatedLocation} edit={edit} flex={1.5} />
+            <TextElement text={updatedXCord.toString()} setText={(text) => handleNumberChange(text, setUpdatedXCord)} edit={edit} flex={0.5} keyboardType="numeric" />
+            <TextElement text={updatedYCord.toString()} setText={(text) => handleNumberChange(text, setUpdatedYCord)} edit={edit} flex={0.5} keyboardType="numeric" />
+            <TextElement text={updatedLevel.toString()} setText={(text) => handleNumberChange(text, setUpdatedLevel)} edit={edit} flex={0.5} keyboardType="numeric" />
             <Button
                     text="I"
                     onPress={() => {

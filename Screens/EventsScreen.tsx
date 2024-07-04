@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  KeyboardTypeOptions,
 } from "react-native";
 import colors from "../Styles/colors"; // Update the import path as needed
 import OuterView from "../Components/OuterView";
@@ -15,12 +16,13 @@ import { Event } from "../utils/interfaces";
 import { useUserContext } from "../Hooks/useUserContext";
 import CreateEventModal from "../Components/CreateEventModal";
 import { set } from "lodash";
+import TextInput from "../Components/Native/TextInput";
 
 const EventsScreen = ({ navigation }: any) => {
     const [error, setError] = useState<string>("");
     const [data, setData] = useState<Event[]>([]);
     const { state, dispatch } = useUserContext();
-    const [createEventModalVisible, setCreateEventModalVisible] = useState(false); 
+    const [createEventModalVisible, setCreateEventModalVisible] = useState(false);
 
     const fetchEvents = async () => {
         try {
@@ -68,6 +70,33 @@ const EventsScreen = ({ navigation }: any) => {
         setCreateEventModalVisible(true);
     };
 
+    const TextElement = useCallback(({ text, setText, edit, flex, keyboardType }: { text: string, setText: (text: string) => void, edit: boolean, flex: number, keyboardType?: string }) => {
+        return (
+            <View style={{ flex: flex, marginRight: edit ? 10 : 0, marginLeft: 5 }}>
+                {edit ? (
+                    <TextInput
+                        value={text}
+                        onChangeText={setText}
+                        keyboardType={keyboardType as KeyboardTypeOptions}
+                        style={[
+                            {
+                                fontFamily: "Montserrat",
+                                borderWidth: 1,
+                                borderColor: colors.gray,
+                                borderRadius: 5,
+                                padding: 5,
+                                flex: 1,
+                                flexWrap: 'wrap',
+                            }
+                        ]}
+                    />
+                ) : (
+                    <Text style={{ fontSize: 15, flex: 1, flexWrap: 'wrap' }}>{text}</Text>
+                )}
+            </View>
+        )
+    }, []);
+
 
     return (
         <OuterView style={{ backgroundColor: colors.white, flex: 1 }}>
@@ -76,6 +105,18 @@ const EventsScreen = ({ navigation }: any) => {
                 <TouchableOpacity style={styles.addButton} onPress={handleOpenCreateModal}>
                     <Text style={styles.addButtonText}>+</Text>
                 </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: "row", flex: 1, borderBottomWidth: 1, borderBottomColor: colors.lightgray, alignItems: "center", padding: 10, columnGap: 5 }}>
+                <TextElement text={"Title"} setText={() => {}} edit={false} flex={1.5}/>
+                <TextElement text={"Description"} setText={() => {}} edit={false} flex={1.5} />
+                <TextElement text={"Date"} setText={() => {}} edit={false} flex={1} keyboardType="numeric" />
+                <TextElement text={"Start"} setText={() => {}} edit={false} flex={0.7} />
+                <TextElement text={"End"} setText={() => {}} edit={false} flex={0.7} />
+                <TextElement text={"Location"} setText={() => {}} edit={false} flex={1.5} />
+                <TextElement text={"X"} setText={() => {}} edit={false} flex={0.5} keyboardType="numeric" />
+                <TextElement text={"Y"} setText={() => {}} edit={false} flex={0.5} keyboardType="numeric" />
+                <TextElement text={"Level"} setText={() => {}} edit={false} flex={0.5} keyboardType="numeric" />
+                <View style={{flex: 1.5}}></View>
             </View>
             <ScrollView>
                 {data.map((event) => (
@@ -86,7 +127,7 @@ const EventsScreen = ({ navigation }: any) => {
                 visible={createEventModalVisible}
                 handleClose={handleCloseModal}
             />
-            
+
         </OuterView>
     );
 };
