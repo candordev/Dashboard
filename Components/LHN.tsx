@@ -136,14 +136,14 @@ const LHN = (props: LHNProps) => {
               icon="pie-chart"
               selected={navIndex === 2}
             />
-        {(state.groupType != "InternalAIChat") && (
+        {
             <NavItem
               name={"Train"}
               route="/trainChat"
               icon="activity"
               selected={navIndex === 1}
             />
-        )}
+        }
             <NavItem
               name={"Chats"}
               route="/chats"
