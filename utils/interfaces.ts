@@ -76,6 +76,7 @@ export interface FileCaption {
 export interface Event {
   title: string;
   description: string;
+  date: Date;
   startTime: string;
   endTime: string;
   location: string;
