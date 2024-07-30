@@ -10,25 +10,52 @@ import RawChunks from "../Components/RawChunks";
 
 const TrainChatScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
+  const isInternalAIChat = state.groupType === "InternalAIChat";
 
-  return (
-    <OuterView
-    style={{
-      backgroundColor: colors.white,
-      flexDirection: "row",
-    }}
-  >
-    <View style={{ flex: 1 }}>
-      <RawChunks documentTitle={"ThirdStoneFAQOwner"} headerTitle={"Owner"}/>
-    </View>
-    <View style={{ flex: 1 }}>
-      <RawChunks documentTitle={"ThirdStoneFAQPR"} headerTitle={"Prospective Resident"}/>
-    </View>
-    <View style={{ flex: 1 }}>
-      <RawChunks documentTitle={"ThirdStoneFAQCR"} headerTitle={"Current Resident"}/>
-    </View>
-  </OuterView>
-  );
+  if (isInternalAIChat) {
+    const groupID = state.leaderGroups[0]._id;
+
+    return (
+      <>
+        <NotificationPopup navigation={navigation} />
+        <OuterView
+          style={{
+            backgroundColor: colors.white,
+            flexDirection: "row",
+            flex: 1,
+            borderRadius: 20,
+            overflow: "visible",
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <DocumentList groupID={groupID} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <FAQList groupID={groupID} />
+          </View>
+        </OuterView>
+      </>
+    );
+  } else {
+    return (
+      <OuterView
+        style={{
+          backgroundColor: colors.white,
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <RawChunks documentTitle={"ThirdStoneFAQOwner"} headerTitle={"Owner"} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <RawChunks documentTitle={"ThirdStoneFAQPR"} headerTitle={"Prospective Resident"} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <RawChunks documentTitle={"ThirdStoneFAQCR"} headerTitle={"Current Resident"} />
+        </View>
+      </OuterView>
+    );
+  }
 };
 
 export default TrainChatScreen;

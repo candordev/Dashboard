@@ -9,7 +9,7 @@
 // local
 
 
-// export const BASE_URL : string = `http://localhost:4000/api`;
+//export const BASE_URL : string = `http://localhost:4000/api`;
 
 
 // export const BASE_URL : string = `http://${HOST}:4000/api`;

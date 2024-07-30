@@ -272,7 +272,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         style={{ padding: 10, borderTopWidth: 1, borderTopColor: "#e1e1e1" }}
       >
         <TextInput
-          style={[styles.textInput, { fontFamily: "Montserrat", marginBottom: 10, }]}
+          style={[styles.textInput, { fontFamily: "Montserrat", marginBottom: 10}]}
           value={newQuestion}
           onChangeText={setNewQuestion}
           placeholder="New FAQ Question"
@@ -288,7 +288,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         <Button
           text="Add FAQ"
           onPress={handleAddDocument}
-          style={{backgroundColor: colors.purple}}
+          style={{backgroundColor: colors.purple, marginTop: 11}}
           loading={isUploading}
         />
         {/* <TouchableOpacity
