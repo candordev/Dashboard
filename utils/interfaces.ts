@@ -72,6 +72,21 @@ export interface FileCaption {
   url: string;
   caption: string;
 }
+
+export interface Event {
+  title: string;
+  description: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  location: string;
+  _id: string;
+  xCord: number;
+  yCord: number;
+  level: number;
+  imageUrl: string;
+}
+
 // TODO: remove user field (redundant, inside of userProfile)
 export interface Post {
   visible: boolean;
