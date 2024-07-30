@@ -227,36 +227,36 @@ const LHN = (props: LHNProps) => {
             selected={navIndex === 4}
           />
         )}
-        {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
-          <NavItem
-            name={"Inbox"}
-            route="/inbox"
-            icon="inbox"
-            unreadCount={unread}
-            selected={navIndex === 5}
-          />
-        )}
-        <NavItem
+        {/* {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
+          // <NavItem
+          //   name={"Inbox"}
+          //   route="/inbox"
+          //   icon="inbox"
+          //   unreadCount={unread}
+          //   selected={navIndex === 5}
+          // />
+        )} */}
+        {/* <NavItem
           name={"Settings"}
           route="/settings"
           icon="settings"
           selected={navIndex === 6}
-        />
-        {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
+        /> */}
+        {/* {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
           <NavItem
             name={"Group Settings"}
             route="/groupSettings"
             icon="user"
             selected={navIndex === 7}
           />
-        )}
-
+        )} */}
+{/* 
         <NavItem
           name="24/7 Support"
           route="/support"
           icon="check-circle"
           selected={navIndex === 8}
-        />
+        /> */}
         <View style={{ flex: 1 }} />
         <NavItem
           name="Sign out"

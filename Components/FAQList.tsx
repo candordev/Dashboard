@@ -288,7 +288,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         <Button
           text="Add FAQ"
           onPress={handleAddDocument}
-          style={{backgroundColor: colors.purple}}
+          style={{backgroundColor: colors.purple, marginTop: 11}}
           loading={isUploading}
         />
         {/* <TouchableOpacity
