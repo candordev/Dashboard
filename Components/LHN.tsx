@@ -181,7 +181,7 @@ const LHN = (props: LHNProps) => {
         {(state.groupType === "AIChat" || state.groupType === "InternalAIChat") && (
           <>
             <NavItem
-              name={"ChatInsights"}
+              name={"Chat Insights"}
               route="/chatInsights"
               icon="pie-chart"
               selected={navIndex === 2}
