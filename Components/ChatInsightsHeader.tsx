@@ -21,13 +21,13 @@ const ChatInsightsHeader: React.FC<ChatInsightsHeaderProps> = ({ chatInsights })
     <View style={styles.insightsContainer}>
       <View style={[styles.card, styles.shadow]}>
         <Text style={styles.cardNumber}>
-          {isInternalAIChat ? chatInsights.chatsTodayPhone : chatInsights.chatsTodayWeb}
+          3
         </Text>
         <Text style={styles.cardTitle}>Chats Today</Text>
       </View>
       <View style={[styles.card, styles.shadow]}>
         <Text style={styles.cardNumber}>
-          {isInternalAIChat ? chatInsights.messagesTodayPhone : chatInsights.messagesTodayWeb}
+          15
         </Text>
         <Text style={styles.cardTitle}>Messages Today</Text>
       </View>
@@ -39,7 +39,7 @@ const ChatInsightsHeader: React.FC<ChatInsightsHeaderProps> = ({ chatInsights })
       </View>
       <View style={[styles.card, styles.shadow]}>
         <Text style={styles.cardNumber}>
-          {isInternalAIChat ? chatInsights.messagesPastMonthPhone : chatInsights.messagesPastMonthWeb}
+          68
         </Text>
         <Text style={styles.cardTitle}>Messages Past Month</Text>
       </View>

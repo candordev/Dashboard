@@ -147,8 +147,8 @@ const ChatsScreen = ({ navigation, route }: any) => {
 
   const renderScene = ({ route }: any) => {
     const data = route.key === 'webChats' ? webChats : smsChats;
-    const keyExtractor = route.key === 'webChats' ? (item: any, index: number) => item.sessionId || index.toString() : (item: any, index: number) => item.number || index.toString();
-
+    const keyExtractor = route.key === 'webChats' ? (item: any, index: number) => "HEY" : (item: any, index: number) => "HEY"
+    const firstChat = data.length > 0 ? [data[0]] : [];
     return (
       <>
         {loading ? (
@@ -156,7 +156,7 @@ const ChatsScreen = ({ navigation, route }: any) => {
         ) : (
           <FlatList
             ref={flatListRef}
-            data={data}
+            data={firstChat}
             keyExtractor={keyExtractor}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -170,10 +170,10 @@ const ChatsScreen = ({ navigation, route }: any) => {
                 }}
               >
                 <Text style={{ fontFamily: "Montserrat", fontSize: 16, color: colors.darkGray }}>
-                  {item.contactInfo && item.contactInfo.firstName && item.contactInfo.lastName
-                    ? `${item.contactInfo.firstName} ${item.contactInfo.lastName}`
-                    : item.sessionId || item.number} - Priority: {item.priority}
-                </Text>
+                {item.contactInfo && item.contactInfo.firstName && item.contactInfo.lastName
+                  ? `${item.contactInfo.firstName} ${item.contactInfo.lastName}`
+                  : "(234) 234-5678"} - Priority: {item.priority}
+              </Text>
               </TouchableOpacity>
             )}
             onScrollToIndexFailed={handleScrollToIndexFailed}

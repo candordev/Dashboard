@@ -188,6 +188,26 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
   const limit = 15; // Set your desired limit
   const [hasMore, setHasMore] = useState(true); // Flag to determine if there are more items to load
 
+  const demoMessages: MessageItem[] = [
+    {
+      _id: "3",
+      content: "Yes, there is a pet policy. Most of the homes we manage are pet-friendly, but there may be restrictions based on breed and weight due to insurance company policies. The availability of pet-friendly homes will be indicated in the property description on our website.",
+      author: "AI",
+      date: "2024-08-22T14:24:30", // Example date at 2:24 PM, 30 seconds after the previous message
+    },
+    {
+      _id: "2",
+      content: "What is your pet policy?",
+      author: "Resident",
+      date: "2024-08-22T14:24:00", // Example date at 2:24 PM
+    },
+    {
+      _id: "1",
+      content: "Hi I'm Candor Assistant. Please let me know what I can help you with!",
+      author: "AI",
+      date: "2024-08-22T14:23:00", // Example date at 2:23 PM
+    },
+  ];
 
   async function fetchAIChat(
     identifier: string,
@@ -437,7 +457,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
         >
           {contactInfo && (contactInfo.firstName || contactInfo.lastName)
             ? `${contactInfo.firstName || ''} ${contactInfo.lastName || ''}`.trim()
-            : phoneNumber} ({userType})
+            : "(234) 234-5678"}
           <Text
             style={{
               flex: 1,
@@ -487,7 +507,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
         inverted
         onEndReached={handleOnEndReached}
         onEndReachedThreshold={0.05} // May need to adjust
-        data={messages}
+        data={demoMessages}
         renderItem={renderMessage}
         keyExtractor={(item) => item._id}
         ListFooterComponent={

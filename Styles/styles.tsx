@@ -174,6 +174,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     flexShrink: 1,
   },
+  unansweredQuestionsContainer: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: colors.white,
+    // shadowColor: colors.black,
+    // shadowRadius: 4,
+    // shadowOffset: { width: 1, height: 1 },
+    // shadowOpacity: 0.2,
+    // add a black outline css
+    borderWidth: 0.0001,
+    flexShrink: 1,
+  },
   insightsSectionTitle: {
     fontFamily: "OpenSans",
     fontSize: 30,

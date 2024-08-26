@@ -238,7 +238,7 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
           >
             <TouchableOpacity onPress={() => {}}>
               <Text style={{ fontFamily: "Montserrat", fontSize: 16 }}>
-                {item.name}
+                Document
               </Text>
               <Text
                 style={{
@@ -247,7 +247,7 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
                   color: "#666",
                 }}
               >
-                {item.description}
+                Document Description
               </Text>
             </TouchableOpacity>
           </View>

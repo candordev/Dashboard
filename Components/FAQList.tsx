@@ -206,7 +206,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
           >
             <TouchableOpacity onPress={() => {}}>
               <Text style={{ fontFamily: "Montserrat", fontSize: 16 }}>
-                {item.question}
+                FAQ
               </Text>
               <Text
                 style={{
@@ -215,7 +215,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
                   color: "#666",
                 }}
               >
-                {item.answer}
+                FAQ Answer
               </Text>
             </TouchableOpacity>
           </View>

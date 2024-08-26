@@ -15,6 +15,9 @@ import ChatInsightsHeader from '../Components/ChatInsightsHeader';
 import additionalStyles from '../Styles/styles';
 import InsightsBarChart from "../Components/InsightsBarChart";
 import ChatsLineGraph from '../Components/ChatsLineGraph';
+import { set } from 'lodash';
+import Button from '../Components/Button';
+import { fitBounds } from 'google-map-react';
 
 
 
@@ -41,7 +44,22 @@ const ChatInsightsScreen = ({ navigation }: any) => {
       if (response.ok) {
         const data = await response.json();
         console.log("CHAT INSIGHTS FROM GET REQUEST: ", data)
-        setChatInsights(data); // Assuming data is directly structured as required    
+        // setChatInsights(data); // Assuming data is directly structured as required
+        data.unansweredResidentQuestionsContentPhone = [
+          {
+            content: "How do I pay my rent?",
+            phoneNumber: "123-456-7890"
+          },
+          {
+            content: "How do I submit a maintenance request?",
+            phoneNumber: "123-456-7890"
+          },
+          {
+            content: "What are the hours for the pool?",
+            phoneNumber: "123-456-7890"
+          }
+        ]
+        setChatInsights(data);
       } else {
         console.error("Failed to fetch chat insights.");
       }
@@ -119,6 +137,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                     fontFamily: "Montserrat",
                     fontSize: 25,
                     fontWeight: "450",
+                    marginBottom: 10  
                 }}
             >
             Unanswered Questions
@@ -127,14 +146,22 @@ const ChatInsightsScreen = ({ navigation }: any) => {
             {isInternalAIChat ? (
               chatInsights?.unansweredResidentQuestionsContentPhone?.map((question, index) => (
                 <TouchableOpacity
-                  key={index}
-                  style={[styles.card, styles.shadow]}
-                  onPress={() => handleCardPress(question.phoneNumber)}
-                >
-                  <Text style={{ fontFamily: "Montserrat", fontSize: 16, color: colors.darkGray }}>
-                    {question.content}
-                  </Text>
-                </TouchableOpacity>
+  key={index}
+  style={[styles.card]}
+  onPress={() => handleCardPress(question.phoneNumber)}
+>
+  <Text style={styles.text}>
+    {question.content}
+  </Text>
+  <View style={styles.buttonContainer}>
+    <Button
+      text="Answer"
+      onPress={() => handleCardPress(question.phoneNumber)}
+      style={styles.button}
+      textStyle={styles.buttonText}
+    />
+  </View>
+</TouchableOpacity>
               ))
             ) : (
               chatInsights?.unansweredResidentQuestionsContentWeb?.map((question, index) => (
@@ -160,18 +187,37 @@ const ChatInsightsScreen = ({ navigation }: any) => {
 
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: colors.white,
-        padding: 15,
-        borderRadius: 10,
-        margin: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 5,
-        boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
-      },
+  card: {
+    backgroundColor: colors.white,
+    padding: 10,
+    borderRadius: 10,
+    margin: 5,
+    elevation: 5,
+    borderColor: colors.lightergray,
+    borderWidth: 1.5, // 1.5 px width
+    flexDirection: 'row', // Align children horizontally
+    alignItems: 'center', // Vertically center the content
+  },
+  text: {
+    fontFamily: "Montserrat",
+    fontSize: 16,
+    color: colors.darkGray,
+    flex: 1, // Take up the remaining space
+  },
+  buttonContainer: {
+    flexShrink: 0, // Prevent the button from shrinking
+  },
+  button: {
+    backgroundColor: colors.purple,
+    marginLeft: 10, // Add some space between the text and the button
+    paddingVertical: 10, // Vertical padding for the button
+    paddingHorizontal: 15, // Horizontal padding for the button
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '700',
+  },
       shadow: {
         ...Platform.select({
           ios: {

@@ -166,7 +166,7 @@ const LHN = (props: LHNProps) => {
             marginBottom: 20,
           }}
         >
-          {state.firstName} {state.lastName}
+          Candor Admin
         </Text>
       </View>
       <>

@@ -1,5 +1,5 @@
 import React from "react";
-import { ResponsiveContainer, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { ResponsiveContainer, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import colors from "../Styles/colors";
 
 interface DataPoint {
@@ -24,9 +24,9 @@ const ChatsLineGraph: React.FC<CasesChartProps> = ({ data }) => {
       >
         <XAxis
           dataKey="date"
+          tick={false} // This disables all the X-axis labels
           tickLine={false}
           allowDataOverflow={true}
-          interval={"preserveEnd"}
         />
         <YAxis
           allowDataOverflow={true}
@@ -34,7 +34,6 @@ const ChatsLineGraph: React.FC<CasesChartProps> = ({ data }) => {
           interval={"preserveEnd"}
         />
         <Tooltip />
-        {/* <Legend /> */}
         <Line
           type="monotone"
           dataKey="count"
