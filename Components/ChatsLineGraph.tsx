@@ -12,29 +12,70 @@ interface CasesChartProps {
 }
 
 const ChatsLineGraph: React.FC<CasesChartProps> = ({ data }) => {
+  console.log(data);
+
+  const newData = [
+    {
+      date: "Aug 20th",
+      count: 10,
+    },
+    {
+      date: "Aug 21st",
+      count: 20,
+    },
+    {
+      date: "Aug 22nd",
+      count: 15,
+    },
+    {
+      date: "Aug 23rd",
+      count: 25,
+    },
+    {
+      date: "Aug 24th",
+      count: 10,
+    },
+    {
+      date: "Aug 25th",
+      count: 15,
+    },
+    {
+      date: "Aug 26th",
+      count: 40,
+    },
+    {
+      date: "Aug 27th",
+      count: 45,
+    },
+    {
+      date: "Aug 28th",
+      count: 50,
+    },
+    {
+      date: "Aug 29th",
+      count: 20,
+    },
+  ]
+
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height="100%">
       <LineChart
-        data={data}
+        data={newData}
         margin={{
           top: 20,
           bottom: 5,
+          right: 50,
         }}
         style={{ fontFamily: 'Montserrat' }}
       >
         <XAxis
           dataKey="date"
           tickLine={false}
-          allowDataOverflow={true}
-          interval={"preserveEnd"}
         />
         <YAxis
           allowDataOverflow={true}
           tickLine={false}
-          interval={"preserveEnd"}
         />
-        <Tooltip />
-        {/* <Legend /> */}
         <Line
           type="monotone"
           dataKey="count"

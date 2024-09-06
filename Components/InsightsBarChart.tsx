@@ -11,9 +11,9 @@ interface InsightsBarChartProps {
 
 const InsightsBarChart: React.FC<InsightsBarChartProps> = ({ chatInsights }) => {
   const userTypeToName: { [key: string]: string } = {
-    prospectiveResident: 'Prospective Resident',
+    prospectiveResident: 'Prospective Res',
     owner: 'Owner',
-    currentResident: 'Current Resident'
+    currentResident: 'Current Res'
   };
 
   const chartData = chatInsights?.allTimeUserTypes

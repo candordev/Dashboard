@@ -21,13 +21,13 @@ const ChatInsightsHeader: React.FC<ChatInsightsHeaderProps> = ({ chatInsights })
     <View style={styles.insightsContainer}>
       <View style={[styles.card, styles.shadow]}>
         <Text style={styles.cardNumber}>
-          {isInternalAIChat ? chatInsights.chatsTodayPhone : chatInsights.chatsTodayWeb}
+          {15}
         </Text>
         <Text style={styles.cardTitle}>Chats Today</Text>
       </View>
       <View style={[styles.card, styles.shadow]}>
         <Text style={styles.cardNumber}>
-          {isInternalAIChat ? chatInsights.messagesTodayPhone : chatInsights.messagesTodayWeb}
+          {32}
         </Text>
         <Text style={styles.cardTitle}>Messages Today</Text>
       </View>
