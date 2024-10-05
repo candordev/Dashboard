@@ -9,7 +9,7 @@
 // local
 
 
-//export const BASE_URL : string = `http://localhost:4000/api`;
+export const BASE_URL : string = `http://localhost:4000/api`;
 
 
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
@@ -18,7 +18,7 @@
 //export const BASE_URL : string = `http://3.221.91.129:4000/api`;
 
 // PRODUCTION
-export const BASE_URL: string = `https://candoradmin.com/api`;
+// export const BASE_URL: string = `https://candoradmin.com/api`;
 
 
 //export const BASE_URL: string = `http://184.72.74.25:4000/api`;
@@ -161,7 +161,7 @@ export const Endpoints = {
   getWebChats: `${BASE_URL}/chat/getWebChats`,
   getAllWebChats: `${BASE_URL}/chat/getAllWebChats`,
   getChunks: `${BASE_URL}/document/getChunks`,
-  addChunk: `${BASE_URL}/document/addChunk`,
+  obiladdChunk: `${BASE_URL}/document/addChunk`,
   deleteChunk: `${BASE_URL}/document/deleteChunk`,
   editChunk: `${BASE_URL}/document/editChunk`,
   getActivityStatus: `${BASE_URL}/group/getActivityStatus?`,
@@ -171,4 +171,8 @@ export const Endpoints = {
   editEvent: `${BASE_URL}/event/editEvent`,
   createEvent: `${BASE_URL}/event/createEvent`,
   deleteEvent: `${BASE_URL}/event/deleteEvent`,
+  getThirdstoneFAQs: `${BASE_URL}/chat/getThirdstoneFAQs`,
+  addThirdstoneFAQ: `${BASE_URL}/chat/addThirdstoneFAQ`,
+  editThirdstoneFAQ: `${BASE_URL}/chat/editThirdstoneFAQ`,
+  deleteThirdstoneFAQ: `${BASE_URL}/chat/deleteThirdstoneFAQ`,
 };
