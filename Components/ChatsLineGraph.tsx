@@ -13,12 +13,13 @@ interface CasesChartProps {
 
 const ChatsLineGraph: React.FC<CasesChartProps> = ({ data }) => {
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height="100%">
       <LineChart
         data={data}
         margin={{
           top: 20,
           bottom: 5,
+          right: 50,
         }}
         style={{ fontFamily: 'Montserrat' }}
       >
@@ -34,7 +35,6 @@ const ChatsLineGraph: React.FC<CasesChartProps> = ({ data }) => {
           interval={"preserveEnd"}
         />
         <Tooltip />
-        {/* <Legend /> */}
         <Line
           type="monotone"
           dataKey="count"
