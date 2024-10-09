@@ -137,6 +137,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                 fontFamily: "Montserrat",
                 fontSize: 25,
                 fontWeight: "450",
+                marginBottom: 10,
               }}
             >
               Unanswered Questions
@@ -147,7 +148,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                     (question, index) => (
                       <TouchableOpacity
                         key={index}
-                        style={[styles.card, styles.shadow]}
+                        style={[styles.card]}
                         onPress={() => handleCardPress(question.phoneNumber)}
                       >
                         <Text
@@ -166,7 +167,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                     (question, index) => (
                       <TouchableOpacity
                         key={index}
-                        style={[styles.card, styles.shadow]}
+                        style={[styles.card]}
                         onPress={() => handleCardPress(question.sessionId)}
                       >
                         <Text
@@ -195,12 +196,8 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     margin: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
-    boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)",
+    borderColor: colors.lightergray,
+    borderWidth: 1,
   },
   shadow: {
     ...Platform.select({

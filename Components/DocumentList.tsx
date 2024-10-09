@@ -222,8 +222,8 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
             />
             <Button
               text="Done"
-              style={{backgroundColor: colors.purple}}
-              textStyle={{fontSize: 14}}
+              style={{ backgroundColor: colors.purple }}
+              textStyle={{ fontSize: 14 }}
               onPress={() => handleEditDocument(item)}
             />
           </>
@@ -236,7 +236,7 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
               paddingLeft: 10,
             }}
           >
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => Linking.openURL(item.link)}>
               <Text style={{ fontFamily: "Montserrat", fontSize: 16 }}>
                 {item.name}
               </Text>
@@ -374,7 +374,7 @@ const DocumentList = ({ groupID }: MemberManagementProps) => {
           text="Add Document"
           onPress={handleAddDocument}
           loading={isUploading}
-          style={{backgroundColor: colors.purple}}
+          style={{ backgroundColor: colors.purple }}
         />
       </View>
     </View>

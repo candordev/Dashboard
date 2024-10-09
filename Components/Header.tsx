@@ -172,7 +172,7 @@ const Header = ({
             fontFamily: "Montserrat",
           }}
         >
-          {headerTitle}
+          {"Issues"}
         </Text>
         <View style={{flexDirection: "row", columnGap: 15}}>
           <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>

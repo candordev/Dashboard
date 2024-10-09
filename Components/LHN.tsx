@@ -22,14 +22,13 @@ const LHN = (props: LHNProps) => {
   const { state, dispatch } = useUserContext();
   const { notifications } = useNotification();
   const [searchPhrase, setSearchPhrase] = useState("");
-  
-  let filteredGroups = []
-  if(state && state.leaderGroups) {
-    filteredGroups = state.leaderGroups.filter((group: { name: string; }) =>
+
+  let filteredGroups = [];
+  if (state && state.leaderGroups) {
+    filteredGroups = state.leaderGroups.filter((group: { name: string }) =>
       group.name.toLowerCase().includes(searchPhrase.toLowerCase())
     );
   }
-  
 
   const isFirstRender = useRef(true);
 
@@ -94,43 +93,45 @@ const LHN = (props: LHNProps) => {
   }, []);
 
   if (state.groupType === "Convention") {
-    return <View style={styles.container}>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          paddingBottom: 10,
-        }}
-      >
-        <ProfilePicture
-          imageUrl={state.imageUrl}
-          type="profile"
-          style={{ marginVertical: 10 }}
-        />
-        <Text
-          style={{
-            color: colors.white,
-            fontWeight: "500",
-            textAlign: "center",
-            fontSize: 13,
-            marginBottom: 20,
-          }}
-        >
-          {state.firstName} {state.lastName}
-        </Text>
-      </View>
-      <View
+    return (
+      <View style={styles.container}>
+        <View
           style={{
             justifyContent: "center",
             alignItems: "center",
             paddingBottom: 10,
           }}
-      ></View>
-      <NavItem
-        name={"Events"}
-        route="/events"
-        icon="calendar"
-        selected={navIndex === 10}/>
+        >
+          <ProfilePicture
+            imageUrl={state.imageUrl}
+            type="profile"
+            style={{ marginVertical: 10 }}
+          />
+          <Text
+            style={{
+              color: colors.white,
+              fontWeight: "500",
+              textAlign: "center",
+              fontSize: 13,
+              marginBottom: 20,
+            }}
+          >
+            {state.firstName} {state.lastName}
+          </Text>
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: 10,
+          }}
+        ></View>
+        <NavItem
+          name={"Events"}
+          route="/events"
+          icon="calendar"
+          selected={navIndex === 10}
+        />
         <View style={{ flex: 1 }} />
         <NavItem
           name="Sign out"
@@ -140,7 +141,8 @@ const LHN = (props: LHNProps) => {
           icon="log-out"
           selected={false}
         />
-    </View>
+      </View>
+    );
   }
 
   return (
@@ -178,39 +180,40 @@ const LHN = (props: LHNProps) => {
             paddingBottom: 10,
           }}
         ></View>
-        {(state.groupType === "AIChat" || state.groupType === "InternalAIChat") && (
+        {(state.groupType === "AIChat" ||
+          state.groupType === "InternalAIChat") && (
           <>
             <NavItem
-              name={"Chat Insights"}
+              name={"Insights"}
               route="/chatInsights"
               icon="pie-chart"
               selected={navIndex === 2}
             />
-        {
-            <NavItem
-              name={"Train"}
-              route="/trainChat"
-              icon="activity"
-              selected={navIndex === 1}
-            />
-        }
+            {
+              <NavItem
+                name={"Train"}
+                route="/trainChat"
+                icon="activity"
+                selected={navIndex === 1}
+              />
+            }
             <NavItem
               name={"Chats"}
               route="/chats"
               icon="message-circle"
               selected={navIndex === 0}
             />
-        {(state.groupType != "InternalAIChat") && (
-            <NavItem
-              name={"Leads"}
-              route="/leads"
-              icon="user"
-              selected={navIndex === 9}
-            />
-          )}
+            {state.groupType != "InternalAIChat" && (
+              <NavItem
+                name={"Leads"}
+                route="/leads"
+                icon="user"
+                selected={navIndex === 9}
+              />
+            )}
           </>
         )}
-        {state.master ? (
+        {state.master && (
           <>
             <NavItem
               name={"Master"}
@@ -218,7 +221,14 @@ const LHN = (props: LHNProps) => {
               icon="list"
               selected={navIndex === 3}
             />
-            <View style={{ backgroundColor: colors.darkGray, padding: 7.5, borderRadius: 10, marginBottom: 10, }}>
+            <View
+              style={{
+                backgroundColor: colors.darkGray,
+                padding: 7.5,
+                borderRadius: 10,
+                marginBottom: 10,
+              }}
+            >
               <SearchBar
                 searchPhrase={searchPhrase}
                 setSearchPhrase={setSearchPhrase}
@@ -231,52 +241,60 @@ const LHN = (props: LHNProps) => {
                 }}
               />
               <View
-                style={{ height: Math.min(140, state.leaderGroups.length * 28), paddingLeft: 25, marginBottom: 5 }}
+                style={{
+                  height: Math.min(140, state.leaderGroups.length * 28),
+                  paddingLeft: 25,
+                  marginBottom: 5,
+                }}
               >
                 <ScrollView>
-                  {filteredGroups.map((group: { _id: any; name: string | any[]; }, index: React.Key | null | undefined) => (
-                    <Pressable
-                      key={index}
-                      onPress={() => handleGroupSelect(group._id)}
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginVertical: 4,
-                      }}
-                    >
-                      <FeatherIcon
-                        name="trello"
-                        size={20}
-                        color={colors.white}
-                        style={{ marginRight: 10 }}
-                      />
-                      <Text
+                  {filteredGroups.map(
+                    (
+                      group: { _id: any; name: string | any[] },
+                      index: React.Key | null | undefined
+                    ) => (
+                      <Pressable
+                        key={index}
+                        onPress={() => handleGroupSelect(group._id)}
                         style={{
-                          color: colors.white,
-                          fontFamily: "Montserrat",
-                          textAlign: "left",
-                          flex: 1,
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginVertical: 4,
                         }}
                       >
-                        {group.name.length > 15
-                          ? `${group.name.slice(0, 15)}...`
-                          : group.name}
-                      </Text>
-                    </Pressable>
-                  ))}
+                        <FeatherIcon
+                          name="trello"
+                          size={20}
+                          color={colors.white}
+                          style={{ marginRight: 10 }}
+                        />
+                        <Text
+                          style={{
+                            color: colors.white,
+                            fontFamily: "Montserrat",
+                            textAlign: "left",
+                            flex: 1,
+                          }}
+                        >
+                          {group.name.length > 15
+                            ? `${group.name.slice(0, 15)}...`
+                            : group.name}
+                        </Text>
+                      </Pressable>
+                    )
+                  )}
                 </ScrollView>
               </View>
             </View>
           </>
-        ) : (
-          <NavItem
-            name={"Issues"}
-            route="/all"
-            icon="list"
-            selected={navIndex === 4}
-          />
         )}
+        <NavItem
+          name={"Issues"}
+          route="/all"
+          icon="list"
+          selected={navIndex === 4}
+        />
         {/* {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
           // <NavItem
           //   name={"Inbox"}
@@ -300,7 +318,7 @@ const LHN = (props: LHNProps) => {
             selected={navIndex === 7}
           />
         )} */}
-{/* 
+        {/* 
         <NavItem
           name="24/7 Support"
           route="/support"

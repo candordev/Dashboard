@@ -11,25 +11,22 @@ import {
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import colors from "../Styles/colors";
 import { BASE_URL, Endpoints } from "../utils/Endpoints";
-import { customFetch, formatDate} from "../utils/utils";
+import { customFetch, formatDate } from "../utils/utils";
 // import TextInput from '../Components/Native/TextInput';
 import Icon from "react-native-vector-icons/FontAwesome";
 import styles from "../Styles/styles";
-import {  StyleSheet, } from "react-native";
+import { StyleSheet } from "react-native";
 import Button from "../Components/Button";
 import ExpandableTextInput from "../Components/ExpandableTextInput";
 import { useUserContext } from "../Hooks/useUserContext";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { io } from "socket.io-client";
 
-
 interface ChatComponentProps {
   phoneNumber: string; // Assuming phoneNumber is a string
   //onPriorityChange?: () => void;
   onPriorityChange?: (sessionId: string) => void;
   chatType: string;
-
-
 }
 
 interface MessageItem {
@@ -45,17 +42,19 @@ interface ContactInfo {
   phoneNumber?: string;
 }
 
-
-const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, onPriorityChange }) => {
+const ChatComponent: React.FC<ChatComponentProps> = ({
+  phoneNumber,
+  chatType,
+  onPriorityChange,
+}) => {
   const [inputText, setInputText] = useState(""); // State to hold the input text
   const [isAITurnedOn, setIsAITurnedOn] = useState(false);
   const [priority, setPriority] = useState("Low");
-  const [userType,setUserType] = useState(""); 
+  const [userType, setUserType] = useState("");
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const { state, dispatch } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [city, setCity] = useState("");
-
 
   useEffect(() => {
     const socketName =
@@ -80,8 +79,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       console.error("Connection error:", err.message);
     });
 
-    socket.on("new-message", (newMessage: MessageItem) => { 
-      console.log("new message! ", newMessage)
+    socket.on("new-message", (newMessage: MessageItem) => {
+      console.log("new message! ", newMessage);
       setMessages((prevMessages) => [newMessage, ...prevMessages]);
     });
 
@@ -93,14 +92,12 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
     };
   }, [phoneNumber]); // Add chatMode to the dependency array
 
-
-
   const toggleAI = async () => {
     const newAIState = !isAITurnedOn;
     setIsAITurnedOn(newAIState);
-  
+
     const isPhoneNumber = /^\+?[1-9]\d{1,14}$/.test(phoneNumber);
-  
+
     // Define the base structure of the bodyData object
     const bodyData: {
       groupID: any;
@@ -111,24 +108,24 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       groupID: state.currentGroup,
       AIReply: newAIState,
     };
-  
+
     // Conditionally add phoneNumber or sessionId
     if (isPhoneNumber) {
       bodyData.phoneNumber = phoneNumber;
     } else {
       bodyData.sessionId = phoneNumber;
     }
-  
+
     try {
       const response = await customFetch(Endpoints.updateNumberSettings, {
         method: "POST",
         body: JSON.stringify(bodyData),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to update AI state");
       }
-  
+
       console.log("AI state updated successfully");
       if (onPriorityChange) onPriorityChange(phoneNumber);
     } catch (error) {
@@ -136,14 +133,13 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       setIsAITurnedOn(!newAIState);
     }
   };
-  
 
   const togglePriority = async () => {
     const newPriority = priority === "Low" ? "High" : "Low";
     setPriority(newPriority);
-  
+
     const isPhoneNumber = /^\+?[1-9]\d{1,14}$/.test(phoneNumber);
-    
+
     // Define the base structure of the bodyData object
     const bodyData: {
       groupID: any;
@@ -154,24 +150,24 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       groupID: state.currentGroup,
       priority: newPriority,
     };
-  
+
     // Conditionally add phoneNumber or sessionId
     if (isPhoneNumber) {
       bodyData.phoneNumber = phoneNumber;
     } else {
       bodyData.sessionId = phoneNumber;
     }
-  
+
     try {
       const response = await customFetch(Endpoints.updateNumberSettings, {
         method: "POST",
         body: JSON.stringify(bodyData),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to update priority");
       }
-  
+
       console.log("Priority updated successfully");
       if (onPriorityChange) onPriorityChange(phoneNumber);
     } catch (error) {
@@ -179,15 +175,13 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       setPriority(priority === "Low" ? "High" : "Low");
     }
   };
-  
-  
+
   const [messages, setMessages] = useState<MessageItem[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const limit = 15; // Set your desired limit
   const [hasMore, setHasMore] = useState(true); // Flag to determine if there are more items to load
-
 
   async function fetchAIChat(
     identifier: string,
@@ -196,30 +190,30 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
   ): Promise<MessageItem[] | undefined> {
     try {
       const isPhoneNumber = /^\+?[1-9]\d{1,14}$/.test(identifier); // Regex to check if identifier is a phone number
-      if(isPhoneNumber){
-        setContactInfo(null)
+      if (isPhoneNumber) {
+        setContactInfo(null);
       }
       const queryParams = new URLSearchParams({
-        [isPhoneNumber ? 'phoneNumber' : 'sessionId']: identifier,
+        [isPhoneNumber ? "phoneNumber" : "sessionId"]: identifier,
         page: page.toString(),
         limit: limit.toString(),
-        groupID: state.currentGroup
+        groupID: state.currentGroup,
       });
-  
-      const url = isPhoneNumber 
-        ? `${Endpoints.getChatForNumber}?${queryParams.toString()}` 
+
+      const url = isPhoneNumber
+        ? `${Endpoints.getChatForNumber}?${queryParams.toString()}`
         : `${Endpoints.getWebChats}?${queryParams.toString()}`;
-  
+
       const response = await customFetch(url, { method: "GET" });
       if (!response.ok) {
         console.error("Error fetching chats: ", response.statusText);
         return undefined;
       }
-  
+
       const data = await response.json();
       if (!isPhoneNumber) {
         setContactInfo(data.contactInfo);
-        console.log("THIS THE DATA BEING USED: ", )
+        console.log("THIS THE DATA BEING USED: ");
         setUserType(data.data[data.data.length - 1]?.userType);
       }
       setPriority(data.priority);
@@ -229,14 +223,13 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
         setCity(data.location.city);
       }
       console.log("DATA RETURNED NEW: ", data);
-      
+
       return data.data;
     } catch (error) {
       console.error("Network error while fetching chats: ", error);
       return undefined;
     }
   }
-  
 
   const handleSendChat = async () => {
     if (inputText.trim()) {
@@ -249,7 +242,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
           body: JSON.stringify({
             phoneNumber: phoneNumber,
             message: inputText,
-            groupID: state.currentGroup
+            groupID: state.currentGroup,
           }),
         });
 
@@ -325,7 +318,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
   const renderMessage = ({ item }: { item: MessageItem }) => {
     const rightMessage = item.author === "Leader" || item.author === "AI";
     const formattedDate = formatDate(item.date); // Ensure you handle formatting as needed
-  
+
     return (
       <View
         style={{
@@ -335,7 +328,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
           marginLeft: rightMessage ? 100 : 0,
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text
             style={{
               color: colors.purple,
@@ -364,7 +357,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
             borderRadius: 20,
             padding: 10,
             marginTop: 3,
-            alignSelf: 'baseline'
+            alignSelf: "baseline",
           }}
         >
           <Text
@@ -405,29 +398,45 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
       >
         {/* Phone Number Display */}
         {contactInfo && (
-              <TouchableOpacity onPress={handleInfoPress}>
-                <MaterialIcons name="info" size={24} color={colors.purple} style={{marginRight: 5.3}}/>
+          <TouchableOpacity onPress={handleInfoPress}>
+            <MaterialIcons
+              name="info"
+              size={24}
+              color={colors.purple}
+              style={{ marginRight: 5.3 }}
+            />
+          </TouchableOpacity>
+        )}
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          // animationType="slide"
+          onRequestClose={closeModal}
+        >
+          <View style={additionalStyles.modalBackground}>
+            <View style={additionalStyles.modalContainer}>
+              <Text style={additionalStyles.modalText}>
+                First Name: {contactInfo?.firstName || "N/A"}
+              </Text>
+              <Text style={additionalStyles.modalText}>
+                Last Name: {contactInfo?.lastName || "N/A"}
+              </Text>
+              <Text style={additionalStyles.modalText}>
+                Email: {contactInfo?.email || "N/A"}
+              </Text>
+              <Text style={additionalStyles.modalText}>
+                Phone Number: {contactInfo?.phoneNumber || "N/A"}
+              </Text>
+              <TouchableOpacity
+                onPress={closeModal}
+                style={additionalStyles.closeButton}
+              >
+                <Text style={additionalStyles.closeButtonText}>Close</Text>
               </TouchableOpacity>
-            )}
-            <Modal
-            visible={modalVisible}
-            transparent={true}
-            // animationType="slide"
-            onRequestClose={closeModal}
-          >
-            <View style={additionalStyles.modalBackground}>
-              <View style={additionalStyles.modalContainer}>
-                <Text style={additionalStyles.modalText}>First Name: {contactInfo?.firstName || 'N/A'}</Text>
-                <Text style={additionalStyles.modalText}>Last Name: {contactInfo?.lastName || 'N/A'}</Text>
-                <Text style={additionalStyles.modalText}>Email: {contactInfo?.email || 'N/A'}</Text>
-                <Text style={additionalStyles.modalText}>Phone Number: {contactInfo?.phoneNumber || 'N/A'}</Text>
-                <TouchableOpacity onPress={closeModal} style={additionalStyles.closeButton}>
-                  <Text style={additionalStyles.closeButtonText}>Close</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </Modal>
-          <Text
+          </View>
+        </Modal>
+        <Text
           style={{
             flex: 1,
             color: colors.black,
@@ -436,8 +445,11 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
           }}
         >
           {contactInfo && (contactInfo.firstName || contactInfo.lastName)
-            ? `${contactInfo.firstName || ''} ${contactInfo.lastName || ''}`.trim()
-            : phoneNumber} ({userType})
+            ? `${contactInfo.firstName || ""} ${
+                contactInfo.lastName || ""
+              }`.trim()
+            : phoneNumber}{" "}
+          {userType ? "(" + userType + ")" : ""}
           <Text
             style={{
               flex: 1,
@@ -471,7 +483,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
               marginRight: 5,
             }}
             textStyle={{ color: colors.white, fontSize: 14, fontWeight: 700 }}
-          /> 
+          />
           <Button
             text={`Priority: ${priority}`}
             onPress={togglePriority}
@@ -499,7 +511,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
         }
       />
 
-       <View
+      <View
         style={[
           styles.textInput,
           {
@@ -512,7 +524,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
         ]}
       >
         <ExpandableTextInput
-          style={{ flex: 1, borderWidth: 0, }}
+          style={{ flex: 1, borderWidth: 0 }}
           onInputChange={setInputText}
           onSubmit={handleSendChat}
           value={inputText}
@@ -528,7 +540,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
             color={inputText.trim() ? colors.purple : colors.lightgray}
           />
         </TouchableOpacity>
-      </View> 
+      </View>
     </View>
   );
 };
@@ -536,22 +548,22 @@ const ChatComponent: React.FC<ChatComponentProps> = ({ phoneNumber, chatType, on
 const additionalStyles = StyleSheet.create({
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
     // width: 300,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   modalText: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     fontSize: 16,
     marginVertical: 5,
-    fontFamily: 'Montserrat'
+    fontFamily: "Montserrat",
   },
   closeButton: {
     marginTop: 20,
@@ -560,9 +572,9 @@ const additionalStyles = StyleSheet.create({
     borderRadius: 5,
   },
   closeButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontFamily: 'Montserrat'
+    fontFamily: "Montserrat",
   },
 });
 

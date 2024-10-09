@@ -35,6 +35,8 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
   const [newAnswer, setNewAnswer] = useState("");
   const [newQuestion, setNewQuestion] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [inputHeight, setInputHeight] = useState(0);
+  const [editLoading, setEditLoading] = useState(false);
 
   useEffect(() => {
     const fetchFAQs = async () => {
@@ -123,6 +125,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
   };
   const handleEditDocument = async (FAQ: FAQ) => {
     try {
+      setEditLoading(true);
       // Prepare the data for the request
       const bodyData = {
         faqID: FAQ._id,
@@ -151,6 +154,8 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
     } catch (error) {
       console.error("Failed to edit document:", error);
       // Handle errors, e.g., by setting an error state or showing a message
+    } finally {
+      setEditLoading(false);
     }
   };
 
@@ -178,23 +183,34 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         }}
       >
         {isEditing ? (
-          <>
+          <View style={{ width: "100%" }}>
             <TextInput
-              style={[styles.textInput, { fontFamily: "Montserrat" }]}
+              style={[
+                styles.textInput,
+                { fontFamily: "Montserrat", marginBottom: 10 },
+              ]}
               value={questionEdit}
               onChangeText={(text) => setQuestionEdit(text)}
             />
             <TextInput
-              style={[styles.textInput, { fontFamily: "Montserrat" }]}
+              style={[
+                styles.textInput,
+                {
+                  fontFamily: "Montserrat",
+                  marginBottom: 10,
+                  height: Math.max(35, inputHeight),
+                },
+              ]}
               value={answerEdit}
               onChangeText={(text) => setAnswerEdit(text)}
+              multiline={true}
+              numberOfLines={10} // Adjust number of lines as needed
+              onContentSizeChange={(event) => {
+                setInputHeight(event.nativeEvent.contentSize.height);
+              }}
             />
-            <Button
-              text="Done"
-              style={{color: colors.purple}}
-              onPress={() => handleEditDocument(item)}
-            />
-          </>
+            <Button text="Done" onPress={() => handleEditDocument(item)} loading={editLoading}/>
+          </View>
         ) : (
           <View
             style={{
@@ -205,7 +221,13 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
             }}
           >
             <TouchableOpacity onPress={() => {}}>
-              <Text style={{ fontFamily: "Montserrat", fontSize: 16 }}>
+              <Text
+                style={{
+                  fontFamily: "Montserrat",
+                  fontSize: 16,
+                  marginBottom: 5,
+                }}
+              >
                 {item.question}
               </Text>
               <Text
@@ -272,7 +294,10 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         style={{ padding: 10, borderTopWidth: 1, borderTopColor: "#e1e1e1" }}
       >
         <TextInput
-          style={[styles.textInput, { fontFamily: "Montserrat", marginBottom: 10}]}
+          style={[
+            styles.textInput,
+            { fontFamily: "Montserrat", marginBottom: 10 },
+          ]}
           value={newQuestion}
           onChangeText={setNewQuestion}
           placeholder="New FAQ Question"
@@ -288,7 +313,7 @@ const FAQList = ({ groupID }: MemberManagementProps) => {
         <Button
           text="Add FAQ"
           onPress={handleAddDocument}
-          style={{backgroundColor: colors.purple, marginTop: 11}}
+          style={{ backgroundColor: colors.purple, marginTop: 11 }}
           loading={isUploading}
         />
         {/* <TouchableOpacity
