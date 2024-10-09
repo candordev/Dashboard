@@ -207,12 +207,14 @@ export const formatDate = (createdAt: string): string => {
   const diffHrs = Math.round(diffMins / 60); // hours
   const diffDays = Math.round(diffHrs / 24); // days
 
-  if (diffMins < 60) {
-    return `${diffMins} minutes ago`;
+  if (diffMins < 1) {
+    return "Just now";
+  } else if (diffMins < 60) {
+    return `${diffMins} minute${diffMins === 1 ? '' : 's'} ago`;
   } else if (diffHrs < 24) {
-    return `${diffHrs} hours ago`;
+    return `${diffHrs} hour${diffHrs === 1 ? '' : 's'} ago`;
   } else if (diffDays < 7) {
-    return `${diffDays} days ago`;
+    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
   } else {
     // Format the date to show in "MM/DD/YYYY" format
     return createdDate.toLocaleDateString();

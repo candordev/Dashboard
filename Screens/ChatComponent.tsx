@@ -328,7 +328,13 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
           marginLeft: rightMessage ? 100 : 0,
         }}
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            alignSelf: rightMessage ? "flex-end" : "flex-start",
+          }}
+        >
           <Text
             style={{
               color: colors.purple,
@@ -357,7 +363,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
             borderRadius: 20,
             padding: 10,
             marginTop: 3,
-            alignSelf: "baseline",
+            alignSelf: rightMessage ? "flex-end" : "flex-start",
           }}
         >
           <Text
