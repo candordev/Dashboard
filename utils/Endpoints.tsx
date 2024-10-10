@@ -9,7 +9,7 @@
 // local
 
 
-//export const BASE_URL : string = `http://localhost:4000/api`;
+// export const BASE_URL : string = `http://localhost:4000/api`;
 
 
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
@@ -171,4 +171,8 @@ export const Endpoints = {
   editEvent: `${BASE_URL}/event/editEvent`,
   createEvent: `${BASE_URL}/event/createEvent`,
   deleteEvent: `${BASE_URL}/event/deleteEvent`,
+  getThirdstoneFAQs: `${BASE_URL}/chat/getThirdstoneFAQs`,
+  addThirdstoneFAQ: `${BASE_URL}/chat/addThirdstoneFAQ`,
+  editThirdstoneFAQ: `${BASE_URL}/chat/editThirdstoneFAQ`,
+  deleteThirdstoneFAQ: `${BASE_URL}/chat/deleteThirdstoneFAQ`,
 };
