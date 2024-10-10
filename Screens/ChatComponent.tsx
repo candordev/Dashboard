@@ -456,7 +456,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
               }`.trim()
             : phoneNumber}{" "}
           {userType ? "(" + userType + ")" : ""}
-          <Text
+          {/* <Text
             style={{
               flex: 1,
               color: colors.purple,
@@ -467,7 +467,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
             }}
           >
             {city}
-          </Text>
+          </Text> */}
         </Text>
         {/* <Text
           style={{
