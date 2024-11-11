@@ -1,10 +1,8 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput, View } from "react-native";
 import Button from "../Components/Button";
 import NotificationPopup from "../Components/NotificationPopup";
 import OuterView from "../Components/OuterView";
-import ProfilePicture from "../Components/ProfilePicture";
 import Text from "../Components/Text";
 import { useUserContext } from "../Hooks/useUserContext";
 import colors from "../Styles/colors";
@@ -24,11 +22,7 @@ function PhoneSettingsScreen({ route, navigation }: Props): JSX.Element {
     <>
       <NotificationPopup navigation={navigation} />
       <OuterView style={{ backgroundColor: colors.white }}>
-        <GeneralSettings />
-        {/* <DepartmentSettings />
-        <TagSettings />
-        <DeadlineSettings /> */}
-        {state.groupType != "AIChat" && <EmailSettings />}
+        <PhoneSettings />
       </OuterView>
     </>
   );
@@ -37,9 +31,10 @@ function PhoneSettingsScreen({ route, navigation }: Props): JSX.Element {
 type SettingsSectionProps = {
   title: string;
   children: React.ReactNode;
+  style?: any;
 };
 
-const GeneralSettings = () => {
+const PhoneSettings = () => {
   const { state, dispatch } = useUserContext();
   const [firstName, setFirstName] = useState(state.firstName);
   const [lastName, setLastName] = useState(state.lastName);
@@ -47,55 +42,72 @@ const GeneralSettings = () => {
   const [previewUrl, setPreviewUrl] = useState(state.imageUrl);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {}, [firstName, lastName, previewUrl]);
+  const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
+  const [newPhoneNumberError, setNewPhoneNumberError] = useState("");
 
-  async function editProfile(first: string, last: string, profilePicture: any) {
-    if (
-      state.firstName === first &&
-      state.lastName === last &&
-      state.imageUrl === previewUrl
-    ) {
+  useEffect(() => {
+    getPhoneNumbers();
+  }, []);
+
+  async function getPhoneNumbers() {
+    try {
+      const params = new URLSearchParams({
+        groupId: state.currentGroup,
+      });
+      const endpoint = Endpoints.getPhoneNumbers + params;
+      const res = await customFetch(endpoint, {
+        method: "GET",
+      });
+
+      console.log(endpoint);
+
+      const data = await res.json();
+      console.log(data);
+      if (res.ok) {
+        setPhoneNumbers(data);
+      } else {
+        console.error("Error getting phone numbers: ", data.error);
+      }
+    } catch (error) {
+      console.error("Network error, please try again later.", error);
+    }
+  }
+
+  async function addPhoneNumber() {
+    if (!newPhoneNumber) {
+      setNewPhoneNumberError("Please enter a phone number");
+      return;
+    }
+
+    // Check if the string is a number
+    if (isNaN(Number(newPhoneNumber))) {
+      setNewPhoneNumberError("Please enter a valid phone number - should only contain numbers");
+      return;
+    }
+
+    // Check whether the phone number has the correct number of digits
+    if (newPhoneNumber.length !== 10) {
+      setNewPhoneNumberError("Please enter a valid phone number - should be 10 digits long");
       return;
     }
 
     try {
       setIsLoading(true);
-      let formData = new FormData();
-      formData.append("firstName", first);
-      formData.append("lastName", last);
-
-      if (profilePicture) {
-        formData.append("image", profilePicture);
-      }
-
-      const res = await customFetch(
-        Endpoints.updateProfile,
-        {
-          method: "PUT",
-          body: formData,
-        },
-        0,
-        true
-      );
+      const res = await customFetch(Endpoints.addPhoneNumber, {
+        method: "POST",
+        body: JSON.stringify({
+          phoneNumber: newPhoneNumber,
+          groupId: state.currentGroup,
+        }),
+      });
 
       const data = await res.json();
       if (res.ok) {
-        dispatch({
-          type: "UPDATE_FIRST_NAME",
-          payload: data.profile.firstName,
-        });
-        setFirstName(data.profile.firstName);
-        dispatch({ type: "UPDATE_LAST_NAME", payload: data.profile.lastName });
-        setLastName(data.profile.lastName);
-        dispatch({
-          type: "UPDATE_PROFILE_PICTURE",
-          payload: data.profile.profilePicture,
-        });
-        setPreviewUrl(data.profile.profilePicture);
-        setImageFile(null);
-        console.log("Profile edited successfully: ", data);
+        setPhoneNumbers([...phoneNumbers, newPhoneNumber]);
+        setNewPhoneNumber("");
       } else {
-        console.error("Error editing profile: ", data.error);
+        console.error("Error adding phone number: ", data.error);
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
@@ -103,229 +115,89 @@ const GeneralSettings = () => {
     setIsLoading(false);
   }
 
-  const onImageChange = (event: any) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImageFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    } else {
-      alert("Please select an image file.");
-    }
-  };
-
-  return (
-    <SettingsSection title={"General"}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          padding: 20,
-          columnGap: 100,
-        }}
-      >
-        <View>
-          <ProfilePicture imageUrl={previewUrl} type="editProfile" />
-          <input
-            type="file"
-            onChange={onImageChange}
-            style={{
-              display: "none",
-            }}
-            id="fileInput"
-          />
-          <label
-            htmlFor="fileInput"
-            style={{
-              backgroundColor: colors.purple,
-              borderRadius: 15,
-              padding: "7px 20px",
-              marginTop: 25,
-              fontFamily: "Montserrat",
-              cursor: "pointer",
-              display: "inline-block",
-              color: colors.white,
-              fontSize: 14,
-              fontWeight: "600",
-            }}
-          >
-            Edit Picture
-          </label>
-        </View>
-        <View>
-          <View style={{ height: 90, justifyContent: "center" }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={{ fontSize: 15, fontWeight: "500", marginRight: 10 }}
-              >
-                First Name:
-              </Text>
-              <TextInput
-                style={styles.textInput}
-                value={firstName}
-                onChangeText={setFirstName}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 10,
-              }}
-            >
-              <Text
-                style={{ fontSize: 15, fontWeight: "500", marginRight: 12 }}
-              >
-                Last Name:
-              </Text>
-              <TextInput
-                style={styles.textInput}
-                value={lastName}
-                onChangeText={setLastName}
-              />
-            </View>
-          </View>
-          <Button
-            text={isLoading ? "Loading..." : "Save Changes"} // Change text based on isLoading
-            onPress={() =>
-              !isLoading && editProfile(firstName, lastName, imageFile)
-            } // Prevent function call if isLoading
-            // disabled={isLoading} // Disable button when loading
-            style={{
-              backgroundColor: colors.purple,
-              borderRadius: 15,
-              paddingVertical: 7,
-              marginTop: 25,
-              marginLeft: 22,
-              alignSelf: "center",
-              opacity: isLoading ? 0.5 : 1, // Optional: change opacity when disabled for a visual cue
-            }}
-            textStyle={{
-              color: colors.white,
-              fontSize: 14,
-              fontWeight: "600",
-            }}
-          />
-        </View>
-      </View>
-    </SettingsSection>
-  );
-};
-
-const EmailSettings = () => {
-  const [ccEmail, setCCEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { state, dispatch } = useUserContext();
-
-  useEffect(() => {
-    setCCEmail(state.ccEmail || "");
-  }, [state.ccEmail]);
-
-  async function editCCEmail() {
-    if (!ccEmail) {
-      alert("Please enter a CC email.");
-      return;
-    }
-
-    if (ccEmail === state.ccEmail) {
-      return;
-    }
-
-    setIsLoading(true);
+  async function deletePhoneNumber(phoneNumber: string) {
     try {
-      const res = await customFetch(Endpoints.editCCEmail, {
-        method: "POST",
-        body: JSON.stringify({ ccEmail }),
+      const res = await customFetch(Endpoints.deletePhoneNumber, {
+        method: "DELETE",
+        body: JSON.stringify({
+          phoneNumber: "+1" + phoneNumber,
+          groupId: state.currentGroup,
+        }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        dispatch({ type: "UPDATE_CC_EMAIL", payload: data.ccEmail });
-        setCCEmail(data.ccEmail);
-        console.log("CC email edited successfully: ", data);
+        setPhoneNumbers(phoneNumbers.filter((num) => num !== phoneNumber));
       } else {
-        console.error("Error editing cc email: ", data.error);
+        console.error("Error deleting phone number: ", data.error);
       }
     } catch (error) {
       console.error("Network error, please try again later.", error);
-    } finally {
-      setIsLoading(false);
     }
   }
 
   return (
-    <SettingsSection title={"Emails"}>
-      <View
-        style={{
-          flexDirection: "column",
-          padding: 20,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ fontSize: 15, fontWeight: "500", marginRight: 12 }}>
-            CC Email:
-          </Text>
-          <TextInput
-            style={styles.textInput}
-            value={ccEmail}
-            onChangeText={setCCEmail}
-            placeholderTextColor={colors.lightgray}
-            placeholder="Enter CC Email"
-          />
-          <Button
-            text={isLoading ? "Loading..." : "Save Changes"}
-            onPress={editCCEmail}
-            // disabled={isLoading}
-            style={{
-              backgroundColor: colors.purple,
-              borderRadius: 15,
-              paddingVertical: 7,
-              marginLeft: 10, // Adjust as necessary for spacing
-              opacity: isLoading ? 0.5 : 1,
-            }}
-            textStyle={{
-              color: colors.white,
-              fontSize: 14,
-              fontWeight: "600",
-            }}
-          />
-        </View>
-      </View>
-    </SettingsSection>
-  );
-};
-
-const DepartmentSettings = () => {
-  return (
-    <SettingsSection title={"Departments"}>
-      {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ fontSize: 15, fontWeight: "500", marginRight: 10 }}>
-              Email:
+    <View style={{ flexDirection: "row", height: "100%" }}>
+      <SettingsSection title={"Phone Numbers"} style={{ flex: 1 }}>
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
+          <ScrollView>
+            {phoneNumbers &&
+              phoneNumbers.map((number, index) => (
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    borderBottomColor: colors.lightergray,
+                    borderBottomWidth: 1,
+                    paddingVertical: 7,
+                    paddingHorizontal: 10,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 15, marginRight: 10 }}>
+                    {number}
+                  </Text>
+                  <Button
+                    text={"Remove"}
+                    onPress={() => {
+                      deletePhoneNumber(number);
+                    }}
+                    style={{
+                      backgroundColor: colors.red,
+                      padding: 5,
+                      borderRadius: 5,
+                    }}
+                    textStyle={{ fontSize: 12 }}
+                  />
+                </View>
+              ))}
+          </ScrollView>
+          <View style={{}}>
+            <TextInput
+              style={[
+                styles.textInput,
+                { fontFamily: "Montserrat", marginBottom: 10 },
+              ]}
+              value={newPhoneNumber}
+              onChangeText={setNewPhoneNumber}
+              placeholder="Add a new phone number"
+              placeholderTextColor={colors.gray}
+            />
+            <Button
+              text="Add Phone Number"
+              onPress={addPhoneNumber}
+              style={{ backgroundColor: colors.purple }}
+              loading={isLoading}
+            />
+            <Text style={{ color: colors.red, fontSize: 12, marginTop: 3 }}>
+              {newPhoneNumberError}
             </Text>
-            <TextInput style={styles.textInput} />
-          </View> */}
-      <Text>World</Text>
-    </SettingsSection>
-  );
-};
-
-const TagSettings = () => {
-  return (
-    <SettingsSection title={"Tags"}>
-      <Text>World</Text>
-    </SettingsSection>
-  );
-};
-
-const DeadlineSettings = () => {
-  return (
-    <SettingsSection title={"Deadlines"}>
-      <Text>World</Text>
-    </SettingsSection>
+          </View>
+        </View>
+      </SettingsSection>
+      <View style={{ flex: 2 }} />
+    </View>
   );
 };
 
@@ -340,12 +212,13 @@ const SettingsSection = (props: SettingsSectionProps) => {
           marginHorizontal: 50,
           borderRadius: 15,
         },
+        props.style,
       ]}
     >
       <Text
         style={{
           fontFamily: "Montserrat",
-          fontSize: 20,
+          fontSize: 30,
           fontWeight: "600",
           marginBottom: 10,
         }}

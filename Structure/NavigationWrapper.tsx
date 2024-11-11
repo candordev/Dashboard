@@ -107,7 +107,6 @@ function NavigationWrapper() {
           <>
             <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="root" component={Root} />
-            <Stack.Screen name="chats" component={ChatsScreen} /> 
           </>
         ) : (
           <>
