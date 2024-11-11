@@ -81,6 +81,7 @@ function NavigationWrapper() {
         root: "root",
         all: "all",
         settings: "settings",
+        phoneSettings: "phoneSettings",
         support: "support",
         // your: "your",
         // suggested: "suggested",
@@ -106,7 +107,6 @@ function NavigationWrapper() {
           <>
             <Stack.Screen name="launch" component={LaunchScreen} />
             <Stack.Screen name="root" component={Root} />
-            <Stack.Screen name="chats" component={ChatsScreen} /> 
           </>
         ) : (
           <>

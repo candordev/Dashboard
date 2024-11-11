@@ -175,4 +175,7 @@ export const Endpoints = {
   addThirdstoneFAQ: `${BASE_URL}/chat/addThirdstoneFAQ`,
   editThirdstoneFAQ: `${BASE_URL}/chat/editThirdstoneFAQ`,
   deleteThirdstoneFAQ: `${BASE_URL}/chat/deleteThirdstoneFAQ`,
+  getPhoneNumbers: `${BASE_URL}/chat/getNumbersFromGroup?`,
+  addPhoneNumber: `${BASE_URL}/chat/addNumberToGroup`,
+  deletePhoneNumber: `${BASE_URL}/chat/deleteNumberFromGroup`,
 };

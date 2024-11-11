@@ -295,6 +295,12 @@ const LHN = (props: LHNProps) => {
           icon="list"
           selected={navIndex === 4}
         />
+        <NavItem
+          name={"Settings"}
+          route="/phoneSettings"
+          icon="settings"
+          selected={navIndex === 11}
+        />
         {/* {(state.groupType !== "AIChat" || state.groupType !== "InternalAIChat") && (
           // <NavItem
           //   name={"Inbox"}
