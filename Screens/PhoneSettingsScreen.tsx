@@ -165,7 +165,7 @@ const PhoneSettings = () => {
                     }}
                     style={{
                       backgroundColor: colors.red,
-                      padding: 5,
+                      padding: 7,
                       borderRadius: 5,
                     }}
                     textStyle={{ fontSize: 12 }}
