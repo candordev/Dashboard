@@ -81,6 +81,7 @@ function NavigationWrapper() {
         root: "root",
         all: "all",
         settings: "settings",
+        phoneSettings: "phoneSettings",
         support: "support",
         // your: "your",
         // suggested: "suggested",

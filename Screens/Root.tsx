@@ -1,21 +1,21 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import React, { useContext } from "react";
+import React from "react";
 import LHN from "../Components/LHN";
-import AllScreen from "./AllScreen";
-import InboxScreen from "./InboxScreen";
-import SettingsScreen from "./SettingsScreen";
-import GroupSettingsScreen from "./GroupSettingsScreen";
-import NotificationPopup from "../Components/NotificationPopup";
-import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
 import { useUserContext } from "../Hooks/useUserContext";
-import SupportScreen from "./SupportScreen";
+import AllScreen from "./AllScreen";
+import ChatInsightsScreen from "./ChatInsightsScreen";
 import ChatsScreen from "./ChatsScreen";
 import EventsScreen from "./EventsScreen";
+import GroupSettingsScreen from "./GroupSettingsScreen";
+import InboxScreen from "./InboxScreen";
 import LeadsScreen from "./LeadsScreen";
+import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
+import PhoneSettingsScreen from "./PhoneSettingsScreen";
+import SettingsScreen from "./SettingsScreen";
+import SupportScreen from "./SupportScreen";
 import TrainChatScreen from "./TrainChat";
-import ChatInsightsScreen from "./ChatInsightsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -59,21 +59,21 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
   //   }
   // }, []);
 
-  const initialRouteName = 
-    state.groupType === "AIChat" || state.groupType === "InternalAIChat" 
-      ? "chatInsights" 
-      : state.groupType === "Convention" 
-        ? "events" 
-        : state.master 
-          ? "master" 
-          : "all";
+  const initialRouteName =
+    state.groupType === "AIChat" || state.groupType === "InternalAIChat"
+      ? "chatInsights"
+      : state.groupType === "Convention"
+      ? "events"
+      : state.master
+      ? "master"
+      : "all";
 
-   //const initialRouteName = "chatInsights";
+  //const initialRouteName = "chatInsights";
 
   return (
     <Drawer.Navigator
       useLegacyImplementation={false}
-      //get the route name and pass it into LHN 
+      //get the route name and pass it into LHN
       drawerContent={(props) => (
         <LHN {...props} navigation={props.navigation} />
       )}
@@ -94,7 +94,7 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
         component={TrainChatScreen}
         options={{ title: "Candor - Train Chat" }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name="chatInsights"
         component={ChatInsightsScreen}
         options={{ title: "Candor - Chat Insights" }}
@@ -133,12 +133,17 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
         name="leads"
         component={LeadsScreen}
         options={{ title: "Candor - Leads" }}
-      /> 
+      />
       <Drawer.Screen
         name="events"
         component={EventsScreen}
         options={{ title: "Candor - Events" }}
-      /> 
+      />
+      <Drawer.Screen
+        name="phoneSettings"
+        component={PhoneSettingsScreen}
+        options={{ title: "Candor - Phone Settings" }}
+      />
     </Drawer.Navigator>
   );
 }
