@@ -201,8 +201,8 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
       });
 
       const url = isPhoneNumber
-        ? `${Endpoints.getChatForNumber}?${queryParams.toString()}`
-        : `${Endpoints.getWebChats}?${queryParams.toString()}`;
+        ? `${Endpoints.getChatUsingPhoneNumber}?${queryParams.toString()}`
+        : `${Endpoints.getChatUsingSessionID}?${queryParams.toString()}`;
 
       const response = await customFetch(url, { method: "GET" });
       if (!response.ok) {
