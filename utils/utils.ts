@@ -5,6 +5,11 @@ import { Linking, Platform } from "react-native";
 import { getAuth } from "firebase/auth";
 import { event, eventNames } from "../Events";
 
+// Utility function to check if a group ID is part of a specific group's Prod or Dev
+export const isGroupInProdOrDev = (currentGroup: any, group: { Prod: any; Dev: any; }) => {
+  return currentGroup === group.Prod || currentGroup === group.Dev;
+};
+
 export const getAuthToken = async (): Promise<string> => {
   try {
     const auth = getAuth();

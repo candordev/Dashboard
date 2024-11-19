@@ -7,10 +7,12 @@ import DocumentList from "../Components/DocumentList"; // Update the import path
 import FAQList from "../Components/FAQList";
 import { useUserContext } from "../Hooks/useUserContext";
 import ThirdstoneFAQGroup from "../Components/ThirdstoneFAQGroup";
+import {isGroupInProdOrDev} from "../utils/utils";
+import {GroupIds} from "../utils/constants"
 
 const TrainChatScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
-  const isInternalAIChat = state.groupType === "InternalAIChat";
+  const isInternalAIChat = isGroupInProdOrDev(state.leaderGroups, GroupIds.Brock) || isGroupInProdOrDev(state.leaderGroups, GroupIds.Caleb);
 
   if (isInternalAIChat) {
     const groupID = state.leaderGroups[0]._id;
