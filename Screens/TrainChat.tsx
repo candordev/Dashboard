@@ -1,18 +1,20 @@
 import React from "react";
 import { View } from "react-native";
-import colors from "../Styles/colors";
-import OuterView from "../Components/OuterView";
-import NotificationPopup from "../Components/NotificationPopup";
 import DocumentList from "../Components/DocumentList"; // Update the import path as needed
 import FAQList from "../Components/FAQList";
-import { useUserContext } from "../Hooks/useUserContext";
+import NotificationPopup from "../Components/NotificationPopup";
+import OuterView from "../Components/OuterView";
 import ThirdstoneFAQGroup from "../Components/ThirdstoneFAQGroup";
-import {isGroupInProdOrDev} from "../utils/utils";
-import {GroupIds} from "../utils/constants"
+import { useUserContext } from "../Hooks/useUserContext";
+import colors from "../Styles/colors";
+import { GroupIds } from "../utils/constants";
+import { isGroup } from "../utils/utils";
 
 const TrainChatScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
-  const isInternalAIChat = isGroupInProdOrDev(state.currentGroup, GroupIds.Brock) || isGroupInProdOrDev(state.currentGroup, GroupIds.Caleb);
+  const isInternalAIChat =
+    isGroup(state.currentGroup, GroupIds.Brock) ||
+    isGroup(state.currentGroup, GroupIds.Caleb);
 
   if (isInternalAIChat) {
     const groupID = state.leaderGroups[0]._id;
@@ -47,13 +49,22 @@ const TrainChatScreen = ({ navigation }: any) => {
         }}
       >
         <View style={{ flex: 1 }}>
-          <ThirdstoneFAQGroup documentTitle={"ThirdStoneFAQOwner"} headerTitle={"Owner"} />
+          <ThirdstoneFAQGroup
+            documentTitle={"ThirdStoneFAQOwner"}
+            headerTitle={"Owner"}
+          />
         </View>
         <View style={{ flex: 1 }}>
-          <ThirdstoneFAQGroup documentTitle={"ThirdStoneFAQPR"} headerTitle={"Prospective Resident"} />
+          <ThirdstoneFAQGroup
+            documentTitle={"ThirdStoneFAQPR"}
+            headerTitle={"Prospective Resident"}
+          />
         </View>
         <View style={{ flex: 1 }}>
-          <ThirdstoneFAQGroup documentTitle={"ThirdStoneFAQCR"} headerTitle={"Current Resident"} />
+          <ThirdstoneFAQGroup
+            documentTitle={"ThirdStoneFAQCR"}
+            headerTitle={"Current Resident"}
+          />
         </View>
       </OuterView>
     );

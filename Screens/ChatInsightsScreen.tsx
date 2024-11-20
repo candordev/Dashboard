@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  ScrollView,
-  FlatList,
-  StyleSheet,
   Platform,
+  ScrollView,
+  StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
-import Text from "../Components/Text";
-import colors from "../Styles/colors";
-import { customFetch, isGroupInProdOrDev } from "../utils/utils";
-import { Endpoints } from "../utils/Endpoints";
-import { useUserContext } from "../Hooks/useUserContext";
-import { Post, ChatInsights } from "../utils/interfaces";
-import DropDown from "../Components/DropDown"; // Assuming DropDown is in your components directory
-import PostWithDropdown from "../Components/PostWithDropDown";
-import GroupInsightsComponent from "../Components/GroupInsightsComponent";
-import OuterView from "../Components/OuterView";
-import NotificationPopup from "../Components/NotificationPopup";
 import ChatInsightsHeader from "../Components/ChatInsightsHeader";
-import additionalStyles from "../Styles/styles";
-import InsightsBarChart from "../Components/InsightsBarChart";
 import ChatsLineGraph from "../Components/ChatsLineGraph";
+import InsightsBarChart from "../Components/InsightsBarChart";
+import NotificationPopup from "../Components/NotificationPopup";
+import OuterView from "../Components/OuterView";
+import Text from "../Components/Text";
+import { useUserContext } from "../Hooks/useUserContext";
+import colors from "../Styles/colors";
+import additionalStyles from "../Styles/styles";
 import { GroupIds } from "../utils/constants";
+import { Endpoints } from "../utils/Endpoints";
+import { ChatInsights } from "../utils/interfaces";
+import { customFetch, isGroup } from "../utils/utils";
 
 const ChatInsightsScreen = ({ navigation }: any) => {
   // State to hold fetched data (though we're using dummy data here)
@@ -59,10 +55,12 @@ const ChatInsightsScreen = ({ navigation }: any) => {
   }, []);
 
   const handleCardPress = (id: string) => {
-      navigation.navigate("chats", { sessionId: id });
+    navigation.navigate("chats", { sessionId: id });
   };
 
-  const isInternalAIChat = isGroupInProdOrDev(state.currentGroup, GroupIds.Brock) || isGroupInProdOrDev(state.currentGroup, GroupIds.Caleb);;
+  const isInternalAIChat =
+    isGroup(state.currentGroup, GroupIds.Brock) ||
+    isGroup(state.currentGroup, GroupIds.Caleb);
 
   return (
     <>
@@ -109,21 +107,21 @@ const ChatInsightsScreen = ({ navigation }: any) => {
             flex: 0.5,
           }}
         >
-        <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
-              <Text
-                style={{
-                  color: colors.black,
-                  fontFamily: "Montserrat",
-                  fontSize: 25,
-                  fontWeight: "450",
-                }}
-              >
-                All Time User Types
-              </Text>
-              <View style={{ alignItems: "center", flex: 1 }}>
-                <InsightsBarChart chatInsights={chatInsights} />
-              </View>
+          <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
+            <Text
+              style={{
+                color: colors.black,
+                fontFamily: "Montserrat",
+                fontSize: 25,
+                fontWeight: "450",
+              }}
+            >
+              All Time User Types
+            </Text>
+            <View style={{ alignItems: "center", flex: 1 }}>
+              <InsightsBarChart chatInsights={chatInsights} />
             </View>
+          </View>
           <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
             <Text
               style={{

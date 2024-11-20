@@ -7,11 +7,11 @@ import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
 import colors from "../Styles/colors";
-import { downloadPDF, getUnreadNotifs, isGroupInProdOrDev } from "../utils/utils";
+import { GroupIds } from "../utils/constants";
+import { downloadPDF, getUnreadNotifs, isGroup } from "../utils/utils";
 import ProfilePicture from "./ProfilePicture";
 import SearchBar from "./SearchBar";
 import Text from "./Text";
-import { GroupIds } from "../utils/constants";
 
 interface LHNProps {
   navigation: any;
@@ -128,7 +128,7 @@ const LHN = (props: LHNProps) => {
             paddingBottom: 10,
           }}
         ></View>
-        {(
+        {
           <>
             <NavItem
               name={"Insights"}
@@ -150,7 +150,7 @@ const LHN = (props: LHNProps) => {
               icon="message-circle"
               selected={navIndex === 0}
             />
-            {isGroupInProdOrDev(state.currentGroup, GroupIds.Issac) && (
+            {isGroup(state.currentGroup, GroupIds.Issac) && (
               <NavItem
                 name={"Leads"}
                 route="/leads"
@@ -159,7 +159,7 @@ const LHN = (props: LHNProps) => {
               />
             )}
           </>
-        )}
+        }
         {state.master && (
           <>
             <NavItem
