@@ -8,7 +8,7 @@ export const constants = {
 }
 
 export const GroupIds = Object.freeze({
-    Thirdstone: {
+    Issac: {
         Prod: "663fa89af38d72f0490da655",
         Dev: "6657a0e9d9f0ae27bd3e0021",
     },

@@ -23,13 +23,8 @@ const OptionPicker = ({ onOptionChange }: OptionPickerProps) => {
 
   // useMemo to compute the options based on the groupType
   const options = useMemo(() => {
-    // Only show 'Deadline' and 'Tag' if groupType is 'HOA'
-    if (state.groupType === 'HOA') {
-      return ['Deadline', 'Tag'];
-    }
-    // Otherwise, show all options
-    return ['Deadline', 'Location', 'Department', 'Tag', 'Map'];
-  }, [state.groupType]); // Dependency array, it will only recompute if groupType changes
+    return ['Deadline', 'Tag'];
+  }, []); // Dependency array, it will only recompute if groupType changes
 
 const handleSelect = (option: string) => {
     setSelectedOption(option);

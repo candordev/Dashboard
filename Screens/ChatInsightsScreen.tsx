@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Text from "../Components/Text";
 import colors from "../Styles/colors";
-import { customFetch } from "../utils/utils";
+import { customFetch, isGroupInProdOrDev } from "../utils/utils";
 import { Endpoints } from "../utils/Endpoints";
 import { useUserContext } from "../Hooks/useUserContext";
 import { Post, ChatInsights } from "../utils/interfaces";
@@ -22,6 +22,7 @@ import ChatInsightsHeader from "../Components/ChatInsightsHeader";
 import additionalStyles from "../Styles/styles";
 import InsightsBarChart from "../Components/InsightsBarChart";
 import ChatsLineGraph from "../Components/ChatsLineGraph";
+import { GroupIds } from "../utils/constants";
 
 const ChatInsightsScreen = ({ navigation }: any) => {
   // State to hold fetched data (though we're using dummy data here)
@@ -56,17 +57,12 @@ const ChatInsightsScreen = ({ navigation }: any) => {
   useEffect(() => {
     fetchChatInsights();
   }, []);
+
   const handleCardPress = (id: string) => {
-    if (state.groupType === "InternalAIChat") {
-      // Handle navigation or action for phone number
-      console.log(`Phone number: ${id}`);
       navigation.navigate("chats", { sessionId: id });
-    } else {
-      navigation.navigate("chats", { sessionId: id });
-    }
   };
 
-  const isInternalAIChat = state.groupType === "InternalAIChat";
+  const isInternalAIChat = isGroupInProdOrDev(state.currentGroup, GroupIds.Brock) || isGroupInProdOrDev(state.currentGroup, GroupIds.Caleb);;
 
   return (
     <>
@@ -113,8 +109,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
             flex: 0.5,
           }}
         >
-          {state.groupType !== "InternalAIChat" && (
-            <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
+        <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
               <Text
                 style={{
                   color: colors.black,
@@ -129,7 +124,6 @@ const ChatInsightsScreen = ({ navigation }: any) => {
                 <InsightsBarChart chatInsights={chatInsights} />
               </View>
             </View>
-          )}
           <View style={[additionalStyles.insightsSection, { flex: 1 }]}>
             <Text
               style={{

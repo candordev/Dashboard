@@ -12,7 +12,7 @@ import {GroupIds} from "../utils/constants"
 
 const TrainChatScreen = ({ navigation }: any) => {
   const { state } = useUserContext();
-  const isInternalAIChat = isGroupInProdOrDev(state.leaderGroups, GroupIds.Brock) || isGroupInProdOrDev(state.leaderGroups, GroupIds.Caleb);
+  const isInternalAIChat = isGroupInProdOrDev(state.currentGroup, GroupIds.Brock) || isGroupInProdOrDev(state.currentGroup, GroupIds.Caleb);
 
   if (isInternalAIChat) {
     const groupID = state.leaderGroups[0]._id;

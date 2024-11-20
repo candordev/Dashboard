@@ -63,7 +63,6 @@ export const setUser = async ({
       masterPages: resJson.masterPages,
       leaderGroups: resJson.leaderGroups,
       postId: postId,
-      groupType: resJson.groupType,
       currentGroup: resJson.leaderGroups && resJson.leaderGroups.length > 0 ? resJson.leaderGroups[0]._id : null,
       master: resJson.master
     };

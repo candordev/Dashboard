@@ -7,10 +7,11 @@ import { useSignout } from "../Hooks/useSignout";
 import { useUserContext } from "../Hooks/useUserContext";
 import { useNotification } from "../Structure/NotificationContext"; // Update the import path as necessary
 import colors from "../Styles/colors";
-import { downloadPDF, getUnreadNotifs } from "../utils/utils";
+import { downloadPDF, getUnreadNotifs, isGroupInProdOrDev } from "../utils/utils";
 import ProfilePicture from "./ProfilePicture";
 import SearchBar from "./SearchBar";
 import Text from "./Text";
+import { GroupIds } from "../utils/constants";
 
 interface LHNProps {
   navigation: any;
@@ -92,59 +93,6 @@ const LHN = (props: LHNProps) => {
     }
   }, []);
 
-  if (state.groupType === "Convention") {
-    return (
-      <View style={styles.container}>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            paddingBottom: 10,
-          }}
-        >
-          <ProfilePicture
-            imageUrl={state.imageUrl}
-            type="profile"
-            style={{ marginVertical: 10 }}
-          />
-          <Text
-            style={{
-              color: colors.white,
-              fontWeight: "500",
-              textAlign: "center",
-              fontSize: 13,
-              marginBottom: 20,
-            }}
-          >
-            {state.firstName} {state.lastName}
-          </Text>
-        </View>
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            paddingBottom: 10,
-          }}
-        ></View>
-        <NavItem
-          name={"Events"}
-          route="/events"
-          icon="calendar"
-          selected={navIndex === 10}
-        />
-        <View style={{ flex: 1 }} />
-        <NavItem
-          name="Sign out"
-          onPress={() => {
-            useSignout({ dispatch });
-          }}
-          icon="log-out"
-          selected={false}
-        />
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <View
@@ -180,8 +128,7 @@ const LHN = (props: LHNProps) => {
             paddingBottom: 10,
           }}
         ></View>
-        {(state.groupType === "AIChat" ||
-          state.groupType === "InternalAIChat") && (
+        {(
           <>
             <NavItem
               name={"Insights"}
@@ -203,7 +150,7 @@ const LHN = (props: LHNProps) => {
               icon="message-circle"
               selected={navIndex === 0}
             />
-            {state.groupType != "InternalAIChat" && (
+            {isGroupInProdOrDev(state.currentGroup, GroupIds.Issac) && (
               <NavItem
                 name={"Leads"}
                 route="/leads"

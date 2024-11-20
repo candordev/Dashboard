@@ -87,12 +87,7 @@ function CreatePostView(props: any) {
       formData.append('anonymous', false.toString());
       formData.append('postCreatedFrom', "dashboard");
       formData.append('proposalFromEmail', email);
-      if(state.groupType == "HOA"){
-        formData.append('location', location);
-      }else{
-        formData.append('location', location);
-        formData.append('neighborhood', neighborhood);
-      }
+      formData.append('location', location);
       formData.append('assigneeUsernames', JSON.stringify(selectedAssignees));
       formData.append('categoryNames', JSON.stringify(selectedCategories));
       formData.append('deadline', selectedDate ? selectedDate.toISOString() : '');
@@ -325,7 +320,7 @@ function CreatePostView(props: any) {
       </View>
       <TextInput
         style={styles.textInput}
-        placeholder={state.groupType !== "HOA" ? "Constituent Email" : "Resident Email"}
+        placeholder={"Resident Email"}
         placeholderTextColor={colors.lightgray}
         value={email}
         onChangeText={setEmail}
@@ -343,10 +338,7 @@ function CreatePostView(props: any) {
         onCategoryChange={handleCategoryChange}
         style={{ zIndex: 2 }}
       />
-       {state.groupType == "HOA" ? 
-        <LocationHOA createPost={true} onChange={async (address: string) => handleSelectHOA(address)} style={{ zIndex: 1, marginTop: 10, marginBottom: 10 }} />
-        : <Location createPost={true} onChange={async (data, details) => handleSelect(data, details)} style={{ zIndex: 1, marginTop: 10, marginBottom: 10}}/>
-        } 
+      <LocationHOA createPost={true} onChange={async (address: string) => handleSelectHOA(address)} style={{ zIndex: 1, marginTop: 10, marginBottom: 10 }} />
       <TouchableOpacity
           style={[additionalStyles.toggleButton, isLoading && { backgroundColor: colors.lightgray }]} // Optional: change background color when loading
           onPress={handleDone}

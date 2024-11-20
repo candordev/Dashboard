@@ -36,7 +36,6 @@ function SettingsScreen({ route, navigation }: Props): JSX.Element {
         {/* <DepartmentSettings />
         <TagSettings />
         <DeadlineSettings /> */}
-       {state.groupType != "AIChat" && (  <EmailSettings />)}
       </OuterView>
     </>
   );

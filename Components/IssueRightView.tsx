@@ -86,10 +86,7 @@ function IssueRightView(props: IssueRightViewProps): JSX.Element {
         <Assignees issue={issue} createPost={false} style={{ zIndex: 4}} />
         <Category issueId={issue._id} createPost={false} style={{ zIndex: 3, marginTop: 10}} />
         <Deadline issue={issue} style={{ zIndex: 2, marginTop: 10 }} />
-        {state.groupType == "HOA" ? 
         <LocationHOA issue={issue} style={{ zIndex: 1, marginTop: 10, marginBottom: 10}} />
-        : <Location issue={issue} style={{ zIndex: 1, marginTop: 10, marginBottom: 10}}/>
-        } 
       </View>
        <View style={{ justifyContent: 'flex-end' }}>
         <MarkDone

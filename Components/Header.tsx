@@ -222,9 +222,6 @@ const Header = ({
           />
         </View>
         <CreatePost onPopoverCloseComplete={onPopoverCloseComplete} />
-        {state.groupType !== "HOA" && (
-          <CSVImportComponent onImportSuccess={handleImportSuccess} />
-        )}
       </View>
     </View>
   );

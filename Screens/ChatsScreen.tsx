@@ -10,6 +10,8 @@ import ChatComponent from "./ChatComponent";
 import { TabView, TabBar } from 'react-native-tab-view';
 import { Modal, TextInput } from "react-native";
 import Button from "../Components/Button";
+import { isGroupInProdOrDev } from "../utils/utils";
+import { GroupIds } from "../utils/constants";
 
 // Step 1: Define the interface
 interface ContactInfo {
@@ -186,7 +188,7 @@ const ChatsScreen = ({ navigation, route }: any) => {
   return (
     <OuterView style={{ backgroundColor: colors.white, flexDirection: "row", padding: 0 }}>
       <View style={{ flex: 1, borderRightWidth: 1, borderColor: colors.lightergray }}>
-        {state.groupType === 'InternalAIChat' ? (
+        { isGroupInProdOrDev(state.currentGroup, GroupIds.Brock) || isGroupInProdOrDev(state.currentGroup, GroupIds.Caleb) ? (
           renderScene({ route: { key: 'smsChats' } })
         ) : (
           <TabView
@@ -212,7 +214,7 @@ const ChatsScreen = ({ navigation, route }: any) => {
             containerStyle={{ flex: 1, backgroundColor: colors.white, margin: 10 }}
             searchBarStyle={{ borderWidth: 1.3, borderColor: colors.lightestgray }}
           />
-          {state.groupType === 'InternalAIChat' && (
+          {isGroupInProdOrDev(state.currentGroup, GroupIds.Brock) || isGroupInProdOrDev(state.currentGroup, GroupIds.Caleb) && (
             <AntDesignIcon
               name="form"
               size={24}

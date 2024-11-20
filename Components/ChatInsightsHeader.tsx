@@ -4,6 +4,8 @@ import colors from '../Styles/colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ChatInsights } from '../utils/interfaces';
 import { useUserContext } from '../Hooks/useUserContext';
+import {isGroupInProdOrDev} from "../utils/utils";
+import {GroupIds} from "../utils/constants"
 
 
 // Interface to type the props
@@ -14,8 +16,7 @@ interface ChatInsightsHeaderProps {
 const ChatInsightsHeader: React.FC<ChatInsightsHeaderProps> = ({ chatInsights }) => {
   const { state } = useUserContext();
 
-  // Determine whether to use web or phone data based on state.groupType
-  const isInternalAIChat = state.groupType === "InternalAIChat";
+  const isInternalAIChat = isGroupInProdOrDev(state.currentGroup, GroupIds.Brock) || isGroupInProdOrDev(state.currentGroup, GroupIds.Caleb);
 
   return (
     <View style={styles.insightsContainer}>
