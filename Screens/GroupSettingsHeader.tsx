@@ -39,8 +39,6 @@ const GroupSettingsHeader: React.FC<GroupSettingsHeaderProps> = ({ groups, onGro
     };
 
 
-
-
     const handleCreateGroup = async () => {
         setIsLoading(true); // Start loading
         try {

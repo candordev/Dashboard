@@ -43,11 +43,11 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
   const getChatModeItems = () => {
     return [
       {
-        label: state.groupType === "HOA" ? "Leaders" : "Authorities",
+        label: "Leaders",
         value: "authorities",
       },
       {
-        label: state.groupType === "HOA" ? "Resident" : "Constituent",
+        label: "Constituent",
         value: "constituent",
       },
     ];
@@ -144,7 +144,7 @@ function PrivateChat(props: PrivateChatProps): JSX.Element {
               {isAuthor ? (
                 <>
                   <Text style={chatStyles.authorSelfDate}></Text>
-                  <Text style={chatStyles.userName}>{state.groupType === "HOA"  ? `Leader ${state.lastName}` : `Authority ${state.lastName}`}</Text>
+                  <Text style={chatStyles.userName}>{`Leader ${state.lastName}`}</Text>
                 </>
               ) : (
                 <>

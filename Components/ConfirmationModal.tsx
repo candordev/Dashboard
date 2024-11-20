@@ -47,9 +47,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                   textAlign: 'center',
                   flexShrink: 1,
                 }}>
-                {state.groupType !== "HOA"
-                  ? "Are you sure you want to send this email to the constituent?"
-                  : "Are you sure you want to send this email to the resident?"}
+                {"Are you sure you want to send this email to the resident?"}
               </Text>
               <View style={additionalStyles.buttonContainer}>
                 <Button
