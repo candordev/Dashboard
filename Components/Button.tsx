@@ -10,6 +10,7 @@ interface ButtonProps {
   style?: any;
   textStyle?: any;
   loading?: boolean;
+  disabled?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -18,12 +19,13 @@ const Button: React.FC<ButtonProps> = ({
   textStyle,
   onPress,
   loading,
+  disabled
 }) => {
   return (
     <TouchableOpacity
       style={[styles.bigButton, style]}
       onPress={onPress}
-      disabled={loading}
+      disabled={loading || disabled}
     >
       <Text
         style={[styles.bigButtonText, textStyle, { opacity: loading ? 0 : 1 }]}

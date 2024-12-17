@@ -150,7 +150,7 @@ const LHN = (props: LHNProps) => {
               icon="message-circle"
               selected={navIndex === 0}
             />
-            {isGroup(state.currentGroup, GroupIds.Issac) && (
+            {isGroup(state.currentGroup, GroupIds.Issac) || isGroup(state.currentGroup, GroupIds.Demo)  && (
               <NavItem
                 name={"Leads"}
                 route="/leads"
