@@ -9,20 +9,25 @@ import colors from "../Styles/colors";
 import styles from "../Styles/styles";
 import { Endpoints } from "../utils/Endpoints";
 import { customFetch } from "../utils/utils";
+import { isGroup } from "../utils/utils";
+import { GroupIds } from "../utils/constants";
 
 type Props = PropsWithChildren<{
   route: any;
   navigation: any;
 }>;
 
-function PhoneSettingsScreen({ route, navigation }: Props): JSX.Element {
+function PropertyAISettingsScreen({ route, navigation }: Props): JSX.Element {
   const { state, dispatch } = useUserContext();
+  const isDemoGroup =
+    isGroup(state.currentGroup, GroupIds.Demo); 
 
   return (
     <>
       <NotificationPopup navigation={navigation} />
-      <OuterView style={{ backgroundColor: colors.white }}>
+      <OuterView style={{ backgroundColor: colors.white, flexDirection: "row", flex: 1 }}>
         <PhoneSettings />
+        {isDemoGroup && <ClearAIChatGroup />}
       </OuterView>
     </>
   );
@@ -32,6 +37,76 @@ type SettingsSectionProps = {
   title: string;
   children: React.ReactNode;
   style?: any;
+};
+
+const ClearAIChatGroup = () => {
+  const { state } = useUserContext();
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const clearGroup = async () => {
+    if (!selectedOption) return; // Ensure a valid option is selected
+
+    try {
+      setIsLoading(true);
+      const res = await customFetch(Endpoints.clearAIChat, {
+        method: "POST",
+        body: JSON.stringify({
+          groupId: state.currentGroup,
+          smsWebOrBoth: selectedOption,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Group cleared successfully.");
+        setSelectedOption(null); // Reset selection after clearing
+      } else {
+        console.error("Error clearing group: ", data.error);
+      }
+    } catch (error) {
+      console.error("Network error: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+      <SettingsSection title={"Clear AI Chats"} style={{ flex: 1 }}>
+      <View style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 10}}>
+        <Button
+          text="Web Sessions Only"
+          onPress={() => setSelectedOption("Web")}
+          style={{
+            margin: 5,flex: 1,backgroundColor: selectedOption === "Web" ? colors.purple : colors.gray,
+          }}
+        />
+        <Button
+          text="SMS Numbers Only"
+          onPress={() => setSelectedOption("SMS")}
+          style={{
+            margin: 5,flex: 1, backgroundColor: selectedOption === "SMS" ? colors.purple : colors.gray,
+          }}
+        />
+        <Button
+          text="Both"
+          onPress={() => setSelectedOption("Both")}
+          style={{
+            margin: 5,flex: 1,backgroundColor: selectedOption === "Both" ? colors.purple : colors.gray,
+          }}
+        />
+      </View>
+      <Button
+        text="Press To Clear"
+        onPress={clearGroup}
+        style={{
+          marginTop: 20,
+          backgroundColor: selectedOption ? colors.purple : colors.gray,
+        }}
+        disabled={!selectedOption}
+        loading={isLoading}
+      />
+    </SettingsSection>
+  );
 };
 
 const PhoneSettings = () => {
@@ -137,7 +212,6 @@ const PhoneSettings = () => {
   }
 
   return (
-    <View style={{ flexDirection: "row", height: "100%" }}>
       <SettingsSection title={"Phone Numbers"} style={{ flex: 1 }}>
         <View style={{ flex: 1, justifyContent: "space-between" }}>
           <ScrollView>
@@ -196,8 +270,6 @@ const PhoneSettings = () => {
           </View>
         </View>
       </SettingsSection>
-      <View style={{ flex: 2 }} />
-    </View>
   );
 };
 
@@ -230,4 +302,4 @@ const SettingsSection = (props: SettingsSectionProps) => {
   );
 };
 
-export default PhoneSettingsScreen;
+export default PropertyAISettingsScreen;

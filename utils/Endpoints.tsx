@@ -9,7 +9,7 @@
 // local
 
 
-// export const BASE_URL : string = `http://localhost:4000/api`;
+//export const BASE_URL : string = `http://localhost:4000/api`;
 
 
 // export const BASE_URL : string = `http://${HOST}:4000/api`;
@@ -178,4 +178,5 @@ export const Endpoints = {
   getPhoneNumbers: `${BASE_URL}/chat/getNumbersFromGroup?`,
   addPhoneNumber: `${BASE_URL}/chat/addNumberToGroup`,
   deletePhoneNumber: `${BASE_URL}/chat/deleteNumberFromGroup`,
+  clearAIChat:  `${BASE_URL}/chat/clearAIChatGroup`,
 };

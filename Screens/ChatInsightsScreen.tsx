@@ -50,7 +50,7 @@ const ChatInsightsScreen = ({ navigation }: any) => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     fetchChatInsights();
   }, []);
 

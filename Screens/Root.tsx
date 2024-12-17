@@ -12,7 +12,7 @@ import GroupSettingsScreen from "./GroupSettingsScreen";
 import InboxScreen from "./InboxScreen";
 import LeadsScreen from "./LeadsScreen";
 import MasterScreen from "./MasterScreen"; // Adjust the import path as necessary
-import PhoneSettingsScreen from "./PhoneSettingsScreen";
+import PropertyAISettingsScreen from "./PropertyAISettingsScreen";
 import SettingsScreen from "./SettingsScreen";
 import SupportScreen from "./SupportScreen";
 import TrainChatScreen from "./TrainChat";
@@ -134,7 +134,7 @@ function Root({ route, navigation }: RootScreenProps): JSX.Element {
       />
       <Drawer.Screen
         name="phoneSettings"
-        component={PhoneSettingsScreen}
+        component={PropertyAISettingsScreen}
         options={{ title: "Candor - Phone Settings" }}
       />
     </Drawer.Navigator>

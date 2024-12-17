@@ -20,6 +20,10 @@ export const GroupIds = Object.freeze({
         Prod: "666cb9e13f4cdf2e9266a7c2",
         Dev: "6755f5187a3d98860ad861e2",
     },
+    Demo: {
+        Prod: "6757586d2dd23a5a666c540f", 
+        Dev: ""
+    },
 });
 
 /*
